@@ -6,7 +6,7 @@
   --mono-red:          #ff537a;
   --mono-yellow:       #ffffb5;
   --mono-green:        #00ffb5;
-  --mono-tile:         #121217;
+  --mono-tile:         #1c1c24;
   --mono-gutter:       0.5rem;
   --mono-line-height:  1.65em;
   --mono-block-offset: 3.3em;
@@ -489,7 +489,7 @@ p a {
 }
 
 .workgrid__item {
-  background: var(--mono-tile);
+  background: #1c1c24;
   border-radius: 4px;
   position: relative;
   overflow: hidden;
