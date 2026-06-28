@@ -448,36 +448,11 @@ p a {
   transition: transform 0.8s var(--ease-out-quint);
 }
 
-/* ─── Work Grid — exact copy of Adrian's ─── */
-
-/* nth-child → grid-area mapping (matches Adrian's HTML order) */
-.workgrid__item:nth-child(1)  { grid-area: area-1;  }
-.workgrid__item:nth-child(2)  { grid-area: area-2;  }
-.workgrid__item:nth-child(3)  { grid-area: area-3;  }
-.workgrid__item:nth-child(4)  { grid-area: area-4;  }
-.workgrid__item:nth-child(5)  { grid-area: area-5;  }
-.workgrid__item:nth-child(6)  { grid-area: area-6;  }
-.workgrid__item:nth-child(7)  { grid-area: area-7;  }
-.workgrid__item:nth-child(8)  { grid-area: area-8;  }
-.workgrid__item:nth-child(9)  { grid-area: area-9;  }
-.workgrid__item:nth-child(10) { grid-area: area-10; }
-.workgrid__item:nth-child(11) { grid-area: area-11; }
-.workgrid__item:nth-child(12) { grid-area: area-12; }
-.workgrid__item:nth-child(13) { grid-area: area-13; }
-.workgrid__item:nth-child(14) { display: none;       }
-.workgrid__item:nth-child(15) { grid-area: area-15; }
-.workgrid__item:nth-child(16) { grid-area: area-16; }
-.workgrid__item:nth-child(17) { grid-area: area-17; }
-
-/*
-  8-tile grid — 4×2 on desktop, 2×4 on mobile
-  Fills exactly 100vh on desktop, no spanning, no gaps
-*/
+/* ─── Work Grid ─── */
 .workgrid {
   display: grid;
   gap: 0.3rem;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(4, 1fr);
 }
 
 @media (min-width: 48em) {
@@ -493,37 +468,50 @@ p a {
   border-radius: 4px;
   position: relative;
   overflow: hidden;
-  min-height: 120px;
-  -webkit-mask-image: -webkit-radial-gradient(#fff, #000);
+  min-height: 140px;
 }
 
-/* Inner elements */
-.workgrid__item > a,
-.workgrid__item__content,
-.workgrid__item__title {
+.workgrid__item > a {
   position: absolute;
   inset: 0;
 }
 
 .workgrid__item__content {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Hover: blur content, reveal title, hue-rotate */
-.workgrid__item > a:hover .workgrid__item__content {
-  filter: blur(44px);
-  transform: scale(1.5);
   transition: filter 0.4s ease, transform 0.4s ease;
 }
 
-.workgrid__item > a:hover {
-  animation: hueRotate 10s infinite;
+.workgrid__item__title {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  font-size: 0.9rem;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.5);
+  transition: opacity 0.3s ease;
+}
+
+.workgrid__item > a:hover .workgrid__item__content {
+  filter: blur(44px);
+  transform: scale(1.5);
 }
 
 .workgrid__item > a:hover .workgrid__item__title {
   opacity: 1;
+}
+
+.workgrid__item > a:hover {
+  animation: hueRotate 10s infinite;
 }
 
 .workgrid__glow {
@@ -532,71 +520,6 @@ p a {
   border-radius: 50%;
   opacity: 0.2;
   filter: blur(50px);
-}
-
-.workgrid__item__title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: #fff;
-  line-height: var(--mono-line-height);
-  z-index: 10;
-  opacity: 0;
-  pointer-events: none;
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.workgrid__item__container,
-.workgrid__item__title,
-.workgrid__item__container > a {
-  position: absolute;
-  inset: 0;
-}
-
-.workgrid__item__content {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: filter 0.4s ease, transform 0.4s ease;
-}
-
-.workgrid__item__content img,
-.workgrid__item__content video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.workgrid__item__title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: #fff;
-  font-size: 0.85rem;
-  line-height: var(--mono-line-height);
-  z-index: 10;
-  opacity: 0;
-  pointer-events: none;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 1rem;
-  transition: opacity 0.3s ease;
-}
-
-.workgrid__item__container > a:hover .workgrid__item__content {
-  filter: blur(44px);
-  transform: scale(1.5);
-}
-
-.workgrid__item__container > a:hover .workgrid__item__title {
-  opacity: 1;
-}
-
-.workgrid__item__container > a:hover {
-  animation: hueRotate 10s infinite;
 }
 
 @keyframes hueRotate {
