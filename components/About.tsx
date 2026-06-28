@@ -3,17 +3,15 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
-const GREETINGS = [
-  'hey!',
-  '¡que tal!',
-  'bonjour!',
-  'ciao!',
-  'hallo!',
-  'こんにちは。',
-  'olá!',
+const DESCRIPTORS = [
+  'product designer.',
+  'systems thinker.',
+  'problem solver.',
+  'code + strategy.',
+  'customer first.',
 ]
 
-function useTypewriter(words: string[], typeSpeed = 85, deleteSpeed = 42, pauseMs = 2200) {
+function useTypewriter(words: string[], typeSpeed = 85, deleteSpeed = 42, pauseMs = 2800) {
   const [displayed, setDisplayed] = useState(words[0])
   const [wordIndex, setWordIndex] = useState(0)
   const [phase, setPhase] = useState<'typing' | 'pausing' | 'deleting'>('pausing')
@@ -40,21 +38,19 @@ function useTypewriter(words: string[], typeSpeed = 85, deleteSpeed = 42, pauseM
 }
 
 export default function About() {
-  const { displayed, isDeleting } = useTypewriter(GREETINGS)
+  const { displayed, isDeleting } = useTypewriter(DESCRIPTORS)
   const router = useRouter()
 
   return (
     <>
       <section className="section about" id="about">
         <h1 className="about__title">
+          <span>i&apos;m luke</span>.
+          <br />
           <span className="greeting">
             {displayed}
             <span className={`typing-cursor${isDeleting ? ' typing-cursor--deleting' : ''}`} />
           </span>
-          <br />
-          <span>i&apos;m</span>
-          <br />
-          <span>luke</span>.
         </h1>
 
         <p className="about__intro-text">
@@ -63,8 +59,8 @@ export default function About() {
         </p>
 
         <div className="about__buttons">
-          <button className="btn" onClick={() => router.push('/chat')}>
-            <span className="btn__icon">→</span>
+          <button className="btn btn--hero" onClick={() => router.push('/chat')}>
+            <span className="btn__icon">⋯</span>
             <span className="btn__text">
               <span className="btn__text__main">chat with luke ai</span>
             </span>

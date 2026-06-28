@@ -1,25 +1,16 @@
 export default function Footer() {
   return (
     <footer className="footer section">
-      <hr />
-      <div className="footer__content">
-        <a href="/" className="footer-link" style={{ fontWeight: 500 }}>
-          luke.
-        </a>
-        <nav style={{ display: 'flex', gap: '0.5rem' }}>
-          <a href="https://twitter.com" className="footer-link" target="_blank" rel="noopener noreferrer">
-            twitter
-          </a>
-          <a href="https://linkedin.com" className="footer-link" target="_blank" rel="noopener noreferrer">
-            linkedin
-          </a>
-          <a href="https://read.cv" className="footer-link" target="_blank" rel="noopener noreferrer">
-            read.cv
-          </a>
-          <span className="footer-link" style={{ pointerEvents: 'none' }}>
-            utah ✦
-          </span>
+      <div className="footer__inner">
+
+        <nav className="footer__nav">
+          <a href="/" className="footer-link footer-link--home" aria-label="Home">⌂</a>
+          <span className="footer__sep">·</span>
+          <a href="https://www.linkedin.com/in/lukewoodstech" className="footer-link" target="_blank" rel="noopener noreferrer">linkedin</a>
+          <span className="footer__sep">·</span>
+          <a href="https://drive.google.com/file/d/18_IQ05ORFpJnJeR42TqPjkL9JoCxSkHX/view?usp=sharing" className="footer-link" target="_blank" rel="noopener noreferrer">résumé</a>
         </nav>
+
       </div>
     </footer>
   )

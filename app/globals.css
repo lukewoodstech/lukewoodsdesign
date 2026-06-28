@@ -122,7 +122,7 @@ p a {
   padding: 1.1em 1.4em;
   line-height: 1em;
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 22px;
+  font-size: clamp(0.875rem, 1.2vw, 1.05rem);
   color: #fff;
   background: transparent;
   cursor: none !important;
@@ -185,15 +185,18 @@ p a {
 .section {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 3.3em 1rem 3em;
+  padding: 3.3em clamp(1rem, 5vw, 3rem) 3em;
   font-size: 1.1rem;
   line-height: var(--mono-line-height);
 }
 
 /* ─── About ─── */
 .about {
-  min-height: 100vh;
-  padding-top: 18vh;
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 5rem;
   padding-bottom: 4rem;
 }
 
@@ -229,10 +232,10 @@ p a {
 }
 
 .about__title {
-  font-size: 44px;
+  font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 400;
   line-height: 1.1;
-  margin: 0.25em 0 0.75em;
+  margin: 0 0 56px;
   color: #fff;
 }
 
@@ -241,17 +244,24 @@ p a {
 }
 
 .about__intro-text {
-  max-width: 560px;
-  font-size: 22px;
+  max-width: 780px;
+  font-size: clamp(1rem, 2vw, 1.5rem);
   color: #fff;
   opacity: 1;
+  margin-top: 0;
+  margin-bottom: 0;
+  letter-spacing: 0.01em;
 }
 
 .about__buttons {
-  margin-top: 2.5rem;
+  margin-top: 48px;
   display: flex;
   gap: 1rem;
   align-items: center;
+}
+
+.btn--hero {
+  font-size: clamp(1rem, 2vw, 1.5rem);
 }
 
 /* ─── Chat page (/chat) ─── */
@@ -272,7 +282,7 @@ p a {
 }
 
 .chat-pg__back {
-  font-size: 16px;
+  font-size: clamp(0.75rem, 1.2vw, 1rem);
   padding: 0.6em 1em;
   z-index: 1;
 }
@@ -311,7 +321,7 @@ p a {
   flex: 1;
   overflow-y: auto;
   scrollbar-width: none;
-  padding: 2.5rem 1.5rem;
+  padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 5vw, 3rem);
 }
 
 .chat-pg__messages::-webkit-scrollbar { display: none; }
@@ -342,14 +352,14 @@ p a {
 
 .chat-pg__msg--ai .chat-pg__text {
   margin: 0;
-  font-size: 22px;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
   line-height: var(--mono-line-height);
   color: #fff;
 }
 
 .chat-pg__msg--user .chat-pg__text {
   margin: 0;
-  font-size: 22px;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
   line-height: var(--mono-line-height);
   color: rgba(255, 255, 255, 0.6);
   text-align: right;
@@ -382,7 +392,7 @@ p a {
 /* Footer input */
 .chat-pg__footer {
   flex-shrink: 0;
-  padding: 1rem 1.5rem 2rem;
+  padding: 1rem clamp(1rem, 5vw, 3rem) 2rem;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -408,7 +418,7 @@ p a {
   outline: none;
   color: #fff;
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 22px;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
   cursor: none !important;
   caret-color: var(--mono-blue);
 }
@@ -422,7 +432,7 @@ p a {
   border: none;
   color: #fff;
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 22px;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
   cursor: none !important;
   opacity: 0.2;
   transition: opacity 0.2s ease;
@@ -438,76 +448,103 @@ p a {
   transition: transform 0.8s var(--ease-out-quint);
 }
 
+/* ─── Work Grid — exact copy of Adrian's ─── */
+
+/* nth-child → grid-area mapping (matches Adrian's HTML order) */
+.workgrid__item:nth-child(1)  { grid-area: area-1;  }
+.workgrid__item:nth-child(2)  { grid-area: area-2;  }
+.workgrid__item:nth-child(3)  { grid-area: area-3;  }
+.workgrid__item:nth-child(4)  { grid-area: area-4;  }
+.workgrid__item:nth-child(5)  { grid-area: area-5;  }
+.workgrid__item:nth-child(6)  { grid-area: area-6;  }
+.workgrid__item:nth-child(7)  { grid-area: area-7;  }
+.workgrid__item:nth-child(8)  { grid-area: area-8;  }
+.workgrid__item:nth-child(9)  { grid-area: area-9;  }
+.workgrid__item:nth-child(10) { grid-area: area-10; }
+.workgrid__item:nth-child(11) { grid-area: area-11; }
+.workgrid__item:nth-child(12) { grid-area: area-12; }
+.workgrid__item:nth-child(13) { grid-area: area-13; }
+.workgrid__item:nth-child(14) { display: none;       }
+.workgrid__item:nth-child(15) { grid-area: area-15; }
+.workgrid__item:nth-child(16) { grid-area: area-16; }
+.workgrid__item:nth-child(17) { grid-area: area-17; }
+
 /*
-  6-tile asymmetric layout
-  Mobile  (2 cols): simple 2-col stack
-  Tablet  (4 cols): compact asymmetric
-  Desktop (6 cols): full asymmetric — matches Adrian's tile scale
-    [ t1  t1  t2  t3  t4  t4 ]
-    [ t5  t5  t2  t3  t6  t6 ]
+  8-tile grid — 4×2 on desktop, 2×4 on mobile
+  Fills exactly 100vh on desktop, no spanning, no gaps
 */
 .workgrid {
   display: grid;
   gap: 0.3rem;
-  grid-template-columns: 1fr 1fr;
-  grid-template-areas:
-    "t1 t2"
-    "t3 t4"
-    "t5 t6";
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(4, 1fr);
 }
 
 @media (min-width: 48em) {
   .workgrid {
+    height: 100vh;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-areas:
-      "t1 t1 t2 t3"
-      "t4 t5 t2 t3"
-      "t4 t5 t6 t6";
+    grid-template-rows: repeat(2, 1fr);
   }
 }
-
-@media (min-width: 75em) {
-  .workgrid {
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-areas:
-      "t1 t1 t2 t3 t4 t4"
-      "t5 t5 t2 t3 t6 t6";
-  }
-}
-
-.workgrid__item:nth-child(1) { grid-area: t1; }
-.workgrid__item:nth-child(2) { grid-area: t2; }
-.workgrid__item:nth-child(3) { grid-area: t3; }
-.workgrid__item:nth-child(4) { grid-area: t4; }
-.workgrid__item:nth-child(5) { grid-area: t5; }
-.workgrid__item:nth-child(6) { grid-area: t6; }
 
 .workgrid__item {
   background: var(--mono-tile);
   border-radius: 4px;
   position: relative;
   overflow: hidden;
-  padding-bottom: 85%;
-  min-height: 80px;
+  min-height: 120px;
   -webkit-mask-image: -webkit-radial-gradient(#fff, #000);
 }
 
-/* t2 and t3 span 2 rows — no extra padding override needed, grid handles height */
-@media (min-width: 48em) {
-  .workgrid__item:nth-child(2),
-  .workgrid__item:nth-child(3) {
-    padding-bottom: 0;
-  }
+/* Inner elements */
+.workgrid__item > a,
+.workgrid__item__content,
+.workgrid__item__title {
+  position: absolute;
+  inset: 0;
 }
 
-@media (min-width: 75em) {
-  .workgrid__item {
-    padding-bottom: 90%;
-  }
-  .workgrid__item:nth-child(2),
-  .workgrid__item:nth-child(3) {
-    padding-bottom: 0;
-  }
+.workgrid__item__content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hover: blur content, reveal title, hue-rotate */
+.workgrid__item > a:hover .workgrid__item__content {
+  filter: blur(44px);
+  transform: scale(1.5);
+  transition: filter 0.4s ease, transform 0.4s ease;
+}
+
+.workgrid__item > a:hover {
+  animation: hueRotate 10s infinite;
+}
+
+.workgrid__item > a:hover .workgrid__item__title {
+  opacity: 1;
+}
+
+.workgrid__glow {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  opacity: 0.2;
+  filter: blur(50px);
+}
+
+.workgrid__item__title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  line-height: var(--mono-line-height);
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .workgrid__item__container,
@@ -569,39 +606,90 @@ p a {
 
 /* ─── Footer ─── */
 .footer {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: var(--mono-line-height) 1rem 2.5rem;
-  font-size: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 0.3rem;
 }
 
-.footer__content {
+.footer__inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0.5em 0;
+  padding: 1.5rem 0;
+}
+
+.footer__nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .footer-link {
+  font-size: clamp(0.875rem, 1.4vw, 1.1rem);
+  font-weight: 500;
   border-radius: 8px;
-  padding: 6px 12px;
-  opacity: 0.54;
-  transition: opacity 0.2s ease;
+  padding: 8px 16px;
+  color: #fff;
+  opacity: 1;
+  white-space: nowrap;
+  transition: background 0.2s ease;
   cursor: none !important;
 }
 
 .footer-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.footer-link--home {
+  font-size: 1.3em;
+  line-height: 1;
+}
+
+.footer__sep {
+  font-size: clamp(0.875rem, 1.4vw, 1.1rem);
+  font-weight: 500;
+  color: #fff;
   opacity: 1;
+  user-select: none;
 }
 
-hr {
-  border: none;
-  margin: calc(var(--mono-line-height) * 2) 0;
+/* ─── Touch / mobile overrides ─── */
+
+/* Hide custom cursor on touch screens */
+@media (hover: none) {
+  #cursor { display: none; }
+  * { cursor: auto !important; }
+  a, button { cursor: pointer !important; }
 }
 
-hr::after {
-  content: "* * *";
-  display: block;
-  text-align: center;
-  opacity: 0.3;
+/* Footer stacks on small screens */
+@media (max-width: 36em) {
+  .footer__content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .footer nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-left: -0.75rem;
+  }
+}
+
+/* Chat header: shrink title on small screens to avoid overlap with back btn */
+@media (max-width: 36em) {
+  .chat-pg__header {
+    padding: 1rem;
+  }
+
+  .chat-pg__title {
+    font-size: 0.8rem;
+  }
+}
+
+/* About section: less top padding on small screens */
+@media (max-width: 36em) {
+  .about {
+    padding-top: 2rem;
+  }
 }
