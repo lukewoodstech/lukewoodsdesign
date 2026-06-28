@@ -449,6 +449,15 @@ p a {
 }
 
 /* ─── Work Grid ─── */
+
+/*
+  8-tile asymmetric layout
+  Mobile (2 col): auto-flowing 2-col stack
+  Desktop (4 col, 100vh):
+    [ t1  t1  t2  t3 ]
+    [ t4  t5  t6  t3 ]
+    [ t4  t7  t7  t8 ]
+*/
 .workgrid {
   display: grid;
   gap: 0.3rem;
@@ -459,12 +468,25 @@ p a {
   .workgrid {
     height: 100vh;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-areas:
+      "t1 t1 t2 t3"
+      "t4 t5 t6 t3"
+      "t4 t7 t7 t8";
   }
+
+  .workgrid__item:nth-child(1) { grid-area: t1; }
+  .workgrid__item:nth-child(2) { grid-area: t2; }
+  .workgrid__item:nth-child(3) { grid-area: t3; }
+  .workgrid__item:nth-child(4) { grid-area: t4; }
+  .workgrid__item:nth-child(5) { grid-area: t5; }
+  .workgrid__item:nth-child(6) { grid-area: t6; }
+  .workgrid__item:nth-child(7) { grid-area: t7; }
+  .workgrid__item:nth-child(8) { grid-area: t8; }
 }
 
 .workgrid__item {
-  background: #1c1c24;
+  background: #1e1e28;
   border-radius: 4px;
   position: relative;
   overflow: hidden;
