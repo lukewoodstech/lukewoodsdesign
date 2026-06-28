@@ -264,9 +264,192 @@ p a {
   font-size: clamp(1rem, 2vw, 1.5rem);
 }
 
+/* ─── Sidebar ─── */
+
+/*
+  Collapsed: 52px rail (icon strip) always visible on desktop.
+  Expanded:  260px — panel slides over the rail from the left.
+  Mobile:    rail hidden, entire sidebar starts at 0, opens as overlay.
+*/
+
+.sidebar {
+  position: relative;
+  width: 52px;
+  flex-shrink: 0;
+  background: #0d0d0d;
+  overflow: hidden;
+  transition: width 0.22s var(--ease-out-quint);
+}
+
+.sidebar--open {
+  width: 260px;
+}
+
+/* Always-visible icon strip */
+.sidebar__rail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 52px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.6rem 0;
+  gap: 0.1rem;
+  z-index: 1;
+}
+
+/* Icon buttons used in both rail and panel header */
+.sidebar__rail-btn {
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: none !important;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s ease;
+  flex-shrink: 0;
+}
+
+.sidebar__rail-btn:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+/* Expanded panel — slides over the rail */
+.sidebar__panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #0d0d0d;
+  transform: translateX(-260px);
+  transition: transform 0.22s var(--ease-out-quint);
+  z-index: 2;
+}
+
+.sidebar--open .sidebar__panel {
+  transform: translateX(0);
+}
+
+/* Hide rail icons while panel is visible so they don't bleed through */
+.sidebar--open .sidebar__rail {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Panel header: "luke ai." + collapse button */
+.sidebar__panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.5rem 0.6rem 1rem;
+  height: 56px;
+  flex-shrink: 0;
+}
+
+.sidebar__brand {
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  opacity: 0.55;
+  user-select: none;
+}
+
+/* New chat button inside panel */
+.sidebar__new {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0.65rem 0.5rem;
+  padding: 0.55rem 0.65rem 0.55rem 0.9rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.75);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  cursor: none !important;
+  transition: background 0.12s ease, color 0.12s ease;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.sidebar__new:hover {
+  background: rgba(255, 255, 255, 0.09);
+  color: #fff;
+}
+
+/* Conversation list */
+.sidebar__list {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.25rem 0.5rem 1rem;
+  scrollbar-width: none;
+}
+
+.sidebar__list::-webkit-scrollbar {
+  display: none;
+}
+
+.sidebar__empty {
+  font-size: 0.75rem;
+  opacity: 0.3;
+  padding: 0.5rem 0.5rem;
+  margin: 0;
+}
+
+.sidebar__item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 6px;
+  cursor: none !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.12s ease, color 0.12s ease;
+  line-height: 1.4;
+}
+
+.sidebar__item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.sidebar__item--active {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.sidebar__backdrop {
+  display: none;
+}
+
 /* ─── Chat page (/chat) ─── */
 .chat-pg {
   height: 100vh;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.chat-pg__main {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -276,15 +459,34 @@ p a {
   display: flex;
   align-items: center;
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 0.5rem;
   flex-shrink: 0;
   position: relative;
 }
 
-.chat-pg__back {
-  font-size: clamp(0.75rem, 1.2vw, 1rem);
-  padding: 0.6em 1em;
+.chat-pg__menu {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.1rem;
+  opacity: 0.5;
+  cursor: none !important;
+  padding: 0.25rem 0.5rem;
+  transition: opacity 0.15s ease;
+  flex-shrink: 0;
   z-index: 1;
+  line-height: 1;
+}
+
+.chat-pg__menu:hover {
+  opacity: 0.9;
+}
+
+.chat-pg__close {
+  margin-left: auto;
+  font-size: clamp(0.875rem, 1.2vw, 1.05rem);
+  padding: 0.6em 1em;
+  flex-shrink: 0;
 }
 
 .chat-pg__title {
@@ -313,9 +515,6 @@ p a {
   50%       { opacity: 0.35; }
 }
 
-.chat-pg__header-fill {
-  margin-left: auto;
-}
 
 .chat-pg__messages {
   flex: 1;
@@ -327,50 +526,102 @@ p a {
 .chat-pg__messages::-webkit-scrollbar { display: none; }
 
 .chat-pg__inner {
-  max-width: 640px;
+  max-width: 720px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.75rem;
 }
 
 .chat-pg__msg {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
 }
 
 .chat-pg__msg--user {
   align-items: flex-end;
 }
 
-.chat-pg__from {
-  font-size: 0.7rem;
-  opacity: 0.3;
-  letter-spacing: 0.06em;
+.chat-pg__msg--assistant {
+  align-items: flex-start;
 }
 
-.chat-pg__msg--ai .chat-pg__text {
-  margin: 0;
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
+/* User bubble */
+.chat-pg__bubble {
+  background: #2a2a2a;
+  border-radius: 18px;
+  padding: 0.75rem 1rem;
+  max-width: 80%;
+  font-size: 1rem;
   line-height: var(--mono-line-height);
   color: #fff;
 }
 
-.chat-pg__msg--user .chat-pg__text {
-  margin: 0;
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
+/* AI text with markdown */
+.chat-pg__ai-text {
+  font-size: 1rem;
   line-height: var(--mono-line-height);
-  color: rgba(255, 255, 255, 0.6);
-  text-align: right;
+  color: #fff;
+  max-width: 100%;
+}
+
+.chat-pg__ai-text p {
+  margin: 0 0 0.9rem;
+}
+
+.chat-pg__ai-text p:last-child {
+  margin-bottom: 0;
+}
+
+.chat-pg__ai-text ul,
+.chat-pg__ai-text ol {
+  margin: 0 0 0.9rem 1.4rem;
+  padding: 0;
+}
+
+.chat-pg__ai-text li {
+  margin-bottom: 0.3rem;
+  list-style: disc;
+}
+
+.chat-pg__ai-text ol li {
+  list-style: decimal;
+}
+
+.chat-pg__ai-text code {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.chat-pg__ai-text pre {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 0 0 0.9rem;
+}
+
+.chat-pg__ai-text pre code {
+  background: none;
+  padding: 0;
+}
+
+.chat-pg__ai-text strong {
+  color: #fff;
+  font-weight: 600;
 }
 
 /* Typing dots */
 .chat-pg__typing {
-  display: flex !important;
+  display: flex;
   align-items: center;
   gap: 5px;
   min-height: 1.65em;
+  margin: 0;
+  padding: 0;
 }
 
 .chat-pg__typing span {
@@ -389,26 +640,30 @@ p a {
   30%            { transform: translateY(-5px); opacity: 1;    }
 }
 
-/* Footer input */
+/* Floating input bar */
 .chat-pg__footer {
   flex-shrink: 0;
-  padding: 1rem clamp(1rem, 5vw, 3rem) 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.75rem clamp(1rem, 5vw, 3rem) 1.75rem;
 }
 
-.chat-pg__input-row {
-  max-width: 640px;
+.chat-pg__float-wrap {
+  max-width: 720px;
   margin: 0 auto;
+}
+
+.chat-pg__float-box {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  padding-bottom: 0.5rem;
+  gap: 0.5rem;
+  background: #1c1c24;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 0.65rem 0.65rem 0.65rem 1.1rem;
   transition: border-color 0.2s ease;
 }
 
-.chat-pg__input-row:focus-within {
-  border-color: rgba(255, 255, 255, 0.4);
+.chat-pg__float-box:focus-within {
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
 .chat-pg__input {
@@ -418,30 +673,42 @@ p a {
   outline: none;
   color: #fff;
   font-family: 'IBM Plex Mono', monospace;
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-size: 1rem;
   cursor: none !important;
   caret-color: var(--mono-blue);
+  min-width: 0;
 }
 
 .chat-pg__input::placeholder {
-  color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.22);
+}
+
+.chat-pg__input:disabled {
+  opacity: 0.5;
 }
 
 .chat-pg__send {
-  background: none;
-  border: none;
-  color: #fff;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
-  cursor: none !important;
-  opacity: 0.2;
-  transition: opacity 0.2s ease;
-  padding: 0;
   flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #fff;
+  border: none;
+  color: #000;
+  font-size: 1.1rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: none !important;
+  transition: background 0.2s ease, opacity 0.2s ease;
 }
 
-.chat-pg__send:not(:disabled) { opacity: 1; }
-.chat-pg__send:disabled       { pointer-events: none; }
+.chat-pg__send:disabled {
+  background: #333;
+  color: rgba(255, 255, 255, 0.25);
+  pointer-events: none;
+}
 
 /* ─── Work Grid ─── */
 .home-wrapper {
@@ -551,7 +818,6 @@ p a {
 
 /* ─── Footer ─── */
 .footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
   margin-top: 0.3rem;
 }
 
@@ -624,11 +890,46 @@ p a {
 /* Chat header: shrink title on small screens to avoid overlap with back btn */
 @media (max-width: 36em) {
   .chat-pg__header {
-    padding: 1rem;
+    padding: 0.75rem 1rem;
   }
 
   .chat-pg__title {
     font-size: 0.8rem;
+  }
+}
+
+/* Desktop: hide the header menu btn (rail handles toggle) */
+@media (min-width: 48em) {
+  .chat-pg__menu {
+    display: none !important;
+  }
+}
+
+/* Mobile: sidebar is fully hidden; opens as overlay */
+@media (max-width: 48em) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 0;
+    z-index: 150;
+  }
+
+  .sidebar--open {
+    width: 260px;
+  }
+
+  .sidebar__rail {
+    display: none;
+  }
+
+  .sidebar__backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 149;
   }
 }
 
