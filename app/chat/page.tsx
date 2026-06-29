@@ -20,7 +20,7 @@ type Conversation = {
 const GREETING: Message = {
   role: 'assistant',
   content:
-    "hi. i'm an ai trained on luke's work and background. ask me anything about his experience, projects, or process.",
+    "hi. i'm luke ai — a portfolio assistant trained on luke woods's public work, resume, and projects. ask me anything about his experience, skills, or process.",
 }
 
 const STORAGE_KEY = 'luke-ai-conversations'
@@ -128,6 +128,8 @@ export default function ChatPage() {
 
     setMessages((prev) => [...prev, { role: 'assistant', content: '' }])
     setIsStreaming(true)
+    // Re-focus after zero→non-zero transition causes textarea remount
+    setTimeout(() => inputRef.current?.focus(), 60)
 
     try {
       const res = await fetch('/api/chat', {
@@ -163,6 +165,7 @@ export default function ChatPage() {
       ])
     } finally {
       setIsStreaming(false)
+      setTimeout(() => inputRef.current?.focus(), 50)
     }
   }
 
@@ -180,7 +183,7 @@ export default function ChatPage() {
       <textarea
         ref={inputRef}
         className="chat-pg__input"
-        placeholder="ask me anything about luke…"
+        placeholder="ask anything about luke's experience…"
         value={input}
         rows={1}
         onChange={(e) => setInput(e.target.value)}
@@ -225,7 +228,7 @@ export default function ChatPage() {
 
         {isZeroState ? (
           <div className="chat-pg__zero">
-            <p className="chat-pg__zero-heading">what do you want to know?</p>
+            <p className="chat-pg__zero-heading">i'm luke ai, a portfolio assistant</p>
             <div className="chat-pg__float-wrap chat-pg__float-wrap--zero">
               {floatInput}
             </div>
@@ -246,7 +249,34 @@ export default function ChatPage() {
                       </p>
                     ) : (
                       <div className="chat-pg__ai-text">
-                        <ReactMarkdown>{msg.content}</ReactMarkdown>
+                        <ReactMarkdown
+                          components={{
+                            a: ({ href, children }) => {
+                              const isEmail = href?.startsWith('mailto:')
+                              const isLinkedIn = href?.includes('linkedin.com')
+                              if (isEmail || isLinkedIn) {
+                                return (
+                                  <a href={href} target={isEmail ? '_self' : '_blank'} rel="noopener noreferrer" className="chat-pg__contact-btn">
+                                    {isEmail ? (
+                                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                                        <rect x="2" y="4" width="20" height="16" rx="2" />
+                                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                                      </svg>
+                                    ) : (
+                                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                                        <rect x="2" y="9" width="4" height="12" />
+                                        <circle cx="4" cy="4" r="2" />
+                                      </svg>
+                                    )}
+                                    {children}
+                                  </a>
+                                )
+                              }
+                              return <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>
+                            },
+                          }}
+                        >{msg.content}</ReactMarkdown>
                       </div>
                     )}
                   </div>

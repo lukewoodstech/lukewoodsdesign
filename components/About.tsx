@@ -54,15 +54,14 @@ export default function About() {
         </h1>
 
         <p className="about__intro-text">
-          I&apos;m a product designer crafting thoughtful digital experiences
-          at the intersection of design, technology, and human behaviour.
+          I&apos;m a product designer who uses research, systems thinking, and technical fluency to turn complex product problems into clear, intuitive software.
         </p>
 
         <div className="about__buttons">
           <button className="btn btn--hero" onClick={() => router.push('/chat', { transitionTypes: ['page-enter'] })}>
             <span className="btn__icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
               </svg>
             </span>
             <span className="btn__text">

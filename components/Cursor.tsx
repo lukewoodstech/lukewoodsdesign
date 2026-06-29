@@ -96,12 +96,42 @@ export default function Cursor() {
       })
     }
 
-    // Re-query elements on every navigation so new page elements get bound
-    const textNodes = document.querySelectorAll('p, h1, h2, h3, blockquote')
-    const btnNodes = document.querySelectorAll('.btn, .footer-link, .chat-pg__send')
+    const BTN_SEL = '.btn, .footer-link, .chat-pg__send, .chat-pg__contact-btn'
+    const TEXT_SEL = 'p, h1, h2, h3, blockquote'
 
-    textNodes.forEach(bindTextNode)
-    btnNodes.forEach(bindBtnNode)
+    const bindEl = (el: Element) => {
+      if (el.nodeType !== Node.ELEMENT_NODE) return
+      if (el.matches(BTN_SEL) && !el.hasAttribute('data-cursor-bound')) {
+        el.setAttribute('data-cursor-bound', '1')
+        bindBtnNode(el)
+      }
+      if (el.matches(TEXT_SEL) && !el.hasAttribute('data-cursor-bound')) {
+        el.setAttribute('data-cursor-bound', '1')
+        bindTextNode(el)
+      }
+      el.querySelectorAll<Element>(`${BTN_SEL}:not([data-cursor-bound])`).forEach(child => {
+        child.setAttribute('data-cursor-bound', '1')
+        bindBtnNode(child)
+      })
+      el.querySelectorAll<Element>(`${TEXT_SEL}:not([data-cursor-bound])`).forEach(child => {
+        child.setAttribute('data-cursor-bound', '1')
+        bindTextNode(child)
+      })
+    }
+
+    // Initial bind
+    document.querySelectorAll<Element>(BTN_SEL).forEach(el => { el.setAttribute('data-cursor-bound', '1'); bindBtnNode(el) })
+    document.querySelectorAll<Element>(TEXT_SEL).forEach(el => { el.setAttribute('data-cursor-bound', '1'); bindTextNode(el) })
+
+    // Only process newly added nodes, not the whole document on every change
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        mutation.addedNodes.forEach(node => {
+          if (node.nodeType === Node.ELEMENT_NODE) bindEl(node as Element)
+        })
+      }
+    })
+    observer.observe(document.body, { childList: true, subtree: true })
 
     document.addEventListener('mousemove', onMouseMove)
     document.addEventListener('touchstart', onTouchStart)
@@ -109,6 +139,7 @@ export default function Cursor() {
     return () => {
       document.removeEventListener('mousemove', onMouseMove)
       document.removeEventListener('touchstart', onTouchStart)
+      observer.disconnect()
     }
   }, [pathname, resetCursor])
 

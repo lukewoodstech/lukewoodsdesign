@@ -21,10 +21,10 @@ const IconPanel = () => (
   </svg>
 )
 
-const IconCompose = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 20h9" />
-    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+const IconPlus = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10" />
+    <path d="M12 8v8M8 12h8" />
   </svg>
 )
 
@@ -40,31 +40,32 @@ export default function Sidebar({
     <>
       <aside className={`sidebar${isOpen ? ' sidebar--open' : ''}`}>
 
-        {/* Rail — always visible on desktop, collapsed icon strip */}
-        <div className="sidebar__rail">
-          <button className="sidebar__rail-btn" onClick={onToggle} aria-label="Expand sidebar">
+        {/* Rail — clicking anywhere on it (not a button) expands the sidebar */}
+        <div className="sidebar__rail" onClick={onToggle}>
+          <button className="sidebar__rail-btn" onClick={(e) => { e.stopPropagation(); onToggle(); }} aria-label="Expand sidebar">
             <IconPanel />
           </button>
-          <button className="sidebar__rail-btn" onClick={onNew} aria-label="New chat">
-            <IconCompose />
+          <button className="sidebar__rail-btn" onClick={(e) => { e.stopPropagation(); onNew(); }} aria-label="New chat">
+            <IconPlus />
           </button>
         </div>
 
-        {/* Panel — slides over the rail when open */}
-        <div className="sidebar__panel">
+        {/* Panel — clicking empty areas collapses the sidebar */}
+        <div className="sidebar__panel" onClick={onToggle}>
           <div className="sidebar__panel-header">
             <span className="sidebar__brand">luke ai.</span>
-            <button className="sidebar__rail-btn" onClick={onToggle} aria-label="Collapse sidebar">
+            <button className="sidebar__rail-btn" onClick={(e) => { e.stopPropagation(); onToggle(); }} aria-label="Collapse sidebar">
               <IconPanel />
             </button>
           </div>
 
-          <button className="sidebar__new" onClick={onNew}>
-            <span>new chat</span>
-            <IconCompose />
+          <button className="sidebar__new" onClick={(e) => { e.stopPropagation(); onNew(); }}>
+            <IconPlus />
+            <span>New Chat</span>
           </button>
 
-          <div className="sidebar__list">
+          <div className="sidebar__list" onClick={(e) => e.stopPropagation()}>
+            <p className="sidebar__section-label">recents</p>
             {conversations.length === 0 ? (
               <p className="sidebar__empty">no chats yet.</p>
             ) : (

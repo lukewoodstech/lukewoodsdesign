@@ -22,7 +22,7 @@ const ibmPlexSans = IBM_Plex_Sans({
 
 export const metadata: Metadata = {
   title: 'Luke Woods · Product Designer',
-  description: 'Product designer crafting thoughtful digital experiences at the intersection of design, technology, and human behaviour.',
+  description: 'Product designer who uses research, systems thinking, and technical fluency to turn complex product problems into clear, intuitive software.',
 }
 
 export const viewport: Viewport = {
