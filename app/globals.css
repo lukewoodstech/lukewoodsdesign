@@ -855,10 +855,8 @@ p a {
 .workgrid__item__content {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: filter 0.4s ease, transform 0.4s ease;
+  overflow: hidden;
+  transition: filter 0.5s ease, transform 0.5s ease;
 }
 
 .workgrid__item__title {
@@ -867,27 +865,54 @@ p a {
   display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  color: #fff;
-  font-size: 0.9rem;
   z-index: 10;
   opacity: 0;
   pointer-events: none;
-  background: rgba(0, 0, 0, 0.5);
-  transition: opacity 0.3s ease;
+  background: rgba(0, 0, 0, 0.72);
+  transition: opacity 0.4s ease;
+}
+
+.workgrid__item__title-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.workgrid__item__title-name {
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.workgrid__item__title-meta {
+  font-size: 0.7rem;
+  font-family: 'IBM Plex Mono', monospace;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .workgrid__item > a:hover .workgrid__item__content {
-  filter: blur(44px);
-  transform: scale(1.5);
+  filter: blur(16px);
+  transform: scale(1.08);
 }
 
 .workgrid__item > a:hover .workgrid__item__title {
   opacity: 1;
 }
 
-.workgrid__item > a:hover {
-  animation: hueRotate 10s infinite;
+/* Static mockup image */
+.tile-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
 }
 
 .workgrid__glow {
@@ -896,11 +921,6 @@ p a {
   border-radius: 50%;
   opacity: 0.2;
   filter: blur(50px);
-}
-
-@keyframes hueRotate {
-  from { filter: hue-rotate(0deg); }
-  to   { filter: hue-rotate(360deg); }
 }
 
 /* ─── Footer ─── */
