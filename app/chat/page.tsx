@@ -41,8 +41,16 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([GREETING])
   const [input, setInput] = useState('')
   const [isStreaming, setIsStreaming] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLTextAreaElement>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
+
+  // Auto-resize textarea as content grows
+  useEffect(() => {
+    const ta = inputRef.current
+    if (!ta) return
+    ta.style.height = 'auto'
+    ta.style.height = Math.min(ta.scrollHeight, 180) + 'px'
+  }, [input])
 
   // Load saved conversations on mount
   useEffect(() => {
@@ -90,6 +98,7 @@ export default function ChatPage() {
     if (!text || isStreaming) return
 
     setInput('')
+    if (inputRef.current) inputRef.current.style.height = 'auto'
 
     const userMsg: Message = { role: 'user', content: text }
     const withUser = [...messages, userMsg]
@@ -164,6 +173,31 @@ export default function ChatPage() {
     }
   }
 
+  const isZeroState = messages.length === 1 && messages[0] === GREETING
+
+  const floatInput = (
+    <div className="chat-pg__float-box">
+      <textarea
+        ref={inputRef}
+        className="chat-pg__input"
+        placeholder="ask me anything about luke…"
+        value={input}
+        rows={1}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={handleKeyDown}
+        disabled={isStreaming}
+      />
+      <button
+        className="chat-pg__send"
+        onClick={handleSend}
+        disabled={!input.trim() || isStreaming}
+        aria-label="Send"
+      >
+        ↑
+      </button>
+    </div>
+  )
+
   return (
     <div className="chat-pg">
       <Sidebar
@@ -184,62 +218,50 @@ export default function ChatPage() {
           >
             ☰
           </button>
-          <span className="chat-pg__title">
-            <span className="chat-pg__dot" />
-            luke ai.
-          </span>
           <button className="btn chat-pg__close" onClick={() => router.back()} aria-label="Close">
             ✕
           </button>
         </header>
 
-        <main className="chat-pg__messages">
-          <div className="chat-pg__inner">
-            {messages.map((msg, i) => (
-              <div key={i} className={`chat-pg__msg chat-pg__msg--${msg.role}`}>
-                {msg.role === 'user' ? (
-                  <div className="chat-pg__bubble">{msg.content}</div>
-                ) : msg.content === '' && isStreaming ? (
-                  <p className="chat-pg__typing">
-                    <span />
-                    <span />
-                    <span />
-                  </p>
-                ) : (
-                  <div className="chat-pg__ai-text">
-                    <ReactMarkdown>{msg.content}</ReactMarkdown>
-                  </div>
-                )}
-              </div>
-            ))}
-            <div ref={bottomRef} />
-          </div>
-        </main>
-
-        <footer className="chat-pg__footer">
-          <div className="chat-pg__float-wrap">
-            <div className="chat-pg__float-box">
-              <input
-                ref={inputRef}
-                className="chat-pg__input"
-                type="text"
-                placeholder="ask me anything about luke…"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                disabled={isStreaming}
-              />
-              <button
-                className="chat-pg__send"
-                onClick={handleSend}
-                disabled={!input.trim() || isStreaming}
-                aria-label="Send"
-              >
-                ↑
-              </button>
+        {isZeroState ? (
+          <div className="chat-pg__zero">
+            <p className="chat-pg__zero-heading">luke ai.</p>
+            <div className="chat-pg__float-wrap chat-pg__float-wrap--zero">
+              {floatInput}
             </div>
           </div>
-        </footer>
+        ) : (
+          <>
+            <main className="chat-pg__messages">
+              <div className="chat-pg__inner">
+                {messages.filter((m) => m !== GREETING).map((msg, i) => (
+                  <div key={i} className={`chat-pg__msg chat-pg__msg--${msg.role}`}>
+                    {msg.role === 'user' ? (
+                      <div className="chat-pg__bubble">{msg.content}</div>
+                    ) : msg.content === '' && isStreaming ? (
+                      <p className="chat-pg__typing">
+                        <span />
+                        <span />
+                        <span />
+                      </p>
+                    ) : (
+                      <div className="chat-pg__ai-text">
+                        <ReactMarkdown>{msg.content}</ReactMarkdown>
+                      </div>
+                    )}
+                  </div>
+                ))}
+                <div ref={bottomRef} />
+              </div>
+            </main>
+
+            <footer className="chat-pg__footer">
+              <div className="chat-pg__float-wrap">
+                {floatInput}
+              </div>
+            </footer>
+          </>
+        )}
       </div>
     </div>
   )
