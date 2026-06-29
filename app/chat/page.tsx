@@ -225,7 +225,7 @@ export default function ChatPage() {
 
         {isZeroState ? (
           <div className="chat-pg__zero">
-            <p className="chat-pg__zero-heading">luke ai.</p>
+            <p className="chat-pg__zero-heading">what do you want to know?</p>
             <div className="chat-pg__float-wrap chat-pg__float-wrap--zero">
               {floatInput}
             </div>
