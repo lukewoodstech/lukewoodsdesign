@@ -445,9 +445,24 @@ p a {
   margin: 0;
 }
 
+.sidebar__item-wrap {
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+  transition: background 0.12s ease;
+}
+
+.sidebar__item-wrap:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.sidebar__item-wrap--active {
+  background: rgba(255, 255, 255, 0.1);
+}
+
 .sidebar__item {
-  display: block;
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   text-align: left;
   background: none;
   border: none;
@@ -455,23 +470,37 @@ p a {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.82rem;
   padding: 0.5rem 0.6rem;
-  border-radius: 6px;
   cursor: none !important;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: background 0.12s ease, color 0.12s ease;
   line-height: 1.4;
 }
 
-.sidebar__item:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+.sidebar__delete {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.35);
+  cursor: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  margin-right: 4px;
+  opacity: 0;
+  transition: opacity 0.12s ease, color 0.12s ease, background 0.12s ease;
 }
 
-.sidebar__item--active {
-  background: rgba(255, 255, 255, 0.1);
+.sidebar__item-wrap:hover .sidebar__delete {
+  opacity: 1;
+}
+
+.sidebar__delete:hover {
   color: #fff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .sidebar__backdrop {
@@ -506,14 +535,15 @@ p a {
   background: none;
   border: none;
   color: #fff;
-  font-size: 1.1rem;
   opacity: 0.5;
   cursor: none !important;
   padding: 0.25rem 0.5rem;
   transition: opacity 0.15s ease;
   flex-shrink: 0;
   z-index: 1;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .chat-pg__menu:hover {
@@ -681,8 +711,8 @@ p a {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0 clamp(1rem, 5vw, 3rem) 18rem;
-  gap: 3rem;
+  padding: 0 clamp(1rem, 5vw, 3rem) 12vh;
+  gap: 2rem;
   width: 100%;
 }
 
@@ -702,12 +732,12 @@ p a {
 }
 
 .chat-pg__float-wrap--zero .chat-pg__float-box {
-  border-color: rgba(150, 100, 255, 0.4);
+  border-color: rgba(0, 143, 255, 0.4);
   box-shadow:
-    0 0 0 1px rgba(150, 100, 255, 0.35),
-    0 0 16px rgba(130, 80, 255, 0.55),
-    0 0 40px rgba(110, 60, 240, 0.4),
-    0 0 80px rgba(80, 40, 200, 0.25);
+    0 0 0 1px rgba(0, 143, 255, 0.3),
+    0 0 16px rgba(0, 143, 255, 0.45),
+    0 0 40px rgba(0, 143, 255, 0.3),
+    0 0 80px rgba(0, 100, 200, 0.2);
 }
 
 
@@ -779,7 +809,7 @@ p a {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: rgb(130, 80, 255);
+  background: var(--mono-blue);
   border: none;
   color: #fff;
   font-size: 1.1rem;
@@ -792,9 +822,48 @@ p a {
 }
 
 .chat-pg__send:disabled {
-  background: rgba(130, 80, 255, 0.25);
+  background: rgba(0, 143, 255, 0.2);
   color: rgba(255, 255, 255, 0.3);
   pointer-events: none;
+}
+
+/* AI sender label above assistant messages */
+.chat-pg__ai-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 0.35rem;
+  display: block;
+  user-select: none;
+}
+
+
+/* Error state + retry button */
+.chat-pg__error {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.chat-pg__retry {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 3em;
+  color: rgba(255, 255, 255, 0.55);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  padding: 0.4em 0.9em;
+  cursor: none !important;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.chat-pg__retry:hover {
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #fff;
 }
 
 /* ─── Work Grid ─── */
@@ -812,29 +881,32 @@ p a {
     [ t4  t5  t6  t3 ]
     [ t4  t7  t7  t8 ]
 */
+/* Mobile: vertical snap scroll, one tile per screen */
 .workgrid {
   display: grid;
   gap: 0.3rem;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  height: 100vh;
 }
 
+.workgrid__item {
+  scroll-snap-align: start;
+}
+
+/* Desktop: 2×2 grid */
 @media (min-width: 48em) {
   .workgrid {
-    height: 100vh;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: 1.4fr 1fr 0.9fr;
-    grid-template-areas:
-      "t1 t1 t2 t3"
-      "t4 t5 t2 t3"
-      "t4 t5 t6 t6";
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    overflow-y: unset;
+    scroll-snap-type: unset;
   }
 
-  .workgrid__item:nth-child(1) { grid-area: t1; }
-  .workgrid__item:nth-child(2) { grid-area: t2; }
-  .workgrid__item:nth-child(3) { grid-area: t3; }
-  .workgrid__item:nth-child(4) { grid-area: t4; }
-  .workgrid__item:nth-child(5) { grid-area: t5; }
-  .workgrid__item:nth-child(6) { grid-area: t6; }
+  .workgrid__item {
+    scroll-snap-align: unset;
+  }
 }
 
 .workgrid__item {
@@ -842,7 +914,13 @@ p a {
   border-radius: 4px;
   position: relative;
   overflow: hidden;
-  min-height: 140px;
+  min-height: 100vh;
+}
+
+@media (min-width: 48em) {
+  .workgrid__item {
+    min-height: unset;
+  }
 }
 
 .workgrid__item > a {

@@ -7,8 +7,6 @@ const tiles = [
   { label: 'Box 2', href: '#' },
   { label: 'Box 3', href: '#' },
   { label: 'Box 4', href: '#' },
-  { label: 'Box 5', href: '#' },
-  { label: 'Box 6', href: '#' },
 ]
 
 export default function WorkGrid() {
