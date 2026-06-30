@@ -2,26 +2,13 @@
 
 import Link from 'next/link'
 
-type Tile = {
-  name?: string
-  href?: string
-  meta?: string
-  visual?: React.ReactNode
-}
-
-const PatternVisual = () => (
-  <img className="tile-img" src="/pattern-2.png" alt="" draggable={false} />
-)
-
-const tiles: Tile[] = [
-  { name: 'Pattern: Custom Reports', href: '#', visual: <PatternVisual /> },
-  { name: 'Lucid',   href: '#' },
-  { name: 'Awardco', href: '#' },
-  { name: 'Mention', href: '#' },
-  {},
-  {},
-  {},
-  {},
+const tiles = [
+  { label: 'Box 1', href: '#' },
+  { label: 'Box 2', href: '#' },
+  { label: 'Box 3', href: '#' },
+  { label: 'Box 4', href: '#' },
+  { label: 'Box 5', href: '#' },
+  { label: 'Box 6', href: '#' },
 ]
 
 export default function WorkGrid() {
@@ -29,21 +16,12 @@ export default function WorkGrid() {
     <div className="workgrid">
       {tiles.map((tile, i) => (
         <div key={i} className="workgrid__item">
-          {tile.href ? (
-            <Link href={tile.href}>
-              <div className="workgrid__item__content">
-                {tile.visual}
-              </div>
-              <div className="workgrid__item__title">
-                <div className="workgrid__item__title-inner">
-                  <span className="workgrid__item__title-name">{tile.name}</span>
-                  {tile.meta && <span className="workgrid__item__title-meta">{tile.meta}</span>}
-                </div>
-              </div>
-            </Link>
-          ) : (
+          <Link href={tile.href}>
             <div className="workgrid__item__content" />
-          )}
+            <div className="workgrid__item__title">
+              <span className="workgrid__item__title-name">{tile.label}</span>
+            </div>
+          </Link>
         </div>
       ))}
     </div>
