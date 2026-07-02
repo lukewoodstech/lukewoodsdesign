@@ -24,10 +24,10 @@ const GREETING: Message = {
 }
 
 const PROMPTS = [
-  { category: 'work',    question: "what projects has luke worked on?" },
-  { category: 'process', question: "what's his design process?" },
-  { category: 'skills',  question: "how technical is he?" },
-  { category: 'impact',  question: "has he shipped anything?" },
+  { category: 'ai product',    label: "Lucid AI",                        message: "tell me about the Lucid AI project" },
+  { category: 'ux redesign',   label: "Awardco Login Flow Redesign",     message: "tell me about the Awardco login flow redesign" },
+  { category: 'feature design', label: "Pattern Custom Reports",         message: "tell me about the Pattern custom reports feature" },
+  { category: 'web design',    label: "Mention Landing Page",            message: "tell me about the Mention landing page" },
 ]
 
 const STORAGE_KEY = 'luke-ai-conversations'
@@ -322,15 +322,15 @@ export default function ChatPage() {
               <div className="grid grid-cols-2 gap-2 mt-14">
                 {PROMPTS.map((p) => (
                   <button
-                    key={p.question}
+                    key={p.label}
                     className="group flex flex-col items-start gap-[0.4rem] rounded-[10px] border border-white/[0.08] bg-white/[0.03] p-4 text-left transition-all duration-200 hover:border-white/[0.18] hover:bg-white/[0.06]"
-                    onClick={() => sendMessage(p.question)}
+                    onClick={() => sendMessage(p.message)}
                   >
                     <span className="block text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-[#008fff]">
                       {p.category}
                     </span>
                     <span className="block text-[0.82rem] leading-snug text-white/60 transition-colors duration-200 group-hover:text-white/90">
-                      {p.question}
+                      {p.label}
                     </span>
                   </button>
                 ))}

@@ -3,10 +3,10 @@
 import Link from 'next/link'
 
 const tiles = [
-  { label: 'Box 1', href: '#' },
-  { label: 'Box 2', href: '#' },
-  { label: 'Box 3', href: '#' },
-  { label: 'Box 4', href: '#' },
+  { label: 'Lucid AI',                      href: '#' },
+  { label: 'Awardco Login Flow Redesign',   href: '#' },
+  { label: 'Pattern Custom Reports',        href: '/work/pattern-custom-reports' },
+  { label: 'Mention Landing Page',          href: '#' },
 ]
 
 export default function WorkGrid() {
