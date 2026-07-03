@@ -62,8 +62,53 @@ export const caseStudies: CaseStudy[] = [
       'Built a component system designed to scale across hundreds of Pattern brands',
       'Turned a multi-hour weekly rebuild into a one-click saved report',
     ],
-    nextSlug: 'lucid-ai',
-    nextTitle: 'Lucid AI',
+    nextSlug: 'awardco-login-flow-redesign',
+    nextTitle: 'Awardco Login Flow Redesign',
+  },
+  {
+    slug: 'awardco-login-flow-redesign',
+    title: 'Login Flow Redesign',
+    company: 'Awardco',
+    role: 'Product Designer',
+    period: '2024',
+    team: 'Solo designer · 2 engineers',
+    tagline: 'Modernizing a cluttered authentication experience into a clean, trust-building entry point.',
+    overview:
+      "Awardco's login page was a product design blind spot — functional, but visually outdated and inconsistent with the rest of the platform. I redesigned it from scratch to reduce friction, surface Google SSO more prominently, and establish a more polished first impression for the thousands of employees who use Awardco daily.",
+    problemIntro:
+      "The existing login flow had accumulated layers of decisions made independently of the broader design system. The result was a page that felt out of place — heavy, cluttered, and unpolished relative to the rest of the product.",
+    problemPoints: [
+      'Google SSO buried below the fold, despite being the most common sign-in method',
+      'Visual inconsistency with Awardco brand and design system',
+      'Cluttered layout with competing CTAs creating decision fatigue',
+      'No clear hierarchy between primary and secondary authentication options',
+    ],
+    process: [
+      {
+        heading: 'Audit & benchmark',
+        body: 'I started by auditing the existing flow and benchmarking against login patterns from modern SaaS products. The consistent pattern: SSO at the top, clean card layout, minimal surrounding noise. The existing Awardco flow did the opposite.',
+      },
+      {
+        heading: 'Hierarchy restructure',
+        body: "I restructured the authentication options around actual usage data — Google SSO is how the vast majority of users sign in. Promoting it to the primary position, with email as the secondary option beneath an OR divider, immediately reduced visual complexity.",
+      },
+      {
+        heading: 'Visual redesign',
+        body: "I updated the visual language to align with Awardco's evolving brand: the full wordmark replaced the standalone icon, a light periwinkle background replaced the flat white, and the card received a more refined shadow and border radius. Every element was pulled from or contributed back to the design system.",
+      },
+      {
+        heading: 'Handoff & implementation',
+        body: 'I worked directly with the front-end team to spec the changes, providing annotated Figma files with exact spacing, color tokens, and interaction states. The implementation matched the design closely with minimal back-and-forth.',
+      },
+    ],
+    outcomes: [
+      'Promoted Google SSO to primary position, reducing time-to-login for most users',
+      'Established a consistent, brand-aligned entry point into the product',
+      'Reduced visual noise by consolidating competing CTAs into a clear hierarchy',
+      'Contributed new login-card components back to the Awardco design system',
+    ],
+    nextSlug: 'pattern-custom-reports',
+    nextTitle: 'Pattern Custom Reports',
   },
 ]
 
