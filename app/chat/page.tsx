@@ -266,7 +266,7 @@ export default function ChatPage() {
   const isZeroState = messages.length === 1 && messages[0] === GREETING
 
   const floatInput = (
-    <div className="chat-pg__float-box">
+    <div className="chat-pg__float-box" onClick={() => inputRef.current?.focus()}>
       <textarea
         ref={inputRef}
         className="chat-pg__input"
@@ -341,7 +341,7 @@ export default function ChatPage() {
           <>
             <main className="chat-pg__messages">
               <div className="chat-pg__inner">
-                {messages.map((msg, i) => (
+                {messages.filter((msg) => msg !== GREETING).map((msg, i) => (
                   <div key={i} className={`chat-pg__msg chat-pg__msg--${msg.role}`}>
                     {msg.role === 'user' ? (
                       <div className="chat-pg__bubble">{msg.content}</div>

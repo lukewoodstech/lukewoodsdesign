@@ -347,6 +347,34 @@ p a {
   background: rgba(255, 255, 255, 0.07);
 }
 
+.sidebar__rail-item {
+  position: relative;
+}
+
+.sidebar__tooltip {
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: #2a2a36;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  padding: 5px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 100;
+}
+
+.sidebar__rail-item:hover .sidebar__tooltip {
+  opacity: 1;
+}
+
 /* Expanded panel — slides over the rail */
 .sidebar__panel {
   position: absolute;
@@ -505,6 +533,80 @@ p a {
 
 .sidebar__backdrop {
   display: none;
+}
+
+.sidebar__modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.sidebar__modal {
+  background: #16161e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 28px 28px 24px;
+  width: 340px;
+  max-width: calc(100vw - 2rem);
+}
+
+.sidebar__modal-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+.sidebar__modal-body {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.sidebar__modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.sidebar__modal-cancel {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.75rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.sidebar__modal-cancel:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.sidebar__modal-delete {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: none;
+  background: #9b2335;
+  color: #fff;
+  font-size: 0.75rem;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.sidebar__modal-delete:hover {
+  background: #b52a3e;
 }
 
 /* ─── Chat page (/chat) ─── */

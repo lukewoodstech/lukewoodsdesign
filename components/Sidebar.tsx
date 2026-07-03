@@ -1,5 +1,50 @@
 'use client'
 
+import { useState, useRef } from 'react'
+
+function RailTooltip({ label, onClick, children }: { label: string; onClick: (e: React.MouseEvent) => void; children: React.ReactNode }) {
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null)
+  const ref = useRef<HTMLDivElement>(null)
+
+  return (
+    <div
+      ref={ref}
+      className="sidebar__rail-item"
+      onMouseEnter={() => {
+        if (!ref.current) return
+        const r = ref.current.getBoundingClientRect()
+        setPos({ x: r.right + 10, y: r.top + r.height / 2 })
+      }}
+      onMouseLeave={() => setPos(null)}
+    >
+      <button className="sidebar__rail-btn" onClick={onClick} aria-label={label}>
+        {children}
+      </button>
+      {pos && (
+        <div style={{
+          position: 'fixed',
+          left: pos.x,
+          top: pos.y,
+          transform: 'translateY(-50%)',
+          background: '#2a2a36',
+          border: '1px solid rgba(255,255,255,0.1)',
+          color: 'rgba(255,255,255,0.9)',
+          fontSize: '0.7rem',
+          fontWeight: 500,
+          letterSpacing: '0.03em',
+          padding: '5px 10px',
+          borderRadius: '6px',
+          whiteSpace: 'nowrap',
+          pointerEvents: 'none',
+          zIndex: 9999,
+        }}>
+          {label}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export type ConversationSummary = {
   id: string
   title: string
@@ -47,18 +92,27 @@ export default function Sidebar({
   onToggle,
   onDelete,
 }: SidebarProps) {
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
+
+  const confirmDelete = () => {
+    if (pendingDeleteId) {
+      onDelete(pendingDeleteId)
+      setPendingDeleteId(null)
+    }
+  }
+
   return (
     <>
       <aside className={`sidebar${isOpen ? ' sidebar--open' : ''}`}>
 
         {/* Rail — clicking anywhere on it (not a button) expands the sidebar */}
         <div className="sidebar__rail" onClick={onToggle}>
-          <button className="sidebar__rail-btn" onClick={(e) => { e.stopPropagation(); onToggle(); }} aria-label="Expand sidebar">
+          <RailTooltip label="Expand sidebar" onClick={(e) => { e.stopPropagation(); onToggle(); }}>
             <IconPanel />
-          </button>
-          <button className="sidebar__rail-btn" onClick={(e) => { e.stopPropagation(); onNew(); }} aria-label="New chat">
+          </RailTooltip>
+          <RailTooltip label="New chat" onClick={(e) => { e.stopPropagation(); onNew(); }}>
             <IconPlus />
-          </button>
+          </RailTooltip>
         </div>
 
         {/* Panel — explicit close button only; no click-to-collapse on background */}
@@ -94,7 +148,7 @@ export default function Sidebar({
                   </button>
                   <button
                     className="sidebar__delete"
-                    onClick={(e) => { e.stopPropagation(); onDelete(conv.id); }}
+                    onClick={(e) => { e.stopPropagation(); setPendingDeleteId(conv.id); }}
                     aria-label="Delete conversation"
                   >
                     <IconTrash />
@@ -108,6 +162,19 @@ export default function Sidebar({
       </aside>
 
       {isOpen && <div className="sidebar__backdrop" onClick={onToggle} />}
+
+      {pendingDeleteId && (
+        <div className="sidebar__modal-backdrop" onClick={() => setPendingDeleteId(null)}>
+          <div className="sidebar__modal" onClick={(e) => e.stopPropagation()}>
+            <p className="sidebar__modal-title">Delete chat</p>
+            <p className="sidebar__modal-body">Are you sure you want to delete this chat?</p>
+            <div className="sidebar__modal-actions">
+              <button className="sidebar__modal-cancel" onClick={() => setPendingDeleteId(null)}>Cancel</button>
+              <button className="sidebar__modal-delete" onClick={confirmDelete}>Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }
