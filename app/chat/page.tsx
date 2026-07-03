@@ -23,6 +23,12 @@ const GREETING: Message = {
     "hi. i'm luke ai — a portfolio assistant trained on luke woods's public work, resume, and projects. ask me anything about his experience, skills, or process.",
 }
 
+const PLUS_ITEMS = [
+  { label: 'Résumé',   description: 'Open in a new tab',          href: 'https://drive.google.com/file/d/18_IQ05ORFpJnJeR42TqPjkL9JoCxSkHX/view?usp=sharing' },
+  { label: 'LinkedIn', description: 'Connect with Luke',           href: 'https://www.linkedin.com/in/lukewoodstech' },
+  { label: 'Email',    description: 'Send Luke a message',         href: 'mailto:lukewoodstech@gmail.com?subject=Hi%20from%20your%20portfolio' },
+]
+
 const PROMPTS = [
   { category: 'ai product',    label: "Lucid AI",                        message: "tell me about the Lucid AI project" },
   { category: 'ux redesign',   label: "Awardco Login Flow Redesign",     message: "tell me about the Awardco login flow redesign" },
@@ -49,7 +55,7 @@ const IconMenu = () => (
 )
 
 const IconClose = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
     <line x1="18" y1="6" x2="6" y2="18" />
     <line x1="6" y1="6" x2="18" y2="18" />
   </svg>
@@ -71,8 +77,10 @@ export default function ChatPage() {
   const [input, setInput] = useState('')
   const [isStreaming, setIsStreaming] = useState(false)
   const [hasError, setHasError] = useState(false)
+  const [plusOpen, setPlusOpen] = useState(false)
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
+  const floatRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const ta = inputRef.current
@@ -80,6 +88,17 @@ export default function ChatPage() {
     ta.style.height = 'auto'
     ta.style.height = Math.min(ta.scrollHeight, 180) + 'px'
   }, [input])
+
+  useEffect(() => {
+    if (!plusOpen) return
+    const handler = (e: MouseEvent) => {
+      if (floatRef.current && !floatRef.current.contains(e.target as Node)) {
+        setPlusOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [plusOpen])
 
   useEffect(() => {
     try {
@@ -265,26 +284,58 @@ export default function ChatPage() {
 
   const isZeroState = messages.length === 1 && messages[0] === GREETING
 
-  const floatInput = (
-    <div className="chat-pg__float-box" onClick={() => inputRef.current?.focus()}>
-      <textarea
-        ref={inputRef}
-        className="chat-pg__input"
-        placeholder="ask anything about luke's experience…"
-        value={input}
-        rows={1}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={handleKeyDown}
-        disabled={isStreaming}
-      />
-      <button
-        className="chat-pg__send"
-        onClick={handleSend}
-        disabled={!input.trim() || isStreaming}
-        aria-label="Send"
-      >
-        <IconArrowUp />
-      </button>
+  const floatInput = (below: boolean) => (
+    <div ref={floatRef} className="chat-pg__float-wrap-inner" style={{ position: 'relative' }}>
+      {plusOpen && (
+        <div className={below ? 'chat-pg__plus-menu chat-pg__plus-menu--below' : 'chat-pg__plus-menu'}>
+          {PLUS_ITEMS.map((item) => (
+            <a
+              key={item.label}
+              className="chat-pg__plus-item"
+              href={item.href}
+              target={item.href.startsWith('mailto') ? '_self' : '_blank'}
+              rel="noopener noreferrer"
+              onClick={() => setPlusOpen(false)}
+            >
+              <span className="chat-pg__plus-item-label">{item.label}</span>
+              <span className="chat-pg__plus-item-desc">{item.description}</span>
+            </a>
+          ))}
+        </div>
+      )}
+      <div className="chat-pg__float-box" onClick={() => inputRef.current?.focus()}>
+        <button
+          className="chat-pg__plus-btn"
+          onClick={(e) => { e.stopPropagation(); setPlusOpen((v) => !v) }}
+          aria-label="Open menu"
+        >
+          <svg
+            width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+            style={{ transform: plusOpen ? 'rotate(45deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}
+          >
+            <line x1="7" y1="1" x2="7" y2="13" />
+            <line x1="1" y1="7" x2="13" y2="7" />
+          </svg>
+        </button>
+        <textarea
+          ref={inputRef}
+          className="chat-pg__input"
+          placeholder="ask luke ai"
+          value={input}
+          rows={1}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          disabled={isStreaming}
+        />
+        <button
+          className="chat-pg__send"
+          onClick={handleSend}
+          disabled={!input.trim() || isStreaming}
+          aria-label="Send"
+        >
+          <IconArrowUp />
+        </button>
+      </div>
     </div>
   )
 
@@ -318,7 +369,7 @@ export default function ChatPage() {
           <div className="chat-pg__zero">
             <p className="chat-pg__zero-heading">ask me anything about luke's work.</p>
             <div className="chat-pg__float-wrap chat-pg__float-wrap--zero">
-              {floatInput}
+              {floatInput(true)}
               <div className="grid grid-cols-2 gap-2 mt-14">
                 {PROMPTS.map((p) => (
                   <button
@@ -406,7 +457,7 @@ export default function ChatPage() {
 
             <footer className="chat-pg__footer">
               <div className="chat-pg__float-wrap">
-                {floatInput}
+                {floatInput(false)}
               </div>
             </footer>
           </>
