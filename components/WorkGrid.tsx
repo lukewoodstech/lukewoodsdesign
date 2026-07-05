@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import BeforeAfterTile from './BeforeAfterTile'
+import PatternTile from './PatternTile'
 
 const otherTiles = [
   { label: 'Lucid AI',               href: '#' },
@@ -31,14 +32,7 @@ export default function WorkGrid() {
       />
 
       {/* Tile 3 — Pattern Custom Reports */}
-      <div className="workgrid__item">
-        <Link href="/work/pattern-custom-reports">
-          <div className="workgrid__item__content" />
-          <div className="workgrid__item__title">
-            <span className="workgrid__item__title-name">Pattern Custom Reports</span>
-          </div>
-        </Link>
-      </div>
+      <PatternTile />
 
       {/* Tile 4 — Mention Landing Page */}
       <div className="workgrid__item">
