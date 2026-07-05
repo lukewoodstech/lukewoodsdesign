@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 
 const TITLE = 'Organic + Paid + Insights'
-const LOOP = 9000  // ms per full animation cycle
+const ANIM_END = 5200  // ms — animation freezes here at final state
 
 function fmt(n: number) {
   return Math.floor(n).toLocaleString('en-US')
@@ -12,60 +12,76 @@ function fmt(n: number) {
 
 export default function PatternTile() {
   const [t, setT] = useState(0)
-  const startRef = useRef<number | null>(null)
-  const rafRef = useRef<number>(0)
+  const [isInView, setIsInView] = useState(false)
+  const tileRef   = useRef<HTMLDivElement>(null)
+  const startRef  = useRef<number | null>(null)
+  const rafRef    = useRef<number>(0)
 
+  // ─── IntersectionObserver: trigger on scroll-in, reset on scroll-out ───
   useEffect(() => {
+    const el = tileRef.current
+    if (!el) return
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true)
+        } else {
+          setIsInView(false)
+          setT(0)
+          startRef.current = null
+        }
+      },
+      { threshold: 0.15 },
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [])
+
+  // ─── RAF: plays once when in view, freezes at ANIM_END ───
+  useEffect(() => {
+    if (!isInView) return
     const frame = (ts: number) => {
       if (!startRef.current) startRef.current = ts
-      setT((ts - startRef.current) % LOOP)
+      const elapsed = ts - startRef.current
+      if (elapsed >= ANIM_END) {
+        setT(ANIM_END)
+        return  // stop — no next frame
+      }
+      setT(elapsed)
       rafRef.current = requestAnimationFrame(frame)
     }
     rafRef.current = requestAnimationFrame(frame)
     return () => cancelAnimationFrame(rafRef.current)
-  }, [])
+  }, [isInView])
 
-  // ─── Phase timing (ms within 9s loop) ───
-  // 0–80:      blank
-  // 80–1700:   title types in
-  // 1700–2700: numbers count up
-  // 2700–5000: lines sketch in (line 2 starts 400ms after line 1)
-  // 5000–7200: hold steady
-  // 7200–8200: fade out
-  // 8200–9000: blank
+  // ─── Derived animation state ───
 
-  const isBlank  = t < 80 || t > 8200
-  const isFading = t >= 7200 && t <= 8200
-  const cardOpacity = isBlank ? 0 : isFading ? Math.max(0, 1 - (t - 7200) / 1000) : 1
-
-  // Title
-  const titleProg  = t < 80 ? 0 : t > 1700 ? 1 : (t - 80) / 1620
+  // Title types in: 0–1700ms
+  const titleProg  = t > 1700 ? 1 : t / 1700
   const typedTitle = TITLE.slice(0, Math.floor(titleProg * TITLE.length))
-  const showCursor = t >= 80 && t < 2000
+  const showCursor = t < 2000
 
-  // Numbers
-  const numProg  = t < 1700 ? 0 : t > 2700 ? 1 : (t - 1700) / 1000
+  // Numbers count up: 1700–2700ms
+  const numProg   = t < 1700 ? 0 : t > 2700 ? 1 : (t - 1700) / 1000
   const clicksVal = fmt(numProg * 300510)
   const acosVal   = (numProg * 42.46).toFixed(2)
 
-  // Lines
-  const line1Prog   = t < 2700 ? 0 : t > 5000 ? 1 : (t - 2700) / 2300
-  const line2Prog   = t < 3100 ? 0 : t > 5400 ? 1 : (t - 3100) / 2300
+  // Lines sketch in: green 2700–4600ms, blue 3100–5000ms
+  const line1Prog   = t < 2700 ? 0 : t > 4600 ? 1 : (t - 2700) / 1900
+  const line2Prog   = t < 3100 ? 0 : t > 5000 ? 1 : (t - 3100) / 1900
   const linesAppear = t < 2700 ? 0 : t < 3000 ? (t - 2700) / 300 : 1
-  const line1Offset = 350 * (1 - line1Prog)
-  const line2Offset = 350 * (1 - line2Prog)
 
   return (
-    <div className="workgrid__item">
+    <div ref={tileRef} className="workgrid__item">
       <Link href="/work/pattern-custom-reports">
         <div className="workgrid__item__content">
           <svg
             className="tile-svg"
-            viewBox="0 0 360 240"
+            viewBox="-18 -12 396 264"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
-            style={{ opacity: cardOpacity }}
+            style={{ opacity: isInView ? 1 : 0, transition: 'opacity 0.3s ease' }}
           >
             {/* Card */}
             <rect x="16" y="8" width="328" height="224" rx="8"
@@ -134,13 +150,13 @@ export default function PatternTile() {
                 d="M 44,146 L 81,154 L 118,169 L 155,177 L 192,161 L 229,192 L 266,177 L 303,130 L 340,115"
                 stroke="#00b37d" strokeWidth="1.75"
                 strokeLinecap="round" strokeLinejoin="round"
-                strokeDasharray="350" strokeDashoffset={line1Offset}
+                strokeDasharray="350" strokeDashoffset={350 * (1 - line1Prog)}
               />
               <path
                 d="M 44,152 L 81,146 L 118,161 L 155,152 L 192,140 L 229,155 L 266,130 L 303,140 L 340,124"
                 stroke="#008fff" strokeWidth="1.75"
                 strokeLinecap="round" strokeLinejoin="round"
-                strokeDasharray="350" strokeDashoffset={line2Offset}
+                strokeDasharray="350" strokeDashoffset={350 * (1 - line2Prog)}
               />
             </g>
           </svg>
