@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import BeforeAfterTile from './BeforeAfterTile'
+import LucidTile from './LucidTile'
 import PatternTile from './PatternTile'
 
 const otherTiles = [
@@ -14,14 +15,7 @@ export default function WorkGrid() {
   return (
     <div className="workgrid">
       {/* Tile 1 — Lucid AI */}
-      <div className="workgrid__item">
-        <Link href="#">
-          <div className="workgrid__item__content" />
-          <div className="workgrid__item__title">
-            <span className="workgrid__item__title-name">Lucid AI</span>
-          </div>
-        </Link>
-      </div>
+      <LucidTile />
 
       {/* Tile 2 — Awardco before/after slider */}
       <BeforeAfterTile
