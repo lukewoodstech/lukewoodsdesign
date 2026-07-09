@@ -1167,6 +1167,76 @@ p a {
   height: 100%;
 }
 
+/* Hoth tile — RGB-split glitch bursts on the wordmark */
+.hoth-wordmark {
+  position: relative;
+}
+
+.hoth-wordmark::before,
+.hoth-wordmark::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  padding-left: inherit;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hoth-glitching .hoth-wordmark {
+  animation: hoth-jitter 0.16s steps(2, jump-none) infinite;
+}
+
+.hoth-glitching .hoth-wordmark::before {
+  opacity: 0.9;
+  color: #0bc7e8;
+  animation: hoth-glitch-a 0.16s steps(2, jump-none) infinite;
+}
+
+.hoth-glitching .hoth-wordmark::after {
+  opacity: 0.9;
+  color: #ff3b5c;
+  animation: hoth-glitch-b 0.19s steps(2, jump-none) infinite;
+}
+
+.hoth-glitching .hoth-tagline {
+  animation: hoth-flicker 0.16s steps(3, jump-none) infinite;
+}
+
+@keyframes hoth-glitch-a {
+  0%   { clip-path: inset(8% 0 76% 0);  transform: translate(-4px, -2px); }
+  33%  { clip-path: inset(54% 0 28% 0); transform: translate(4px, 1px); }
+  66%  { clip-path: inset(78% 0 5% 0);  transform: translate(-3px, 2px); }
+  100% { clip-path: inset(32% 0 52% 0); transform: translate(3px, -1px); }
+}
+
+@keyframes hoth-glitch-b {
+  0%   { clip-path: inset(64% 0 18% 0); transform: translate(4px, 1px); }
+  33%  { clip-path: inset(12% 0 70% 0); transform: translate(-4px, -1px); }
+  66%  { clip-path: inset(42% 0 40% 0); transform: translate(3px, 2px); }
+  100% { clip-path: inset(80% 0 4% 0);  transform: translate(-2px, 1px); }
+}
+
+@keyframes hoth-jitter {
+  0%   { transform: translate(1px, 0); }
+  50%  { transform: translate(-1px, 1px); }
+  100% { transform: translate(0, -1px); }
+}
+
+@keyframes hoth-flicker {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.5; }
+  100% { opacity: 0.9; }
+}
+
+/* Hoth tile — keyhole glow breathes while the lock is open */
+.hoth-keyhole-pulse {
+  animation: hoth-glow-pulse 1.6s ease-in-out infinite;
+}
+@keyframes hoth-glow-pulse {
+  0%, 100% { opacity: 0.7; }
+  50%      { opacity: 1; }
+}
+
 /* Pattern: line draw loop */
 .tile-line {
   animation: tileLineDraw 6s ease-out infinite;
