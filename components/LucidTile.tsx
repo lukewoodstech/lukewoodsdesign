@@ -3,84 +3,276 @@
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-// Pyramid vertices
-// Apex: (175, 40)  Front-left: (112, 192)  Front-right: (238, 192)
-// Back vertex (3D depth): (175, 158)
-// Centroid (scale origin): (175, 141)
+/*
+ * Hyper-real glass pyramid, raytraced in a WebGL2 fragment shader.
+ *
+ * Each pixel fires a ray at an analytic square pyramid (intersection of five
+ * half-spaces). At the surface it splits: a fresnel-weighted reflection of a
+ * procedural studio environment, plus a refracted ray traced *through* the
+ * body — bouncing on total internal reflection — and refracted again on exit.
+ * The three colour channels use slightly different IORs, so edges and caustic
+ * regions disperse into warm/cool fringes like real glass. The camera orbits
+ * slowly, which reads as the pyramid spinning under fixed studio lights.
+ */
 
-const WAVE_START = 3000  // ms — wave begins after beams are drawn
+const VERT = `#version 300 es
+void main() {
+  // Fullscreen triangle from gl_VertexID — no buffers needed
+  vec2 p = vec2(float((gl_VertexID << 1) & 2), float(gl_VertexID & 2));
+  gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0);
+}`
+
+const FRAG = `#version 300 es
+precision highp float;
+
+uniform vec2 uRes;
+uniform float uTime;
+out vec4 outColor;
+
+const float PI = 3.14159265;
+
+// Pyramid: apex (0, AY, 0), square base at y = -BY with half-width W
+const float AY = 0.70;
+const float BY = 0.50;
+const float W  = 0.56;
+
+vec4 planes[5];
+
+void initPlanes() {
+  float h = AY + BY;
+  vec3 n;
+  n = normalize(vec3( h, W, 0.0)); planes[0] = vec4(n, n.y * AY);
+  n = normalize(vec3(-h, W, 0.0)); planes[1] = vec4(n, n.y * AY);
+  n = normalize(vec3(0.0, W,  h)); planes[2] = vec4(n, n.y * AY);
+  n = normalize(vec3(0.0, W, -h)); planes[3] = vec4(n, n.y * AY);
+  planes[4] = vec4(0.0, -1.0, 0.0, BY);
+}
+
+// Ray vs convex polyhedron (slab method over the 5 planes).
+// Entry at tN with normal nN, exit at tF with normal nF.
+bool intersect(vec3 ro, vec3 rd, out float tN, out float tF, out vec3 nN, out vec3 nF) {
+  tN = -1e9; tF = 1e9; nN = vec3(0.0); nF = vec3(0.0);
+  for (int i = 0; i < 5; i++) {
+    vec3 n = planes[i].xyz;
+    float denom = dot(n, rd);
+    float dist = planes[i].w - dot(n, ro);
+    if (abs(denom) < 1e-7) { if (dist < 0.0) return false; continue; }
+    float t = dist / denom;
+    if (denom < 0.0) { if (t > tN) { tN = t; nN = n; } }
+    else             { if (t < tF) { tF = t; nF = n; } }
+  }
+  return tN < tF;
+}
+
+// Procedural studio: graded blue backdrop, bright floor bounce, a big soft
+// cool key light upper-front-left, and a warm amber practical low behind-right.
+vec3 env(vec3 d) {
+  vec3 col = mix(vec3(0.20, 0.26, 0.40), vec3(0.02, 0.03, 0.055),
+                 smoothstep(-0.45, 0.55, d.y));
+  col += vec3(0.42, 0.50, 0.68) * pow(max(-d.y, 0.0), 1.6) * 0.5;
+
+  vec3 keyDir = normalize(vec3(-0.45, 0.60, 0.66));
+  float k = max(dot(d, keyDir), 0.0);
+  col += vec3(1.05, 1.10, 1.20) * pow(k, 3.0) * 0.55;
+  col += vec3(1.5) * pow(k, 28.0) * 1.8;
+
+  vec3 warmDir = normalize(vec3(0.55, -0.28, -0.78));
+  float wl = max(dot(d, warmDir), 0.0);
+  col += vec3(1.30, 0.44, 0.10) * pow(wl, 3.5) * 1.9;
+  col += vec3(1.70, 0.75, 0.22) * pow(wl, 24.0) * 2.2;
+
+  vec3 rimDir = normalize(vec3(0.6, 0.4, -0.4));
+  col += vec3(0.35, 0.55, 0.95) * pow(max(dot(d, rimDir), 0.0), 8.0) * 0.5;
+  return col;
+}
+
+float schlick(float cosT) {
+  return 0.04 + 0.96 * pow(1.0 - cosT, 5.0);
+}
+
+vec4 shade(vec3 ro, vec3 rd) {
+  float tN, tF; vec3 nN, nF;
+  if (!intersect(ro, rd, tN, tF, nN, nF) || tN < 0.001) return vec4(0.0);
+
+  vec3 p = ro + rd * tN;
+  vec3 n = nN;
+  float F = schlick(clamp(dot(-rd, n), 0.0, 1.0));
+  vec3 reflCol = env(reflect(rd, n));
+  vec3 col = reflCol * F;
+
+  // Beer–Lambert absorption; passes blue slightly more — cool glass
+  vec3 sigma = vec3(0.22, 0.12, 0.07);
+
+  // Trace transmission per channel with dispersed IORs
+  for (int c = 0; c < 3; c++) {
+    float ior = 1.470 + 0.024 * float(c);
+    vec3 dir = refract(rd, n, 1.0 / ior);
+    vec3 pp = p + dir * 1e-4;
+    float pathLen = 0.0;
+    vec3 escaped = reflCol; // fallback if trapped after max bounces
+
+    for (int b = 0; b < 4; b++) {
+      float t0, t1; vec3 m0, m1;
+      intersect(pp, dir, t0, t1, m0, m1);
+      pathLen += t1;
+      pp += dir * t1;
+      vec3 outN = m1;
+      vec3 rf = refract(dir, -outN, ior);
+      if (dot(rf, rf) > 0.0) {
+        rf = normalize(rf);
+        float F2 = schlick(clamp(dot(rf, outN), 0.0, 1.0));
+        escaped = env(rf) * (1.0 - F2);
+        break;
+      }
+      dir = reflect(dir, outN); // total internal reflection
+      pp += dir * 1e-4;
+    }
+
+    vec3 chan = c == 0 ? vec3(1.0, 0.0, 0.0)
+              : c == 1 ? vec3(0.0, 1.0, 0.0)
+              :          vec3(0.0, 0.0, 1.0);
+    float atten = exp(-pathLen * dot(sigma, chan));
+    col += chan * dot(escaped, chan) * (1.0 - F) * atten;
+  }
+
+  return vec4(col, 1.0);
+}
+
+void main() {
+  initPlanes();
+
+  // Orbit the camera — visually the pyramid spins under fixed lights
+  float ang = uTime * (2.0 * PI / 22.0);
+  float ca = cos(ang), sa = sin(ang);
+  vec3 roBase = vec3(0.0, 0.34, 3.3);
+  vec3 ro = vec3(roBase.z * sa, roBase.y, roBase.z * ca);
+  vec3 target = vec3(0.0, 0.10, 0.0);
+  vec3 fw = normalize(target - ro);
+  vec3 rt = normalize(cross(fw, vec3(0.0, 1.0, 0.0)));
+  vec3 up = cross(rt, fw);
+  const float FL = 1.425; // 75% of 1.9 — pyramid renders 25% smaller
+
+  // 2×2 supersampling for clean edges
+  vec4 acc = vec4(0.0);
+  for (int s = 0; s < 4; s++) {
+    vec2 off = vec2(float(s & 1), float((s >> 1) & 1)) * 0.5 + 0.25;
+    vec2 uv = (gl_FragCoord.xy + off - 0.5 * uRes) / uRes.y;
+    vec3 rd = normalize(fw * FL + uv.x * rt + uv.y * up);
+    acc += shade(ro, rd);
+  }
+  acc *= 0.25;
+
+  // Unpremultiply → tonemap → gamma → premultiply for canvas compositing
+  vec3 c = acc.a > 0.0 ? acc.rgb / acc.a : vec3(0.0);
+  c = 1.0 - exp(-c * 1.5);
+  c = pow(c, vec3(1.0 / 2.2));
+  outColor = vec4(c * acc.a, acc.a);
+}`
 
 export default function LucidTile() {
   const router = useRouter()
-  const [hovered, setHovered]   = useState(false)
-  const [t, setT]               = useState(0)
+  const [hovered, setHovered] = useState(false)
   const [isInView, setIsInView] = useState(false)
-  const tileRef  = useRef<HTMLDivElement>(null)
+  const tileRef = useRef<HTMLDivElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const glRef = useRef<{
+    gl: WebGL2RenderingContext
+    uTime: WebGLUniformLocation | null
+    uRes: WebGLUniformLocation | null
+  } | null>(null)
+  const rafRef = useRef(0)
   const startRef = useRef<number | null>(null)
-  const rafRef   = useRef<number>(0)
 
   useEffect(() => {
     const el = tileRef.current
     if (!el) return
     const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true)
-        } else {
-          setIsInView(false)
-          setT(0)
-          startRef.current = null
-        }
-      },
+      ([entry]) => setIsInView(entry.isIntersecting),
       { threshold: 0.15 },
     )
     obs.observe(el)
     return () => obs.disconnect()
   }, [])
 
-  // RAF runs continuously while in view (wave never stops)
+  // One-time WebGL setup
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const gl = canvas.getContext('webgl2', {
+      alpha: true,
+      antialias: false,
+      premultipliedAlpha: true,
+    })
+    if (!gl) return // no WebGL2 — tile stays quietly dark
+
+    const compile = (type: number, src: string) => {
+      const sh = gl.createShader(type)!
+      gl.shaderSource(sh, src)
+      gl.compileShader(sh)
+      if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
+        console.error('LucidTile shader:', gl.getShaderInfoLog(sh))
+      }
+      return sh
+    }
+    const prog = gl.createProgram()!
+    gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT))
+    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG))
+    gl.linkProgram(prog)
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+      console.error('LucidTile link:', gl.getProgramInfoLog(prog))
+      return
+    }
+    gl.useProgram(prog)
+    gl.bindVertexArray(gl.createVertexArray())
+
+    glRef.current = {
+      gl,
+      uTime: gl.getUniformLocation(prog, 'uTime'),
+      uRes: gl.getUniformLocation(prog, 'uRes'),
+    }
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const w = Math.max(1, Math.round(canvas.clientWidth * dpr))
+      const h = Math.max(1, Math.round(canvas.clientHeight * dpr))
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w
+        canvas.height = h
+      }
+    }
+    resize()
+    const ro = new ResizeObserver(resize)
+    ro.observe(canvas)
+
+    return () => {
+      ro.disconnect()
+      glRef.current = null
+      gl.getExtension('WEBGL_lose_context')?.loseContext()
+    }
+  }, [])
+
+  // Render loop while in view
   useEffect(() => {
     if (!isInView) return
     const frame = (ts: number) => {
-      if (!startRef.current) startRef.current = ts
-      setT(ts - startRef.current)
+      const ctx = glRef.current
+      if (ctx) {
+        if (startRef.current === null) startRef.current = ts
+        const { gl, uTime, uRes } = ctx
+        const c = gl.canvas as HTMLCanvasElement
+        gl.viewport(0, 0, c.width, c.height)
+        gl.uniform1f(uTime, (ts - startRef.current) / 1000)
+        gl.uniform2f(uRes, c.width, c.height)
+        gl.drawArrays(gl.TRIANGLES, 0, 3)
+      }
       rafRef.current = requestAnimationFrame(frame)
     }
     rafRef.current = requestAnimationFrame(frame)
-    return () => cancelAnimationFrame(rafRef.current)
+    return () => {
+      cancelAnimationFrame(rafRef.current)
+      startRef.current = null
+    }
   }, [isInView])
-
-  // Prism: scales in 0–900ms
-  const prismProg  = Math.min(1, t / 900)
-  const prismScale = 0.82 + 0.18 * prismProg
-
-  // Entry beam: 900–1700ms
-  const entryProg = t < 900 ? 0 : Math.min(1, (t - 900) / 800)
-
-  // Orange exit: 1700–2800ms
-  const orangeProg = t < 1700 ? 0 : Math.min(1, (t - 1700) / 1100)
-
-  // Blue exit: 2000–3000ms (slight stagger)
-  const blueProg = t < 2000 ? 0 : Math.min(1, (t - 2000) / 1000)
-
-  // Gentle wave on exit bezier control points after WAVE_START
-  const waveT = Math.max(0, t - WAVE_START)
-  const wave  = Math.sin((waveT / 2400) * 2 * Math.PI)
-
-  // Orange bezier: (222,143) → CP1 → CP2 → (385,68)
-  const oCP1y = 108 + (t >= WAVE_START ? wave * 9  : 0)
-  const oCP2y = 80  + (t >= WAVE_START ? wave * 6  : 0)
-
-  // Blue bezier: (222,165) → CP1 → CP2 → (385,198)
-  const bCP1y = 192 - (t >= WAVE_START ? wave * 9  : 0)
-  const bCP2y = 202 - (t >= WAVE_START ? wave * 6  : 0)
-
-  const orangePath = `M 222,143 C 275,${oCP1y} 332,${oCP2y} 385,68`
-  const bluePath   = `M 222,165 C 275,${bCP1y} 332,${bCP2y} 385,198`
-
-  // Freeze dashoffset at 0 once fully drawn (avoid recalc fighting the wave)
-  const oDash = orangeProg < 1 ? 1 - orangeProg : 0
-  const bDash = blueProg   < 1 ? 1 - blueProg   : 0
 
   return (
     <div
@@ -91,7 +283,7 @@ export default function LucidTile() {
       onMouseLeave={() => setHovered(false)}
       onClick={() => router.push('/work/lucid-ai')}
     >
-      {/* Dark hover overlay */}
+      {/* Dark hover overlay (paints behind the pyramid, so the glass stays lit) */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -102,151 +294,16 @@ export default function LucidTile() {
       />
 
       <div className="workgrid__item__content">
-        <svg
+        <canvas
+          ref={canvasRef}
           className="tile-svg"
-          viewBox="-25 -20 410 280"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
-          style={{ opacity: isInView ? 1 : 0, transition: 'opacity 0.4s ease' }}
-        >
-          <defs>
-            <filter id="lg-prism-glow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
-              <feMerge>
-                <feMergeNode in="blur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
-            <filter id="lg-beam-glow" x="-30%" y="-120%" width="160%" height="340%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
-              <feMerge>
-                <feMergeNode in="blur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
-          </defs>
-
-          {/* ── 3D Glass Pyramid ── */}
-          <g
-            style={{
-              transform: `translate(175px, 141px) scale(${prismScale}) translate(-175px, -141px)`,
-              opacity: prismProg,
-            }}
-          >
-            {/* Outer glow halo */}
-            <polygon
-              points="175,40 112,192 238,192"
-              fill="none"
-              stroke="rgba(255,255,255,0.18)"
-              strokeWidth="12"
-              strokeLinejoin="round"
-              filter="url(#lg-prism-glow)"
-            />
-            {/* Left face — lighter (catches more light) */}
-            <polygon
-              points="175,40 112,192 175,158"
-              fill="rgba(255,255,255,0.07)"
-            />
-            {/* Right face — slightly darker */}
-            <polygon
-              points="175,40 238,192 175,158"
-              fill="rgba(255,255,255,0.03)"
-            />
-            {/* Inner highlight — specular on left face */}
-            <polygon
-              points="175,40 148,165 175,158"
-              fill="rgba(255,255,255,0.06)"
-            />
-            {/* Outer edges */}
-            <line x1="175" y1="40"  x2="112" y2="192" stroke="rgba(255,255,255,0.80)" strokeWidth="1.2" strokeLinecap="round"/>
-            <line x1="175" y1="40"  x2="238" y2="192" stroke="rgba(255,255,255,0.60)" strokeWidth="1.2" strokeLinecap="round"/>
-            <line x1="112" y1="192" x2="238" y2="192" stroke="rgba(255,255,255,0.38)" strokeWidth="1.2" strokeLinecap="round"/>
-            {/* Internal 3D structure edges */}
-            <line x1="175" y1="40"  x2="175" y2="158" stroke="rgba(255,255,255,0.28)" strokeWidth="0.9" strokeLinecap="round"/>
-            <line x1="112" y1="192" x2="175" y2="158" stroke="rgba(255,255,255,0.22)" strokeWidth="0.9" strokeLinecap="round" strokeDasharray="4 3"/>
-            <line x1="238" y1="192" x2="175" y2="158" stroke="rgba(255,255,255,0.16)" strokeWidth="0.9" strokeLinecap="round" strokeDasharray="4 3"/>
-          </g>
-
-          {/* ── Entry beam (warm amber, angled into left face) ── */}
-          {/* Glow layer */}
-          <path
-            d="M -25,112 L 130,152"
-            stroke="#c87828"
-            strokeWidth="10"
-            strokeLinecap="round"
-            style={{ opacity: entryProg * 0.32 }}
-            filter="url(#lg-beam-glow)"
-            pathLength="1"
-            strokeDasharray="1"
-            strokeDashoffset={1 - entryProg}
-          />
-          {/* Core */}
-          <path
-            d="M -25,112 L 130,152"
-            stroke="#ecc070"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            style={{ opacity: entryProg * 0.92 }}
-            pathLength="1"
-            strokeDasharray="1"
-            strokeDashoffset={1 - entryProg}
-          />
-
-          {/* ── Orange exit beam ── */}
-          {/* Glow */}
-          <path
-            d={orangePath}
-            stroke="#b86820"
-            strokeWidth="14"
-            strokeLinecap="round"
-            fill="none"
-            style={{ opacity: orangeProg * 0.28 }}
-            filter="url(#lg-beam-glow)"
-            pathLength="1"
-            strokeDasharray="1"
-            strokeDashoffset={oDash}
-          />
-          {/* Core */}
-          <path
-            d={orangePath}
-            stroke="#e8a848"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            fill="none"
-            style={{ opacity: orangeProg * 0.90 }}
-            pathLength="1"
-            strokeDasharray="1"
-            strokeDashoffset={oDash}
-          />
-
-          {/* ── Blue exit beam ── */}
-          {/* Glow */}
-          <path
-            d={bluePath}
-            stroke="#1840a0"
-            strokeWidth="14"
-            strokeLinecap="round"
-            fill="none"
-            style={{ opacity: blueProg * 0.28 }}
-            filter="url(#lg-beam-glow)"
-            pathLength="1"
-            strokeDasharray="1"
-            strokeDashoffset={bDash}
-          />
-          {/* Core */}
-          <path
-            d={bluePath}
-            stroke="#4898e8"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            fill="none"
-            style={{ opacity: blueProg * 0.90 }}
-            pathLength="1"
-            strokeDasharray="1"
-            strokeDashoffset={bDash}
-          />
-        </svg>
+          style={{
+            display: 'block',
+            opacity: isInView ? 1 : 0,
+            transition: 'opacity 0.4s ease',
+          }}
+        />
       </div>
 
       {/* Hover title */}
