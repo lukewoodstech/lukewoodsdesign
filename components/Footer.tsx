@@ -1,14 +1,20 @@
+import Link from 'next/link'
+import EmailLink from './EmailLink'
+import { SITE } from '@/lib/site'
+
 export default function Footer() {
   return (
     <footer className="footer section">
       <div className="footer__inner">
 
-        <nav className="footer__nav">
-          <a href="/" className="footer-link footer-link--home" aria-label="Home">⌂</a>
+        <nav className="footer__nav" aria-label="Contact and social">
+          <Link href="/" className="footer-link footer-link--home" aria-label="Home">⌂</Link>
           <span className="footer__sep">·</span>
-          <a href="https://www.linkedin.com/in/lukewoodstech" className="footer-link" target="_blank" rel="noopener noreferrer">linkedin</a>
+          <EmailLink />
           <span className="footer__sep">·</span>
-          <a href="https://drive.google.com/file/d/18_IQ05ORFpJnJeR42TqPjkL9JoCxSkHX/view?usp=sharing" className="footer-link" target="_blank" rel="noopener noreferrer">résumé</a>
+          <a href={SITE.linkedin} className="footer-link" target="_blank" rel="noopener noreferrer">linkedin</a>
+          <span className="footer__sep">·</span>
+          <a href={SITE.resume} className="footer-link" target="_blank" rel="noopener noreferrer">résumé</a>
         </nav>
 
       </div>

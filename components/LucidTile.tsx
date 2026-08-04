@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import TileFooter from './TileFooter'
+import { useReducedMotion } from '@/lib/useReducedMotion'
 
 /*
  * Hyper-real glass pyramid, raytraced in a WebGL2 fragment shader.
@@ -171,6 +173,7 @@ void main() {
 
 export default function LucidTile() {
   const router = useRouter()
+  const reducedMotion = useReducedMotion()
   const [hovered, setHovered] = useState(false)
   const [isInView, setIsInView] = useState(false)
   const tileRef = useRef<HTMLDivElement>(null)
@@ -254,17 +257,31 @@ export default function LucidTile() {
   // Render loop while in view
   useEffect(() => {
     if (!isInView) return
-    const frame = (ts: number) => {
+
+    const draw = (elapsedSeconds: number) => {
       const ctx = glRef.current
-      if (ctx) {
-        if (startRef.current === null) startRef.current = ts
-        const { gl, uTime, uRes } = ctx
-        const c = gl.canvas as HTMLCanvasElement
-        gl.viewport(0, 0, c.width, c.height)
-        gl.uniform1f(uTime, (ts - startRef.current) / 1000)
-        gl.uniform2f(uRes, c.width, c.height)
-        gl.drawArrays(gl.TRIANGLES, 0, 3)
-      }
+      if (!ctx) return
+      const { gl, uTime, uRes } = ctx
+      const c = gl.canvas as HTMLCanvasElement
+      gl.viewport(0, 0, c.width, c.height)
+      gl.uniform1f(uTime, elapsedSeconds)
+      gl.uniform2f(uRes, c.width, c.height)
+      gl.drawArrays(gl.TRIANGLES, 0, 3)
+    }
+
+    /*
+     * Reduced motion: paint one frame of the pyramid and stop. This is also
+     * the heaviest thing on the page — a per-pixel raytrace with three-channel
+     * dispersion — so not looping it is a real power saving too.
+     */
+    if (reducedMotion) {
+      draw(0)
+      return
+    }
+
+    const frame = (ts: number) => {
+      if (startRef.current === null) startRef.current = ts
+      draw((ts - startRef.current) / 1000)
       rafRef.current = requestAnimationFrame(frame)
     }
     rafRef.current = requestAnimationFrame(frame)
@@ -272,7 +289,7 @@ export default function LucidTile() {
       cancelAnimationFrame(rafRef.current)
       startRef.current = null
     }
-  }, [isInView])
+  }, [isInView, reducedMotion])
 
   return (
     <div
@@ -283,38 +300,32 @@ export default function LucidTile() {
       onMouseLeave={() => setHovered(false)}
       onClick={() => router.push('/work/lucid-ai')}
     >
-      {/* Dark hover overlay (paints behind the pyramid, so the glass stays lit) */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'rgba(0,0,0,0.72)',
-          opacity: hovered ? 1 : 0,
-          transition: 'opacity 0.4s ease',
-        }}
-      />
-
-      <div className="workgrid__item__content">
-        <canvas
-          ref={canvasRef}
-          className="tile-svg"
-          aria-hidden="true"
+      <div className="tile-stage">
+        {/* Dark hover overlay (paints behind the pyramid, so the glass stays lit) */}
+        <div
+          className="absolute inset-0 pointer-events-none"
           style={{
-            display: 'block',
-            opacity: isInView ? 1 : 0,
+            background: 'rgba(0,0,0,0.72)',
+            opacity: hovered ? 1 : 0,
             transition: 'opacity 0.4s ease',
           }}
         />
+
+        <div className="workgrid__item__content">
+          <canvas
+            ref={canvasRef}
+            className="tile-svg"
+            aria-hidden="true"
+            style={{
+              display: 'block',
+              opacity: isInView ? 1 : 0,
+              transition: 'opacity 0.4s ease',
+            }}
+          />
+        </div>
       </div>
 
-      {/* Hover title */}
-      <div
-        className="absolute inset-x-0 top-4 flex justify-center pointer-events-none"
-        style={{ opacity: hovered ? 1 : 0, transition: 'opacity 0.2s ease' }}
-      >
-        <span className="text-xs font-semibold uppercase tracking-[0.15em] text-white">
-          Lucid AI
-        </span>
-      </div>
+      <TileFooter slug="lucid-ai" hovered={hovered} />
     </div>
   )
 }

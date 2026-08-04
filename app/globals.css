@@ -208,6 +208,19 @@ p a {
   transition: all 0.65s var(--ease-out-quint);
 }
 
+/* Present to screen readers and the document outline, invisible on screen */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ─── Section base ─── */
 .section {
   max-width: 1280px;
@@ -226,7 +239,6 @@ p a {
   padding-top: 5rem;
   padding-bottom: 4rem;
 }
-
 
 /* Greeting row — typed word + blinking cursor */
 .greeting {
@@ -283,6 +295,7 @@ p a {
 .about__buttons {
   margin-top: 48px;
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
   align-items: center;
 }
@@ -1066,7 +1079,12 @@ p a {
   gap: 0.3rem;
   grid-template-columns: 1fr;
   overflow-y: auto;
-  scroll-snap-type: y mandatory;
+  /*
+    `proximity`, not `mandatory` — mandatory locked every scroll onto a
+    full-screen tile, so reaching the footer (résumé, contact) took four
+    deliberate swipes. Proximity still settles on a tile without trapping.
+  */
+  scroll-snap-type: y proximity;
   height: 100vh;
 }
 
@@ -1094,6 +1112,16 @@ p a {
   position: relative;
   overflow: hidden;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Artwork lives here — a flexible box above the fixed footer slab */
+.tile-stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
 @media (min-width: 48em) {
@@ -1157,6 +1185,197 @@ p a {
 
 .workgrid__item > a:hover .workgrid__item__title {
   opacity: 1;
+}
+
+/* ─── Tile footer — company lockup, title, summary, tags ─── */
+.tile-footer {
+  position: relative;
+  flex: 0 0 auto;
+  z-index: 20;
+  padding: 0.85rem clamp(1.1rem, 1.8vw, 1.5rem) 0.95rem;
+  background: rgba(0, 0, 0, 0.34);
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  transition: background 0.4s ease;
+}
+
+.tile-footer.is-hovered {
+  background: rgba(0, 0, 0, 0.52);
+}
+
+.tile-footer__head {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.tile-footer__logo,
+.tile-footer__logo-img {
+  flex: 0 0 auto;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 5px;
+}
+
+.tile-footer__logo {
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.07);
+  font-size: 0.625rem;
+  font-weight: 600;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.tile-footer__logo-img {
+  object-fit: contain;
+}
+
+/* Keycap affordance — greys out at rest, lights up with the tile */
+.tile-footer__enter {
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding: 0.4em 0.6em;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 0.5625rem;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.32);
+  white-space: nowrap;
+  transition:
+    color 0.35s ease,
+    border-color 0.35s ease,
+    background 0.35s ease,
+    box-shadow 0.35s ease,
+    text-shadow 0.35s ease;
+}
+
+.tile-footer.is-hovered .tile-footer__enter {
+  border-color: color-mix(in srgb, var(--mono-blue) 65%, transparent);
+  background: color-mix(in srgb, var(--mono-blue) 16%, transparent);
+  color: color-mix(in srgb, var(--mono-blue) 55%, #fff);
+  box-shadow:
+    0 0 10px color-mix(in srgb, var(--mono-blue) 40%, transparent),
+    inset 0 0 8px color-mix(in srgb, var(--mono-blue) 18%, transparent);
+  text-shadow: 0 0 8px color-mix(in srgb, var(--mono-blue) 55%, transparent);
+}
+
+/* Company name in full, beside the mark */
+.tile-footer__company {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.tile-footer__title {
+  /* -webkit-box so a long title wraps to two lines rather than truncating */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-width: 0;
+  margin: 0.45rem 0 0;
+  font-size: clamp(0.95rem, 1.1vw, 1.08rem);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+
+/*
+ * The only keyboard- and crawler-reachable path to a case study — the tile
+ * itself is a click-only div, so this link carries the whole grid's
+ * accessibility. Focus ring must stay visible.
+ */
+.tile-footer__link {
+  color: inherit;
+  text-decoration: none;
+  cursor: none !important;
+}
+
+.tile-footer__link:focus-visible {
+  outline: 2px solid var(--mono-blue);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* Role · period — omitted entirely when the study is still a placeholder */
+.tile-footer__meta {
+  /* Single line — some periods carry a duration too ("May – Jul 2025 · 10 weeks") */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0.4rem 0 0;
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+/* Keyboard affordance only — no hover, and no room, on touch layouts */
+@media (max-width: 47.99em) {
+  .tile-footer__enter {
+    display: none;
+  }
+}
+
+.tile-footer__summary {
+  /* Capped at two lines so a long summary can't push the footer taller */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0.4rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.tile-footer__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.65rem;
+}
+
+/* Each tag carries a discipline accent, set as --tag-color by TileFooter */
+.tile-footer__tag {
+  padding: 0.44em 0.72em;
+  border: 1px solid color-mix(in srgb, var(--tag-color) 38%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tag-color) 11%, transparent);
+  font-size: 0.625rem;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--tag-color) 72%, #fff);
+  white-space: nowrap;
+  transition:
+    color 0.35s ease,
+    border-color 0.35s ease,
+    background 0.35s ease;
+}
+
+.tile-footer.is-hovered .tile-footer__tag {
+  border-color: color-mix(in srgb, var(--tag-color) 70%, transparent);
+  background: color-mix(in srgb, var(--tag-color) 20%, transparent);
+  color: color-mix(in srgb, var(--tag-color) 40%, #fff);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile-footer__enter,
+  .tile-footer__tag {
+    transition: none;
+  }
 }
 
 /* Tile SVG base */
@@ -1228,15 +1447,6 @@ p a {
   100% { opacity: 0.9; }
 }
 
-/* Hoth tile — keyhole glow breathes while the lock is open */
-.hoth-keyhole-pulse {
-  animation: hoth-glow-pulse 1.6s ease-in-out infinite;
-}
-@keyframes hoth-glow-pulse {
-  0%, 100% { opacity: 0.7; }
-  50%      { opacity: 1; }
-}
-
 /* Pattern: line draw loop */
 .tile-line {
   animation: tileLineDraw 6s ease-out infinite;
@@ -1284,6 +1494,58 @@ p a {
   filter: blur(50px);
 }
 
+/* ─── Site nav ─── */
+
+/*
+  Fixed, not sticky: on mobile `.workgrid` is its own 100vh scroll container,
+  so a sticky header in normal flow scrolls out of reach behind it. z-index
+  sits above the tile art and `.tile-footer` (20), below `.sidebar` (150).
+*/
+.sitenav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/*
+  Horizontal padding matches `.section` so the name lines up with the footer's
+  home glyph directly below it. Left-aligned — the nav is one group, not a
+  split bar.
+*/
+.sitenav__inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0.75rem clamp(1rem, 5vw, 3rem);
+  display: flex;
+  align-items: center;
+}
+
+/* Clears the fixed bar so it never sits on top of page content. */
+.sitenav-offset {
+  padding-top: 4.25rem;
+}
+
+@media (max-width: 36em) {
+  .sitenav__inner {
+    padding-inline: 0.25rem;
+  }
+
+  .sitenav .footer-link,
+  .sitenav .footer__sep {
+    font-size: 0.8125rem;
+  }
+
+  .sitenav .footer-link {
+    padding: 8px 9px;
+  }
+}
+
 /* ─── Footer ─── */
 .footer {
   margin-top: 0.3rem;
@@ -1328,6 +1590,50 @@ p a {
   color: #fff;
   opacity: 1;
   user-select: none;
+}
+
+/* ─── Email link — copy-to-clipboard confirmation ─── */
+
+.email-link {
+  position: relative;
+}
+
+/*
+  Absolutely positioned so confirming the copy never reflows the nav or the
+  footer row. pointer-events: none keeps it clear of the custom cursor.
+*/
+.email-link__toast {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  z-index: 1;
+  padding: 0.4em 0.65em;
+  border-radius: 6px;
+  background: var(--mono-blue);
+  color: #000;
+  font-size: 0.5625rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, -4px);
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    transform 0.25s var(--ease-out-quint);
+}
+
+.email-link__toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .email-link__toast {
+    transition: none;
+  }
 }
 
 /* ─── Touch / mobile overrides ─── */
@@ -1400,6 +1706,7 @@ p a {
 /* About section: less top padding on small screens */
 @media (max-width: 36em) {
   .about {
-    padding-top: 2rem;
+    /* Still has to clear the fixed site nav. */
+    padding-top: 5rem;
   }
 }

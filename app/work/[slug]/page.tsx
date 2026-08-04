@@ -1,71 +1,188 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { getCaseStudy, caseStudies } from '@/lib/caseStudies'
+import Image from 'next/image'
+import Footer from '@/components/Footer'
+import SiteNav from '@/components/SiteNav'
+import { getCaseStudy, caseStudies, real, shortTeam } from '@/lib/caseStudies'
+import { SITE } from '@/lib/site'
 
 export function generateStaticParams() {
   return caseStudies.map((cs) => ({ slug: cs.slug }))
 }
 
-const Fig = ({ caption, height = 'h-[420px]' }: { caption: string; height?: string }) => (
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  const cs = getCaseStudy(slug)
+  if (!cs) return {}
+
+  // Unwritten studies fall back to the site blurb rather than shipping "[One-sentence tagline: …]"
+  const description = real(cs.tagline) ?? real(cs.summary) ?? SITE.description
+  const title = `${cs.title} · ${cs.company}`
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `/work/${cs.slug}` },
+    openGraph: {
+      type: 'article',
+      title: `${title} · ${SITE.name}`,
+      description,
+      url: `/work/${cs.slug}`,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} · ${SITE.name}`,
+      description,
+    },
+  }
+}
+
+const SECTION_LABEL = 'text-sm font-semibold uppercase tracking-[0.18em] text-[#008fff]'
+
+const Fig = ({ caption, height = 'h-[420px]', src }: { caption: string; height?: string; src?: string }) => (
   <figure className="my-14">
-    <div className={`${height} w-full bg-white/[0.05] rounded-lg`} />
-    <figcaption className="mt-3 text-sm text-white">{caption}</figcaption>
+    {src ? (
+      // alt is empty by design — the figcaption below already carries this text,
+      // and duplicating it makes screen readers announce the caption twice.
+      <Image
+        src={src}
+        alt=""
+        width={1600}
+        height={1000}
+        sizes="(min-width: 860px) 860px, 100vw"
+        className="w-full h-auto rounded-lg"
+      />
+    ) : (
+      <div className={`${height} w-full bg-white/[0.05] rounded-lg`} />
+    )}
+    <figcaption className="mt-3 text-base text-white">{caption}</figcaption>
   </figure>
 )
+
+/*
+ * Role / Timeline / Team / Impact, directly under the title. The long-form
+ * Outcome section still closes the page, but its numbers now also appear
+ * above the fold — previously a reader had to get ~1,100 words in to find
+ * out whether the work went anywhere.
+ */
+function AtAGlance({
+  role,
+  period,
+  team,
+  headline,
+}: {
+  role?: string
+  period?: string
+  team?: string
+  headline?: string[]
+}) {
+  const facts = [
+    { label: 'Role', value: role },
+    { label: 'Timeline', value: period },
+    { label: 'Team', value: team },
+  ].filter((f): f is { label: string; value: string } => Boolean(f.value))
+
+  if (!facts.length && !headline?.length) return null
+
+  return (
+    <div className="mt-8 border-y border-white/10 py-6">
+      {facts.length > 0 && (
+        <dl className="flex flex-wrap gap-x-12 gap-y-5">
+          {facts.map((f) => (
+            <div key={f.label}>
+              <dt className={`${SECTION_LABEL} mb-1.5`}>{f.label}</dt>
+              <dd className="text-base text-white">{f.value}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
+
+      {headline && headline.length > 0 && (
+        <div className={facts.length > 0 ? 'mt-6' : ''}>
+          <p className={`${SECTION_LABEL} mb-1.5`}>Impact</p>
+          <ul className="flex flex-wrap gap-x-6 gap-y-1.5 text-base text-white">
+            {headline.map((metric) => (
+              <li key={metric} className="flex gap-2.5">
+                <span aria-hidden="true" className="text-[#008fff] flex-shrink-0">—</span>
+                {metric}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  )
+}
 
 export default async function CaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const cs = getCaseStudy(slug)
   if (!cs) notFound()
 
+  const prev = caseStudies.find((c) => c.nextSlug === cs.slug)
+  const next = cs.nextSlug ? getCaseStudy(cs.nextSlug) : undefined
+
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white font-medium">
 
-      <nav className="px-8 py-7 flex items-center justify-between">
-        <Link href="/" className="text-sm text-white hover:text-[#008fff] transition-colors">
-          ← work
-        </Link>
-        {cs.nextSlug && cs.nextTitle && (
-          <Link href={`/work/${cs.nextSlug}`} className="text-sm text-white hover:text-[#008fff] transition-colors">
-            {cs.nextTitle} →
-          </Link>
-        )}
-      </nav>
+      <SiteNav />
 
-      <div className="max-w-[660px] mx-auto px-8 pb-32">
+      <div className="max-w-[860px] mx-auto px-8 pb-32 sitenav-offset">
 
         <header className="pt-10 pb-14">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#008fff] mb-4">
+          <p className={`${SECTION_LABEL} mb-4`}>
             {cs.company}
           </p>
-          <h1 className="text-5xl font-normal leading-tight tracking-tight text-white">
+          <h1 className="text-6xl font-medium leading-tight tracking-tight text-white">
             {cs.title}
           </h1>
-          <p className="mt-4 text-base text-white leading-snug">
-            {cs.tagline}
-          </p>
-          <p className="mt-6 text-sm text-white">
-            {cs.role} · {cs.period} · {cs.team}
-          </p>
+          {real(cs.tagline) && (
+            <p className="mt-5 text-xl text-white leading-snug">
+              {cs.tagline}
+            </p>
+          )}
+          <AtAGlance
+            role={real(cs.role)}
+            period={real(cs.period)}
+            team={shortTeam(cs.team)}
+            headline={cs.headline}
+          />
         </header>
 
-        <div className="h-[52vh] w-full bg-white/[0.05] rounded-lg" />
-        <p className="mt-3 text-sm text-white">Final design overview</p>
+        {cs.heroSrc ? (
+          <Image
+            src={cs.heroSrc}
+            alt=""
+            width={1600}
+            height={1000}
+            priority
+            sizes="(min-width: 860px) 860px, 100vw"
+            className="w-full h-auto rounded-lg"
+          />
+        ) : (
+          <div className="h-[52vh] w-full bg-white/[0.05] rounded-lg" />
+        )}
+        <p className="mt-3 text-base text-white">{cs.heroCaption ?? 'Final design overview'}</p>
 
-        <p className="mt-14 text-base text-white leading-[1.85]">
+        <p className="mt-14 text-lg text-white leading-[1.8]">
           {cs.overview}
         </p>
 
         <section className="mt-16">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#008fff] mb-5">
+          <h2 className={`${SECTION_LABEL} mb-5 block`}>
             Problem
-          </p>
-          <p className="text-base text-white leading-[1.85]">
+          </h2>
+          <p className="text-lg text-white leading-[1.8]">
             {cs.problemIntro}
           </p>
           <ul className="mt-5 space-y-2">
             {cs.problemPoints.map((point, i) => (
-              <li key={i} className="flex gap-3 text-base text-white leading-relaxed">
+              <li key={i} className="flex gap-3 text-lg text-white leading-relaxed">
                 <span className="text-[#008fff] flex-shrink-0">—</span>
                 {point}
               </li>
@@ -73,20 +190,20 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
           </ul>
         </section>
 
-        <Fig caption="Discovery — workflow mapping with brand managers" height="h-64" />
+        {cs.problemFigure && <Fig {...cs.problemFigure} />}
 
         <section>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#008fff] mb-8">
+          <h2 className={`${SECTION_LABEL} mb-8 block`}>
             Process
-          </p>
+          </h2>
           <div className="space-y-8">
             {cs.process.map((step, i) => (
               <div key={i}>
-                <p className="text-base text-white mb-1">
+                <h3 className="text-lg text-white mb-1 block font-medium">
                   <span className="text-[#008fff] mr-3 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
                   {step.heading}
-                </p>
-                <p className="text-base text-white leading-[1.85] pl-9">
+                </h3>
+                <p className="text-lg text-white leading-[1.8] pl-10">
                   {step.body}
                 </p>
               </div>
@@ -94,16 +211,17 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
           </div>
         </section>
 
-        <Fig caption="Figma prototypes — grouping and metric hierarchy" />
-        <Fig caption="Final design — custom report builder" height="h-[500px]" />
+        {cs.processFigures?.map((fig, i) => (
+          <Fig key={i} {...fig} />
+        ))}
 
         <section>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#008fff] mb-5">
+          <h2 className={`${SECTION_LABEL} mb-5 block`}>
             Outcome
-          </p>
+          </h2>
           <ul className="space-y-2">
             {cs.outcomes.map((outcome, i) => (
-              <li key={i} className="flex gap-3 text-base text-white leading-relaxed">
+              <li key={i} className="flex gap-3 text-lg text-white leading-relaxed">
                 <span className="text-[#008fff] flex-shrink-0">—</span>
                 {outcome}
               </li>
@@ -111,19 +229,28 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
           </ul>
         </section>
 
+        {/*
+          Prev/next moved down from the top nav — a reader wants the next
+          project after finishing this one, not before starting it.
+        */}
+        <nav className="mt-24 pt-8 border-t border-white/10 flex items-center justify-between gap-4" aria-label="More work">
+          {prev ? (
+            <Link href={`/work/${prev.slug}`} className="footer-link -ml-4">
+              ← {prev.title}
+            </Link>
+          ) : (
+            <span />
+          )}
+          {next && (
+            <Link href={`/work/${next.slug}`} className="footer-link -mr-4 text-right">
+              {next.title} →
+            </Link>
+          )}
+        </nav>
+
       </div>
 
-      {cs.nextSlug && cs.nextTitle && (
-        <div className="border-t border-white/[0.08] py-16 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white mb-4">Next</p>
-          <Link
-            href={`/work/${cs.nextSlug}`}
-            className="text-3xl text-white hover:text-[#008fff] transition-colors duration-200"
-          >
-            {cs.nextTitle} →
-          </Link>
-        </div>
-      )}
+      <Footer />
 
     </div>
   )
