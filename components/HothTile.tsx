@@ -189,7 +189,12 @@ export default function HothTile() {
         </div>
       </div>
 
-      <TileFooter slug="hoth" hovered={hovered} />
+      <TileFooter
+        slug="hoth"
+        logoSrc="/logos/hoth.png"
+        companyHref="https://hoth.com"
+        hovered={hovered}
+      />
     </div>
   )
 }

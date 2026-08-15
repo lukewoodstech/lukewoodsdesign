@@ -24,6 +24,8 @@ export default function WorkGrid() {
         afterSrc="/after.png"
         beforeAlt="Awardco's original login screen, showing every authentication method at once"
         afterAlt="The redesigned Awardco login screen, leading with single sign-on"
+        logoSrc="/logos/awardco.png"
+        companyHref="https://www.awardco.com"
       />
 
       {/* Tile 3 — Pattern Custom Reports */}

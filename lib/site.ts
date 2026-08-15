@@ -9,7 +9,7 @@ export const SITE = {
   role: 'Product Designer',
   url: 'https://lukewoodsdesign.vercel.app',
   description:
-    'Product designer who uses research, systems thinking, and technical fluency to turn complex product problems into clear, intuitive software.',
+    'Product designer who uses research, systems thinking, and technical fluency to turn complex product problems into clear, intuitive experiences.',
   email: 'lukewoodstech@gmail.com',
   linkedin: 'https://www.linkedin.com/in/lukewoodstech',
   resume:

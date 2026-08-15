@@ -172,7 +172,12 @@ export default function PatternTile() {
         </div>
       </div>
 
-      <TileFooter slug="pattern-custom-reports" hovered={hovered} />
+      <TileFooter
+        slug="pattern-custom-reports"
+        logoSrc="/logos/pattern.png"
+        companyHref="https://www.pattern.com"
+        hovered={hovered}
+      />
     </div>
   )
 }

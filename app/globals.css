@@ -1231,6 +1231,23 @@ p a {
   object-fit: contain;
 }
 
+/*
+  Padding + matching negative margin: the mark stays 1.4rem visually while the
+  hit area grows past the 24px minimum, without shifting the row it sits in.
+*/
+.tile-footer__logo-link {
+  display: inline-flex;
+  flex: 0 0 auto;
+  padding: 5px;
+  margin: -5px;
+  border-radius: 9px;
+  transition: background 0.2s ease;
+}
+
+.tile-footer__logo-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
 /* Keycap affordance — greys out at rest, lights up with the tile */
 .tile-footer__enter {
   flex: 0 0 auto;
@@ -1306,19 +1323,6 @@ p a {
   outline: 2px solid var(--mono-blue);
   outline-offset: 3px;
   border-radius: 3px;
-}
-
-/* Role · period — omitted entirely when the study is still a placeholder */
-.tile-footer__meta {
-  /* Single line — some periods carry a duration too ("May – Jul 2025 · 10 weeks") */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin: 0.4rem 0 0;
-  font-size: 0.6875rem;
-  line-height: 1.4;
-  letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.58);
 }
 
 /* Keyboard affordance only — no hover, and no room, on touch layouts */
@@ -1524,6 +1528,65 @@ p a {
   padding: 0.75rem clamp(1rem, 5vw, 3rem);
   display: flex;
   align-items: center;
+}
+
+/*
+  Case study variant: the article body is `max-w-[860px] mx-auto px-8`, so the
+  same box here puts the name exactly on the article's left text edge instead
+  of stranding it out in the 1280px grid's margin. Both are border-box, so the
+  numbers line up without arithmetic.
+*/
+.sitenav__inner--article {
+  max-width: 860px;
+  padding-inline: 2rem;
+}
+
+/*
+  Right-hand jump to the next case study. `margin-left: auto` pushes it to the
+  far edge without making the container a space-between — the left links stay
+  one group even when this is absent. Styling is plain `.footer-link`: no box,
+  same hover wash as the rest of the bar.
+*/
+.sitenav__next {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.sitenav__next-arrow {
+  transition: transform 0.3s var(--ease-out-quint);
+}
+
+.sitenav__next:hover .sitenav__next-arrow {
+  transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sitenav__next-arrow,
+  .sitenav__next:hover .sitenav__next-arrow {
+    transition: none;
+    transform: none;
+  }
+}
+
+/*
+  The name is set lowercase to match the bar's other links; `text-transform`
+  rather than a lowercased string so assistive tech still reads "Luke Woods".
+*/
+.sitenav__name {
+  text-transform: lowercase;
+}
+
+/*
+  Under ~576px four left-hand links plus `next` wrap the bar to two lines, so
+  `next` gives way — the article's own prev/next still covers phones. A minimal
+  bar is just the name, with room to spare, so it keeps `next` at every width.
+*/
+@media (max-width: 36em) {
+  .sitenav__inner:not(.sitenav__inner--minimal) .sitenav__next {
+    display: none;
+  }
 }
 
 /* Clears the fixed bar so it never sits on top of page content. */

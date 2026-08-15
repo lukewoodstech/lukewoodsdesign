@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import EmailLink from './EmailLink'
+import HomeLink from './HomeLink'
 import { SITE } from '@/lib/site'
 
 export default function Footer() {
@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="footer__inner">
 
         <nav className="footer__nav" aria-label="Contact and social">
-          <Link href="/" className="footer-link footer-link--home" aria-label="Home">⌂</Link>
+          <HomeLink className="footer-link footer-link--home" aria-label="Home">⌂</HomeLink>
           <span className="footer__sep">·</span>
           <EmailLink />
           <span className="footer__sep">·</span>

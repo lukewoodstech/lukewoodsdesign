@@ -325,7 +325,12 @@ export default function LucidTile() {
         </div>
       </div>
 
-      <TileFooter slug="lucid-ai" hovered={hovered} />
+      <TileFooter
+        slug="lucid-ai"
+        logoSrc="/logos/lucid.png"
+        companyHref="https://lucid.co"
+        hovered={hovered}
+      />
     </div>
   )
 }

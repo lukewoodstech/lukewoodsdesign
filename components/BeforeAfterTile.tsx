@@ -12,6 +12,9 @@ type Props = {
   afterSrc: string
   beforeAlt: string
   afterAlt: string
+  /** Passed straight through to TileFooter — this tile is company-agnostic. */
+  logoSrc?: string
+  companyHref?: string
 }
 
 // Tile is half the viewport on the desktop 2×2 grid, full width on mobile.
@@ -24,6 +27,8 @@ export default function BeforeAfterTile({
   afterSrc,
   beforeAlt,
   afterAlt,
+  logoSrc,
+  companyHref,
 }: Props) {
   const router = useRouter()
   const [hovered, setHovered] = useState(false)
@@ -128,7 +133,12 @@ export default function BeforeAfterTile({
         </div>
       </div>
 
-      <TileFooter slug={slug} hovered={hovered} />
+      <TileFooter
+        slug={slug}
+        logoSrc={logoSrc}
+        companyHref={companyHref}
+        hovered={hovered}
+      />
     </div>
   )
 }

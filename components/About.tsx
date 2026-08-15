@@ -54,7 +54,7 @@ export default function About() {
         </h1>
 
         <p className="about__intro-text">
-          I&apos;m a product designer who uses research, systems thinking, and technical fluency to turn complex product problems into clear, intuitive software.
+          I&apos;m a product designer who uses research, systems thinking, and technical fluency to turn complex product problems into clear, intuitive experiences.
         </p>
 
         <div className="about__buttons">
