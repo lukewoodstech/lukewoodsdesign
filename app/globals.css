@@ -1773,3 +1773,397 @@ p a {
     padding-top: 5rem;
   }
 }
+
+/* ─── Lucid case study (/work/lucid-ai) ─── */
+
+/*
+ * Page-scoped design system: the deck's editorial green adapted onto the
+ * site's black. Green replaces the site blue for eyebrows/accents on this
+ * page only; dark green grounds the reframe pull quote; yellow is reserved
+ * for annotation marks on screenshots, echoing the deck's annotation style.
+ */
+.lcs {
+  --lcs-green: #34d399;
+  --lcs-green-dim: rgba(52, 211, 153, 0.55);
+  --lcs-green-dark: #0a3d2b;
+  --lcs-yellow: #ffd34d;
+}
+
+.lcs-eyebrow {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--lcs-green);
+  margin-bottom: 1rem;
+}
+
+.lcs-headline {
+  display: block;
+  font-size: clamp(1.35rem, 2.6vw, 1.9rem);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: #fff;
+  margin: 0 0 1.25rem;
+}
+
+.lcs-prose {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: #fff;
+}
+
+.lcs-prose p { margin: 0 0 1.1rem; }
+.lcs-prose p:last-child { margin-bottom: 0; }
+
+.lcs-bullets li {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  margin-bottom: 0.55rem;
+}
+
+.lcs-bullets li::before {
+  content: '—';
+  color: var(--lcs-green);
+  flex-shrink: 0;
+}
+
+/* Screenshots: rounded, subtle shadow, never device-framed */
+.lcs-shot {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+.lcs-cap {
+  margin-top: 0.8rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* Scroll reveal — opacity/translate only, gated off for reduced motion */
+.lcs-reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.55s ease, transform 0.55s var(--ease-out-quint);
+}
+
+.lcs-reveal.is-inview {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lcs-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Segmented control (before/after, failure states, panel toggle) */
+.lcs-seg {
+  display: inline-flex;
+  /* Wraps on narrow screens — an overflowing pill row would otherwise force
+     the whole page wider than the viewport and clip every text column. */
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.lcs-seg__btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8125rem;
+  line-height: 1;
+  padding: 0.6em 1.05em;
+  border-radius: 999px;
+  cursor: none !important;
+  transition: background 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+}
+
+.lcs-seg__btn:hover { color: #fff; }
+
+.lcs-seg__btn[aria-pressed='true'],
+.lcs-seg__btn[aria-selected='true'] {
+  background: var(--lcs-green);
+  color: #04170f;
+  font-weight: 600;
+}
+
+.lcs-seg__btn:focus-visible {
+  outline: 2px solid var(--lcs-green);
+  outline-offset: 2px;
+}
+
+/* Crossfade stage for before/after and panel expand */
+.lcs-stage {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.lcs-stage__layer {
+  transition: opacity 0.35s ease;
+}
+
+.lcs-stage__layer--hidden {
+  opacity: 0;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lcs-stage__layer { transition: none; }
+}
+
+/* Reframe pull quote — the single serif moment, on the deck's dark green */
+.lcs-quote {
+  background: var(--lcs-green-dark);
+  border-radius: 14px;
+  padding: clamp(2.25rem, 6vw, 4rem) clamp(1.5rem, 5vw, 3.5rem);
+}
+
+.lcs-quote blockquote {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  line-height: 1.45;
+  color: #fff;
+  letter-spacing: 0;
+}
+
+.lcs-quote figcaption {
+  margin-top: 1.25rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--lcs-green);
+}
+
+/* Timeline — bar draws in, release markers pop after it passes */
+.lcs-tl { position: relative; }
+
+.lcs-tl__track {
+  position: relative;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
+  overflow: visible;
+}
+
+.lcs-tl__fill {
+  position: absolute;
+  inset: 0;
+  background: var(--lcs-green);
+  border-radius: 2px;
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+.is-inview .lcs-tl__fill {
+  animation: lcs-tl-draw 1.2s var(--ease-out-quint) forwards;
+}
+
+@keyframes lcs-tl-draw {
+  to { transform: scaleX(1); }
+}
+
+.lcs-tl__stop {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #000;
+  border: 3px solid var(--lcs-green);
+  opacity: 0;
+  scale: 0.4;
+}
+
+.is-inview .lcs-tl__stop {
+  animation: lcs-tl-pop 0.4s var(--ease-out-quint) forwards;
+}
+
+@keyframes lcs-tl-pop {
+  to { opacity: 1; scale: 1; }
+}
+
+.lcs-tl__label {
+  position: absolute;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.75);
+  white-space: nowrap;
+}
+
+.lcs-tl__label strong {
+  display: block;
+  color: #fff;
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-inview .lcs-tl__fill { animation: none; transform: scaleX(1); }
+  .is-inview .lcs-tl__stop { animation: none; opacity: 1; scale: 1; }
+}
+
+/* Timeline collapses to a vertical list on phones — labels can't fit inline */
+.lcs-tl__vlist { display: none; }
+
+@media (max-width: 40em) {
+  .lcs-tl__horizontal { display: none; }
+  .lcs-tl__vlist {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    border-left: 2px solid var(--lcs-green);
+    padding-left: 1.1rem;
+  }
+  .lcs-tl__vlist li { font-size: 0.9rem; line-height: 1.5; }
+  .lcs-tl__vlist strong { display: block; color: #fff; }
+  .lcs-tl__vlist span { color: rgba(255, 255, 255, 0.65); }
+}
+
+/* Layout contest — four schematic wireframes, winner lifts */
+.lcs-lay {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.9rem;
+}
+
+.lcs-lay__card {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 0.9rem;
+  background: rgba(255, 255, 255, 0.03);
+  transition: transform 0.3s var(--ease-out-quint), border-color 0.3s ease, opacity 0.3s ease;
+}
+
+.lcs-lay__card--winner { border-color: var(--lcs-green-dim); }
+
+.lcs-lay:hover .lcs-lay__card:not(.lcs-lay__card--winner) { opacity: 0.4; }
+
+.lcs-lay:hover .lcs-lay__card--winner {
+  transform: translateY(-4px);
+  border-color: var(--lcs-green);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lcs-lay__card,
+  .lcs-lay:hover .lcs-lay__card--winner { transform: none; transition: none; }
+}
+
+.lcs-lay__diagram {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 0.7rem;
+}
+
+.lcs-lay__block { position: absolute; background: rgba(52, 211, 153, 0.35); }
+.lcs-lay__card--winner .lcs-lay__block { background: var(--lcs-green); opacity: 0.75; }
+
+.lcs-lay__name {
+  font-size: 0.78rem;
+  color: #fff;
+  display: block;
+}
+
+.lcs-lay__verdict {
+  font-size: 0.7rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.55);
+  display: block;
+  margin-top: 0.15rem;
+}
+
+.lcs-lay__badge {
+  position: absolute;
+  top: -0.55rem;
+  right: 0.7rem;
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--lcs-green);
+  color: #04170f;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.28em 0.7em;
+}
+
+/* Results count-up */
+.lcs-count {
+  font-size: clamp(2.6rem, 6vw, 4rem);
+  font-weight: 600;
+  color: var(--lcs-green);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Mention demo — resolved chip rendered in page language, not a screenshot */
+.lcs-mention {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.85em 1.2em;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.8);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  flex-wrap: wrap;
+}
+
+.lcs-mention__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  background: rgba(52, 211, 153, 0.16);
+  border: 1px solid var(--lcs-green-dim);
+  color: var(--lcs-green);
+  border-radius: 999px;
+  padding: 0.18em 0.6em;
+  font-weight: 600;
+}
+
+/* Failure-state tab panels */
+.lcs-tab-panel[hidden] { display: none; }
+
+.lcs-statecard {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 1.4rem;
+}
+
+/* Annotation ring — the deck's yellow circle language, for figure callouts */
+.lcs-annot {
+  position: absolute;
+  border: 2.5px solid var(--lcs-yellow);
+  border-radius: 999px;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}

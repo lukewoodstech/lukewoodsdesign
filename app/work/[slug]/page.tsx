@@ -8,7 +8,9 @@ import { getCaseStudy, caseStudies, real, shortTeam } from '@/lib/caseStudies'
 import { SITE } from '@/lib/site'
 
 export function generateStaticParams() {
-  return caseStudies.map((cs) => ({ slug: cs.slug }))
+  // lucid-ai has a bespoke page at app/work/lucid-ai — the static route wins,
+  // so don't also generate it from this template.
+  return caseStudies.filter((cs) => cs.slug !== 'lucid-ai').map((cs) => ({ slug: cs.slug }))
 }
 
 export async function generateMetadata({
@@ -130,7 +132,11 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
   return (
     <div className="min-h-screen bg-black text-white font-medium">
 
-      <SiteNav />
+      <SiteNav
+        width="article"
+        contact={false}
+        next={next && { href: `/work/${next.slug}`, title: next.title }}
+      />
 
       <div className="max-w-[860px] mx-auto px-8 pb-32 sitenav-offset">
 

@@ -38,15 +38,23 @@ export type CaseStudy = {
 
 export const caseStudies: CaseStudy[] = [
   {
+    /*
+     * The article itself is the bespoke page at app/work/lucid-ai/page.tsx —
+     * this entry only feeds the home-grid tile and the prev/next chain.
+     */
     slug: 'lucid-ai',
-    title: 'Lucid AI',
+    title: 'Bringing Lucid AI out of the canvas',
     company: 'Lucid',
-    role: '[Your role — e.g. Product Designer]',
-    period: '[Period — e.g. Jan – Mar 2025]',
-    team: '[Team — e.g. PM name · X engineers]',
-    summary: "Bringing generative AI into Lucid's visual collaboration canvas.",
+    role: 'Product Design Intern',
+    period: 'May – Aug 2026 · 12 weeks',
+    team: 'Two scrum teams: search + AI',
+    summary: 'The AI chat panel that brought Lucid AI to the docs list, GA on every tier.',
     tags: ['AI Product', '0 → 1', 'Prototyping'],
-    tagline: '[One-sentence tagline: what was the project and why does it matter?]',
+    headline: [
+      'GA on all tiers in 12 weeks',
+      'Harness for every future docs list skill',
+    ],
+    tagline: "So you can find a doc you can't name.",
     overview:
       '[2–4 sentences: the situation, what you did end-to-end, and the headline result. This paragraph sits directly under the hero image.]',
     problemIntro:
