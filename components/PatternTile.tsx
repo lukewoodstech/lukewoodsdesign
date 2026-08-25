@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import TileFooter from './TileFooter'
+import { useEnterToOpen } from '@/lib/useEnterToOpen'
 import { useReducedMotion } from '@/lib/useReducedMotion'
 
 const TITLE = 'Organic + Paid + Insights'
@@ -21,6 +22,8 @@ export default function PatternTile() {
   const tileRef  = useRef<HTMLDivElement>(null)
   const startRef = useRef<number | null>(null)
   const rafRef   = useRef<number>(0)
+
+  useEnterToOpen(hovered, '/work/pattern-custom-reports')
 
   // Trigger on scroll-in; reset on scroll-out
   useEffect(() => {

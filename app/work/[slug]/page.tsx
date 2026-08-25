@@ -1,16 +1,24 @@
 import type { Metadata } from 'next'
+import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import BeforeAfterHero from '@/components/BeforeAfterHero'
+import CaseStudyGate from '@/components/CaseStudyGate'
 import Footer from '@/components/Footer'
 import SiteNav from '@/components/SiteNav'
 import { getCaseStudy, caseStudies, real, shortTeam } from '@/lib/caseStudies'
+import { PROTECTED_SLUGS, UNLOCK_COOKIE } from '@/lib/gate'
 import { SITE } from '@/lib/site'
+import { unlockCaseStudy } from './actions'
 
 export function generateStaticParams() {
   // lucid-ai has a bespoke page at app/work/lucid-ai — the static route wins,
-  // so don't also generate it from this template.
-  return caseStudies.filter((cs) => cs.slug !== 'lucid-ai').map((cs) => ({ slug: cs.slug }))
+  // so don't also generate it from this template. Protected slugs render
+  // dynamically: their page reads the unlock cookie, a request-time API.
+  return caseStudies
+    .filter((cs) => cs.slug !== 'lucid-ai' && !PROTECTED_SLUGS.has(cs.slug))
+    .map((cs) => ({ slug: cs.slug }))
 }
 
 export async function generateMetadata({
@@ -129,6 +137,35 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
   const prev = caseStudies.find((c) => c.nextSlug === cs.slug)
   const next = cs.nextSlug ? getCaseStudy(cs.nextSlug) : undefined
 
+  /*
+   * Protected studies ship the gate, not the article, until the unlock
+   * cookie is present — the content never reaches the browser. cookies()
+   * is only touched on protected slugs so the public studies stay static.
+   */
+  if (PROTECTED_SLUGS.has(cs.slug)) {
+    const store = await cookies()
+    if (store.get(UNLOCK_COOKIE)?.value !== '1') {
+      return (
+        <div className="min-h-screen bg-black text-white font-medium">
+          <SiteNav
+            width="article"
+            contact={false}
+            next={next && { href: `/work/${next.slug}`, title: next.title }}
+          />
+          <div className="max-w-[860px] mx-auto px-8 pb-32 sitenav-offset">
+            <CaseStudyGate
+              slug={cs.slug}
+              company={cs.company}
+              title={cs.title}
+              action={unlockCaseStudy}
+            />
+          </div>
+          <Footer />
+        </div>
+      )
+    }
+  }
+
   return (
     <div className="min-h-screen bg-black text-white font-medium">
 
@@ -144,7 +181,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
           <p className={`${SECTION_LABEL} mb-4`}>
             {cs.company}
           </p>
-          <h1 className="text-6xl font-medium leading-tight tracking-tight text-white">
+          <h1 className="text-4xl md:text-6xl font-medium leading-tight tracking-tight text-white">
             {cs.title}
           </h1>
           {real(cs.tagline) && (
@@ -160,7 +197,17 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
           />
         </header>
 
-        {cs.heroSrc ? (
+        {cs.slug === 'awardco-login-flow-redesign' ? (
+          /* The home tile's before/after slider, promoted to hero — the first
+             thing you see and touch on this study. */
+          <BeforeAfterHero
+            beforeSrc="/before.png"
+            afterSrc="/after.png"
+            beforeAlt="Awardco's original login screen, showing every authentication method at once"
+            afterAlt="The redesigned Awardco login screen, leading with single sign-on"
+            aspect={2016 / 1270}
+          />
+        ) : cs.heroSrc ? (
           <Image
             src={cs.heroSrc}
             alt=""
@@ -173,7 +220,11 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
         ) : (
           <div className="h-[52vh] w-full bg-white/[0.05] rounded-lg" />
         )}
-        <p className="mt-3 text-base text-white">{cs.heroCaption ?? 'Final design overview'}</p>
+        <p className="mt-3 text-base text-white">
+          {cs.slug === 'awardco-login-flow-redesign'
+            ? 'Drag across the frame: the old login on the left, the shipped redesign on the right.'
+            : (cs.heroCaption ?? 'Final design overview')}
+        </p>
 
         <p className="mt-14 text-lg text-white leading-[1.8]">
           {cs.overview}

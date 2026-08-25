@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useReducedMotion } from '@/lib/useReducedMotion'
 
 const DESCRIPTORS = [
   'product designer.',
@@ -11,34 +12,36 @@ const DESCRIPTORS = [
   'customer first.',
 ]
 
-function useTypewriter(words: string[], typeSpeed = 85, deleteSpeed = 42, pauseMs = 2800) {
-  const [displayed, setDisplayed] = useState(words[0])
-  const [wordIndex, setWordIndex] = useState(0)
-  const [phase, setPhase] = useState<'typing' | 'pausing' | 'deleting'>('pausing')
+const ROTATE_MS = 3400
+
+/*
+ * Whole words crossfade in and out — the old character-by-character
+ * typewriter spent much of its cycle mid-word, so a first glance could
+ * land on "product desig|". The h1's real text is static ("product
+ * designer.") for crawlers and screen readers; the rotation is a purely
+ * visual aria-hidden layer. Reduced motion pins the first word.
+ */
+function useWordRotation(count: number) {
+  const reducedMotion = useReducedMotion()
+  const [active, setActive] = useState(0)
+  const [prev, setPrev] = useState<number | null>(null)
 
   useEffect(() => {
-    const word = words[wordIndex]
-    if (phase === 'pausing') {
-      const t = setTimeout(() => setPhase('deleting'), pauseMs)
-      return () => clearTimeout(t)
-    }
-    if (phase === 'deleting') {
-      if (displayed.length === 0) { setWordIndex(i => (i + 1) % words.length); setPhase('typing'); return }
-      const t = setTimeout(() => setDisplayed(d => d.slice(0, -1)), deleteSpeed)
-      return () => clearTimeout(t)
-    }
-    if (phase === 'typing') {
-      if (displayed.length === word.length) { setPhase('pausing'); return }
-      const t = setTimeout(() => setDisplayed(word.slice(0, displayed.length + 1)), typeSpeed)
-      return () => clearTimeout(t)
-    }
-  }, [displayed, phase, wordIndex, words, typeSpeed, deleteSpeed, pauseMs])
+    if (reducedMotion) return
+    const t = setInterval(() => {
+      setActive((i) => {
+        setPrev(i)
+        return (i + 1) % count
+      })
+    }, ROTATE_MS)
+    return () => clearInterval(t)
+  }, [count, reducedMotion])
 
-  return { displayed, isDeleting: phase === 'deleting' }
+  return { active, prev }
 }
 
 export default function About() {
-  const { displayed, isDeleting } = useTypewriter(DESCRIPTORS)
+  const { active, prev } = useWordRotation(DESCRIPTORS.length)
   const router = useRouter()
 
   return (
@@ -47,9 +50,21 @@ export default function About() {
         <h1 className="about__title">
           <span>i&apos;m luke</span>.
           <br />
-          <span className="greeting">
-            {displayed}
-            <span className={`typing-cursor${isDeleting ? ' typing-cursor--deleting' : ''}`} />
+          {/* The animation never exposes a partial word, but crawlers and
+              screen readers still get the plain title. */}
+          <span className="visually-hidden">product designer.</span>
+          <span className="greeting" aria-hidden="true">
+            {DESCRIPTORS.map((word, i) => (
+              <span
+                key={word}
+                className={`greeting__word${i === active ? ' is-active' : ''}${
+                  i === prev ? ' is-prev' : ''
+                }`}
+              >
+                {word}
+                <span className="typing-cursor" />
+              </span>
+            ))}
           </span>
         </h1>
 
@@ -58,6 +73,16 @@ export default function About() {
         </p>
 
         <div className="about__buttons">
+          <a href="#work" className="btn btn--hero">
+            <span className="btn__icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 4v16m0 0l-6-6m6 6l6-6" />
+              </svg>
+            </span>
+            <span className="btn__text">
+              <span className="btn__text__main">see work</span>
+            </span>
+          </a>
           <button className="btn btn--hero" onClick={() => router.push('/chat', { transitionTypes: ['page-enter'] })}>
             <span className="btn__icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

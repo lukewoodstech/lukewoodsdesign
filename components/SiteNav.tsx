@@ -1,3 +1,6 @@
+'use client'
+
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import EmailLink from './EmailLink'
 import HomeLink from './HomeLink'
@@ -36,8 +39,26 @@ export default function SiteNav({
   next?: { href: string; title: string }
   contact?: boolean
 }) {
+  /*
+   * The bar is 60% black so the hero shows through, but white tile art
+   * (the Lucid mock) scrolling underneath turned it into two colliding
+   * rows of text in a grey band. Once the visitor is past the first
+   * viewport the transparency isn't buying anything — step it up to
+   * near-opaque. scrollY keeps working here even on mobile, where the
+   * work grid does its own internal scrolling, because reaching the grid
+   * already puts the page past the threshold.
+   */
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > window.innerHeight * 0.5)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   return (
-    <header className="sitenav">
+    <header className={`sitenav${scrolled ? ' sitenav--scrolled' : ''}`}>
       <div
         className={[
           'sitenav__inner',
@@ -51,6 +72,10 @@ export default function SiteNav({
           <HomeLink className="footer-link sitenav__name">{SITE.name}</HomeLink>
           {contact && (
             <>
+              <span className="footer__sep">·</span>
+              <Link href="/#work" className="footer-link">
+                work
+              </Link>
               <span className="footer__sep">·</span>
               <EmailLink />
               <span className="footer__sep">·</span>

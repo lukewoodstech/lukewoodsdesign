@@ -3,7 +3,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Michroma } from 'next/font/google'
+import GateModal from './GateModal'
 import TileFooter from './TileFooter'
+import { unlockCaseStudy } from '@/app/work/[slug]/actions'
+import { UNLOCK_HINT_COOKIE } from '@/lib/gate'
+import { getCaseStudy } from '@/lib/caseStudies'
+import { useEnterToOpen } from '@/lib/useEnterToOpen'
 import { useReducedMotion } from '@/lib/useReducedMotion'
 
 const michroma = Michroma({ weight: '400', subsets: ['latin'] })
@@ -38,6 +43,22 @@ export default function HothTile() {
   const fadeRef    = useRef(0)
   const hoveredRef = useRef(false)
   const runningRef = useRef(false)
+  const [gateOpen, setGateOpen] = useState(false)
+
+  /*
+   * This study is password-gated. Instead of navigating to the gate page,
+   * ask for the password right here in a modal; once the unlock cookie is
+   * set (readable via its hint twin) the tile navigates like any other.
+   */
+  const openStudy = () => {
+    if (document.cookie.split('; ').some((c) => c.startsWith(`${UNLOCK_HINT_COOKIE}=1`))) {
+      router.push('/work/hoth')
+    } else {
+      setGateOpen(true)
+    }
+  }
+
+  useEnterToOpen(hovered && !gateOpen, openStudy)
 
   // Coordinates are relative to the stage — the canvas only covers the artwork
   const trackMouse = (e: React.MouseEvent) => {
@@ -135,7 +156,7 @@ export default function HothTile() {
       onMouseEnter={(e) => { trackMouse(e); setHovered(true) }}
       onMouseMove={trackMouse}
       onMouseLeave={() => setHovered(false)}
-      onClick={() => router.push('/work/hoth')}
+      onClick={openStudy}
     >
       <div ref={stageRef} className="tile-stage">
         {/* Dark overlay — behind everything, darkens the tile background on hover */}
@@ -194,6 +215,15 @@ export default function HothTile() {
         logoSrc="/logos/hoth.png"
         companyHref="https://hoth.com"
         hovered={hovered}
+      />
+
+      <GateModal
+        open={gateOpen}
+        onClose={() => setGateOpen(false)}
+        slug="hoth"
+        company={getCaseStudy('hoth')?.company ?? 'Hoth'}
+        title={getCaseStudy('hoth')?.title ?? 'Hoth'}
+        action={unlockCaseStudy}
       />
     </div>
   )
