@@ -12,12 +12,15 @@ import { PROTECTED_SLUGS, UNLOCK_COOKIE } from '@/lib/gate'
 import { SITE } from '@/lib/site'
 import { unlockCaseStudy } from './actions'
 
+// Studies with bespoke pages under app/work/<slug> — the static routes win,
+// so don't also generate them from this template.
+const BESPOKE_SLUGS = new Set(['lucid-ai', 'awardco-login-flow-redesign'])
+
 export function generateStaticParams() {
-  // lucid-ai has a bespoke page at app/work/lucid-ai — the static route wins,
-  // so don't also generate it from this template. Protected slugs render
-  // dynamically: their page reads the unlock cookie, a request-time API.
+  // Protected slugs render dynamically: their page reads the unlock cookie,
+  // a request-time API.
   return caseStudies
-    .filter((cs) => cs.slug !== 'lucid-ai' && !PROTECTED_SLUGS.has(cs.slug))
+    .filter((cs) => !BESPOKE_SLUGS.has(cs.slug) && !PROTECTED_SLUGS.has(cs.slug))
     .map((cs) => ({ slug: cs.slug }))
 }
 

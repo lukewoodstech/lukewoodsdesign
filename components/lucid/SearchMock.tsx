@@ -15,6 +15,11 @@ import { useReducedMotion } from '@/lib/useReducedMotion'
  * Loop: cursor blinks → query types → bubble posts → thinking dots →
  * summary and result rows resolve → hold → fade → restart.
  * Reduced motion renders the resolved state, static.
+ *
+ * zeroState mode follows the file's "zero state ful page -> search results"
+ * frame (node 40000022:11342): the loop opens on the zero screen — centered
+ * "What are you looking for today?", the focused input, three prompt
+ * buttons — the query types there, and sending crossfades into the chat.
  */
 
 const MOCK = '/case-studies/lucid/mock'
@@ -35,11 +40,19 @@ const ROWS = [
   { title: 'FY27 Strategy Map',         desc: '- Strategy canvas linking annual goals to the Q3 roadmap initiatives.' },
 ] as const
 
+// Zero-state prompt buttons, verbatim from the design file
+const PROMPTS = [
+  { icon: 'intelligent-search-24.svg', title: 'Find docs',       desc: 'Locate files by person, timeframe, or canvas text' },
+  { icon: 'summarize-24.svg',          title: 'Summarize',       desc: 'Get the gist of a doc or a group of them' },
+  { icon: 'diagram-shapes-24.svg',     title: 'Build a diagram', desc: 'Create flowcharts and visual layouts from a text prompt.' },
+] as const
+
 // Timeline (ms)
 const TYPE_START = 900
 const CHAR_MS = 75
 const TYPE_END = TYPE_START + QUERY.length * CHAR_MS // 2475
-const SEND = TYPE_END + 350
+// Hold the finished query on screen before it sends — long enough to read it
+const SEND = TYPE_END + 1500
 const DOTS_START = SEND + 150
 const DOTS_END = SEND + 1100
 const RESP = DOTS_END + 80
@@ -59,12 +72,66 @@ function clamp01(n: number) {
   return n < 0 ? 0 : n > 1 ? 1 : n
 }
 
+/* The AI chat input — one box, rendered centered on the zero screen and as
+   the bottom bar of the chat. Placeholder ↔ typed text ↔ post-send reset. */
+function ChatInput({
+  compact,
+  sent,
+  typed,
+  typedCount,
+}: {
+  compact: boolean
+  sent: boolean
+  typed: string
+  typedCount: number
+}) {
+  return (
+    <div
+      className="mx-auto flex w-full max-w-[800px] flex-col rounded-[8px] border border-[#7c78ff] bg-white"
+      style={{ height: compact ? 76 : 104 }}
+    >
+      <div className={`relative min-h-0 flex-1 ${compact ? 'pb-[4px] pl-[12px] pr-[8px] pt-[10px]' : 'pb-[8px] pl-[16px] pr-[8px] pt-[16px]'}`}>
+        {!sent && typedCount === 0 ? (
+          <p className="text-[14px] leading-[20px] text-[rgba(40,44,51,0.7)]">
+            Find or summarize a document...
+            <span
+              className={`absolute h-[16px] w-px bg-[#282c33] ${compact ? 'left-[12px] top-[12px]' : 'left-[16px] top-[18px]'}`}
+              style={{ animation: 'cursorBlink 1s step-end infinite' }}
+            />
+          </p>
+        ) : (
+          <p className="text-[14px] leading-[20px]">
+            {sent ? (
+              <span className="text-[rgba(40,44,51,0.7)]">Find or summarize a document...</span>
+            ) : (
+              <>
+                {typed}
+                <span className="ml-[1px] inline-block h-[16px] w-px translate-y-[3px] bg-[#282c33]" />
+              </>
+            )}
+          </p>
+        )}
+      </div>
+      <div className={`flex items-center justify-end ${compact ? 'px-[6px] pb-[4px]' : 'px-[8px] pb-[8px]'}`}>
+        <span
+          className="flex items-center justify-center rounded-[4px] p-[4px]"
+          style={{ opacity: !sent && typedCount > 0 ? 1 : 0.45, transition: 'opacity 0.2s ease' }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={`${MOCK}/send-arrow.svg`} alt="" className="size-[24px]" />
+        </span>
+      </div>
+    </div>
+  )
+}
+
 export default function SearchMock({
   height = 836,
   width = 400,
   compact = false,
   scale = 1,
   startResolved = false,
+  zeroState = false,
 }: {
   height?: number | '100%'
   /** 400 = the side panel; '100%' = full-page style filling the container,
@@ -77,13 +144,18 @@ export default function SearchMock({
   /** First frame = resolved answer (the tile's resting state); the case
       study demo keeps the default and plays the sequence from the top */
   startResolved?: boolean
+  /** Open each loop on the design file's zero state — the query types in
+      the centered input, then the panel crossfades into the chat. The zero
+      screen is a designed frame, so this mode never needs startResolved. */
+  zeroState?: boolean
 }) {
   const reducedMotion = useReducedMotion()
   const [t, setT] = useState(0)
   const [isInView, setIsInView] = useState(false)
+  const resumeResolved = startResolved && !zeroState
   // A full exchange exists on screen — lets the next typing pass keep the
   // previous answer visible instead of clearing to an empty white panel.
-  const [prevAvailable, setPrevAvailable] = useState(startResolved)
+  const [prevAvailable, setPrevAvailable] = useState(resumeResolved)
   const rootRef = useRef<HTMLDivElement>(null)
   const startRef = useRef<number | null>(null)
   const rafRef = useRef(0)
@@ -98,7 +170,7 @@ export default function SearchMock({
         } else {
           setIsInView(false)
           setT(0)
-          setPrevAvailable(startResolved)
+          setPrevAvailable(resumeResolved)
           startRef.current = null
         }
       },
@@ -106,13 +178,13 @@ export default function SearchMock({
     )
     obs.observe(el)
     return () => obs.disconnect()
-  }, [startResolved])
+  }, [resumeResolved])
 
   useEffect(() => {
     if (!isInView || reducedMotion) return
     const frame = (ts: number) => {
       // Backdate the clock so the first painted frame is the resolved state.
-      if (!startRef.current) startRef.current = ts - (startResolved ? START_AT : 0)
+      if (!startRef.current) startRef.current = ts - (resumeResolved ? START_AT : 0)
       const total = ts - startRef.current
       if (total >= LOOP_END) setPrevAvailable(true)
       setT(total % LOOP_END)
@@ -120,7 +192,7 @@ export default function SearchMock({
     }
     rafRef.current = requestAnimationFrame(frame)
     return () => cancelAnimationFrame(rafRef.current)
-  }, [isInView, reducedMotion, startResolved])
+  }, [isInView, reducedMotion, resumeResolved])
 
   // Reduced motion renders the resolved frame as data, not via setState.
   const tv = reducedMotion ? HOLD_END : t
@@ -138,10 +210,24 @@ export default function SearchMock({
    * The previous cycle's answer stays up while the next query types, fading
    * only as the new one sends — the messages area is never an empty panel.
    * (It's the same query looping, so "prev" and "next" render identically.)
+   * Moot in zeroState mode, where the zero screen covers the typing phase.
    */
-  const showPrev = prevAvailable && tv < DOTS_START
+  const showPrev = !zeroState && prevAvailable && tv < DOTS_START
   const prevOpacity = tv < SEND ? 1 : clamp01(1 - (tv - SEND) / (DOTS_START - SEND))
   const showResponse = tv >= RESP || showPrev
+  /*
+   * Zero screen opacity: full through the typing phase, crossfades out as
+   * the query sends, then back in over the resolved answer just before the
+   * loop wraps — so the restart lands on the zero state with no flash.
+   * Reduced motion skips it entirely and shows the resolved chat instead.
+   */
+  const zeroOpacity =
+    !zeroState || reducedMotion
+      ? 0
+      : Math.max(
+          1 - clamp01((tv - SEND) / 250),
+          clamp01((tv - (LOOP_END - 300)) / 250),
+        )
 
   const scaled = scale !== 1
   const fillWidth = width === '100%'
@@ -150,7 +236,7 @@ export default function SearchMock({
     <div ref={rootRef} className="flex h-full items-center justify-center overflow-hidden">
       {/* ── The panel; 400 native, or full-page style filling the stage ── */}
       <div
-        className={`lcs-searchmock flex flex-col overflow-hidden rounded-[8px] border border-white/10 bg-white text-left ${fillWidth || scaled ? '' : 'max-w-full'}`}
+        className={`lcs-searchmock relative flex flex-col overflow-hidden rounded-[8px] border border-white/10 bg-white text-left ${fillWidth || scaled ? '' : 'max-w-full'}`}
         style={{
           width: fillWidth ? (scaled ? `${100 / scale}%` : '100%') : width,
           height: scaled && height === '100%' ? `${100 / scale}%` : height,
@@ -270,43 +356,44 @@ export default function SearchMock({
 
         {/* Input */}
         <div className={`shrink-0 ${compact ? 'px-[12px] pb-[12px] pt-[6px]' : 'px-[16px] pb-[16px] pt-[8px]'}`}>
+          <ChatInput compact={compact} sent={sent} typed={typed} typedCount={typedCount} />
+        </div>
+
+        {/* Zero screen — overlays everything below the header while the
+            query types, per node 40000022:11342 */}
+        {zeroState && zeroOpacity > 0 && (
           <div
-            className="mx-auto flex w-full max-w-[800px] flex-col rounded-[8px] border border-[#7c78ff] bg-white"
-            style={{ height: compact ? 76 : 104 }}
+            className={`absolute inset-x-0 bottom-0 z-10 flex flex-col items-center justify-center bg-white px-[16px] ${compact ? 'top-[48px]' : 'top-[56px]'}`}
+            style={{ opacity: zeroOpacity }}
           >
-            <div className={`relative min-h-0 flex-1 ${compact ? 'pb-[4px] pl-[12px] pr-[8px] pt-[10px]' : 'pb-[8px] pl-[16px] pr-[8px] pt-[16px]'}`}>
-              {!sent && typedCount === 0 ? (
-                <p className="text-[14px] leading-[20px] text-[rgba(40,44,51,0.7)]">
-                  Find or summarize a document...
-                  <span
-                    className={`absolute h-[16px] w-px bg-[#282c33] ${compact ? 'left-[12px] top-[12px]' : 'left-[16px] top-[18px]'}`}
-                    style={{ animation: 'cursorBlink 1s step-end infinite' }}
-                  />
-                </p>
-              ) : (
-                <p className="text-[14px] leading-[20px]">
-                  {sent ? (
-                    <span className="text-[rgba(40,44,51,0.7)]">Find or summarize a document...</span>
-                  ) : (
-                    <>
-                      {typed}
-                      <span className="ml-[1px] inline-block h-[16px] w-px translate-y-[3px] bg-[#282c33]" />
-                    </>
-                  )}
-                </p>
-              )}
-            </div>
-            <div className={`flex items-center justify-end ${compact ? 'px-[6px] pb-[4px]' : 'px-[8px] pb-[8px]'}`}>
-              <span
-                className="flex items-center justify-center rounded-[4px] p-[4px]"
-                style={{ opacity: !sent && typedCount > 0 ? 1 : 0.45, transition: 'opacity 0.2s ease' }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`${MOCK}/send-arrow.svg`} alt="" className="size-[24px]" />
-              </span>
+            {/* Compact tiles shrink the whole zero screen a touch — at full
+                panel scale it crowds the stage */}
+            <div
+              className="flex w-full flex-col items-center gap-[32px]"
+              style={compact ? { transform: 'scale(0.82)' } : undefined}
+            >
+              <p className="whitespace-nowrap text-center text-[32px] font-semibold leading-[40px] tracking-[-0.3px] text-black">
+                What are you looking for today?
+              </p>
+              <div className="flex w-full max-w-[600px] flex-col gap-[24px]">
+                <ChatInput compact={compact} sent={sent} typed={typed} typedCount={typedCount} />
+                <div className="flex w-full items-stretch gap-[16px]">
+                  {PROMPTS.map((p) => (
+                    <div
+                      key={p.title}
+                      className="flex min-w-[120px] flex-1 flex-col justify-center gap-[4px] rounded-[4px] p-[12px]"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={`${MOCK}/${p.icon}`} alt="" className="size-[24px]" />
+                      <p className="text-[14px] font-medium leading-[24px]">{p.title}</p>
+                      <p className="text-[12px] leading-[16px] text-[rgba(40,44,51,0.7)]">{p.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   )

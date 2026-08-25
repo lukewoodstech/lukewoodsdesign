@@ -36,7 +36,9 @@ const TAG_COLORS: Record<string, string> = {
 
 const FALLBACK = ['var(--mono-blue)', 'var(--mono-pink)', 'var(--mono-green)', 'var(--mono-yellow)']
 
-function tagColor(tag: string) {
+// Exported so other surfaces (the Luke AI zero state) color case-study
+// references with the same discipline palette as the grid tiles.
+export function tagColor(tag: string) {
   if (TAG_COLORS[tag]) return TAG_COLORS[tag]
   // Stable per-name colour so an unmapped tag still reads consistently
   let h = 0

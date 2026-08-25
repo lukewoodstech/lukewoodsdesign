@@ -8,8 +8,9 @@ import { useEnterToOpen } from '@/lib/useEnterToOpen'
 
 /*
  * The Lucid AI Find docs panel, rebuilt Figma-faithful in SearchMock and
- * run in compact tile mode: query types, results resolve, loop. SearchMock
- * owns its own scroll-in trigger and reduced-motion handling.
+ * run in compact tile mode: the loop opens on the zero-state screen, the
+ * query types there, then the panel crossfades into the chat with results.
+ * SearchMock owns its own scroll-in trigger and reduced-motion handling.
  */
 
 // The mock's native layout box — it scales as one unit, never reflows.
@@ -66,7 +67,7 @@ export default function LucidTile() {
           {/* Fixed-size panel: one constant box through the whole loop,
               centered in the stage with dark margins on every side */}
           <div className="flex h-full w-full items-center justify-center">
-            <SearchMock height={PANEL_H} width={PANEL_W} compact scale={scale} startResolved />
+            <SearchMock height={PANEL_H} width={PANEL_W} compact scale={scale} zeroState />
           </div>
         </div>
       </div>

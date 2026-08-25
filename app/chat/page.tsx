@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import ReactMarkdown from 'react-markdown'
 import Sidebar from '@/components/Sidebar'
+import { SITE, MAILTO } from '@/lib/site'
 
 type Message = {
   role: 'user' | 'assistant'
@@ -20,20 +21,85 @@ type Conversation = {
 const GREETING: Message = {
   role: 'assistant',
   content:
-    "hi. i'm luke ai — a portfolio assistant trained on luke woods's public work, resume, and projects. ask me anything about his experience, skills, or process.",
+    "hi. i'm luke ai. the case studies tell you what luke shipped — i'm for everything else: map his experience to your role, compare how he works across teams, or get the 30-second version.",
 }
 
+// Reads from lib/site.ts like the nav and footer do — the résumé is
+// self-hosted now, and this page used to be the last Drive-link holdout.
 const PLUS_ITEMS = [
-  { label: 'Résumé',   description: 'Open in a new tab',          href: 'https://drive.google.com/file/d/18_IQ05ORFpJnJeR42TqPjkL9JoCxSkHX/view?usp=sharing' },
-  { label: 'LinkedIn', description: 'Connect with Luke',           href: 'https://www.linkedin.com/in/lukewoodstech' },
-  { label: 'Email',    description: 'Send Luke a message',         href: 'mailto:lukewoodstech@gmail.com?subject=Hi%20from%20your%20portfolio' },
+  { label: 'Résumé',   description: 'Open in a new tab',  href: SITE.resume },
+  { label: 'LinkedIn', description: 'Connect with Luke',  href: SITE.linkedin },
+  { label: 'Email',    description: 'Send Luke a message', href: MAILTO },
 ]
 
+/*
+ * Zero-state suggestions do what the case-study pages can't: map Luke to a
+ * specific role, compress everything for a skim, synthesize across teams,
+ * and answer the interview-style questions. Summaries of individual
+ * studies live one click away on the grid — no reason to duplicate them.
+ */
+const IconTarget = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="8" />
+    <circle cx="12" cy="12" r="4" opacity="0.6" />
+    <circle cx="12" cy="12" r="0.8" fill="currentColor" stroke="none" />
+  </svg>
+)
+const IconBolt = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M13 2 4.5 13.5h5L11 22l8.5-11.5h-5L13 2Z" />
+  </svg>
+)
+const IconCode = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M8.5 7 4 12l4.5 5" />
+    <path d="M15.5 7 20 12l-4.5 5" />
+    <path d="M13.2 4.5 10.8 19.5" opacity="0.6" />
+  </svg>
+)
+const IconRedo = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M4 8v5h5" />
+    <path d="M4.5 13a8 8 0 1 0 2-7.5L4 8" />
+  </svg>
+)
+
 const PROMPTS = [
-  { category: 'ai product',    label: "Lucid AI",                        message: "tell me about the Lucid AI project" },
-  { category: 'ux redesign',   label: "Awardco Login Flow Redesign",     message: "tell me about the Awardco login flow redesign" },
-  { category: 'feature design', label: "Pattern Custom Reports",         message: "tell me about the Pattern custom reports feature" },
-  { category: 'web design',    label: "Hoth Landing Page",               message: "tell me about the Hoth landing page" },
+  {
+    key: 'fit',
+    icon: <IconTarget />,
+    color: 'var(--mono-blue)',
+    header: 'Is Luke your fit?',
+    desc: "Paste a job description — I'll map his experience to it.",
+    message:
+      "I'm evaluating Luke for a role. If I paste the job description, can you map his experience against it — honestly, including gaps?",
+  },
+  {
+    key: 'pitch',
+    icon: <IconBolt />,
+    color: 'var(--mono-yellow)',
+    header: 'The 30-second version',
+    desc: 'Four internships, distilled for the skim read.',
+    message: 'Give me the 30-second version of Luke: who he is, proof, and why it matters.',
+  },
+  {
+    key: 'worksample',
+    icon: <IconCode />,
+    color: 'var(--mono-green)',
+    header: "You're inside a work sample",
+    desc: 'Ask how any piece of this site was built.',
+    message:
+      'How was this site built? Walk me through what is actually running on the home page tiles.',
+  },
+  {
+    key: 'hard',
+    icon: <IconRedo />,
+    color: 'var(--mono-pink)',
+    header: 'Ask the hard question',
+    desc: "Trade-offs, limits, what he'd redo.",
+    message:
+      "What would Luke do differently across his projects, and what are the honest limitations of his work so far?",
+  },
 ]
 
 const STORAGE_KEY = 'luke-ai-conversations'
@@ -370,18 +436,27 @@ export default function ChatPage() {
             <p className="chat-pg__zero-heading">ask me anything about luke's work.</p>
             <div className="chat-pg__float-wrap chat-pg__float-wrap--zero">
               {floatInput(true)}
-              <div className="grid grid-cols-2 gap-2 mt-14">
+              <div className="grid grid-cols-2 gap-2.5 mt-14">
                 {PROMPTS.map((p) => (
                   <button
-                    key={p.label}
-                    className="group flex flex-col items-start gap-[0.4rem] rounded-[10px] border border-white/[0.08] bg-white/[0.03] p-4 text-left transition-all duration-200 hover:border-white/[0.18] hover:bg-white/[0.06]"
+                    key={p.key}
+                    className="group flex items-start gap-3.5 rounded-[12px] border border-white/[0.08] bg-white/[0.03] p-4 text-left transition-all duration-200 hover:border-white/[0.18] hover:bg-white/[0.06]"
                     onClick={() => sendMessage(p.message)}
                   >
-                    <span className="block text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-[#008fff]">
-                      {p.category}
+                    <span
+                      className="flex size-10 shrink-0 items-center justify-center rounded-[9px] border border-white/[0.08] bg-white/[0.04]"
+                      style={{ color: p.color }}
+                      aria-hidden="true"
+                    >
+                      {p.icon}
                     </span>
-                    <span className="block text-[0.82rem] leading-snug text-white/60 transition-colors duration-200 group-hover:text-white/90">
-                      {p.label}
+                    <span className="flex min-w-0 flex-col gap-1">
+                      <span className="text-[1rem] font-semibold leading-snug text-white/90 transition-colors duration-200 group-hover:text-white">
+                        {p.header}
+                      </span>
+                      <span className="text-[0.85rem] leading-snug text-white/45 transition-colors duration-200 group-hover:text-white/65">
+                        {p.desc}
+                      </span>
                     </span>
                   </button>
                 ))}

@@ -1,0 +1,8 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="DiagramShapes">
+<g id="primary">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M16.5 12C18.9853 12 21 14.0147 21 16.5C21 18.9853 18.9853 21 16.5 21C14.0147 21 12 18.9853 12 16.5C12 14.0147 14.0147 12 16.5 12ZM16.5 13C14.567 13 13 14.567 13 16.5C13 18.433 14.567 20 16.5 20C18.433 20 20 18.433 20 16.5C20 14.567 18.433 13 16.5 13Z" fill="#282C33"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M12 11H8V16H12V17H7V11H3V3H12V11ZM4 10H11V4H4V10Z" fill="#282C33"/>
+</g>
+</g>
+</svg>

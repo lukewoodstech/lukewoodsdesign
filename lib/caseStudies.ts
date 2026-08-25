@@ -229,6 +229,11 @@ export const caseStudies: CaseStudy[] = [
     nextTitle: 'Lucid AI',
   },
   {
+    /*
+     * The article itself is the bespoke page at
+     * app/work/awardco-login-flow-redesign/page.tsx — this entry feeds the
+     * home-grid tile, the prev/next chain, and the chat zero-state.
+     */
     slug: 'awardco-login-flow-redesign',
     title: 'Reducing Authentication Friction',
     company: 'Awardco',
