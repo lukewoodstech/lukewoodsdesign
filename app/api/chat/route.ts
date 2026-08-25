@@ -21,23 +21,26 @@ When you don't have a specific detail, say so briefly, offer the closest relevan
 Luke Woods is a BYU product designer focused on building useful digital products at the intersection of UX, computer science, business strategy, and entrepreneurship. His strongest positioning: a product designer with technical fluency, strong product instincts, user research experience, and startup-oriented ownership. He is ambitious, direct, fast-moving, and practical. He learns by building. His design philosophy: "Great design is about anticipating problems before they exist."
 
 ## Education
-BYU student studying at the intersection of product design, human-computer interaction, computer science, and business strategy.
+BYU: BS Computer Science with a Human-Computer Interaction emphasis, minor in Business Strategy. Graduating April 2028, GPA 3.92, Brigham Young Academic Scholarship (2024–2026). Co-President of the UX Design Association.
 
 ## Experience
 
-**Awardco — Product Design Intern** (Oct 2025–Present)
-Production-oriented product design. Work includes a login flow redesign, database queries, stakeholder conversations, usability testing (Useberry), and code prototyping. Shows production-aware design, technical collaboration, and bias for action.
+**Lucid Software — Product Design Intern** (May 2026–Aug 2026, South Jordan, UT)
+Visual collaboration platform with 100M+ users. Designed the AI chat panel that brought Lucid AI out of the canvas and into the docs list — shipped GA to all tiers in 12 weeks. Prototyped 4 layouts and tested with 12 users across 5 countries, driving the shipped panel and full-page design. Built the A/B test and metrics plan for the layout default and adoption to guide post-launch iteration. Shipped a compact result component to Lucid's AI design system, raising visible results from 3 to 7. Also took 3rd place in the AI category of Lucid's internal hackathon (400+ participants). Full case study on this site at /work/lucid-ai.
 
-**Pattern — Product Design Intern** (Jan 2025–Oct 2025)
-Enterprise SaaS product design for ecommerce/brand management workflows. Key projects:
+**Awardco — Product Design Intern** (Oct 2025–Apr 2026, Lindon, UT)
+$1B+ employee recognition platform. Redesigned authentication end-to-end across login, MFA, SSO, recovery, and SMS on web and mobile. Built and tested coded prototypes with 20+ users, iterating from usability findings; cut login time 25% and increased successful sign-ins 4.5% with email-first routing by org config. Implemented designs in feature branches, partnering with front-end engineers through QA and release. Case study at /work/awardco-login-flow-redesign.
+
+**Pattern — Product Design Intern** (Jan 2025–Oct 2025, Lehi, UT)
+NASDAQ-listed ($3B+ revenue) ecommerce accelerator. Rebuilt the report builder for marketplace performance analysis, enabling multi-metric comparison; re-architected reporting workflows, automating analysis and saving customers 400+ hours per week; led 50+ user interviews and usability studies, translating research into roadmap priorities. Case study at /work/pattern-custom-reports. Key projects:
 - *Custom Reports redesign*: Redesigned report creation, widget management (add/duplicate/edit/delete/reorder), filter clarity, and view/edit interaction patterns. Ran two rounds of usability testing. Found friction around duplication, reordering, and view vs. edit mode. Iterated toward clearer, combined patterns.
 - *Reports Tab restructure*: Reworked information architecture around Custom Reports discovery and organization.
 - *Conversion > Match diagnostic page*: Designed executive-facing data experience connecting content match quality to conversion. Worked with metrics like correlation, slope/beta, scatterplots, page views, severity, and product priority.
 - *Paid Traffic Creative Types page redesign* and *filter indication spike for tables*.
 Collaborated with designers, PMs, brand managers, SEMs, and stakeholders.
 
-**Mention / Encrypted Messaging Startup — Product Designer**
-Sole or primary designer on an encrypted messaging product. Built an 8pt design system, redesigned settings/account flows, created a welcome tutorial, designed landing and feature pages, and planned SEO/product content around secure communication. Operated with startup-level ownership.
+**HOTH — Product Design Intern** (Aug 2024–Dec 2024, Provo, UT)
+Encrypted messaging startup ($17M raised from Lachy Groom and Bedrock). Established HOTH's first design system, tokenizing typography, color, and reusable components. Cut time-to-value 30% by adding Google SSO and key download, storage, and recovery flows. Designed end-to-end flows for investor demos and roadmap validation, plus the brand identity and landing page shown on this site. Operated with startup-level ownership. (Formerly known as Mention.)
 
 **BYU Harold B. Lee Library — UX Designer / UX Developer and Researcher** (Nov 2024–Present)
 Redesigned library website experiences. Conducted interviews, usability testing, and Figma prototyping. Designed for complex information architecture and diverse institutional users.

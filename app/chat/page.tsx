@@ -33,7 +33,7 @@ const PROMPTS = [
   { category: 'ai product',    label: "Lucid AI",                        message: "tell me about the Lucid AI project" },
   { category: 'ux redesign',   label: "Awardco Login Flow Redesign",     message: "tell me about the Awardco login flow redesign" },
   { category: 'feature design', label: "Pattern Custom Reports",         message: "tell me about the Pattern custom reports feature" },
-  { category: 'web design',    label: "Mention Landing Page",            message: "tell me about the Mention landing page" },
+  { category: 'web design',    label: "Hoth Landing Page",               message: "tell me about the Hoth landing page" },
 ]
 
 const STORAGE_KEY = 'luke-ai-conversations'

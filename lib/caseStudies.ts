@@ -100,7 +100,8 @@ export const caseStudies: CaseStudy[] = [
     title: 'Custom Reports in Predict',
     company: 'Pattern',
     role: 'Product Design Intern',
-    period: 'May – Jul 2025 · 10 weeks',
+    // Résumé dates; the Custom Reports project itself ran ~10 weeks inside them.
+    period: 'Jan – Oct 2025',
     team: 'Gavin Munro (PM) · Tanner Dopp (Eng Manager) · Zach Brough (Director of Product)',
     summary: 'Rebuilding reporting so brand managers ship client-ready reports in minutes.',
     tags: ['B2B SaaS', 'Data Visualization', 'User Research'],
@@ -112,7 +113,7 @@ export const caseStudies: CaseStudy[] = [
     tagline:
       'Rebuilding Predict’s reporting tool so brand managers could create executive-ready, multi-metric reports in minutes instead of an hour.',
     overview:
-      "Pattern's Predict platform had a Custom Reports tool that was built to save time — and was doing exactly the opposite. Adoption sat at 35%, retention at 20%, and it took 80 seconds just to get into a report; most managers tried it once and went back to Excel. Over a 10-week internship on the Predict team, I redesigned Custom Reports end-to-end, from discovery through final handoff. The redesigned tool cut report creation from 30–60 minutes to under 10, and 80% of brand managers created at least one custom report in the first week.",
+      "Pattern's Predict platform had a Custom Reports tool that was built to save time — and was doing exactly the opposite. Adoption sat at 35%, retention at 20%, and it took 80 seconds just to get into a report; most managers tried it once and went back to Excel. Over a 10-week project on the Predict team, I redesigned Custom Reports end-to-end, from discovery through final handoff. The redesigned tool cut report creation from 30–60 minutes to under 10, and 80% of brand managers created at least one custom report in the first week.",
     problemIntro:
       "Brand managers at Pattern each juggle around six brands and are the primary point of contact for brand partners — reporting performance is a core part of their week. The old tool made that painful: one KPI per view meant stitching together multiple one-metric dashboards to tell a story, and comparing ad spend against sales lift in a single report was impossible. Ad strategists had the same problem connecting ad performance with sales metrics. So both groups fell back to exporting data into Excel — slow, manual, and unpolished in front of clients.",
     problemPoints: [
@@ -181,8 +182,8 @@ export const caseStudies: CaseStudy[] = [
     slug: 'hoth',
     title: 'Hoth Landing Page',
     company: 'Hoth',
-    role: '[Your role — e.g. Designer & Developer]',
-    period: '[Period — e.g. 2025]',
+    role: 'Product Design Intern',
+    period: 'Aug – Dec 2024',
     team: '[Team — e.g. Solo project]',
     summary: 'Brand identity and landing page for an encrypted work platform.',
     tags: ['Brand Identity', 'Web Design', 'Motion'],
@@ -231,8 +232,9 @@ export const caseStudies: CaseStudy[] = [
     slug: 'awardco-login-flow-redesign',
     title: 'Reducing Authentication Friction',
     company: 'Awardco',
-    role: 'Product Designer',
-    period: '2024',
+    // Role/period follow the résumé (public/resume.pdf) — the single source of truth.
+    role: 'Product Design Intern',
+    period: 'Oct 2025 – Apr 2026',
     team: 'Natalie McKenzie (PM) · Robert Jensen (Tech Lead) · Michelle Rodabough (UX Manager)',
     summary: 'Turning 7.7M failed logins into one guided path across SSO, MFA, and mobile.',
     tags: ['Mobile Design', 'Design Systems', 'UX Research'],
