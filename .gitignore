@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# extracted screen-recording frames — contain confidential Lucid content, never commit
+tmp-frames/

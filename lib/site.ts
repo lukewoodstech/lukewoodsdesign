@@ -12,8 +12,12 @@ export const SITE = {
     'Product designer who uses research, systems thinking, and technical fluency to turn complex product problems into clear, intuitive experiences.',
   email: 'lukewoodstech@gmail.com',
   linkedin: 'https://www.linkedin.com/in/lukewoodstech',
-  resume:
-    'https://drive.google.com/file/d/18_IQ05ORFpJnJeR42TqPjkL9JoCxSkHX/view?usp=sharing',
+  /*
+   * Self-hosted: the Drive link required Google's viewer and could silently
+   * break on a permissions change. The PDF ships with the site instead —
+   * update it by replacing public/resume.pdf.
+   */
+  resume: '/resume.pdf',
 } as const
 
 export const MAILTO = `mailto:${SITE.email}?subject=${encodeURIComponent(

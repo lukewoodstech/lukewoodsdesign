@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
 import SiteNav from '@/components/SiteNav'
@@ -8,7 +7,12 @@ import CompareStage from '@/components/lucid/CompareStage'
 import ShipTimeline from '@/components/lucid/ShipTimeline'
 import LayoutContest from '@/components/lucid/LayoutContest'
 import ResultsCount from '@/components/lucid/ResultsCount'
+import SearchMock from '@/components/lucid/SearchMock'
+import BoardGenClip from '@/components/lucid/BoardGenClip'
 import FailureTabs from '@/components/lucid/FailureTabs'
+import PrismStage from '@/components/lucid/PrismStage'
+import ZoomShot from '@/components/lucid/ZoomShot'
+import ImpactStats from '@/components/lucid/ImpactStats'
 import { SITE } from '@/lib/site'
 
 /*
@@ -74,7 +78,7 @@ export default function LucidCaseStudy() {
         {/* ── Hero ── */}
         <header className="pt-10 pb-12">
           <p className="lcs-eyebrow">Lucid · Product Design Internship</p>
-          <h1 className="text-5xl sm:text-6xl font-medium leading-tight tracking-tight">
+          <h1 className="text-4xl sm:text-6xl font-medium leading-tight tracking-tight">
             {TITLE}
           </h1>
           <p className="mt-4 text-xl leading-snug text-white/85">
@@ -94,20 +98,23 @@ export default function LucidCaseStudy() {
               </div>
             ))}
           </dl>
+
+          <ImpactStats
+            stats={[
+              { value: 12, label: 'weeks from zero to GA' },
+              { value: 3, label: 'AI skills shipped at launch' },
+              { value: 'All', label: 'tiers, free through enterprise' },
+              { value: 20, label: 'user interviews, five countries' },
+            ]}
+            kicker="Beyond the numbers: every future docs list AI skill inherits this panel, its entry point, its response patterns, and its failure states."
+          />
         </header>
 
         <Reveal as="figure" className="m-0">
-          <Image
-            src={`${IMG}/full-page-zero.png`}
-            alt="The shipped Lucid AI experience on the docs list: a full page chat asking what are you looking for today, with Find docs, Summarize, and Build a diagram skills beneath the input"
-            width={2880}
-            height={1800}
-            priority
-            sizes="(min-width: 860px) 860px, 100vw"
-            className="lcs-shot"
-          />
+          <SearchMock width="100%" height={560} />
           <figcaption className="lcs-cap">
-            The shipped experience. Lucid AI on the docs list, one click from anywhere.
+            Not a screenshot: the shipped experience rebuilt in code from our design
+            file, running the Find docs loop. Content is the file&rsquo;s demo data.
           </figcaption>
         </Reveal>
 
@@ -204,24 +211,22 @@ export default function LucidCaseStudy() {
           </div>
           <div className="mt-8 grid gap-6 sm:grid-cols-2">
             <figure className="m-0">
-              <Image
+              <ZoomShot
                 src={`${IMG}/find-docs-flow.png`}
                 alt="The Find docs skill explaining it can search by collaborators, timeframe, canvas content, and connected project views, with quick view chips"
                 width={2400}
                 height={1600}
                 sizes="(min-width: 860px) 430px, 100vw"
-                className="lcs-shot"
               />
               <figcaption className="lcs-cap">Find docs: search by what you actually remember.</figcaption>
             </figure>
             <figure className="m-0">
-              <Image
+              <ZoomShot
                 src={`${IMG}/summarize-flow.png`}
                 alt="The Summarize skill explaining project syncs, catch-up reports, thematic reviews, and single file deep dives, with cross-file prompt chips"
                 width={2400}
                 height={1600}
                 sizes="(min-width: 860px) 430px, 100vw"
-                className="lcs-shot"
               />
               <figcaption className="lcs-cap">Summarize: the gist of a doc or a group of them.</figcaption>
             </figure>
@@ -238,7 +243,7 @@ export default function LucidCaseStudy() {
           <div className="lcs-prose">
             <p>
               The problem was already validated when I joined, so my research was
-              evaluative, not generative. I ran 12 interviews with external users
+              evaluative, not generative. I ran 20 interviews with external users
               across the US, UK, Chile, India, and New Zealand, putting concepts and
               iterations in front of them to answer two questions. Are we building the
               right thing. Can people use it.
@@ -249,13 +254,12 @@ export default function LucidCaseStudy() {
             </p>
           </div>
           <Reveal as="figure" className="my-10 m-0">
-            <Image
+            <ZoomShot
               src={`${IMG}/skills-ideation.png`}
               alt="An ideation grid of twenty candidate skills for the docs list AI, from Find docs and Summarize to catch up, dormant files, and project status"
               width={1680}
               height={1956}
               sizes="(min-width: 860px) 860px, 100vw"
-              className="lcs-shot"
             />
             <figcaption className="lcs-cap">
               The possibility space: twenty candidate skills, mapped before cutting to
@@ -292,13 +296,12 @@ export default function LucidCaseStudy() {
             </p>
           </div>
           <Reveal as="figure" className="my-10 m-0">
-            <Image
+            <ZoomShot
               src={`${IMG}/entry-point-callout.png`}
               alt="The docs list with a one-time callout anchored to the AI icon beside the global search bar, reading Find Lucid AI anytime"
               width={2880}
               height={1800}
               sizes="(min-width: 860px) 860px, 100vw"
-              className="lcs-shot"
             />
             <figcaption className="lcs-cap">
               The AI icon docks beside search. The upgrade lives where the old
@@ -390,24 +393,22 @@ export default function LucidCaseStudy() {
           </div>
           <div className="mt-8 grid gap-6 sm:grid-cols-2">
             <figure className="m-0">
-              <Image
+              <ZoomShot
                 src={`${IMG}/results-v1-24px.png`}
                 alt="Version one of doc search results: three large 24px bordered result buttons with a see last two results chip"
                 width={2400}
                 height={2026}
                 sizes="(min-width: 860px) 430px, 100vw"
-                className="lcs-shot"
               />
               <figcaption className="lcs-cap">V1: three results in the 24px component, rest behind a click.</figcaption>
             </figure>
             <figure className="m-0">
-              <Image
+              <ZoomShot
                 src={`${IMG}/results-final-16px.png`}
                 alt="The shipped doc search results: seven compact 16px doc chips, each with a one-line description, ranked strongest match first"
                 width={2400}
                 height={1312}
                 sizes="(min-width: 860px) 430px, 100vw"
-                className="lcs-shot"
               />
               <figcaption className="lcs-cap">Shipped: up to seven results in the 16px component, all visible.</figcaption>
             </figure>
@@ -446,6 +447,13 @@ export default function LucidCaseStudy() {
               canvas never ambushes you; you choose when to enter it.
             </p>
           </div>
+          <Reveal as="figure" className="my-10 m-0">
+            <BoardGenClip />
+            <figcaption className="lcs-cap">
+              The shipped flow, captured live: Build a diagram assembling a board in
+              its own tab while the panel reports progress.
+            </figcaption>
+          </Reveal>
         </Section>
 
         <Section eyebrow="Failure states" headline="Every dead end converts to a next step.">
@@ -473,13 +481,12 @@ export default function LucidCaseStudy() {
                   label: 'Out of scope',
                   content: (
                     <figure className="m-0">
-                      <Image
+                      <ZoomShot
                         src={`${IMG}/out-of-scope.png`}
                         alt="Asked to write a full PRD, the assistant names its limit, offers to find product roadmaps or generate a feature flowchart as buttons instead"
                         width={2400}
                         height={1100}
                         sizes="(min-width: 860px) 860px, 100vw"
-                        className="lcs-shot"
                       />
                       <figcaption className="lcs-cap">
                         Asked for something it cannot do, it names the limit and
@@ -492,13 +499,12 @@ export default function LucidCaseStudy() {
                   label: 'Working',
                   content: (
                     <figure className="m-0 max-w-[420px]">
-                      <Image
+                      <ZoomShot
                         src={`${IMG}/working-state.png`}
                         alt="The working state: a spinner labeled generating diagram, under a scanned canvas step, naming what the assistant is doing"
                         width={810}
                         height={1800}
                         sizes="420px"
-                        className="lcs-shot"
                       />
                       <figcaption className="lcs-cap">
                         The spinner names what it is doing. Reused from the editor
@@ -529,6 +535,29 @@ export default function LucidCaseStudy() {
               the next iteration after my internship ends
             </li>
           </ul>
+        </Section>
+
+        {/* ── Hackathon aside ── */}
+        <Section eyebrow="Hackathon" headline="Third place in the AI category.">
+          <div className="lcs-prose">
+            <p>
+              Midway through the summer, Lucid ran its internal hackathon. My team
+              entered the AI category and took third place.
+            </p>
+            <p>
+              What we built stays inside Lucid. The prism below stands in for it: a
+              glass pyramid raytraced live in your browser by a WebGL2 fragment
+              shader I wrote for this site, with real refraction, dispersion, and
+              total internal reflection.
+            </p>
+          </div>
+          <Reveal as="figure" className="my-10 m-0">
+            <PrismStage />
+            <figcaption className="lcs-cap">
+              Rendered in real time, one raytrace per pixel. It holds still if your
+              system asks for reduced motion.
+            </figcaption>
+          </Reveal>
         </Section>
 
         {/* ── Reflection ── */}
