@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import { IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google'
 import { ViewTransition } from 'react'
+import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 import Cursor from '@/components/Cursor'
 import { SITE } from '@/lib/site'
@@ -59,6 +61,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </div>
         </ViewTransition>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
