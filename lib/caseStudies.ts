@@ -96,70 +96,86 @@ export const caseStudies: CaseStudy[] = [
     nextTitle: 'Awardco Login Flow Redesign',
   },
   {
+    /*
+     * The article itself is the bespoke page at
+     * app/work/pattern-custom-reports/page.tsx — this entry feeds the
+     * home-grid tile, the prev/next chain, and the chat zero-state.
+     *
+     * Sourced from the 2026-08 interview record in case-studies/pattern/
+     * (notes.md "FINAL BUILD DECISIONS" is binding):
+     * - Canonical numbers only: Pendo baseline ~60% trial / ~15% retention
+     *   (vs ~28–35% benchmarks), 30–60 min manual reporting, 50+ interviews,
+     *   20-user testing, 9-week project.
+     * - The redesign was BUILT AFTER THE INTERNSHIP — impact is framed as
+     *   "validated through usability testing and shipped after my internship".
+     *   The old 80%-adoption / +50%-satisfaction figures are cut entirely.
+     * - Filter override behavior is unverified — say "clearer, editable after
+     *   creation" and nothing more specific.
+     */
     slug: 'pattern-custom-reports',
     title: 'Custom Reports in Predict',
     company: 'Pattern',
     role: 'Product Design Intern',
-    // Résumé dates; the Custom Reports project itself ran ~10 weeks inside them.
+    // Résumé dates; the Custom Reports project itself ran 9 weeks inside them.
     period: 'Jan – Oct 2025',
-    team: 'Gavin Munro (PM) · Tanner Dopp (Eng Manager) · Zach Brough (Director of Product)',
-    summary: 'Rebuilding reporting so brand managers ship client-ready reports in minutes.',
+    team: 'Julie Broadbent (Design Manager) · Mitch Park (Director of Product)',
+    summary: 'Rebuilding the failed reporting tool brand managers had abandoned for Excel.',
     tags: ['B2B SaaS', 'Data Visualization', 'User Research'],
     headline: [
-      '30–60 min → under 10 min per report',
-      '80% of brand managers adopted in week one',
-      '+50% user satisfaction',
+      '60% tried the old tool — only 15% stayed',
+      'Validated with 20 users in live testing',
+      'Shipped by the team after handoff',
     ],
     tagline:
-      'Rebuilding Predict’s reporting tool so brand managers could create executive-ready, multi-metric reports in minutes instead of an hour.',
+      "Redesigning Predict's abandoned reporting tool so brand managers could build, edit, and share multi-metric client reports without falling back to Excel.",
     overview:
-      "Pattern's Predict platform had a Custom Reports tool that was built to save time — and was doing exactly the opposite. Adoption sat at 35%, retention at 20%, and it took 80 seconds just to get into a report; most managers tried it once and went back to Excel. Over a 10-week project on the Predict team, I redesigned Custom Reports end-to-end, from discovery through final handoff. The redesigned tool cut report creation from 30–60 minutes to under 10, and 80% of brand managers created at least one custom report in the first week.",
+      "Pattern's Predict platform had a Custom Reports tool built to replace the export-to-Excel reporting grind — and a year in, almost nobody used it. Pendo showed roughly 60% of eligible users had tried it, but only about 15% came back, well under enterprise retention benchmarks. The demand was real; the experience was failing it. Starting from a one-line ticket and 50+ discovery interviews, I made the case for a redesign, scoped it to 9 weeks with product and design leadership, rebuilt the core report-building experience, and validated it with 20 users. The team built and shipped it after my internship ended.",
     problemIntro:
-      "Brand managers at Pattern each juggle around six brands and are the primary point of contact for brand partners — reporting performance is a core part of their week. The old tool made that painful: one KPI per view meant stitching together multiple one-metric dashboards to tell a story, and comparing ad spend against sales lift in a single report was impossible. Ad strategists had the same problem connecting ad performance with sales metrics. So both groups fell back to exporting data into Excel — slow, manual, and unpolished in front of clients.",
+      "Brand managers at Pattern each juggle around six brands and are the primary point of contact for brand partners — reporting performance is a core part of their week. The old tool made that painful: charts were capped at two metrics, so comparing ad spend against sales lift in one view was impossible, and both brand managers and ad strategists fell back to stitching screenshots and Excel exports into client decks.",
     problemPoints: [
-      'Adoption at 35%, retention at 20% — managers tried Custom Reports once, then reverted to Excel and Tableau',
-      'Reporting took 30–60 minutes per brand, stitched together from one-metric dashboards',
-      'No way to compare multiple KPIs — like ad spend vs. sales lift — in a single report',
-      'Entering a report and starting to build took 80 seconds of navigation',
-      'Screenshots and raw Excel exports looked unprofessional in client meetings',
+      '60% of eligible users tried Custom Reports in its first year; only ~15% returned — versus ~28–35% enterprise retention benchmarks',
+      'Assembling one client-ready report took 30–60 minutes across Predict, Excel, and slides',
+      'Charts capped at two metrics — no way to compare ad spend against sales lift in one view',
+      'Filters were locked at creation and their effects were opaque, so editing often meant rebuilding',
+      'Separate view and edit modes hid basic actions like add, duplicate, and rearrange',
     ],
     process: [
       {
-        heading: 'Understand: research with both user groups',
-        body: "I structured the 10 weeks as Understand → Ideate → Validate → Design → Test. I ran discovery sessions and usability interviews with the two user groups the tool had to serve — brand managers and ad strategists — and built personas around their competing needs: managers wanted fast, client-ready reports; strategists wanted to connect ad performance with sales data. Auditing the old view and edit modes surfaced exactly where the UI fought its users.",
+        heading: 'A one-line ticket, pulled on its thread',
+        body: "My first project at Pattern was a small ClickUp ticket: let users duplicate a widget. Working the flow, I realized duplication treated a symptom — people cloned widgets because building reports was slow, confusing, and inflexible. I carried that question into the weekly continuous-discovery interviews I was already running, and reporting workarounds kept surfacing across otherwise unrelated conversations.",
       },
       {
-        heading: 'Define success before designing',
-        body: "With my PM I defined four success metrics up front: adoption rate (was it valuable enough to try?), retention (did it become a core tool, not a novelty?), time-to-report (managers were losing 30–60 minutes per brand), and share/export usage (did it replace the Excel workaround?). Every design decision afterward had a measurable target to answer to.",
+        heading: 'Building the case',
+        body: "I synthesized the interview patterns, checked Pendo — high trial, poor retention, so a usability problem rather than a demand problem — and brought the opportunity to the Predict product and design team. Once we agreed it was worth pursuing, I scoped a 9-week project with my design manager and our Director of Product, focused on the core report-building experience: creating reports, configuring widgets and filters, and editing content.",
       },
       {
         heading: 'Prioritize under real constraints',
-        body: "Ten weeks, limited engineering capacity, and an existing design system meant scope discipline. I ran requirements through an Eisenhower matrix — fixing the report-creation workflow, making the in-report UI intuitive, and adding automated Gmail sending landed as urgent and important; cross-brand reporting and BI-tool integrations were consciously deferred. Competitive analysis of Tableau, Excel, Shopify, and the Google ecosystem showed what 'intuitive reporting' looks like when done well.",
+        body: "No new data sources, a fixed design system, and limited engineering capacity meant scope discipline: the smallest set of high-impact changes that could realistically ship. A drag-and-drop builder matched advanced users' mental models but exceeded the roadmap, so I kept its underlying value — flexible report construction — in a structured, feasible flow, and deferred drill-downs, pivot-style analysis, and new integrations.",
       },
       {
-        heading: 'The drag-and-drop trade-off',
-        body: "The original vision was a fully flexible drag-and-drop report builder. Engineering flagged it as too complex for the timeline, so I partnered with them on a streamlined 'add metric' flow instead — faster to build, and it still solved the core user need. We shipped something usable on time, with drag-and-drop documented as a future roadmap item rather than a blocked release.",
+        heading: 'The redesign',
+        body: "A templates-and-tiles home replaced the text list, a guided modal flow replaced the side drawer for new reports, a first-run wizard explained the settings that used to be opaque, charts broke the two-metric cap, and reports gained share, export, and scheduled email sending. Filters became clearer and editable after creation instead of locked in.",
       },
       {
-        heading: 'High-fidelity prototypes',
-        body: "I designed the full system in Figma: a Custom Reports home with search, templates, and sharing states; a create-report modal that drops users straight into configuration; and an in-report experience built around multi-metric line charts with comparison and color customization. Each flow went through user testing rounds, and annotated prototypes gave engineers implementation-ready specs.",
+        heading: 'Testing killed my favorite assumption',
+        body: "I tested with 20 colleagues who used Predict daily — 10 brand managers, 10 ad strategists. I'd assumed users wanted separate view and edit modes; watching managers edit graphs live with clients in the room killed that, and the shipped design uses one combined mode. To seed the new Templates feature, I ran a report-building competition with prizes — the winning reports became the shipped templates.",
       },
       {
-        heading: 'Handoff & continuity',
-        body: "My internship ended shortly after release, leaving limited time to capture post-launch insights. I worked with the PM and engineers to document assumptions and hand off a clear plan for follow-up testing and iteration, so the next design and product team could validate and refine the feature beyond the internship window.",
+        heading: 'Handoff & honest impact',
+        body: "I handed off annotated specs, the prototype, documentation, and a backlog; the team built and shipped Custom Reports after my internship ended. The impact I can claim is what testing showed — both user groups building multi-metric reports quickly and confidently against a 30–60 minute baseline — and I frame it exactly that way.",
       },
     ],
     outcomes: [
-      'Report creation dropped from 30–60 minutes to under 10 — and entering a report from 80 seconds to under 30',
-      '80% of brand managers created at least one custom report in the first week',
-      'Weekly repeat usage grew as managers shifted off Excel and Tableau back into Predict',
-      'Automated Gmail sending and polished exports became the standard reporting workflow; user satisfaction rose 50%',
+      'Redesign validated through usability testing with 20 brand managers and ad strategists, then shipped by the team after my internship',
+      'Broke the two-metric chart cap — multi-metric comparison became the core of the in-report experience',
+      'Templates seeded from a prized report-building competition among the tool’s actual users',
+      'Full handoff: annotated specs, prototype, documentation, and a follow-up testing plan',
     ],
     heroSrc: '/work/pattern/hifi-home-send-report.png',
     heroCaption: 'Final design — Custom Reports home and send-report flow in Predict',
     problemFigure: {
       src: '/work/pattern/old-ui-view-mode.png',
-      caption: 'The old UI — one metric per view, buried controls, and an 80-second path into a report',
+      caption: 'The old UI — two-metric charts, buried controls, and filters you couldn’t change after creation',
     },
     processFigures: [
       {

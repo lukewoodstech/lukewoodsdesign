@@ -14,7 +14,11 @@ import { unlockCaseStudy } from './actions'
 
 // Studies with bespoke pages under app/work/<slug> — the static routes win,
 // so don't also generate them from this template.
-const BESPOKE_SLUGS = new Set(['lucid-ai', 'awardco-login-flow-redesign'])
+const BESPOKE_SLUGS = new Set([
+  'lucid-ai',
+  'awardco-login-flow-redesign',
+  'pattern-custom-reports',
+])
 
 export function generateStaticParams() {
   // Protected slugs render dynamically: their page reads the unlock cookie,
