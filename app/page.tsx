@@ -1,15 +1,10 @@
-import About from '@/components/About'
-import SiteNav from '@/components/SiteNav'
-import WorkGrid from '@/components/WorkGrid'
-import Footer from '@/components/Footer'
+import CanvasHome from '@/components/CanvasHome'
 
+/*
+ * The homepage is the horizontal canvas on desktop; CanvasHome itself
+ * renders the classic vertical stack (SiteNav/About/WorkGrid/Footer)
+ * below 48em and under reduced motion.
+ */
 export default function Home() {
-  return (
-    <>
-      <SiteNav />
-      <About />
-      <WorkGrid />
-      <Footer />
-    </>
-  )
+  return <CanvasHome />
 }

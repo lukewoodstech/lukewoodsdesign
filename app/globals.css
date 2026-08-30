@@ -2524,3 +2524,571 @@ p a {
 .acs .lcs-zoom:focus-visible {
   outline-color: #008fff;
 }
+
+/* ────────────────────────────────────────────────────────────────
+   Canvas homepage prototype (/canvas)
+   A tall scroll track pins a 100vh viewport; scroll progress slides
+   a wide card strip horizontally. The first 100vw is a landing
+   screen (giant name plate, selected-object contact card); rulers
+   and a dashed sticker nav play design-tool chrome. Desktop (≥48em)
+   only — the route falls back to the regular vertical homepage
+   below that and under reduced motion, so no media-query guards.
+   ──────────────────────────────────────────────────────────────── */
+
+.canvas-track {
+  position: relative;
+  /* height set inline: calc(100vh + TRAVELvw) → ~1:1 px scroll mapping */
+}
+
+.canvas-viewport {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #000;
+}
+
+/* The card strip carries the dot grid so the "surface" visibly moves. */
+.canvas-strip {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 420vw; /* generous; real extent set by card positions */
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.18) 1.5px, transparent 1.5px);
+  background-size: 30px 30px;
+  will-change: transform;
+}
+
+/* Depth layer: giant outlined names drifting at 0.35x scroll speed. */
+.canvas-bg {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 420vw;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.canvas-bg__name {
+  position: absolute;
+  top: 30vh;
+  font-family: var(--font-sans), sans-serif;
+  font-size: clamp(8rem, 16vw, 15rem);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.09);
+  user-select: none;
+}
+
+/* ── Landing screen ─────────────────────────────────────────────── */
+
+.canvas-intro {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Highlighted tagline — text painted like a live selection. */
+.canvas-intro__tag {
+  position: absolute;
+  left: 6vw;
+  top: 46vh;
+}
+
+.canvas-intro__highlight-wrap {
+  margin: 0 0 1.1rem;
+}
+
+.canvas-intro__highlight {
+  position: relative;
+  display: inline-block;
+  background: #008fff;
+  color: #fff;
+  font-family: var(--font-sans), sans-serif;
+  font-size: clamp(1.6rem, 2.6vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.25;
+  padding: 0.1em 0.35em;
+}
+
+.canvas-intro__cred {
+  margin: 0;
+  font-size: clamp(1rem, 1.4vw, 1.4rem);
+  font-family: var(--font-sans), sans-serif;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Name plate across the bottom, Queenie-style but lowercase like the
+   rest of the site. vw-sized so it always spans the landing screen. */
+.canvas-intro__giant {
+  position: absolute;
+  left: 3vw;
+  bottom: 1vh;
+  margin: 0;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 14.5vw;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+  white-space: nowrap;
+  color: #fff;
+  user-select: none;
+}
+
+.canvas-intro__hint {
+  position: absolute;
+  right: 4vw;
+  top: 52vh;
+  margin: 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.canvas-intro__arrow {
+  display: inline-block;
+  animation: canvas-hint-nudge 1.6s ease-in-out infinite;
+}
+
+@keyframes canvas-hint-nudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(8px);
+  }
+}
+
+/* ── Contact card: a "selected object" on the canvas ────────────── */
+
+.canvas-contact {
+  position: absolute;
+  left: 58vw;
+  top: 9vh;
+  width: 30vw;
+  outline: 1px solid rgba(255, 255, 255, 0.35);
+  outline-offset: 10px;
+}
+
+.canvas-contact__shadow {
+  position: absolute;
+  inset: 0;
+  background: #0c0c13;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 3px;
+}
+
+.canvas-contact__shadow--a {
+  transform: rotate(-3.2deg) translate(-8px, 8px);
+}
+
+.canvas-contact__shadow--b {
+  transform: rotate(2.1deg) translate(10px, -6px);
+}
+
+.canvas-contact__card {
+  position: relative;
+  background: #14141c;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 3px;
+  padding: 1.4rem 1.6rem 1.1rem;
+  transform: rotate(-1.2deg);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.canvas-contact__eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.canvas-contact__links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.45rem;
+  font-size: 0.95rem;
+}
+
+.canvas-contact__sig {
+  align-self: flex-end;
+  font-family: var(--font-sans), sans-serif;
+  font-size: clamp(2.4rem, 3.4vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1;
+  color: #008fff;
+  user-select: none;
+}
+
+/* Selection handles shared by the contact card and the highlight. */
+.sel-handle {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  background: #fff;
+  border: 1px solid #008fff;
+}
+
+.canvas-contact .sel-handle {
+  /* sit on the offset outline, not the card edge */
+  --sel-off: -15px;
+}
+
+.canvas-intro__highlight .sel-handle {
+  --sel-off: -5px;
+}
+
+.sel-handle--tl {
+  top: var(--sel-off);
+  left: var(--sel-off);
+}
+
+.sel-handle--tr {
+  top: var(--sel-off);
+  right: var(--sel-off);
+}
+
+.sel-handle--bl {
+  bottom: var(--sel-off);
+  left: var(--sel-off);
+}
+
+.sel-handle--br {
+  bottom: var(--sel-off);
+  right: var(--sel-off);
+}
+
+/* ── Work cards ─────────────────────────────────────────────────── */
+
+.canvas-card {
+  position: absolute;
+  will-change: transform;
+}
+
+/* The tiles size themselves for grid cells; inside a card they just
+   fill the frame. Shadow separates card from surface. */
+.canvas-card .workgrid__item {
+  height: 100%;
+  min-height: 0;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+}
+
+.canvas-card__label {
+  position: absolute;
+  top: -1.8rem;
+  left: 0.2rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* ── About: photos box ──────────────────────────────────────────── */
+
+.about-photos {
+  position: absolute;
+  top: 16vh;
+  width: 26vw;
+}
+
+/* Polaroid frames: white border, thick chin, thrown-on-the-desk tilt. */
+.polaroid {
+  background: #f5f2ea;
+  padding: 0.8vw 0.8vw 3vw;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
+  border-radius: 2px;
+}
+
+.polaroid--main {
+  position: relative;
+  margin: 0;
+  width: 22vw;
+  transform: rotate(-2.2deg);
+}
+
+.polaroid--main img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.polaroid--main figcaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.8vw;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #26262e;
+}
+
+/* Blank frames behind — undeveloped shots waiting for real photos. */
+.polaroid--back-a,
+.polaroid--back-b {
+  position: absolute;
+  width: 22vw;
+  height: 24vw;
+}
+
+.polaroid--back-a {
+  top: -3vh;
+  left: 4vw;
+  transform: rotate(3.4deg);
+}
+
+.polaroid--back-b {
+  top: 4vh;
+  left: -2.5vw;
+  transform: rotate(-6.5deg);
+}
+
+/* ── About: simplified résumé doc ───────────────────────────────── */
+
+.about-resume {
+  position: absolute;
+  top: 12vh;
+  width: 27vw;
+}
+
+.resume-doc {
+  background: #f7f5ef;
+  color: #17171d;
+  border-radius: 2px;
+  padding: 2vw 2.2vw;
+  transform: rotate(1.3deg);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
+}
+
+.resume-doc__head h2 {
+  margin: 0;
+  font-family: var(--font-sans), sans-serif;
+  font-size: clamp(1.5rem, 1.9vw, 2.1rem);
+  font-weight: 700;
+  color: #17171d;
+}
+
+.resume-doc__head p {
+  margin: 0.15rem 0 0;
+  font-size: 0.85rem;
+  color: #55555f;
+}
+
+.resume-doc__section {
+  margin: 1.6rem 0 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #008fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  padding-bottom: 0.35rem;
+}
+
+.resume-doc__rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.resume-doc__rows li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'company period'
+    'role role';
+  padding: 0.45rem 0;
+  font-size: 0.85rem;
+}
+
+.resume-doc__rows li + li {
+  border-top: 1px dashed rgba(0, 0, 0, 0.12);
+}
+
+.resume-doc__company {
+  grid-area: company;
+  font-weight: 500;
+}
+
+.resume-doc__role {
+  grid-area: role;
+  color: #55555f;
+  font-size: 0.78rem;
+}
+
+.resume-doc__period {
+  grid-area: period;
+  color: #55555f;
+  font-size: 0.78rem;
+}
+
+.resume-doc__tags {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #26262e;
+}
+
+.resume-doc__dl {
+  display: inline-block;
+  margin-top: 1.4rem;
+  font-size: 0.85rem;
+  color: #008fff;
+  text-decoration: none;
+  border-bottom: 1px solid #008fff;
+  padding-bottom: 1px;
+}
+
+.resume-doc__dl:hover {
+  color: #0072cc;
+  border-color: #0072cc;
+}
+
+/* ── Outro: designed contact finale ─────────────────────────────── */
+
+.canvas-outro {
+  position: absolute;
+  top: 0;
+  height: 100vh;
+  width: 32vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.canvas-outro__card {
+  position: relative;
+  background: #14141c;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 3px;
+  padding: 2.4vw 2.6vw;
+  transform: rotate(-1.1deg);
+  outline: 1px solid rgba(255, 255, 255, 0.35);
+  outline-offset: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.4rem;
+}
+
+.canvas-outro__card .sel-handle {
+  --sel-off: -15px;
+}
+
+.canvas-outro__title {
+  margin: 0;
+  font-family: var(--font-sans), sans-serif;
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.canvas-outro__sub {
+  margin: 0;
+  font-size: clamp(0.95rem, 1.1vw, 1.1rem);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.canvas-outro__cta {
+  display: inline-block;
+  background: #008fff;
+  color: #fff;
+  font-family: var(--font-sans), sans-serif;
+  font-size: clamp(1.1rem, 1.4vw, 1.4rem);
+  font-weight: 700;
+  padding: 0.7em 1.4em;
+  border-radius: 3px;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.canvas-outro__cta:hover {
+  background: #0072cc;
+  transform: rotate(1.1deg);
+}
+
+.canvas-outro__links {
+  display: flex;
+  gap: 1.4rem;
+  font-size: 0.95rem;
+}
+
+/* ── Screen-fixed chrome: sticker nav + progress line ───────────── */
+
+/* Dashed sticker nav, top-left. */
+.canvas-nav {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  z-index: 4;
+}
+
+.canvas-nav__btn {
+  display: inline-block;
+  border: 1px dashed rgba(255, 255, 255, 0.6);
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  padding: 0.45rem 1.6rem;
+  cursor: none;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.canvas-nav__btn:nth-child(1) {
+  transform: rotate(-2.4deg);
+}
+
+.canvas-nav__btn:nth-child(2) {
+  transform: rotate(1.8deg) translateX(10px);
+}
+
+.canvas-nav__btn:nth-child(3) {
+  transform: rotate(-1.4deg) translateX(2px);
+}
+
+.canvas-nav__btn:nth-child(4) {
+  transform: rotate(2.2deg) translateX(12px);
+}
+
+.canvas-nav__btn:hover {
+  background: #008fff;
+  border-color: #008fff;
+  border-style: solid;
+}
+
+.canvas-nav__btn:focus-visible {
+  outline: 2px solid #008fff;
+  outline-offset: 2px;
+}
+
+/* Thin progress line along the bottom edge — fills as the canvas is
+   traversed. */
+.canvas-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  z-index: 4;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.canvas-progress__fill {
+  position: absolute;
+  inset: 0;
+  background: #008fff;
+  transform-origin: left;
+}
