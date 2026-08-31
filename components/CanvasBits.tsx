@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import Image from 'next/image'
 import { SITE } from '@/lib/site'
 import EmailLink from './EmailLink'
 import LucidTile from './LucidTile'
@@ -35,6 +36,84 @@ export const WORK_TILES: ReadonlyArray<{ slug: string; label: string; tile: Reac
   { slug: 'hoth', label: '04 · hoth', tile: <HothTile /> },
 ]
 
+/*
+ * A FigJam-style sticky note beside the polaroids: the personal blurb —
+ * who Luke is off the clock — in handwriting on the one yellow object
+ * on the canvas. Shared by CanvasHome and MobileHome.
+ */
+/* Résumé rows — dates follow public/resume.pdf, the single source of
+   truth (same strings as lib/caseStudies.ts). */
+const RESUME_ROWS = [
+  { company: 'Lucid', period: 'May – Aug 2026' },
+  { company: 'Awardco', period: 'Oct 2025 – Apr 2026' },
+  { company: 'Pattern', period: 'Jan – Oct 2025' },
+  { company: 'Hoth', period: 'Aug – Dec 2024' },
+] as const
+
+/*
+ * README.md in rendered markdown preview — the classic "about this
+ * project" file, except the project is Luke. One window carries the
+ * whole about section: personal blurb (Luke's own words), then the
+ * simplified résumé — experience, toolkit, download link.
+ */
+export function AboutReadme() {
+  return (
+    <div className="code-card readme-card" aria-label="About Luke, the person">
+      <div className="code-card__bar" aria-hidden="true">
+        <span className="code-card__dot code-card__dot--r" />
+        <span className="code-card__dot code-card__dot--y" />
+        <span className="code-card__dot code-card__dot--g" />
+        <span className="code-card__file">README.md — luke</span>
+      </div>
+      <div className="code-card__tabs" aria-hidden="true">
+        <span className="code-card__tab">
+          <span className="code-card__mdicon">M↓</span>
+          README.md (Preview)
+          <span className="code-card__tabclose">×</span>
+        </span>
+      </div>
+      <div className="readme-card__body">
+        <h2>
+          hi, i&apos;m luke <span aria-hidden="true">👋</span>
+        </h2>
+        <div className="readme-card__badges" aria-hidden="true">
+          <span className="readme-card__badge readme-card__badge--blue">design + code</span>
+          <span className="readme-card__badge readme-card__badge--purple">byu cs</span>
+          <span className="readme-card__badge readme-card__badge--green">open to work</span>
+        </div>
+        <p>
+          I&apos;m Luke. I&apos;m curious, ambitious, and always building toward something. I love
+          big ideas, good people, and challenges that push me beyond what I already know.
+        </p>
+        <p>
+          Outside of work, I&apos;m usually lifting, playing basketball, watching anime, or
+          taking care of an unreasonable number of tarantulas. And if it involves being
+          outdoors — fishing, hiking, a good view — count me in. The polaroids are proof.
+        </p>
+        <blockquote>
+          That same curiosity shapes how I design: stay open, dig deeper, and build things that
+          genuinely improve people&apos;s lives.
+        </blockquote>
+        <h3>experience</h3>
+        <ul className="resume-md__rows">
+          {RESUME_ROWS.map((row) => (
+            <li key={row.company}>
+              <span className="resume-md__company">{row.company}</span>
+              <span className="resume-md__role">Product Design Intern</span>
+              <span className="resume-md__period">{row.period}</span>
+            </li>
+          ))}
+        </ul>
+        <h3>toolkit</h3>
+        <p className="resume-md__tags">research · design systems · prototyping · motion · code</p>
+        <a className="resume-md__dl" href={SITE.resume} target="_blank" rel="noopener noreferrer">
+          ⤓ download the full résumé
+        </a>
+      </div>
+    </div>
+  )
+}
+
 /* Figma-style selection handles on the corners of a "selected" object. */
 export function SelectionHandles() {
   return (
@@ -60,6 +139,20 @@ export function CodeTagline() {
       <span className="ct-dim">+</span> code<span className="ct-dim">;</span>
       <SelectionHandles />
     </span>
+  )
+}
+
+/*
+ * The line under the tagline, set as the comment on the declaration.
+ * Deliberately plain and confident — no hedge, no comparison; the site
+ * around it is the evidence. (Earlier drafts qualified the claim —
+ * "real enough to user-test" — and Luke cut them for sounding weak.)
+ */
+export function CredComment() {
+  return (
+    <p className="code-cred">
+      <span>{'// I design and build.'}</span>
+    </p>
   )
 }
 
@@ -150,51 +243,61 @@ export function ContactCard() {
 }
 
 /*
- * The contact finale as a GitHub-style pull request: Luke asking to be
- * merged into your team. The green Merge button is the email CTA; the
- * checks row is the pitch. Shared by the desktop canvas and MobileHome.
+ * The contact finale as a Figma publish dialog: Luke as a component ready
+ * to publish to the visitor's team library. Reads at two levels — designers
+ * catch the bit, everyone else just sees a clear hire-me card with a big
+ * blue button. The Publish button is the email CTA (EmailLink, so a click
+ * copies the address even without a mail client). Shared by the desktop
+ * canvas and MobileHome.
  */
 export function ContactFinale() {
   return (
-    <div className="pr-card">
-      <div className="pr-card__head">
-        <span className="pr-card__state" aria-hidden="true">
-          ⎇ open
+    <div className="pub-card">
+      <div className="pub-card__bar">
+        publish component
+        <span className="pub-card__x" aria-hidden="true">
+          ×
         </span>
-        <div className="pr-card__headtext">
-          <h2 className="pr-card__title">
-            add luke to your team <span className="pr-card__num">#001</span>
+      </div>
+      <div className="pub-card__main">
+        <div className="pub-card__thumb" aria-hidden="true">
+          <Image src="/luke-woods.jpg" alt="" width={128} height={128} />
+        </div>
+        <div>
+          <h2 className="pub-card__name">
+            <span className="pub-card__compicon" aria-hidden="true">
+              ❖
+            </span>
+            luke woods
           </h2>
-          <p className="pr-card__meta">
-            <b>luke</b> wants to merge 4 internships into <code>your-team/main</code>
-          </p>
+          <p className="pub-card__meta">product designer · v5.0 · ready to ship</p>
         </div>
       </div>
-      <ul className="pr-card__checks">
+      <ul className="pub-card__changes">
         <li>
-          <span className="pr-card__check" aria-hidden="true">
-            ✓
+          <span className="pub-card__plus" aria-hidden="true">
+            +
           </span>
           design — end-to-end flows shipped at four companies
         </li>
         <li>
-          <span className="pr-card__check" aria-hidden="true">
-            ✓
+          <span className="pub-card__plus" aria-hidden="true">
+            +
           </span>
-          code — prototypes real enough to user-test
+          code — working prototypes, this site included
         </li>
         <li>
-          <span className="pr-card__check" aria-hidden="true">
-            ✓
+          <span className="pub-card__plus" aria-hidden="true">
+            +
           </span>
           research — interviews and usability tests at every stop
         </li>
       </ul>
-      <div className="pr-card__mergebox">
-        <EmailLink className="pr-card__merge">merge pull request</EmailLink>
-        <span className="pr-card__mergehint">opens an email to luke · click also copies the address</span>
+      <div className="pub-card__publishrow">
+        <EmailLink className="pub-card__publish">publish to your library</EmailLink>
+        <span className="pub-card__hint">opens an email to luke · copies the address</span>
       </div>
-      <div className="pr-card__links">
+      <div className="pub-card__links">
         <a className="footer-link" href={SITE.linkedin} target="_blank" rel="noopener noreferrer">
           linkedin
         </a>

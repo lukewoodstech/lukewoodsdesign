@@ -130,9 +130,11 @@ export default function HothTile() {
 
   useEffect(() => () => cancelAnimationFrame(rafRef.current), [])
 
-  // Random short glitch bursts on the wordmark while hovered
+  // Random short glitch bursts on the wordmark — always alive so the tile
+  // reads as encrypted at rest, sparser when idle and more frequent under
+  // the cursor (cadence reads hoveredRef so hovering doesn't reset the loop)
   useEffect(() => {
-    if (!hovered || reducedMotion) { setGlitching(false); return }
+    if (reducedMotion) { setGlitching(false); return }
     let alive = true
     let timer: ReturnType<typeof setTimeout>
     const burst = () => {
@@ -141,12 +143,15 @@ export default function HothTile() {
       timer = setTimeout(() => {
         if (!alive) return
         setGlitching(false)
-        timer = setTimeout(burst, 700 + Math.random() * 1600)
+        const lull = hoveredRef.current
+          ? 700 + Math.random() * 1600
+          : 2200 + Math.random() * 2800
+        timer = setTimeout(burst, lull)
       }, 140 + Math.random() * 140)
     }
-    burst()
+    timer = setTimeout(burst, 400 + Math.random() * 900)
     return () => { alive = false; clearTimeout(timer) }
-  }, [hovered, reducedMotion])
+  }, [reducedMotion])
 
   return (
     <div

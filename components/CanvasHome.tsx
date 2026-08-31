@@ -7,8 +7,7 @@ import MobileHome from './MobileHome'
 import LukeAiCard from './LukeAiCard'
 import VectorName from './VectorName'
 import LocalTimeLine from './LocalTimeLine'
-import { CodeTagline, ContactCard, ContactFinale, WORK_TILES } from './CanvasBits'
-import { SITE } from '@/lib/site'
+import { AboutReadme, CodeTagline, ContactCard, CredComment, WORK_TILES } from './CanvasBits'
 import { useReducedMotion } from '@/lib/useReducedMotion'
 
 /*
@@ -53,23 +52,13 @@ const CARDS: readonly CardSpec[] = [
    a working app window sits straight, unlike the pinned-up case studies. */
 const AI_CARD: CardSpec = { left: 293, top: 13, w: 32, h: 68, rot: 0, drift: -1 }
 
-/* About section: photos → simplified résumé → contact finale */
+/* About section: photos + the combined README (blurb + résumé) → finale.
+   Polaroids + README span ~90vw; the finale starts past them. */
 const ABOUT_PHOTOS_LEFT = 336 // vw
-/* Two full-size polaroids span ~42vw — the résumé starts past them
-   so the frames never touch the editor window. */
-const ABOUT_RESUME_LEFT = 382 // vw
-const OUTRO_LEFT = 416 // vw
-const STRIP_W = OUTRO_LEFT + 42 // vw — contact box + right margin
+/* The README is the canvas's last object: photos section (336) + its
+   left offset (70) + its 30vw width, plus right margin. */
+const STRIP_W = 446 // vw
 const TRAVEL = STRIP_W - 100 // vw the strip translates over the full scroll
-
-/* Simplified résumé rows — dates follow public/resume.pdf, the single
-   source of truth (same strings as lib/caseStudies.ts). */
-const RESUME_ROWS = [
-  { company: 'Lucid', period: 'May – Aug 2026' },
-  { company: 'Awardco', period: 'Oct 2025 – Apr 2026' },
-  { company: 'Pattern', period: 'Jan – Oct 2025' },
-  { company: 'Hoth', period: 'Aug – Dec 2024' },
-] as const
 
 /*
  * Same pattern as lib/useReducedMotion: matchMedia is an external store.
@@ -162,6 +151,10 @@ export default function CanvasHome() {
   })
   const x = useTransform(smooth, (v) => `${-v * TRAVEL}vw`)
   const bgX = useTransform(smooth, (v) => `${-v * TRAVEL * 0.35}vw`)
+  /* The outline names drift slower than the canvas, so stray letters can
+     linger into the about section — fade the whole depth layer out over
+     the last stretch so the ending is calm dot-grid. */
+  const bgOpacity = useTransform(smooth, [0.78, 0.92], [1, 0])
 
   /*
    * Sideways input drives the canvas too: scroll distance maps ~1:1 to
@@ -248,7 +241,7 @@ export default function CanvasHome() {
       style={{ height: `calc(100vh + ${TRAVEL}vw)` }}
     >
       <div className="canvas-viewport">
-        <motion.div className="canvas-bg" style={{ x: bgX }} aria-hidden="true">
+        <motion.div className="canvas-bg" style={{ x: bgX, opacity: bgOpacity }} aria-hidden="true">
           <span className="canvas-bg__name" style={{ left: '78vw' }}>
             product designer
           </span>
@@ -264,9 +257,7 @@ export default function CanvasHome() {
               <p className="canvas-intro__highlight-wrap">
                 <CodeTagline />
               </p>
-              <p className="canvas-intro__cred">
-                recently at Lucid — previously Awardco, Pattern, and Hoth.
-              </p>
+              <CredComment />
               <LocalTimeLine />
             </div>
 
@@ -320,67 +311,17 @@ export default function CanvasHome() {
               />
               <figcaption>kenai river, alaska</figcaption>
             </figure>
-          </section>
-
-          <section
-            className="about-resume"
-            style={{ left: `${ABOUT_RESUME_LEFT}vw` }}
-            aria-label="Simplified résumé"
-          >
-            <span className="canvas-card__label" aria-hidden="true">
-              07 · résumé
-            </span>
-            <div className="code-card resume-md">
-              <div className="code-card__bar" aria-hidden="true">
-                <span className="code-card__dot code-card__dot--r" />
-                <span className="code-card__dot code-card__dot--y" />
-                <span className="code-card__dot code-card__dot--g" />
-                <span className="code-card__file">resume.md — portfolio</span>
-              </div>
-              <div className="code-card__tabs" aria-hidden="true">
-                <span className="code-card__tab">
-                  <span className="code-card__mdicon">M↓</span>
-                  resume.md (Preview)
-                  <span className="code-card__tabclose">×</span>
-                </span>
-              </div>
-              <div className="resume-md__body">
-                <h2>luke woods</h2>
-                <p className="resume-md__lede">product designer</p>
-                <h3>experience</h3>
-                <ul className="resume-md__rows">
-                  {RESUME_ROWS.map((row) => (
-                    <li key={row.company}>
-                      <span className="resume-md__company">{row.company}</span>
-                      <span className="resume-md__role">Product Design Intern</span>
-                      <span className="resume-md__period">{row.period}</span>
-                    </li>
-                  ))}
-                </ul>
-                <h3>toolkit</h3>
-                <p className="resume-md__tags">
-                  research · design systems · prototyping · motion · code
-                </p>
-                <a
-                  className="resume-md__dl"
-                  href={SITE.resume}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  ⤓ download the full résumé
-                </a>
-              </div>
-            </div>
-          </section>
-
-          <section className="canvas-outro" style={{ left: `${OUTRO_LEFT}vw` }}>
-            <div className="canvas-outro__stack">
-              <span className="canvas-card__label" aria-hidden="true">
-                08 · say hi
-              </span>
-              <h2 className="canvas-outro__title">like what you see?</h2>
-              <ContactFinale />
-            </div>
+            <figure className="polaroid polaroid--third">
+              <Image
+                src="/luke-grand-canyon.jpg"
+                alt="Luke smiling in a selfie on a Grand Canyon trail, canyon ridges stretching out behind him"
+                width={700}
+                height={700}
+                sizes="22vw"
+              />
+              <figcaption>grand canyon, arizona</figcaption>
+            </figure>
+            <AboutReadme />
           </section>
         </motion.div>
 

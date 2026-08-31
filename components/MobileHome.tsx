@@ -5,7 +5,14 @@ import Image from 'next/image'
 import EmailLink from './EmailLink'
 import LukeAiCard from './LukeAiCard'
 import LocalTimeLine from './LocalTimeLine'
-import { CodeTagline, ContactCard, ContactFinale, SelectionHandles, WORK_TILES } from './CanvasBits'
+import {
+  AboutReadme,
+  CodeTagline,
+  ContactCard,
+  CredComment,
+  SelectionHandles,
+  WORK_TILES,
+} from './CanvasBits'
 import { SITE } from '@/lib/site'
 
 /*
@@ -78,9 +85,7 @@ export default function MobileHome() {
           <p className="canvas-intro__highlight-wrap">
             <CodeTagline />
           </p>
-          <p className="mhome-hero__cred">
-            recently at Lucid — previously Awardco, Pattern, and Hoth.
-          </p>
+          <CredComment />
           <LocalTimeLine className="mhome-hero__time" />
 
           <ContactCard />
@@ -141,13 +146,18 @@ export default function MobileHome() {
               />
               <figcaption>kenai river, alaska</figcaption>
             </figure>
+            <figure className="polaroid polaroid--third mhome-polaroid">
+              <Image
+                src="/luke-grand-canyon.jpg"
+                alt="Luke smiling in a selfie on a Grand Canyon trail, canyon ridges stretching out behind him"
+                width={700}
+                height={700}
+                sizes="(max-width: 48em) 80vw, 20rem"
+              />
+              <figcaption>grand canyon, arizona</figcaption>
+            </figure>
+            <AboutReadme />
           </div>
-        </section>
-
-        {/* ── Outro: same pull-request finale as the canvas ── */}
-        <section className="mhome-outro">
-          <h2 className="canvas-outro__title">like what you see?</h2>
-          <ContactFinale />
         </section>
 
         <footer className="mhome-footer">

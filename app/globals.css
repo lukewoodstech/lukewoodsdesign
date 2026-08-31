@@ -225,7 +225,7 @@ p a {
 .footer-link:focus-visible,
 .tile-footer__logo-link:focus-visible,
 .term-nav__line:focus-visible,
-.pr-card__links a:focus-visible,
+.pub-card__links a:focus-visible,
 .resume-md__dl:focus-visible,
 .chat-pg__send:focus-visible,
 .chat-pg__contact-btn:focus-visible,
@@ -2486,7 +2486,7 @@ p a {
 .canvas-strip {
   position: absolute;
   inset: 0 auto 0 0;
-  width: 470vw; /* generous; real extent set by card positions */
+  width: 530vw; /* generous; real extent set by card positions */
   background-image: radial-gradient(circle, rgba(255, 255, 255, 0.18) 1.5px, transparent 1.5px);
   background-size: 30px 30px;
   will-change: transform;
@@ -2496,7 +2496,7 @@ p a {
 .canvas-bg {
   position: absolute;
   inset: 0 auto 0 0;
-  width: 470vw;
+  width: 530vw;
   pointer-events: none;
   will-change: transform;
 }
@@ -2893,13 +2893,25 @@ a.cc-link:focus-visible {
   transform: rotate(3.2deg);
 }
 
-.polaroid--second img {
+/* Third frame: the Grand Canyon shot, continuing the loose row. */
+.polaroid--third {
+  position: absolute;
+  top: 1vh;
+  left: 40.5vw;
+  width: 22vw;
+  margin: 0;
+  transform: rotate(-1.8deg);
+}
+
+.polaroid--second img,
+.polaroid--third img {
   display: block;
   width: 100%;
   height: auto;
 }
 
-.polaroid--second figcaption {
+.polaroid--second figcaption,
+.polaroid--third figcaption {
   position: absolute;
   left: 0;
   right: 0;
@@ -2909,60 +2921,106 @@ a.cc-link:focus-visible {
   color: #26262e;
 }
 
+/* README.md: the personal blurb as a rendered markdown preview window,
+   following the polaroid row — same chrome as contact.ts / resume.md. */
+.readme-card {
+  position: absolute;
+  /* clear air between the last polaroid (ends ~62.5vw) and the window */
+  left: 70vw;
+  /* the section sits at 16vh; -8vh puts the window near the top of the
+     screen so the combined blurb + résumé fits above the fold */
+  top: -8vh;
+  width: 30vw;
+}
+
+.readme-card__body {
+  padding: 1.1rem 1.4rem 1.2rem;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #cccccc;
+}
+
+.readme-card__body h2 {
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid #3d3d3d;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* shields.io-style badge row under the heading */
+.readme-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 0.9rem;
+}
+
+/* Site-palette badge pills (same recipe as the tile tag pills) — no
+   foreign brand hexes. */
+.readme-card__badge {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 0.18rem 0.6rem;
+  color: var(--badge-c);
+  border: 1px solid color-mix(in srgb, var(--badge-c) 55%, transparent);
+  background: color-mix(in srgb, var(--badge-c) 14%, transparent);
+}
+
+.readme-card__badge--blue {
+  --badge-c: var(--mono-blue);
+}
+
+.readme-card__badge--purple {
+  --badge-c: var(--mono-pink);
+}
+
+.readme-card__badge--green {
+  --badge-c: var(--mono-green);
+}
+
+.readme-card__body p {
+  margin: 0 0 0.8em;
+}
+
+/* GitHub-style blockquote for the design-philosophy line */
+.readme-card__body blockquote {
+  margin: 0;
+  padding: 0.1rem 0 0.1rem 0.9rem;
+  border-left: 3px solid #3d444d;
+  color: #9d9d9d;
+}
+
+/* Ruled section headings for the résumé half of the README */
+.readme-card__body h3 {
+  margin: 1rem 0 0.45rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid #3d3d3d;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.readme-card__body .resume-md__rows li {
+  padding: 0.32rem 0;
+}
+
 .polaroid--main {
   z-index: 1;
 }
 
-/* ── About: simplified résumé doc ───────────────────────────────── */
-
-.about-resume {
-  position: absolute;
-  top: 12vh;
-  width: 27vw;
-}
-
-/*
- * resume.md open in VS Code's rendered markdown preview: same window
- * chrome as contact.ts (reused classes), body set in the preview's
- * sans type with GitHub-style ruled headings.
- */
-.resume-md {
-  width: 100%;
-}
+/* ── Résumé fragments — now rendered inside the README window ───── */
 
 .code-card__mdicon {
   color: #519aba;
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-}
-
-.resume-md__body {
-  padding: 1.3rem 1.6rem 1.5rem;
-  font-family: var(--font-sans), sans-serif;
-  font-size: 0.85rem;
-  color: #cccccc;
-}
-
-.resume-md__body h2 {
-  margin: 0 0 0.1rem;
-  font-size: 1.45rem;
-  font-weight: 700;
-  color: #fff;
-}
-
-.resume-md__lede {
-  margin: 0 0 1rem;
-  color: #9d9d9d;
-}
-
-.resume-md__body h3 {
-  margin: 1.3rem 0 0.5rem;
-  padding-bottom: 0.35rem;
-  border-bottom: 1px solid #3d3d3d;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #fff;
 }
 
 .resume-md__rows {
@@ -3047,123 +3105,150 @@ a.cc-link:focus-visible {
  * merge-summary line, green checks, and the merge button as the
  * email CTA.
  */
-.pr-card {
-  background: #161b22;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 8px;
-  padding: 1.4rem 1.6rem;
+/* The contact finale as a Figma publish dialog — dark panel, site
+   palette throughout (pink component identity, green additions, the
+   primary action in --mono-blue like Figma's own publish button). */
+.pub-card {
+  background: #26262e;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
   font-family: var(--font-sans), sans-serif;
+  overflow: hidden;
 }
 
-.pr-card__head {
+.pub-card__bar {
   display: flex;
-  align-items: flex-start;
-  gap: 0.9rem;
-}
-
-.pr-card__state {
-  flex: 0 0 auto;
-  display: inline-block;
-  background: #238636;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1.3rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.85rem;
+  font-weight: 600;
   color: #fff;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-  border-radius: 999px;
-  padding: 0.3rem 0.8rem;
-  margin-top: 0.15rem;
 }
 
-.pr-card__title {
+.pub-card__x {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.pub-card__main {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem 1.3rem 0;
+}
+
+/* Component thumbnail: the headshot inset on Figma's transparency
+   checkerboard, peeking out around the edges. */
+.pub-card__thumb {
+  flex: 0 0 auto;
+  width: 64px;
+  height: 64px;
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background:
+    conic-gradient(
+        rgba(255, 255, 255, 0.14) 90deg,
+        transparent 90deg 180deg,
+        rgba(255, 255, 255, 0.14) 180deg 270deg,
+        transparent 270deg
+      )
+      0 0 / 12px 12px,
+    var(--mono-tile);
+}
+
+.pub-card__thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.pub-card__name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   margin: 0;
-  font-size: clamp(1.1rem, 1.5vw, 1.5rem);
+  font-size: clamp(1.05rem, 1.4vw, 1.4rem);
   font-weight: 700;
   color: #fff;
   line-height: 1.25;
 }
 
-.pr-card__num {
-  color: #8b949e;
-  font-weight: 400;
+.pub-card__compicon {
+  color: var(--mono-pink);
+  font-size: 0.85em;
 }
 
-.pr-card__meta {
+.pub-card__meta {
   margin: 0.25rem 0 0;
   font-size: 0.82rem;
-  color: #8b949e;
+  color: rgba(255, 255, 255, 0.55);
 }
 
-.pr-card__meta b {
-  color: #e7e7e7;
-  font-weight: 600;
-}
-
-.pr-card__meta code {
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  background: rgba(110, 118, 129, 0.3);
-  border-radius: 4px;
-  padding: 0.1em 0.4em;
-  color: #e7e7e7;
-}
-
-.pr-card__checks {
+.pub-card__changes {
   list-style: none;
-  margin: 1.1rem 0 0;
-  padding: 0.75rem 0 0;
+  margin: 1.1rem 1.3rem 0;
+  padding: 0.85rem 0 0;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
-  font-size: 0.85rem;
-  color: #cccccc;
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
 }
 
-.pr-card__check {
-  color: #3fb950;
+.pub-card__plus {
+  color: var(--mono-green);
+  font-family: var(--font-mono);
   font-weight: 700;
   margin-right: 0.5rem;
 }
 
-.pr-card__mergebox {
+.pub-card__publishrow {
   display: flex;
   align-items: center;
   gap: 0.9rem;
-  margin-top: 1.2rem;
+  margin: 1.2rem 1.3rem 0;
 }
 
-.pr-card__merge {
+.pub-card__publish {
   display: inline-block;
-  background: #238636;
+  background: var(--mono-blue);
   color: #fff;
   font-weight: 600;
   font-size: 0.95rem;
-  border-radius: 6px;
-  padding: 0.6em 1.3em;
+  border-radius: 8px;
+  padding: 0.6em 1.4em;
   text-decoration: none;
   transition: background 0.2s ease;
 }
 
-.pr-card__merge:hover {
-  background: #2ea043;
+.pub-card__publish:hover {
+  background: var(--mono-blue-deep);
 }
 
-.pr-card__merge:focus-visible {
-  outline: 2px solid var(--mono-blue);
+/* White ring — the blue ring would vanish on the blue button */
+.pub-card__publish:focus-visible {
+  outline: 2px solid #fff;
   outline-offset: 2px;
 }
 
-.pr-card__mergehint {
+.pub-card__hint {
   font-size: 0.75rem;
-  color: #8b949e;
+  color: rgba(255, 255, 255, 0.5);
 }
 
-.pr-card__links {
+.pub-card__links {
   display: flex;
   gap: 1.4rem;
-  margin-top: 1.2rem;
-  padding-top: 0.9rem;
+  margin: 1.2rem 1.3rem 0;
+  padding: 0.9rem 0 1.2rem;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   font-size: 0.9rem;
   font-family: var(--font-mono);
@@ -3501,12 +3586,36 @@ a.cc-link:focus-visible {
   bottom: 14px;
 }
 
-/* On the stack the second polaroid flows under the first — same size,
-   opposite tilt, tucked up for a slight overlap. */
-.mhome-polaroids .polaroid--second {
+/* On the stack the first photo stays big as the anchor; the other two
+   shrink to snapshot size and zigzag right/left with a deeper tuck — a
+   loose pile on the desk instead of three full screens of scroll. */
+.mhome-polaroids .polaroid--second,
+.mhome-polaroids .polaroid--third {
   position: static;
-  transform: rotate(2.4deg);
-  margin-top: -0.6rem;
+  width: min(13rem, 62vw);
+  padding: 8px 8px 34px;
+}
+
+/* smaller frame, smaller handwriting */
+.mhome-polaroids .polaroid--second figcaption,
+.mhome-polaroids .polaroid--third figcaption {
+  font-size: 0.75rem;
+}
+
+.mhome-polaroids .polaroid--second {
+  margin: -1.4rem 6vw 0 auto;
+  transform: rotate(2.8deg);
+}
+
+.mhome-polaroids .polaroid--third {
+  margin: -1.1rem auto 0 7vw;
+  transform: rotate(-2.6deg);
+}
+
+.mhome-polaroids .readme-card {
+  position: static;
+  width: min(21rem, 88vw);
+  margin: 1.8rem auto 0;
 }
 
 /* ── Outro + footer ──────────────────────────────────────────────── */
@@ -3515,16 +3624,25 @@ a.cc-link:focus-visible {
   padding: 3rem 15px 3.5rem;
 }
 
-/* Same PR card as the canvas finale, tightened for phones. Three links
-   don't fit one row at phone width — without the wrap the row overflows
-   the card and stretches the whole layout viewport. */
-.mhome-outro .pr-card {
-  padding: 1.2rem 1.1rem;
+/* Same publish dialog as the canvas finale, tightened for phones. Three
+   links don't fit one row at phone width — without the wrap the row
+   overflows the card and stretches the whole layout viewport. */
+.mhome-outro .pub-card__main,
+.mhome-outro .pub-card__changes,
+.mhome-outro .pub-card__publishrow,
+.mhome-outro .pub-card__links {
+  margin-left: 1.1rem;
+  margin-right: 1.1rem;
 }
 
-.mhome-outro .pr-card__links {
+.mhome-outro .pub-card__links {
   flex-wrap: wrap;
   gap: 0.4rem 1.4rem;
+}
+
+/* The hint wraps under the button at phone width instead of squeezing it */
+.mhome-outro .pub-card__publishrow {
+  flex-wrap: wrap;
 }
 
 .mhome-footer {
@@ -3803,9 +3921,37 @@ a.cc-link:focus-visible {
   background: rgba(255, 255, 255, 0.08);
 }
 
-/* Mobile: the AI window sits in a fixed-height frame like the tiles. */
+/* Mobile: the AI window sits in a fixed-height frame like the tiles —
+   but shorter: its resting content is one boot line + three chips + the
+   input, and 72vh left half the terminal as dead space. The body still
+   scrolls internally once a real conversation grows past this. */
 .mhome-card--ai {
-  height: 72vh;
+  height: min(52vh, 30rem);
+}
+
+/* Mobile touch targets: the code-card links render at ~15px tall and the
+   terminal's send button at 26px — well under comfortable thumb size.
+   Looser line spacing plus padded (layout-neutral, negative-margin) hit
+   boxes get each row to ~28px+ without changing the design. */
+@media (max-width: 47.99em) {
+  .code-card__body {
+    line-height: 2.1;
+  }
+
+  a.cc-link {
+    display: inline-block;
+    padding: 0.45em 0.2em;
+    margin: -0.45em -0.2em;
+  }
+
+  .ai-card__send {
+    width: 40px;
+    height: 40px;
+  }
+
+  .ai-card__chip {
+    padding: 0.8em 0.8em 0.8em 0;
+  }
 }
 
 /* ────────────────────────────────────────────────────────────────
@@ -3828,6 +3974,29 @@ a.cc-link:focus-visible {
 .ct-dim {
   color: rgba(255, 255, 255, 0.72);
   font-weight: 400;
+}
+
+/* The cred line as the comment above the declaration — same voice as
+   the contact.ts comment. Hanging indent keeps any overflow wrap
+   aligned past the slashes like a real editor. */
+.code-cred {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: clamp(0.8rem, 1vw, 0.95rem);
+  font-style: italic;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.code-cred span {
+  display: block;
+  padding-left: 1.6em;
+  text-indent: -1.6em;
+}
+
+/* Matches the old .mhome-hero__cred inset (highlight handles need 6px) */
+.mhome-hero .code-cred {
+  margin: 0 6px;
 }
 
 /* ── Vector-object name plate ─────────────────────────────────────
