@@ -7,7 +7,10 @@ import BeforeAfterHero from '@/components/BeforeAfterHero'
 import CaseStudyGate from '@/components/CaseStudyGate'
 import Footer from '@/components/Footer'
 import SiteNav from '@/components/SiteNav'
-import { getCaseStudy, caseStudies, real, shortTeam } from '@/lib/caseStudies'
+import ZoomShot from '@/components/lucid/ZoomShot'
+import { Section, Prose, Bullets, FactStrip } from '@/components/CaseStudy'
+import { getCaseStudy, caseStudies, real, isPlaceholder, shortTeam } from '@/lib/caseStudies'
+import type { Figure } from '@/lib/caseStudies'
 import { PROTECTED_SLUGS, UNLOCK_COOKIE } from '@/lib/gate'
 import { SITE } from '@/lib/site'
 import { unlockCaseStudy } from './actions'
@@ -28,6 +31,14 @@ export function generateStaticParams() {
     .map((cs) => ({ slug: cs.slug }))
 }
 
+// "Hoth Landing Page · Hoth" doubles the company — skip the suffix when the
+// title already names it.
+function pageTitle(title: string, company: string) {
+  return title.toLowerCase().includes(company.toLowerCase())
+    ? title
+    : `${title} · ${company}`
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -39,7 +50,7 @@ export async function generateMetadata({
 
   // Unwritten studies fall back to the site blurb rather than shipping "[One-sentence tagline: …]"
   const description = real(cs.tagline) ?? real(cs.summary) ?? SITE.description
-  const title = `${cs.title} · ${cs.company}`
+  const title = pageTitle(cs.title, cs.company)
 
   return {
     title,
@@ -59,80 +70,20 @@ export async function generateMetadata({
   }
 }
 
-const SECTION_LABEL = 'text-sm font-semibold uppercase tracking-[0.18em] text-[#008fff]'
-
-const Fig = ({ caption, height = 'h-[420px]', src }: { caption: string; height?: string; src?: string }) => (
-  <figure className="my-14">
-    {src ? (
-      // alt is empty by design — the figcaption below already carries this text,
-      // and duplicating it makes screen readers announce the caption twice.
-      <Image
-        src={src}
-        alt=""
-        width={1600}
-        height={1000}
-        sizes="(min-width: 860px) 860px, 100vw"
-        className="w-full h-auto rounded-lg"
-      />
-    ) : (
-      <div className={`${height} w-full bg-white/[0.05] rounded-lg`} />
-    )}
-    <figcaption className="mt-3 text-base text-white">{caption}</figcaption>
-  </figure>
-)
-
 /*
- * Role / Timeline / Team / Impact, directly under the title. The long-form
- * Outcome section still closes the page, but its numbers now also appear
- * above the fold — previously a reader had to get ~1,100 words in to find
- * out whether the work went anywhere.
+ * Figures from the data file: expandable screenshot when a real capture
+ * exists, nothing at all while the caption is still scaffolding. (The old
+ * template rendered grey placeholder boxes with bracketed captions.)
  */
-function AtAGlance({
-  role,
-  period,
-  team,
-  headline,
-}: {
-  role?: string
-  period?: string
-  team?: string
-  headline?: string[]
-}) {
-  const facts = [
-    { label: 'Role', value: role },
-    { label: 'Timeline', value: period },
-    { label: 'Team', value: team },
-  ].filter((f): f is { label: string; value: string } => Boolean(f.value))
-
-  if (!facts.length && !headline?.length) return null
-
+const Fig = ({ caption, src }: Figure) => {
+  if (!src || isPlaceholder(caption)) return null
   return (
-    <div className="mt-8 border-y border-white/10 py-6">
-      {facts.length > 0 && (
-        <dl className="flex flex-wrap gap-x-12 gap-y-5">
-          {facts.map((f) => (
-            <div key={f.label}>
-              <dt className={`${SECTION_LABEL} mb-1.5`}>{f.label}</dt>
-              <dd className="text-base text-white">{f.value}</dd>
-            </div>
-          ))}
-        </dl>
-      )}
-
-      {headline && headline.length > 0 && (
-        <div className={facts.length > 0 ? 'mt-6' : ''}>
-          <p className={`${SECTION_LABEL} mb-1.5`}>Impact</p>
-          <ul className="flex flex-wrap gap-x-6 gap-y-1.5 text-base text-white">
-            {headline.map((metric) => (
-              <li key={metric} className="flex gap-2.5">
-                <span aria-hidden="true" className="text-[#008fff] flex-shrink-0">—</span>
-                {metric}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
+    <figure className="my-12">
+      {/* alt is empty by design — the figcaption below already carries this
+          text, and duplicating it makes screen readers announce it twice. */}
+      <ZoomShot src={src} alt="" width={1600} height={1000} sizes="(min-width: 860px) 860px, 100vw" />
+      <figcaption className="cs-cap">{caption}</figcaption>
+    </figure>
   )
 }
 
@@ -143,6 +94,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
 
   const prev = caseStudies.find((c) => c.nextSlug === cs.slug)
   const next = cs.nextSlug ? getCaseStudy(cs.nextSlug) : undefined
+  const accentStyle = { '--accent': cs.accent } as React.CSSProperties
 
   /*
    * Protected studies ship the gate, not the article, until the unlock
@@ -153,7 +105,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
     const store = await cookies()
     if (store.get(UNLOCK_COOKIE)?.value !== '1') {
       return (
-        <div className="min-h-screen bg-black text-white font-medium">
+        <div className="cs min-h-screen bg-black text-white font-medium" style={accentStyle}>
           <SiteNav
             width="article"
             contact={false}
@@ -167,14 +119,25 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
               action={unlockCaseStudy}
             />
           </div>
-          <Footer />
+          <Footer width="article" />
         </div>
       )
     }
   }
 
+  const problemPoints = cs.problemPoints.filter((p) => !isPlaceholder(p))
+  const processSteps = cs.process.filter((s) => !isPlaceholder(s.heading))
+  const outcomes = cs.outcomes.filter((o) => !isPlaceholder(o))
+  const facts = (
+    [
+      ['Role', real(cs.role)],
+      ['Timeline', real(cs.period)],
+      ['Team', shortTeam(cs.team)],
+    ] as const
+  ).filter((f): f is ['Role' | 'Timeline' | 'Team', string] => Boolean(f[1]))
+
   return (
-    <div className="min-h-screen bg-black text-white font-medium">
+    <div className="cs min-h-screen bg-black text-white font-medium" style={accentStyle}>
 
       <SiteNav
         width="article"
@@ -184,114 +147,87 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
 
       <div className="max-w-[860px] mx-auto px-8 pb-32 sitenav-offset">
 
-        <header className="pt-10 pb-14">
-          <p className={`${SECTION_LABEL} mb-4`}>
-            {cs.company}
-          </p>
+        <header className="pt-10 pb-12">
+          <p className="cs-eyebrow mb-4">{cs.company}</p>
           <h1 className="text-4xl md:text-6xl font-medium leading-tight tracking-tight text-white">
             {cs.title}
           </h1>
           {real(cs.tagline) && (
-            <p className="mt-5 text-xl text-white leading-snug">
+            <p className="mt-5 text-xl text-white/85 leading-snug">
               {cs.tagline}
             </p>
           )}
-          <AtAGlance
-            role={real(cs.role)}
-            period={real(cs.period)}
-            team={shortTeam(cs.team)}
-            headline={cs.headline}
-          />
+          <FactStrip facts={[...facts]} impact={cs.headline} />
         </header>
 
         {cs.slug === 'awardco-login-flow-redesign' ? (
           /* The home tile's before/after slider, promoted to hero — the first
              thing you see and touch on this study. */
-          <BeforeAfterHero
-            beforeSrc="/before.png"
-            afterSrc="/after.png"
-            beforeAlt="Awardco's original login screen, showing every authentication method at once"
-            afterAlt="The redesigned Awardco login screen, leading with single sign-on"
-            aspect={2016 / 1270}
-          />
+          <>
+            <BeforeAfterHero
+              beforeSrc="/before.png"
+              afterSrc="/after.png"
+              beforeAlt="Awardco's original login screen, showing every authentication method at once"
+              afterAlt="The redesigned Awardco login screen, leading with single sign-on"
+              aspect={2016 / 1270}
+            />
+            <p className="cs-cap">
+              Drag across the frame: the old login on the left, the shipped redesign on the right.
+            </p>
+          </>
         ) : cs.heroSrc ? (
-          <Image
-            src={cs.heroSrc}
-            alt=""
-            width={1600}
-            height={1000}
-            priority
-            sizes="(min-width: 860px) 860px, 100vw"
-            className="w-full h-auto rounded-lg"
-          />
-        ) : (
-          <div className="h-[52vh] w-full bg-white/[0.05] rounded-lg" />
+          <figure className="m-0">
+            <Image
+              src={cs.heroSrc}
+              alt=""
+              width={1600}
+              height={1000}
+              priority
+              sizes="(min-width: 860px) 860px, 100vw"
+              className="w-full h-auto rounded-lg border border-white/10"
+            />
+            <figcaption className="cs-cap">{cs.heroCaption ?? 'Final design overview'}</figcaption>
+          </figure>
+        ) : null}
+
+        {real(cs.overview) && <Prose className="mt-14">{cs.overview}</Prose>}
+
+        {(real(cs.problemIntro) || problemPoints.length > 0) && (
+          <Section eyebrow="Problem">
+            {real(cs.problemIntro) && <Prose>{cs.problemIntro}</Prose>}
+            {problemPoints.length > 0 && <Bullets items={problemPoints} />}
+          </Section>
         )}
-        <p className="mt-3 text-base text-white">
-          {cs.slug === 'awardco-login-flow-redesign'
-            ? 'Drag across the frame: the old login on the left, the shipped redesign on the right.'
-            : (cs.heroCaption ?? 'Final design overview')}
-        </p>
-
-        <p className="mt-14 text-lg text-white leading-[1.8]">
-          {cs.overview}
-        </p>
-
-        <section className="mt-16">
-          <h2 className={`${SECTION_LABEL} mb-5 block`}>
-            Problem
-          </h2>
-          <p className="text-lg text-white leading-[1.8]">
-            {cs.problemIntro}
-          </p>
-          <ul className="mt-5 space-y-2">
-            {cs.problemPoints.map((point, i) => (
-              <li key={i} className="flex gap-3 text-lg text-white leading-relaxed">
-                <span className="text-[#008fff] flex-shrink-0">—</span>
-                {point}
-              </li>
-            ))}
-          </ul>
-        </section>
 
         {cs.problemFigure && <Fig {...cs.problemFigure} />}
 
-        <section>
-          <h2 className={`${SECTION_LABEL} mb-8 block`}>
-            Process
-          </h2>
-          <div className="space-y-8">
-            {cs.process.map((step, i) => (
-              <div key={i}>
-                <h3 className="text-lg text-white mb-1 block font-medium">
-                  <span className="text-[#008fff] mr-3 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
-                  {step.heading}
-                </h3>
-                <p className="text-lg text-white leading-[1.8] pl-10">
-                  {step.body}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
+        {processSteps.length > 0 && (
+          <Section eyebrow="Process">
+            <div className="mt-8 space-y-8">
+              {processSteps.map((step, i) => (
+                <div key={i}>
+                  <h3 className="text-lg text-white mb-1 block font-medium">
+                    <span className="text-[var(--accent)] mr-3 tabular-nums">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    {step.heading}
+                  </h3>
+                  <p className="cs-prose pl-10">{step.body}</p>
+                </div>
+              ))}
+            </div>
+          </Section>
+        )}
 
         {cs.processFigures?.map((fig, i) => (
           <Fig key={i} {...fig} />
         ))}
 
-        <section>
-          <h2 className={`${SECTION_LABEL} mb-5 block`}>
-            Outcome
-          </h2>
-          <ul className="space-y-2">
-            {cs.outcomes.map((outcome, i) => (
-              <li key={i} className="flex gap-3 text-lg text-white leading-relaxed">
-                <span className="text-[#008fff] flex-shrink-0">—</span>
-                {outcome}
-              </li>
-            ))}
-          </ul>
-        </section>
+        {outcomes.length > 0 && (
+          <Section eyebrow="Outcome">
+            <Bullets items={outcomes} />
+          </Section>
+        )}
 
         {/*
           Prev/next moved down from the top nav — a reader wants the next
@@ -314,7 +250,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
 
       </div>
 
-      <Footer />
+      <Footer width="article" />
 
     </div>
   )

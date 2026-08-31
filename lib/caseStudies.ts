@@ -13,13 +13,13 @@ export type CaseStudy = {
   slug: string
   title: string
   company: string
+  /** The study's accent color — drives its OG card and page `--accent`. */
+  accent: string
   role: string
   period: string
   team: string
   /** One line for the work-grid tile. Kept here so tile copy can't drift from the case study. */
   summary: string
-  /** Discipline tags for the tile, colour-coded by TileFooter. */
-  tags: string[]
   /** 2–3 short metrics for the at-a-glance row. Omit until the study has real numbers. */
   headline?: string[]
   tagline: string
@@ -33,7 +33,6 @@ export type CaseStudy = {
   problemFigure?: Figure
   processFigures?: Figure[]
   nextSlug?: string
-  nextTitle?: string
 }
 
 export const caseStudies: CaseStudy[] = [
@@ -43,13 +42,13 @@ export const caseStudies: CaseStudy[] = [
      * this entry only feeds the home-grid tile and the prev/next chain.
      */
     slug: 'lucid-ai',
-    title: 'Bringing Lucid AI out of the canvas',
+    title: 'Bringing Lucid AI Out of the Canvas',
     company: 'Lucid',
+    accent: '#34d399',
     role: 'Product Design Intern',
     period: 'May – Aug 2026 · 12 weeks',
     team: 'Two scrum teams: search + AI',
     summary: 'The AI chat panel that brought Lucid AI to the docs list, GA on every tier.',
-    tags: ['AI Product', '0 → 1', 'Prototyping'],
     headline: [
       'GA on all tiers in 12 weeks',
       'Harness for every future docs list skill',
@@ -93,7 +92,6 @@ export const caseStudies: CaseStudy[] = [
       { caption: '[Figure — final design]', height: 'h-[500px]' },
     ],
     nextSlug: 'awardco-login-flow-redesign',
-    nextTitle: 'Awardco Login Flow Redesign',
   },
   {
     /*
@@ -115,12 +113,12 @@ export const caseStudies: CaseStudy[] = [
     slug: 'pattern-custom-reports',
     title: 'Custom Reports in Predict',
     company: 'Pattern',
+    accent: '#00b37d',
     role: 'Product Design Intern',
     // Résumé dates; the Custom Reports project itself ran 9 weeks inside them.
     period: 'Jan – Oct 2025',
     team: 'Julie Broadbent (Design Manager) · Mitch Park (Director of Product)',
     summary: 'Rebuilding the failed reporting tool brand managers had abandoned for Excel.',
-    tags: ['B2B SaaS', 'Data Visualization', 'User Research'],
     headline: [
       '60% tried the old tool — only 15% stayed',
       'Validated with 20 users in live testing',
@@ -192,17 +190,16 @@ export const caseStudies: CaseStudy[] = [
       },
     ],
     nextSlug: 'hoth',
-    nextTitle: 'Hoth Landing Page',
   },
   {
     slug: 'hoth',
     title: 'Hoth Landing Page',
     company: 'Hoth',
+    accent: '#008fff',
     role: 'Product Design Intern',
     period: 'Aug – Dec 2024',
     team: '[Team — e.g. Solo project]',
     summary: 'Brand identity and landing page for an encrypted work platform.',
-    tags: ['Brand Identity', 'Web Design', 'Motion'],
     tagline: '[One-sentence tagline: what was the project and why does it matter?]',
     overview:
       '[2–4 sentences: the situation, what you did end-to-end, and the headline result. This paragraph sits directly under the hero image.]',
@@ -242,7 +239,6 @@ export const caseStudies: CaseStudy[] = [
       { caption: '[Figure — final design]', height: 'h-[500px]' },
     ],
     nextSlug: 'lucid-ai',
-    nextTitle: 'Lucid AI',
   },
   {
     /*
@@ -253,16 +249,16 @@ export const caseStudies: CaseStudy[] = [
     slug: 'awardco-login-flow-redesign',
     title: 'Reducing Authentication Friction',
     company: 'Awardco',
+    accent: '#008fff',
     // Role/period follow the résumé (public/resume.pdf) — the single source of truth.
     role: 'Product Design Intern',
     period: 'Oct 2025 – Apr 2026',
     team: 'Natalie McKenzie (PM) · Robert Jensen (Tech Lead) · Michelle Rodabough (UX Manager)',
     summary: 'Turning 7.7M failed logins into one guided path across SSO, MFA, and mobile.',
-    tags: ['Mobile Design', 'Design Systems', 'UX Research'],
     headline: [
       '27s → 5.9s login decision (−78%)',
-      '7.7M annual failed logins addressed',
-      '−25% reported difficulty',
+      '25% faster login in testing',
+      '+4.5% successful sign-ins',
     ],
     tagline:
       'Turning 7.7 million failed logins into a unified, guided authentication system across SSO, MFA, and standard login.',
@@ -288,7 +284,7 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         heading: 'Testing SSO-first against password-first',
-        body: "I usability-tested three variants of the sign-in surface — the old design as control, an SSO-first layout, and a password-first layout — using heatmaps and task metrics. SSO-first cut decision time from 27s to 5.9s (−78%) and raised confidence. Password-first was marginally faster (−83%), but it reinforced password usage — the least reliable method — working directly against SSO adoption goals. That trade-off, speed versus steering users onto the right path, decided the design.",
+        body: "I usability-tested three variants of the sign-in surface — the old design as control, an SSO-first layout, and a password-first layout — using heatmaps and task metrics. SSO-first cut decision time from 27s to 5.9s (−78%) and raised confidence over the old design. Password-first was marginally faster still (−83%) and edged it on confidence, but it reinforced password usage — the least reliable method — working directly against SSO adoption goals. That trade-off, speed versus steering users onto the right path, decided the design.",
       },
       {
         heading: 'Guide the user, don’t ask them',
@@ -304,7 +300,7 @@ export const caseStudies: CaseStudy[] = [
       },
     ],
     outcomes: [
-      'Login decision time cut 78% in testing (27s → 5.9s), with confidence up and reported difficulty down 25%',
+      'Login-method decision time cut 78% in testing (27s → 5.9s), with confidence and reported difficulty both improved over the old design',
       'Eliminated redundant double authentication — the login code now persists as a secure token that counts as MFA',
       'One guided, consistent path across mobile and desktop, with SMS authentication added for deskless workers',
       'Unified login, reset, and MFA into a single company-branded system, replacing fragmented per-state UIs',
@@ -327,7 +323,6 @@ export const caseStudies: CaseStudy[] = [
       },
     ],
     nextSlug: 'pattern-custom-reports',
-    nextTitle: 'Pattern Custom Reports',
   },
 ]
 

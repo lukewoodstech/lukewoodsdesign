@@ -7,11 +7,17 @@ import './globals.css'
 import Cursor from '@/components/Cursor'
 import { SITE } from '@/lib/site'
 
+/*
+ * Named --font-plex-* rather than --font-mono/--font-sans: Tailwind v4 defines
+ * theme variables with those exact names, and the duplicate definitions left
+ * the winning font up to stylesheet order. The @theme block in globals.css
+ * maps Tailwind's tokens onto these.
+ */
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ['latin'],
   weight: ['300', '400', '500'],
   style: ['normal', 'italic'],
-  variable: '--font-mono',
+  variable: '--font-plex-mono',
   display: 'swap',
 })
 
@@ -19,7 +25,7 @@ const ibmPlexSans = IBM_Plex_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
   style: ['normal', 'italic'],
-  variable: '--font-sans',
+  variable: '--font-plex-sans',
   display: 'swap',
 })
 

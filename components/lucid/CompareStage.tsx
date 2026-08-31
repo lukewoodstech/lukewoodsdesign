@@ -64,7 +64,7 @@ export default function CompareStage({
         ))}
       </div>
 
-      <p className="lcs-cap" aria-live="polite">{layers[active].caption}</p>
+      <p className="cs-cap" aria-live="polite">{layers[active].caption}</p>
     </div>
   )
 }

@@ -1,6 +1,5 @@
 'use client'
 
-import type { CSSProperties } from 'react'
 import Link from 'next/link'
 import { getCaseStudy } from '@/lib/caseStudies'
 
@@ -15,43 +14,9 @@ type Props = {
 }
 
 /*
- * Discipline accents, drawn from the site palette. Grouped by kind so a tag
- * keeps its colour wherever it appears: craft = blue, research/brand = pink,
- * product & motion = green, stage-of-work = yellow.
- */
-const TAG_COLORS: Record<string, string> = {
-  'Prototyping': 'var(--mono-blue)',
-  'Design Systems': 'var(--mono-blue)',
-  'Data Visualization': 'var(--mono-blue)',
-  'Web Design': 'var(--mono-blue)',
-  'UX Research': 'var(--mono-pink)',
-  'User Research': 'var(--mono-pink)',
-  'Brand Identity': 'var(--mono-pink)',
-  'AI Product': 'var(--mono-green)',
-  'Mobile Design': 'var(--mono-green)',
-  'Motion': 'var(--mono-green)',
-  '0 → 1': 'var(--mono-yellow)',
-  'B2B SaaS': 'var(--mono-yellow)',
-}
-
-const FALLBACK = ['var(--mono-blue)', 'var(--mono-pink)', 'var(--mono-green)', 'var(--mono-yellow)']
-
-// Exported so other surfaces (the Luke AI zero state) color case-study
-// references with the same discipline palette as the grid tiles.
-export function tagColor(tag: string) {
-  if (TAG_COLORS[tag]) return TAG_COLORS[tag]
-  // Stable per-name colour so an unmapped tag still reads consistently
-  let h = 0
-  for (let i = 0; i < tag.length; i++) h = (h * 31 + tag.charCodeAt(i)) | 0
-  return FALLBACK[Math.abs(h) % FALLBACK.length]
-}
-
-/*
  * The band under every tile's artwork: company mark and name on one line, the
- * case study title, a one-line summary, and colour-coded discipline tags.
- * Sized as a fixed slab under a flexible stage, so all four tiles line up
- * across the grid. Role and period live on the case study itself — in the grid
- * they only varied by which studies happened to have them filled in.
+ * case study title with its year, and a one-line summary. Sized as a fixed
+ * slab under a flexible stage, so all four tiles line up across the grid.
  *
  * The title is a real <Link>, which is the only keyboard- and crawler-visible
  * route into the case studies — the tile itself is a click-only div. A
@@ -67,7 +32,11 @@ export default function TileFooter({
   const cs = getCaseStudy(slug)
   if (!cs) return null
 
-  const { company, title, summary, tags } = cs
+  const { company, title, summary, period } = cs
+
+  // Periods read like "Oct 2025 – Apr 2026 · 12 weeks"; show the last (most
+  // recent) year on the tile.
+  const year = period.match(/\d{4}/g)?.at(-1)
 
   const mark = logoSrc ? (
     // eslint-disable-next-line @next/next/no-img-element
@@ -102,35 +71,21 @@ export default function TileFooter({
         )}
         {/* Spelled out, not just the monogram — "A" tells a visitor nothing. */}
         <span className="tile-footer__company">{company}</span>
-        <span className="tile-footer__enter" aria-hidden="true">
-          Enter ↵
-        </span>
       </div>
 
       <h3 className="tile-footer__title">
         <Link href={`/work/${slug}`} className="tile-footer__link">
           {title}
         </Link>
+        {year && (
+          <span className="tile-footer__year">
+            {' · '}
+            {year}
+          </span>
+        )}
       </h3>
 
       <p className="tile-footer__summary">{summary}</p>
-
-      <ul className="tile-footer__tags">
-        {tags.map((tag, i) => (
-          <li
-            key={tag}
-            className="tile-footer__tag"
-            style={
-              {
-                '--tag-color': tagColor(tag),
-                transitionDelay: hovered ? `${i * 45}ms` : '0ms',
-              } as CSSProperties
-            }
-          >
-            {tag}
-          </li>
-        ))}
-      </ul>
     </div>
   )
 }

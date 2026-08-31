@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og'
-import { OgCard, OG_SIZE, OG_CONTENT_TYPE } from '@/lib/og'
+import { OgCard, OG_SIZE, OG_CONTENT_TYPE, ogFonts } from '@/lib/og'
 import { getCaseStudy, caseStudies } from '@/lib/caseStudies'
 import { SITE } from '@/lib/site'
 
@@ -16,8 +16,16 @@ export default async function Image({ params }: { params: Promise<{ slug: string
   const { slug } = await params
   const cs = getCaseStudy(slug)
 
+  // "Hoth Landing Page" already names the company — an eyebrow would double it.
+  const eyebrow =
+    cs && !cs.title.toLowerCase().includes(cs.company.toLowerCase())
+      ? cs.company
+      : cs
+        ? undefined
+        : SITE.role
+
   return new ImageResponse(
-    <OgCard title={cs?.title ?? SITE.name} eyebrow={cs?.company ?? SITE.role} />,
-    size,
+    <OgCard title={cs?.title ?? SITE.name} eyebrow={eyebrow} accent={cs?.accent} />,
+    { ...size, fonts: await ogFonts() },
   )
 }

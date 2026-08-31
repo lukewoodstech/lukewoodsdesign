@@ -54,14 +54,7 @@ export default function LucidTile() {
     >
       <div className="tile-stage" ref={stageRef}>
         {/* Dark overlay — behind the panel, darkens the tile margins on hover */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: 'rgba(0,0,0,0.72)',
-            opacity: hovered ? 1 : 0,
-            transition: 'opacity 0.4s ease',
-          }}
-        />
+        <div className="tile-scrim" style={{ opacity: hovered ? 1 : 0 }} />
 
         <div className="workgrid__item__content">
           {/* Fixed-size panel: one constant box through the whole loop,

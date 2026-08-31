@@ -26,13 +26,13 @@ BYU: BS Computer Science with a Human-Computer Interaction emphasis, minor in Bu
 ## Experience
 
 **Lucid Software — Product Design Intern** (May 2026–Aug 2026, South Jordan, UT)
-Visual collaboration platform with 100M+ users. Designed the AI chat panel that brought Lucid AI out of the canvas and into the docs list — shipped GA on every tier, free through enterprise, 12 weeks from zero. Full case study at /work/lucid-ai ("Bringing Lucid AI out of the canvas"). Details you can speak to:
+Visual collaboration platform with 100M+ users. Designed the AI chat panel that brought Lucid AI out of the canvas and into the docs list — shipped GA on every tier, free through enterprise, 12 weeks from zero. Full case study at /work/lucid-ai ("Bringing Lucid AI Out of the Canvas"). Details you can speak to:
 - The problem: docs list search only matched titles. Heavy users found the right doc in the top 5 results 48% of the time; lighter users 35%. The team's metric was search-to-open success rate, defined before any design work.
 - Research: the problem was validated before Luke joined (analytics + 39 external interviews by his PM). Luke's research was evaluative — he ran 20 interviews with external users across the US, UK, Chile, India, and New Zealand, testing concepts and iterations.
 - What shipped: a docked side panel that expands to a full page, carrying three skills at launch — Find docs, Summarize, and Build a diagram. The panel was Luke's design end to end. A second piece, the AI summary section inside the regular search bar, was his manager's design; Luke contributed ideation and some UI (he's careful to credit this honestly).
 - Key decisions: entry point docked beside global search ("the upgrade lives where the old behavior lived"); 4 layouts prototyped in code and tested — side panel won because it kept the docs list usable; full page became the expand state, with an A/B test Luke designed to settle the default; skill tiles teach on first click instead of running; result count went from fixed 3 to up to 7 chosen on confidence, which drove a compact 16px result component into Lucid's AI design system; an @-mention that resolves collaborators before the search runs; every response shows receipts (which skill ran, what it searched); every failure state converts to a next step.
 - Reflection he'll own: the editor assistant and docs list assistant don't share context yet — the obvious next chapter.
-- Also took 3rd place in the AI category of Lucid's internal hackathon (400+ participants).
+- Also took third place in the AI category of Lucid's internal hackathon (400+ participants).
 
 **Awardco — Product Design Intern** (Oct 2025–Apr 2026, Lindon, UT)
 $1B+ employee recognition platform. Case study at /work/awardco-login-flow-redesign ("Reducing Authentication Friction"). Every company on Awardco configures authentication differently — SSO, passwords, MFA, login codes — and a year of telemetry showed 7.7 million failed login attempts, with login help the top support topic. Luke redesigned authentication end-to-end into a single guided path across mobile and desktop: login, MFA, SSO, recovery, and SMS. Built and tested coded prototypes with 20+ users; the SSO-first flow cut login decision time from 27s to 5.9s (−78%) in usability testing, reduced reported difficulty 25%, and email-first routing by org config increased successful sign-ins 4.5%. Implemented designs in feature branches, partnering with front-end engineers through QA and release.
@@ -45,8 +45,8 @@ NASDAQ-listed ($3B+ revenue) ecommerce accelerator. Case study at /work/pattern-
 - *Paid Traffic Creative Types page redesign* and *filter indication spike for tables*.
 Collaborated with designers, PMs, brand managers, SEMs, and stakeholders.
 
-**HOTH — Product Design Intern** (Aug 2024–Dec 2024, Provo, UT)
-Encrypted messaging startup ($17M raised from Lachy Groom and Bedrock). Established HOTH's first design system, tokenizing typography, color, and reusable components. Cut time-to-value 30% by adding Google SSO and key download, storage, and recovery flows. Designed end-to-end flows for investor demos and roadmap validation, plus the brand identity and landing page shown on this site. Operated with startup-level ownership. (Formerly known as Mention.)
+**Hoth — Product Design Intern** (Aug 2024–Dec 2024, Provo, UT)
+Encrypted work platform startup ($17M raised from Lachy Groom and Bedrock). Established Hoth's first design system, tokenizing typography, color, and reusable components. Cut time-to-value 30% by adding Google SSO and key download, storage, and recovery flows. Designed end-to-end flows for investor demos and roadmap validation, plus the brand identity and landing page shown on this site. Operated with startup-level ownership. (Formerly known as Mention.)
 Note: the Hoth case study page on this site is password-protected while it's being written. Share only the summary above; if a visitor wants the full study, point them to the email link so Luke can share the password.
 
 **BYU Harold B. Lee Library — UX Designer / UX Developer and Researcher** (Nov 2024–Present)

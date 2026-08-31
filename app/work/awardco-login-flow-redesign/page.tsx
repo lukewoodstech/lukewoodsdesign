@@ -7,6 +7,7 @@ import BeforeAfterHero from '@/components/BeforeAfterHero'
 import Reveal from '@/components/lucid/Reveal'
 import ZoomShot from '@/components/lucid/ZoomShot'
 import CompareStage from '@/components/lucid/CompareStage'
+import { Section, Prose, Bullets, Reframe, FactStrip } from '@/components/CaseStudy'
 import { SITE } from '@/lib/site'
 
 /*
@@ -50,56 +51,20 @@ export const metadata: Metadata = {
 }
 
 const IMG = '/work/awardco'
-const SECTION_LABEL = 'text-sm font-semibold uppercase tracking-[0.18em] text-[#008fff]'
-
-function Section({
-  eyebrow,
-  headline,
-  children,
-}: {
-  eyebrow: string
-  headline: string
-  children: React.ReactNode
-}) {
-  return (
-    <Reveal as="section" className="mt-20">
-      <span className={`${SECTION_LABEL} block`}>{eyebrow}</span>
-      <h2 className="mt-3 mb-6 text-2xl sm:text-[2rem] font-medium leading-snug tracking-tight text-white">
-        {headline}
-      </h2>
-      {children}
-    </Reveal>
-  )
-}
-
-const Prose = ({ children }: { children: React.ReactNode }) => (
-  <div className="space-y-4 text-lg text-white leading-[1.8]">{children}</div>
-)
-
-const Bullets = ({ items }: { items: string[] }) => (
-  <ul className="mt-5 space-y-2">
-    {items.map((item) => (
-      <li key={item} className="flex gap-3 text-lg text-white leading-relaxed">
-        <span aria-hidden="true" className="text-[#008fff] flex-shrink-0">—</span>
-        {item}
-      </li>
-    ))}
-  </ul>
-)
 
 export default function AwardcoCaseStudy() {
   return (
-    <div className="acs min-h-screen bg-black text-white font-medium">
+    <div className="cs acs min-h-screen bg-black text-white font-medium">
       <SiteNav
         width="article"
         contact={false}
-        next={{ href: '/work/pattern-custom-reports', title: 'Pattern Custom Reports' }}
+        next={{ href: '/work/pattern-custom-reports', title: 'Custom Reports in Predict' }}
       />
 
       <div className="max-w-[860px] mx-auto px-8 pb-32 sitenav-offset">
         {/* ── Hero ── */}
         <header className="pt-10 pb-12">
-          <p className={`${SECTION_LABEL} mb-4`}>Awardco · Product Design Internship</p>
+          <p className="cs-eyebrow mb-4">Awardco · Product Design Internship</p>
           <h1 className="text-4xl md:text-6xl font-medium leading-tight tracking-tight text-white">
             {TITLE}
           </h1>
@@ -108,35 +73,19 @@ export default function AwardcoCaseStudy() {
             system across SSO, MFA, and standard login.
           </p>
 
-          <div className="mt-8 border-y border-white/10 py-6">
-            <dl className="flex flex-wrap gap-x-12 gap-y-5">
-              {[
-                ['Role', 'Product Design Intern'],
-                ['Timeline', 'Oct 2025 – Apr 2026'],
-                ['Team', 'Natalie McKenzie (PM) +2'],
-              ].map(([label, value]) => (
-                <div key={label}>
-                  <dt className={`${SECTION_LABEL} mb-1.5 !text-[0.7rem]`}>{label}</dt>
-                  <dd className="text-base text-white">{value}</dd>
-                </div>
-              ))}
-            </dl>
-            <div className="mt-6">
-              <p className={`${SECTION_LABEL} mb-1.5`}>Impact — before/after testing</p>
-              <ul className="flex flex-wrap gap-x-6 gap-y-1.5 text-base text-white">
-                {[
-                  '27s → 5.9s login decision (−78%)',
-                  '25% faster login',
-                  '+4.5% successful sign-ins',
-                ].map((metric) => (
-                  <li key={metric} className="flex gap-2.5">
-                    <span aria-hidden="true" className="text-[#008fff] flex-shrink-0">—</span>
-                    {metric}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+          <FactStrip
+            facts={[
+              ['Role', 'Product Design Intern'],
+              ['Timeline', 'Oct 2025 – Apr 2026'],
+              ['Team', 'Natalie McKenzie (PM) +2'],
+            ]}
+            impact={[
+              '27s → 5.9s login decision (−78%)',
+              '25% faster login',
+              '+4.5% successful sign-ins',
+            ]}
+            impactLabel="Impact — before/after testing"
+          />
         </header>
 
         <BeforeAfterHero
@@ -146,7 +95,7 @@ export default function AwardcoCaseStudy() {
           afterAlt="The redesigned Awardco login screen, leading with single sign-on"
           aspect={2016 / 1270}
         />
-        <p className="mt-3 text-base text-white">
+        <p className="cs-cap">
           Drag across the frame: the old login on the left, the redesign on the right.
         </p>
 
@@ -198,7 +147,7 @@ export default function AwardcoCaseStudy() {
                 height={2048}
                 sizes="(min-width: 860px) 520px, 100vw"
               />
-              <figcaption className="mt-3 text-base text-white/70">
+              <figcaption className="cs-cap">
                 The old login: three competing calls to action, none of them labeled
                 with the provider users actually recognized.
               </figcaption>
@@ -215,7 +164,7 @@ export default function AwardcoCaseStudy() {
                 sizes="(min-width: 860px) 300px, 60vw"
                 className="w-full h-auto rounded-lg border border-white/10"
               />
-              <figcaption className="mt-3 text-base text-white/70">
+              <figcaption className="cs-cap">
                 The same stack on mobile — where most deskless workers live.
               </figcaption>
             </figure>
@@ -223,7 +172,7 @@ export default function AwardcoCaseStudy() {
         </Section>
 
         {/* ── Evidence ── */}
-        <Section eyebrow="The evidence" headline="I didn't inherit a case. I built one.">
+        <Section eyebrow="The evidence" headline="I didn’t inherit a case. I built one.">
           <Prose>
             <p>
               My PM brought me a known pain point: heavy support volume around login.
@@ -249,7 +198,7 @@ export default function AwardcoCaseStudy() {
               height={806}
               sizes="(min-width: 860px) 860px, 100vw"
             />
-            <figcaption className="mt-3 text-base text-white/70">
+            <figcaption className="cs-cap">
               A year of login telemetry: password login drove failure at scale while
               every guided method quietly worked.
             </figcaption>
@@ -257,13 +206,9 @@ export default function AwardcoCaseStudy() {
         </Section>
 
         {/* ── Reframe ── */}
-        <Reveal className="mt-20">
-          <blockquote className="border-l-2 border-[#008fff] pl-6 py-1">
-            <p className="text-2xl sm:text-3xl font-medium leading-snug tracking-tight text-white">
-              7.7 million failures weren&rsquo;t security issues. They were UX
-              failures.
-            </p>
-          </blockquote>
+        <Reframe
+          quote={<>7.7 million failures weren&rsquo;t security issues. They were UX failures.</>}
+        >
           <Prose>
             <p className="mt-6">
               Users weren&rsquo;t choosing wrong passwords — they were choosing wrong
@@ -273,7 +218,7 @@ export default function AwardcoCaseStudy() {
               standardize on one system with one predictable path.
             </p>
           </Prose>
-        </Reveal>
+        </Reframe>
 
         {/* ── The decision ── */}
         <Section
@@ -285,8 +230,9 @@ export default function AwardcoCaseStudy() {
               I tested three sign-in surfaces with 75 people across the company —
               the old design as control, an SSO-first layout, and a password-first
               layout — using heatmaps and task metrics. SSO-first cut the
-              login-method decision from 27 seconds to 5.9. Password-first was even
-              faster at 4.6 seconds, and scored higher on confidence.
+              login-method decision from 27 seconds to 5.9 and lifted reported
+              confidence over the old design. Password-first was even faster at
+              4.6 seconds — and edged out SSO-first on confidence, too.
             </p>
             <p>
               I chose the slower one. Password-first earned its speed by reinforcing
@@ -304,7 +250,7 @@ export default function AwardcoCaseStudy() {
               height={806}
               sizes="(min-width: 860px) 860px, 100vw"
             />
-            <figcaption className="mt-3 text-base text-white/70">
+            <figcaption className="cs-cap">
               Control, SSO-first, password-first. The scattered heat on the control is
               27 seconds of hesitation.
             </figcaption>
@@ -342,7 +288,7 @@ export default function AwardcoCaseStudy() {
               height={2048}
               sizes="(min-width: 860px) 860px, 100vw"
             />
-            <figcaption className="mt-3 text-base text-white/70">
+            <figcaption className="cs-cap">
               Arriving already authenticated: your email is on the page, one field
               stands between you and the product, and the double code entry is gone.
             </figcaption>
@@ -352,7 +298,7 @@ export default function AwardcoCaseStudy() {
         {/* ── Dynamic branding ── */}
         <Section
           eyebrow="Dynamic branding"
-          headline="The button says Google, because that's what users look for."
+          headline="The button says Google, because that’s what users look for."
         >
           <Prose>
             <p>
@@ -372,7 +318,7 @@ export default function AwardcoCaseStudy() {
               that objects. Same design, with an escape hatch. Green light.
             </p>
           </Prose>
-          <div className="mt-8 grid gap-5 sm:grid-cols-3">
+          <div className="mt-8 grid gap-6 sm:grid-cols-3">
             {[
               {
                 src: `${IMG}/figma/sso-awardco.png`,
@@ -398,7 +344,7 @@ export default function AwardcoCaseStudy() {
                   height={2048}
                   sizes="(min-width: 860px) 280px, 100vw"
                 />
-                <figcaption className="mt-2 text-sm text-white/70">{f.cap}</figcaption>
+                <figcaption className="cs-cap">{f.cap}</figcaption>
               </figure>
             ))}
           </div>
@@ -430,7 +376,7 @@ export default function AwardcoCaseStudy() {
                 sizes="300px"
                 className="w-full h-auto rounded-lg border border-white/10"
               />
-              <figcaption className="mt-3 text-base text-white/70">
+              <figcaption className="cs-cap">
                 The new mobile login: one provider button, one field, one path.
               </figcaption>
             </figure>
@@ -443,7 +389,7 @@ export default function AwardcoCaseStudy() {
                 sizes="300px"
                 className="w-full h-auto rounded-lg border border-white/10"
               />
-              <figcaption className="mt-3 text-base text-white/70">
+              <figcaption className="cs-cap">
                 Verification, your way: email, secondary email, or text.
               </figcaption>
             </figure>
@@ -521,7 +467,7 @@ export default function AwardcoCaseStudy() {
               height={806}
               sizes="(min-width: 860px) 860px, 100vw"
             />
-            <figcaption className="mt-3 text-base text-white/70">
+            <figcaption className="cs-cap">
               Sketches → four directions → the guided system. Competitive patterns
               (including Stripe&rsquo;s password UX) fed the inline-validation design.
             </figcaption>
@@ -533,7 +479,7 @@ export default function AwardcoCaseStudy() {
           <Bullets
             items={[
               'In before/after testing, login time dropped 25% and successful sign-ins rose 4.5%',
-              'Login-method decision time fell 78% (27s → 5.9s), with confidence up and reported difficulty down 25%',
+              'Login-method decision time fell 78% (27s → 5.9s), with confidence and reported difficulty both improved over the old design',
               'Double authentication eliminated — the universal login code persists as a secure token that counts toward MFA',
               'One guided path across mobile and desktop, with SMS verification for deskless workers and dynamic provider branding per company',
               'Approved by architecture and security review; handed off to the team, who built it after my internship on their roadmap',
@@ -579,7 +525,7 @@ export default function AwardcoCaseStudy() {
         {/* ── Reflection ── */}
         <Section
           eyebrow="Reflection"
-          headline="The best authentication systems don't ask users to choose. They route them."
+          headline="The best authentication systems don’t ask users to choose. They route them."
         >
           <Prose>
             <p>
@@ -613,12 +559,12 @@ export default function AwardcoCaseStudy() {
             ← Bringing Lucid AI out of the canvas
           </Link>
           <Link href="/work/pattern-custom-reports" className="footer-link -mr-4 text-right">
-            Pattern Custom Reports →
+            Custom Reports in Predict →
           </Link>
         </nav>
       </div>
 
-      <Footer />
+      <Footer width="article" />
     </div>
   )
 }

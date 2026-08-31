@@ -36,7 +36,7 @@ export default function CaseStudyGate({
           : 'flex min-h-[70vh] flex-col items-center justify-center px-6 text-center'
       }
     >
-      <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#008fff]">
+      <p className="cs-eyebrow">
         {company}
       </p>
       <h1
@@ -50,7 +50,7 @@ export default function CaseStudyGate({
       </h1>
 
       <div
-        className="mt-10 flex size-14 items-center justify-center rounded-full border border-white/15 bg-white/[0.04]"
+        className="mt-10 flex size-14 items-center justify-center rounded-full border border-white/20 bg-white/[0.04]"
         aria-hidden="true"
       >
         <svg
@@ -87,7 +87,7 @@ export default function CaseStudyGate({
           autoFocus
           placeholder="password"
           aria-label="Case study password"
-          className="w-full rounded-lg border border-white/20 bg-white/[0.04] px-4 py-3 font-mono text-base text-white placeholder:text-white/35 focus:border-[#008fff] focus:outline-none"
+          className="w-full rounded-lg border border-white/20 bg-white/[0.04] px-4 py-3 font-mono text-base text-white placeholder:text-white/35 focus:border-[var(--accent)] focus:outline-none"
         />
         <button type="submit" className="btn justify-center" disabled={pending}>
           <span className="btn__text">
@@ -95,7 +95,7 @@ export default function CaseStudyGate({
           </span>
         </button>
         {state.error && (
-          <p role="alert" className="text-sm text-[#ff537a]">
+          <p role="alert" className="text-sm text-mono-red">
             {state.error}
           </p>
         )}

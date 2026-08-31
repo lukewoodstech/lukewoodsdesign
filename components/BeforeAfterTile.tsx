@@ -139,14 +139,7 @@ export default function BeforeAfterTile({
     >
       <div className="tile-stage">
         {/* Dark overlay — behind images */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: 'rgba(0, 0, 0, 0.72)',
-            opacity: hovered ? 1 : 0,
-            transition: 'opacity 0.4s ease',
-          }}
-        />
+        <div className="tile-scrim" style={{ opacity: hovered ? 1 : 0 }} />
 
         {/* After — base layer. Centered on mobile, where the full-height tile
             left the bottom-anchored art under a large empty region. */}
@@ -201,8 +194,8 @@ export default function BeforeAfterTile({
           className="absolute bottom-4 inset-x-0 flex justify-between px-5 pointer-events-none"
           style={{ opacity: revealed ? 1 : 0, transition: 'opacity 0.2s ease' }}
         >
-          <span className="text-xs font-semibold uppercase tracking-[0.15em] text-white">before</span>
-          <span className="text-xs font-semibold uppercase tracking-[0.15em] text-white">after</span>
+          <span className="text-xs font-semibold uppercase tracking-[0.15em] text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.6)]">before</span>
+          <span className="text-xs font-semibold uppercase tracking-[0.15em] text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.6)]">after</span>
         </div>
       </div>
 

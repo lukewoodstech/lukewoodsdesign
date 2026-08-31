@@ -12,7 +12,14 @@ import { SITE, MAILTO } from '@/lib/site'
  * and copies the address to the clipboard, confirming in a small toast. Either
  * way the visitor leaves with the address.
  */
-export default function EmailLink({ className = 'footer-link' }: { className?: string }) {
+export default function EmailLink({
+  className = 'footer-link',
+  children = 'email',
+}: {
+  className?: string
+  /** Link text; defaults to "email". The contact.ts card shows the address itself. */
+  children?: React.ReactNode
+}) {
   const [copied, setCopied] = useState(false)
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
@@ -39,7 +46,7 @@ export default function EmailLink({ className = 'footer-link' }: { className?: s
 
   return (
     <a href={MAILTO} className={`${className} email-link`} onClick={handleClick}>
-      email
+      {children}
       {/* Positioned absolutely so the nav and footer never reflow */}
       <span className={`email-link__toast${copied ? ' is-visible' : ''}`} aria-hidden="true">
         copied

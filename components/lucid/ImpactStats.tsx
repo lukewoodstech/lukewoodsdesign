@@ -1,10 +1,11 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useReducedMotion } from '@/lib/useReducedMotion'
 
 /*
  * The impact strip under the hero: big numbers count up once when the strip
- * enters view, each tile rising in with a stagger and a green rule drawing
+ * enters view, each tile rising in with a stagger and an accent rule drawing
  * beneath the number. Numeric values tween from zero; string values (like
  * "All") just fade in with the tile. Reduced motion renders the final state.
  * Numbers are decorative emphasis — each carries a visually-hidden static
@@ -12,6 +13,8 @@ import { useEffect, useRef, useState } from 'react'
  */
 export type ImpactStat = {
   value: number | string
+  /** Rendered after the number, outside the count-up — e.g. '+' for "50+". */
+  suffix?: string
   label: string
 }
 
@@ -24,6 +27,7 @@ export default function ImpactStats({
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [inView, setInView] = useState(false)
+  const reducedMotion = useReducedMotion()
   const [counts, setCounts] = useState<number[]>(() =>
     stats.map((s) => (typeof s.value === 'number' ? 0 : NaN)),
   )
@@ -37,7 +41,7 @@ export default function ImpactStats({
         io.disconnect()
         setInView(true)
         const finals = stats.map((s) => (typeof s.value === 'number' ? s.value : NaN))
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (reducedMotion) {
           setCounts(finals)
           return
         }
@@ -62,11 +66,11 @@ export default function ImpactStats({
     )
     io.observe(el)
     return () => io.disconnect()
-  }, [stats])
+  }, [stats, reducedMotion])
 
   return (
     <div ref={ref} className={`lcs-impact ${inView ? 'is-inview' : ''}`}>
-      <span className="lcs-eyebrow">Impact</span>
+      <span className="cs-eyebrow">Impact</span>
       <div className="lcs-impact__grid">
         {stats.map((stat, i) => (
           <div
@@ -77,8 +81,12 @@ export default function ImpactStats({
             <span className="lcs-impact__num">
               <span aria-hidden="true">
                 {typeof stat.value === 'number' ? counts[i] : stat.value}
+                {stat.suffix}
               </span>
-              <span className="visually-hidden">{stat.value}</span>
+              <span className="visually-hidden">
+                {stat.value}
+                {stat.suffix}
+              </span>
             </span>
             <span className="lcs-impact__bar" aria-hidden="true" />
             <span className="lcs-impact__label">{stat.label}</span>

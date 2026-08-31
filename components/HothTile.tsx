@@ -160,14 +160,7 @@ export default function HothTile() {
     >
       <div ref={stageRef} className="tile-stage">
         {/* Dark overlay — behind everything, darkens the tile background on hover */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: 'rgba(0,0,0,0.72)',
-            opacity: hovered ? 1 : 0,
-            transition: 'opacity 0.4s ease',
-          }}
-        />
+        <div className="tile-scrim" style={{ opacity: hovered ? 1 : 0 }} />
 
         {/* Binary field — revealed around the cursor on hover */}
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full pointer-events-none" />

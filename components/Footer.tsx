@@ -3,9 +3,15 @@ import EmailLink from './EmailLink'
 import HomeLink from './HomeLink'
 import { SITE } from '@/lib/site'
 
-export default function Footer() {
+/*
+ * `width` mirrors SiteNav's prop: `page` sits on the 1280px `.section` grid,
+ * `article` on the 860px case-study column — so the footer's links line up
+ * with the nav name and article text above them instead of drifting ~200px
+ * into the grid margin on wide screens.
+ */
+export default function Footer({ width = 'page' }: { width?: 'page' | 'article' }) {
   return (
-    <footer className="footer section">
+    <footer className={`footer section${width === 'article' ? ' footer--article' : ''}`}>
       <div className="footer__inner">
 
         <nav className="footer__nav" aria-label="Contact and social">

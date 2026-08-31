@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useReducedMotion } from '@/lib/useReducedMotion'
 
 /*
  * The 3 → 7 count-up for the results component section. Animates once when
@@ -11,6 +12,7 @@ import { useEffect, useRef, useState } from 'react'
 export default function ResultsCount() {
   const ref = useRef<HTMLSpanElement>(null)
   const [value, setValue] = useState(3)
+  const reducedMotion = useReducedMotion()
 
   useEffect(() => {
     const el = ref.current
@@ -20,7 +22,7 @@ export default function ResultsCount() {
         if (!entry.isIntersecting) return
         io.disconnect()
         // Reduced motion: land on the final value, no tween
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (reducedMotion) {
           setValue(7)
           return
         }
@@ -36,7 +38,7 @@ export default function ResultsCount() {
     )
     io.observe(el)
     return () => io.disconnect()
-  }, [])
+  }, [reducedMotion])
 
   return (
     <span ref={ref}>

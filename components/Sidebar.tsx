@@ -21,23 +21,7 @@ function RailTooltip({ label, onClick, children }: { label: string; onClick: (e:
         {children}
       </button>
       {pos && (
-        <div style={{
-          position: 'fixed',
-          left: pos.x,
-          top: pos.y,
-          transform: 'translateY(-50%)',
-          background: '#2a2a36',
-          border: '1px solid rgba(255,255,255,0.1)',
-          color: 'rgba(255,255,255,0.9)',
-          fontSize: '0.7rem',
-          fontWeight: 500,
-          letterSpacing: '0.03em',
-          padding: '5px 10px',
-          borderRadius: '6px',
-          whiteSpace: 'nowrap',
-          pointerEvents: 'none',
-          zIndex: 9999,
-        }}>
+        <div className="sidebar__tooltip" style={{ left: pos.x, top: pos.y }}>
           {label}
         </div>
       )}
@@ -107,10 +91,10 @@ export default function Sidebar({
 
         {/* Rail — clicking anywhere on it (not a button) expands the sidebar */}
         <div className="sidebar__rail" onClick={onToggle}>
-          <RailTooltip label="Expand sidebar" onClick={(e) => { e.stopPropagation(); onToggle(); }}>
+          <RailTooltip label="expand sidebar" onClick={(e) => { e.stopPropagation(); onToggle(); }}>
             <IconPanel />
           </RailTooltip>
-          <RailTooltip label="New chat" onClick={(e) => { e.stopPropagation(); onNew(); }}>
+          <RailTooltip label="new chat" onClick={(e) => { e.stopPropagation(); onNew(); }}>
             <IconPlus />
           </RailTooltip>
         </div>
@@ -119,14 +103,14 @@ export default function Sidebar({
         <div className="sidebar__panel">
           <div className="sidebar__panel-header">
             <span className="sidebar__brand">luke ai.</span>
-            <button className="sidebar__rail-btn" onClick={(e) => { e.stopPropagation(); onToggle(); }} aria-label="Collapse sidebar">
+            <button className="sidebar__rail-btn" onClick={(e) => { e.stopPropagation(); onToggle(); }} aria-label="collapse sidebar">
               <IconPanel />
             </button>
           </div>
 
           <button className="sidebar__new" onClick={(e) => { e.stopPropagation(); onNew(); }}>
             <IconPlus />
-            <span>New Chat</span>
+            <span>new chat</span>
           </button>
 
           <div className="sidebar__list">
@@ -149,7 +133,7 @@ export default function Sidebar({
                   <button
                     className="sidebar__delete"
                     onClick={(e) => { e.stopPropagation(); setPendingDeleteId(conv.id); }}
-                    aria-label="Delete conversation"
+                    aria-label="delete conversation"
                   >
                     <IconTrash />
                   </button>
@@ -166,11 +150,11 @@ export default function Sidebar({
       {pendingDeleteId && (
         <div className="sidebar__modal-backdrop" onClick={() => setPendingDeleteId(null)}>
           <div className="sidebar__modal" onClick={(e) => e.stopPropagation()}>
-            <p className="sidebar__modal-title">Delete chat</p>
-            <p className="sidebar__modal-body">Are you sure you want to delete this chat?</p>
+            <p className="sidebar__modal-title">delete chat?</p>
+            <p className="sidebar__modal-body">this will permanently remove the conversation.</p>
             <div className="sidebar__modal-actions">
-              <button className="sidebar__modal-cancel" onClick={() => setPendingDeleteId(null)}>Cancel</button>
-              <button className="sidebar__modal-delete" onClick={confirmDelete}>Delete</button>
+              <button className="sidebar__modal-cancel" onClick={() => setPendingDeleteId(null)}>cancel</button>
+              <button className="sidebar__modal-delete" onClick={confirmDelete}>delete</button>
             </div>
           </div>
         </div>

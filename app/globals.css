@@ -1,5 +1,22 @@
 @import "tailwindcss";
 
+/*
+ * Design tokens, exposed to Tailwind. `inline` so the font tokens can
+ * reference the next/font variables set on <html> (see app/layout.tsx).
+ * Colors here generate utilities: text-accent, bg-mono-blue, etc.
+ */
+@theme inline {
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --color-mono-blue: var(--mono-blue);
+  --color-mono-blue-deep: var(--mono-blue-deep);
+  --color-mono-pink: #ffb3ff;
+  --color-mono-red: #ff537a;
+  --color-mono-yellow: #ffffb5;
+  --color-mono-green: #00ffb5;
+  --color-accent: var(--accent);
+}
+
 /* ─── Page transitions ─── */
 ::view-transition-old(root) {
   animation: 180ms ease-in both page-fade-out;
@@ -26,16 +43,29 @@
 }
 
 :root {
+  color-scheme: dark;
   --mono-blue:         #008fff;
+  --mono-blue-deep:    #0072cc;
   --mono-pink:         #ffb3ff;
   --mono-red:          #ff537a;
   --mono-yellow:       #ffffb5;
   --mono-green:        #00ffb5;
-  --mono-tile:         #1c1c24;
+  --mono-tile:         #1e1e28;
+  /*
+   * Per-case-study accent. Case study roots override it (.lcs green,
+   * .pcs Pattern green); everything portable — eyebrows, bullet dashes,
+   * focus rings, the lightbox — reads this instead of a page-specific color.
+   */
+  --accent:            var(--mono-blue);
   --mono-gutter:       0.5rem;
   --mono-line-height:  1.65em;
   --mono-block-offset: 3.3em;
   --ease-out-quint:    cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+::selection {
+  background: var(--mono-blue);
+  color: #fff;
 }
 
 *,
@@ -52,12 +82,13 @@ body {
   padding: 0;
   background: #000;
   color: #fff;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 16px;
   line-height: var(--mono-line-height);
   cursor: none !important;
   -webkit-font-smoothing: antialiased;
   overscroll-behavior: none;
+  scrollbar-width: none;
 }
 
 html::-webkit-scrollbar,
@@ -85,7 +116,9 @@ h1, h2, h3 {
 }
 
 h2, h3 {
-  color: var(--mono-blue);
+  /* Follows the page accent, so an unstyled heading on a case study can
+     never render in another study's color. */
+  color: var(--accent);
   font-size: 1em;
   font-weight: normal;
   margin: var(--mono-line-height) 0 0;
@@ -156,7 +189,7 @@ p a {
   border-radius: 3em;
   padding: 1.1em 1.4em;
   line-height: 1em;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: var(--font-mono);
   font-size: clamp(0.875rem, 1.2vw, 1.05rem);
   color: #fff;
   background: transparent;
@@ -182,6 +215,29 @@ p a {
 
 .btn:active {
   animation: push 0.5s ease-out;
+}
+
+/*
+ * One focus treatment for every interactive element that had none — the
+ * custom cursor replaces the pointer, but keyboard users still need a ring.
+ */
+.btn:focus-visible,
+.footer-link:focus-visible,
+.tile-footer__logo-link:focus-visible,
+.term-nav__line:focus-visible,
+.pr-card__links a:focus-visible,
+.resume-md__dl:focus-visible,
+.chat-pg__send:focus-visible,
+.chat-pg__contact-btn:focus-visible,
+.chat-pg__retry:focus-visible,
+.chat-pg__menu:focus-visible,
+.chat-pg__plus-btn:focus-visible,
+.sidebar__rail-btn:focus-visible,
+.sidebar__new:focus-visible,
+.sidebar__item:focus-visible,
+.sidebar__delete:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .btn__icon {
@@ -347,7 +403,7 @@ p a {
   position: relative;
   width: 52px;
   flex-shrink: 0;
-  background: #0d0d0d;
+  background: #0d0d12;
   overflow: hidden;
   transition: width 0.22s var(--ease-out-quint);
 }
@@ -383,40 +439,34 @@ p a {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.12s ease;
+  transition: background 0.2s ease;
   flex-shrink: 0;
 }
 
 .sidebar__rail-btn:hover {
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .sidebar__rail-item {
   position: relative;
 }
 
+/* Positioned from JS (fixed, beside the rail button); looks live here so the
+   component and the stylesheet can't drift apart. */
 .sidebar__tooltip {
-  position: absolute;
-  left: calc(100% + 10px);
-  top: 50%;
+  position: fixed;
   transform: translateY(-50%);
   background: #2a2a36;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.85);
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.03em;
   padding: 5px 10px;
-  border-radius: 6px;
+  border-radius: 8px;
   white-space: nowrap;
-  opacity: 0;
   pointer-events: none;
-  transition: opacity 0.15s ease;
-  z-index: 100;
-}
-
-.sidebar__rail-item:hover .sidebar__tooltip {
-  opacity: 1;
+  z-index: 9999;
 }
 
 /* Expanded panel — slides over the rail */
@@ -428,7 +478,7 @@ p a {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: #0d0d0d;
+  background: #0d0d12;
   transform: translateX(-260px);
   transition: transform 0.22s var(--ease-out-quint);
   z-index: 2;
@@ -473,11 +523,11 @@ p a {
   border: none;
   border-radius: 8px;
   color: #fff;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 0.85rem;
   font-weight: 500;
   cursor: none !important;
-  transition: background 0.12s ease;
+  transition: background 0.2s ease;
   flex-shrink: 0;
   white-space: nowrap;
   width: calc(100% - 1rem);
@@ -520,8 +570,8 @@ p a {
 .sidebar__item-wrap {
   display: flex;
   align-items: center;
-  border-radius: 6px;
-  transition: background 0.12s ease;
+  border-radius: 8px;
+  transition: background 0.2s ease;
 }
 
 .sidebar__item-wrap:hover {
@@ -539,7 +589,7 @@ p a {
   background: none;
   border: none;
   color: #fff;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 0.82rem;
   padding: 0.5rem 0.6rem;
   cursor: none !important;
@@ -563,7 +613,7 @@ p a {
   border-radius: 4px;
   margin-right: 4px;
   opacity: 0;
-  transition: opacity 0.12s ease, color 0.12s ease, background 0.12s ease;
+  transition: opacity 0.2s ease, color 0.2s ease, background 0.2s ease;
 }
 
 .sidebar__item-wrap:hover .sidebar__delete {
@@ -591,7 +641,7 @@ p a {
 
 .sidebar__modal {
   background: #16161e;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 28px 28px 24px;
   width: 340px;
@@ -621,24 +671,24 @@ p a {
 
 .sidebar__modal-cancel {
   padding: 6px 14px;
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: transparent;
   color: rgba(255, 255, 255, 0.6);
   font-size: 0.75rem;
   font-family: inherit;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .sidebar__modal-cancel:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.08);
   color: rgba(255, 255, 255, 0.85);
 }
 
 .sidebar__modal-delete {
   padding: 6px 14px;
-  border-radius: 6px;
+  border-radius: 8px;
   border: none;
   background: #9b2335;
   color: #fff;
@@ -646,7 +696,7 @@ p a {
   font-family: inherit;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background 0.2s ease;
 }
 
 .sidebar__modal-delete:hover {
@@ -684,7 +734,7 @@ p a {
   opacity: 0.5;
   cursor: none !important;
   padding: 0.25rem 0.5rem;
-  transition: opacity 0.15s ease;
+  transition: opacity 0.2s ease;
   flex-shrink: 0;
   z-index: 1;
   display: flex;
@@ -735,8 +785,8 @@ p a {
 
 /* User bubble */
 .chat-pg__bubble {
-  background: #2a2a2a;
-  border-radius: 18px;
+  background: #2a2a36;
+  border-radius: 12px;
   padding: 0.75rem 1rem;
   max-width: 80%;
   font-size: 1rem;
@@ -784,7 +834,7 @@ p a {
 
 .chat-pg__ai-text pre {
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 1rem;
   overflow-x: auto;
@@ -812,16 +862,17 @@ p a {
   border-radius: 3em;
   color: #fff;
   font-size: 0.82rem;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: var(--font-mono);
   text-decoration: none;
   background: transparent;
   cursor: none !important;
   transition: border-color 0.3s ease, opacity 0.3s ease;
 }
 
+/* Same rest state as .btn, same hover: the magnetized cursor pill takes
+   over as the outline. */
 .chat-pg__contact-btn:hover {
-  border-color: rgba(255, 255, 255, 0.5);
-  opacity: 0.85;
+  border-color: transparent;
 }
 
 /* Typing dots */
@@ -922,7 +973,7 @@ p a {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: color 0.15s ease;
+  transition: color 0.2s ease;
   padding: 0;
   appearance: none;
 }
@@ -957,10 +1008,10 @@ p a {
   padding: 12px 16px;
   background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   cursor: pointer;
   text-align: left;
-  transition: background 0.15s ease;
+  transition: background 0.2s ease;
 }
 
 .chat-pg__plus-item:last-child {
@@ -968,7 +1019,7 @@ p a {
 }
 
 .chat-pg__plus-item:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .chat-pg__plus-item-label {
@@ -986,7 +1037,7 @@ p a {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: #232323;
+  background: #1e1e28;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 9999px;
   padding: 0.75rem;
@@ -1003,7 +1054,7 @@ p a {
   border: none;
   outline: none;
   color: #fff;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 1rem;
   cursor: none !important;
   caret-color: var(--mono-blue);
@@ -1077,7 +1128,7 @@ p a {
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 3em;
   color: rgba(255, 255, 255, 0.55);
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   padding: 0.4em 0.9em;
   cursor: none !important;
@@ -1141,13 +1192,24 @@ p a {
 }
 
 .workgrid__item {
-  background: #1e1e28;
+  background: var(--mono-tile);
   border-radius: 4px;
   position: relative;
   overflow: hidden;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  /* Inset so the ring survives overflow:hidden and doesn't shift layout */
+  outline: 1px solid transparent;
+  outline-offset: -1px;
+  transition: outline-color 0.3s ease;
+}
+
+/* Hover affordance for the whole tile — desktop pointers only */
+@media (hover: hover) {
+  .workgrid__item:hover {
+    outline-color: var(--mono-blue);
+  }
 }
 
 /* Artwork lives here — a flexible box above the fixed footer slab */
@@ -1164,61 +1226,22 @@ p a {
   }
 }
 
-.workgrid__item > a {
-  position: absolute;
-  inset: 0;
-}
-
 .workgrid__item__content {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  transition: filter 0.5s ease, transform 0.5s ease;
 }
 
-.workgrid__item__title {
+/*
+ * The dark wash a tile fades in behind its footer on hover. One rule instead
+ * of the same rgba literal copy-pasted into all four tile components.
+ */
+.tile-scrim {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  opacity: 0;
-  pointer-events: none;
   background: rgba(0, 0, 0, 0.72);
+  pointer-events: none;
   transition: opacity 0.4s ease;
-}
-
-.workgrid__item__title-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.workgrid__item__title-name {
-  font-size: clamp(1.2rem, 2vw, 1.6rem);
-  font-weight: 600;
-  color: #fff;
-  letter-spacing: -0.02em;
-  line-height: 1;
-}
-
-.workgrid__item__title-meta {
-  font-size: 0.7rem;
-  font-family: 'IBM Plex Mono', monospace;
-  color: rgba(255, 255, 255, 0.6);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.workgrid__item > a:hover .workgrid__item__content {
-  filter: blur(16px);
-  transform: scale(1.08);
-}
-
-.workgrid__item > a:hover .workgrid__item__title {
-  opacity: 1;
 }
 
 /* ─── Tile footer — company lockup, title, summary, tags ─── */
@@ -1228,7 +1251,7 @@ p a {
   z-index: 20;
   padding: 0.85rem clamp(1.1rem, 1.8vw, 1.5rem) 0.95rem;
   background: rgba(0, 0, 0, 0.34);
-  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   transition: background 0.4s ease;
 }
 
@@ -1247,7 +1270,7 @@ p a {
   flex: 0 0 auto;
   width: 1.4rem;
   height: 1.4rem;
-  border-radius: 5px;
+  border-radius: 4px;
 }
 
 .tile-footer__logo {
@@ -1274,44 +1297,12 @@ p a {
   flex: 0 0 auto;
   padding: 5px;
   margin: -5px;
-  border-radius: 9px;
+  border-radius: 8px;
   transition: background 0.2s ease;
 }
 
 .tile-footer__logo-link:hover {
   background: rgba(255, 255, 255, 0.1);
-}
-
-/* Keycap affordance — greys out at rest, lights up with the tile */
-.tile-footer__enter {
-  flex: 0 0 auto;
-  margin-left: auto;
-  padding: 0.4em 0.6em;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 5px;
-  background: rgba(255, 255, 255, 0.03);
-  font-size: 0.5625rem;
-  line-height: 1;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.32);
-  white-space: nowrap;
-  transition:
-    color 0.35s ease,
-    border-color 0.35s ease,
-    background 0.35s ease,
-    box-shadow 0.35s ease,
-    text-shadow 0.35s ease;
-}
-
-.tile-footer.is-hovered .tile-footer__enter {
-  border-color: color-mix(in srgb, var(--mono-blue) 65%, transparent);
-  background: color-mix(in srgb, var(--mono-blue) 16%, transparent);
-  color: color-mix(in srgb, var(--mono-blue) 55%, #fff);
-  box-shadow:
-    0 0 10px color-mix(in srgb, var(--mono-blue) 40%, transparent),
-    inset 0 0 8px color-mix(in srgb, var(--mono-blue) 18%, transparent);
-  text-shadow: 0 0 8px color-mix(in srgb, var(--mono-blue) 55%, transparent);
 }
 
 /* Company name in full, beside the mark */
@@ -1324,7 +1315,7 @@ p a {
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .tile-footer__title {
@@ -1359,11 +1350,10 @@ p a {
   border-radius: 3px;
 }
 
-/* Keyboard affordance only — no hover, and no room, on touch layouts */
-@media (max-width: 47.99em) {
-  .tile-footer__enter {
-    display: none;
-  }
+/* " · 2026" after the title — quieter than the title so it reads as metadata */
+.tile-footer__year {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .tile-footer__summary {
@@ -1375,45 +1365,7 @@ p a {
   margin: 0.4rem 0 0;
   font-size: 0.8125rem;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.88);
-}
-
-.tile-footer__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem;
-  margin-top: 0.65rem;
-}
-
-/* Each tag carries a discipline accent, set as --tag-color by TileFooter */
-.tile-footer__tag {
-  padding: 0.44em 0.72em;
-  border: 1px solid color-mix(in srgb, var(--tag-color) 38%, transparent);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--tag-color) 11%, transparent);
-  font-size: 0.625rem;
-  line-height: 1;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--tag-color) 72%, #fff);
-  white-space: nowrap;
-  transition:
-    color 0.35s ease,
-    border-color 0.35s ease,
-    background 0.35s ease;
-}
-
-.tile-footer.is-hovered .tile-footer__tag {
-  border-color: color-mix(in srgb, var(--tag-color) 70%, transparent);
-  background: color-mix(in srgb, var(--tag-color) 20%, transparent);
-  color: color-mix(in srgb, var(--tag-color) 40%, #fff);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tile-footer__enter,
-  .tile-footer__tag {
-    transition: none;
-  }
+  color: rgba(255, 255, 255, 0.85);
 }
 
 /* Tile SVG base */
@@ -1524,14 +1476,6 @@ p a {
 }
 
 
-.workgrid__glow {
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  opacity: 0.2;
-  filter: blur(50px);
-}
-
 /* ─── Site nav ─── */
 
 /*
@@ -1548,7 +1492,7 @@ p a {
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   transition: background 0.35s ease;
 }
 
@@ -1639,7 +1583,9 @@ p a {
 }
 
 @media (max-width: 36em) {
-  .sitenav__inner {
+  /* The article variant keeps its 2rem inline padding — it exists to line the
+     name up with the article's text edge, and that must hold on phones too. */
+  .sitenav__inner:not(.sitenav__inner--article) {
     padding-inline: 0.25rem;
   }
 
@@ -1656,6 +1602,17 @@ p a {
 /* ─── Footer ─── */
 .footer {
   margin-top: 0.3rem;
+}
+
+/*
+ * Article variant: same 860px column as the case-study body and the
+ * `.sitenav__inner--article` bar above it, so the footer's links land on the
+ * article's left text edge instead of the 1280px grid's margin.
+ */
+.footer--article {
+  max-width: 860px;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 .footer__inner {
@@ -1715,7 +1672,7 @@ p a {
   left: 50%;
   z-index: 1;
   padding: 0.4em 0.65em;
-  border-radius: 6px;
+  border-radius: 8px;
   background: var(--mono-blue);
   color: #000;
   font-size: 0.5625rem;
@@ -1810,70 +1767,77 @@ p a {
   }
 }
 
-/* About section: less top padding on small screens */
-@media (max-width: 36em) {
-  .about {
-    /* Still has to clear the fixed site nav. */
-    padding-top: 5rem;
-  }
-}
+/* ─── Case studies: shared article system ───
 
-/* ─── Lucid case study (/work/lucid-ai) ─── */
+   One typographic system for all four studies. Each page root carries `cs`
+   plus a scope class that sets --accent; every shared piece below reads the
+   variable, so a study changes color by changing one line. */
 
-/*
- * Page-scoped design system: the deck's editorial green adapted onto the
- * site's black. Green replaces the site blue for eyebrows/accents on this
- * page only; dark green grounds the reframe pull quote; yellow is reserved
- * for annotation marks on screenshots, echoing the deck's annotation style.
- */
-.lcs {
-  --lcs-green: #34d399;
-  --lcs-green-dim: rgba(52, 211, 153, 0.55);
-  --lcs-green-dark: #0a3d2b;
-  --lcs-yellow: #ffd34d;
-}
+.lcs { --accent: #34d399; --lcs-yellow: #ffd34d; }
+.pcs { --accent: #00b37d; }
+/* .acs keeps the site blue — the :root default already provides it. */
 
-.lcs-eyebrow {
+.cs-eyebrow {
   display: block;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--lcs-green);
-  margin-bottom: 1rem;
+  color: var(--accent);
 }
 
-.lcs-headline {
+/* Fact-strip / persona micro-label: the eyebrow one step down */
+.cs-label-sm {
   display: block;
-  font-size: clamp(1.35rem, 2.6vw, 1.9rem);
-  font-weight: 500;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-  color: #fff;
-  margin: 0 0 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
 }
 
-.lcs-prose {
-  font-size: 1.0625rem;
+.cs-headline {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.375;
+  letter-spacing: -0.025em;
+  color: #fff;
+  margin: 0.75rem 0 1.5rem;
+}
+
+@media (min-width: 40em) {
+  .cs-headline { font-size: 2rem; }
+}
+
+.cs-prose {
+  font-size: 1.125rem;
   line-height: 1.8;
   color: #fff;
 }
 
-.lcs-prose p { margin: 0 0 1.1rem; }
-.lcs-prose p:last-child { margin-bottom: 0; }
+.cs-prose p { margin: 0 0 1.1rem; }
+.cs-prose p:last-child { margin-bottom: 0; }
 
-.lcs-bullets li {
+.cs-bullets li {
   display: flex;
   gap: 0.75rem;
-  font-size: 1.0625rem;
-  line-height: 1.65;
-  margin-bottom: 0.55rem;
+  font-size: 1.125rem;
+  line-height: 1.625;
+  margin-bottom: 0.5rem;
 }
 
-.lcs-bullets li::before {
+.cs-bullets li::before {
   content: '—';
-  color: var(--lcs-green);
+  color: var(--accent);
   flex-shrink: 0;
+}
+
+.cs-cap {
+  margin-top: 0.75rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* Impact strip — the numbers hook under the hero. Tiles rise in staggered,
@@ -1883,7 +1847,7 @@ p a {
   margin-top: 1.75rem;
 }
 
-.lcs-impact .lcs-eyebrow {
+.lcs-impact .cs-eyebrow {
   margin-bottom: 1.25rem;
 }
 
@@ -1906,7 +1870,7 @@ p a {
   padding: 1.15rem 1.15rem 1.25rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  background: linear-gradient(180deg, rgba(52, 211, 153, 0.08), rgba(52, 211, 153, 0.02));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 8%, transparent), color-mix(in srgb, var(--accent) 2%, transparent));
   opacity: 0;
   transform: translateY(12px);
 }
@@ -1924,16 +1888,16 @@ p a {
   font-size: clamp(1.9rem, 4.6vw, 2.8rem);
   font-weight: 600;
   line-height: 1;
-  color: var(--lcs-green);
+  color: var(--accent);
   font-variant-numeric: tabular-nums;
-  text-shadow: 0 0 28px rgba(52, 211, 153, 0.35);
+  text-shadow: 0 0 28px color-mix(in srgb, var(--accent) 35%, transparent);
 }
 
 .lcs-impact__bar {
   display: block;
   height: 2px;
   border-radius: 1px;
-  background: var(--lcs-green);
+  background: var(--accent);
   opacity: 0.8;
   transform: scaleX(0);
   transform-origin: left center;
@@ -1959,7 +1923,7 @@ p a {
   margin: 1.15rem 0 0;
   font-size: 0.9rem;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1980,16 +1944,9 @@ p a {
 .lcs-shot {
   width: 100%;
   height: auto;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
-}
-
-.lcs-cap {
-  margin-top: 0.8rem;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.65);
 }
 
 /* Click-to-expand screenshots: hover surfaces the hint, click opens the lightbox */
@@ -2015,9 +1972,9 @@ p a {
 }
 
 .lcs-zoom:focus-visible {
-  outline: 2px solid var(--lcs-green);
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
-  border-radius: 10px;
+  border-radius: 8px;
 }
 
 .lcs-zoom__hint {
@@ -2027,7 +1984,7 @@ p a {
   display: inline-flex;
   align-items: center;
   gap: 0.45em;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 0.7rem;
   letter-spacing: 0.04em;
   color: #fff;
@@ -2094,9 +2051,9 @@ p a {
   max-width: 100%;
   max-height: 94vh;
   object-fit: contain;
-  border-radius: 10px;
+  border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
 }
 
 .lcs-lightbox__close {
@@ -2121,7 +2078,7 @@ p a {
 }
 
 .lcs-lightbox__close:focus-visible {
-  outline: 2px solid var(--lcs-green);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
@@ -2169,7 +2126,7 @@ p a {
   gap: 4px;
   padding: 4px;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 22px;
+  border-radius: 999px;
   background: rgba(255, 255, 255, 0.04);
 }
 
@@ -2178,7 +2135,7 @@ p a {
   border: none;
   background: transparent;
   color: rgba(255, 255, 255, 0.6);
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 0.8125rem;
   line-height: 1;
   padding: 0.6em 1.05em;
@@ -2192,13 +2149,13 @@ p a {
 
 .lcs-seg__btn[aria-pressed='true'],
 .lcs-seg__btn[aria-selected='true'] {
-  background: var(--lcs-green);
+  background: var(--accent);
   color: #04170f;
   font-weight: 600;
 }
 
 .lcs-seg__btn:focus-visible {
-  outline: 2px solid var(--lcs-green);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
@@ -2206,7 +2163,7 @@ p a {
 .lcs-stage {
   position: relative;
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: 8px;
 }
 
 .lcs-stage__layer {
@@ -2224,31 +2181,6 @@ p a {
   .lcs-stage__layer { transition: none; }
 }
 
-/* Reframe pull quote — the single serif moment, on the deck's dark green */
-.lcs-quote {
-  background: var(--lcs-green-dark);
-  border-radius: 14px;
-  padding: clamp(2.25rem, 6vw, 4rem) clamp(1.5rem, 5vw, 3.5rem);
-}
-
-.lcs-quote blockquote {
-  margin: 0;
-  font-family: Georgia, 'Times New Roman', serif;
-  font-style: italic;
-  font-size: clamp(1.35rem, 3vw, 2rem);
-  line-height: 1.45;
-  color: #fff;
-  letter-spacing: 0;
-}
-
-.lcs-quote figcaption {
-  margin-top: 1.25rem;
-  font-size: 0.8125rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--lcs-green);
-}
-
 /* Timeline — bar draws in, release markers pop after it passes */
 .lcs-tl { position: relative; }
 
@@ -2263,7 +2195,7 @@ p a {
 .lcs-tl__fill {
   position: absolute;
   inset: 0;
-  background: var(--lcs-green);
+  background: var(--accent);
   border-radius: 2px;
   transform-origin: left center;
   transform: scaleX(0);
@@ -2285,7 +2217,7 @@ p a {
   height: 13px;
   border-radius: 50%;
   background: #000;
-  border: 3px solid var(--lcs-green);
+  border: 3px solid var(--accent);
   opacity: 0;
   scale: 0.4;
 }
@@ -2328,7 +2260,7 @@ p a {
     display: flex;
     flex-direction: column;
     gap: 0.9rem;
-    border-left: 2px solid var(--lcs-green);
+    border-left: 2px solid var(--accent);
     padding-left: 1.1rem;
   }
   .lcs-tl__vlist li { font-size: 0.9rem; line-height: 1.5; }
@@ -2346,19 +2278,22 @@ p a {
 .lcs-lay__card {
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 10px;
+  border-radius: 8px;
   padding: 0.9rem;
   background: rgba(255, 255, 255, 0.03);
   transition: transform 0.3s var(--ease-out-quint), border-color 0.3s ease, opacity 0.3s ease;
 }
 
-.lcs-lay__card--winner { border-color: var(--lcs-green-dim); }
+.lcs-lay__card--winner { border-color: color-mix(in srgb, var(--accent) 55%, transparent); }
 
-.lcs-lay:hover .lcs-lay__card:not(.lcs-lay__card--winner) { opacity: 0.4; }
+/* Desktop pointers only — same gate as the tile hover ring */
+@media (hover: hover) {
+  .lcs-lay:hover .lcs-lay__card:not(.lcs-lay__card--winner) { opacity: 0.4; }
 
-.lcs-lay:hover .lcs-lay__card--winner {
-  transform: translateY(-4px);
-  border-color: var(--lcs-green);
+  .lcs-lay:hover .lcs-lay__card--winner {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2370,13 +2305,13 @@ p a {
   position: relative;
   aspect-ratio: 16 / 10;
   border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 5px;
+  border-radius: 4px;
   overflow: hidden;
   margin-bottom: 0.7rem;
 }
 
-.lcs-lay__block { position: absolute; background: rgba(52, 211, 153, 0.35); }
-.lcs-lay__card--winner .lcs-lay__block { background: var(--lcs-green); opacity: 0.75; }
+.lcs-lay__block { position: absolute; background: color-mix(in srgb, var(--accent) 35%, transparent); }
+.lcs-lay__card--winner .lcs-lay__block { background: var(--accent); opacity: 0.75; }
 
 .lcs-lay__name {
   font-size: 0.78rem;
@@ -2399,7 +2334,7 @@ p a {
   font-size: 0.58rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  background: var(--lcs-green);
+  background: var(--accent);
   color: #04170f;
   font-weight: 700;
   border-radius: 999px;
@@ -2410,7 +2345,7 @@ p a {
 .lcs-count {
   font-size: clamp(2.6rem, 6vw, 4rem);
   font-weight: 600;
-  color: var(--lcs-green);
+  color: var(--accent);
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
@@ -2433,9 +2368,9 @@ p a {
   display: inline-flex;
   align-items: center;
   gap: 0.35em;
-  background: rgba(52, 211, 153, 0.16);
-  border: 1px solid var(--lcs-green-dim);
-  color: var(--lcs-green);
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  color: var(--accent);
   border-radius: 999px;
   padding: 0.18em 0.6em;
   font-weight: 600;
@@ -2446,7 +2381,7 @@ p a {
 
 .lcs-statecard {
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 10px;
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.03);
   padding: 1.4rem;
 }
@@ -2477,26 +2412,27 @@ p a {
 }
 
 /* ────────────────────────────────────────────────────────────────────────────
-   Awardco case study (.acs) — overrides for the shared lcs-* mechanics used
-   on /work/awardco-login-flow-redesign. The page's accent is the site blue,
-   not Lucid green, and its Before/After toggle needs to read as a control,
-   not a whisper. */
+   Awardco + Pattern (.acs / .pcs) — overrides for the shared lcs-* mechanics.
+   Their Before/After toggles need to read as controls, not whispers. Colors
+   come from --accent, so each page keeps its own. */
 
 /* Both options must read as buttons at rest — the inherited pill row hid the
    unselected label until you hovered it, so the control didn't read as a
    toggle at all. Each segment gets its own visible box; the active one fills
-   with the page's blue. */
-.acs .lcs-seg {
+   with the page's accent. */
+.acs .lcs-seg,
+.pcs .lcs-seg {
   display: flex;
   width: 100%;
   max-width: 340px;
   gap: 6px;
   padding: 5px;
   border-color: rgba(255, 255, 255, 0.28);
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.08);
 }
 
-.acs .lcs-seg__btn {
+.acs .lcs-seg__btn,
+.pcs .lcs-seg__btn {
   flex: 1;
   text-align: center;
   font-size: 0.95rem;
@@ -2507,22 +2443,20 @@ p a {
   transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
-.acs .lcs-seg__btn:hover {
+.acs .lcs-seg__btn:hover,
+.pcs .lcs-seg__btn:hover {
   background: rgba(255, 255, 255, 0.12);
   color: #fff;
 }
 
 .acs .lcs-seg__btn[aria-pressed='true'],
-.acs .lcs-seg__btn[aria-selected='true'] {
-  background: #008fff;
-  border-color: #008fff;
+.acs .lcs-seg__btn[aria-selected='true'],
+.pcs .lcs-seg__btn[aria-pressed='true'],
+.pcs .lcs-seg__btn[aria-selected='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
   color: #fff;
   font-weight: 600;
-}
-
-.acs .lcs-seg__btn:focus-visible,
-.acs .lcs-zoom:focus-visible {
-  outline-color: #008fff;
 }
 
 /* ────────────────────────────────────────────────────────────────
@@ -2552,7 +2486,7 @@ p a {
 .canvas-strip {
   position: absolute;
   inset: 0 auto 0 0;
-  width: 420vw; /* generous; real extent set by card positions */
+  width: 470vw; /* generous; real extent set by card positions */
   background-image: radial-gradient(circle, rgba(255, 255, 255, 0.18) 1.5px, transparent 1.5px);
   background-size: 30px 30px;
   will-change: transform;
@@ -2562,7 +2496,7 @@ p a {
 .canvas-bg {
   position: absolute;
   inset: 0 auto 0 0;
-  width: 420vw;
+  width: 470vw;
   pointer-events: none;
   will-change: transform;
 }
@@ -2570,7 +2504,7 @@ p a {
 .canvas-bg__name {
   position: absolute;
   top: 30vh;
-  font-family: var(--font-sans), sans-serif;
+  font-family: var(--font-sans);
   font-size: clamp(8rem, 16vw, 15rem);
   font-weight: 700;
   line-height: 1;
@@ -2604,9 +2538,9 @@ p a {
 .canvas-intro__highlight {
   position: relative;
   display: inline-block;
-  background: #008fff;
+  background: var(--mono-blue);
   color: #fff;
-  font-family: var(--font-sans), sans-serif;
+  font-family: var(--font-sans);
   font-size: clamp(1.6rem, 2.6vw, 2.6rem);
   font-weight: 700;
   line-height: 1.25;
@@ -2616,7 +2550,7 @@ p a {
 .canvas-intro__cred {
   margin: 0;
   font-size: clamp(1rem, 1.4vw, 1.4rem);
-  font-family: var(--font-sans), sans-serif;
+  font-family: var(--font-sans);
   color: rgba(255, 255, 255, 0.9);
 }
 
@@ -2627,7 +2561,7 @@ p a {
   left: 3vw;
   bottom: 1vh;
   margin: 0;
-  font-family: var(--font-sans), sans-serif;
+  font-family: var(--font-sans);
   font-size: 14.5vw;
   font-weight: 700;
   letter-spacing: -0.04em;
@@ -2671,62 +2605,182 @@ p a {
   left: 58vw;
   top: 9vh;
   width: 30vw;
-  outline: 1px solid rgba(255, 255, 255, 0.35);
-  outline-offset: 10px;
 }
 
-.canvas-contact__shadow {
-  position: absolute;
-  inset: 0;
-  background: #0c0c13;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 3px;
-}
+/* ── contact.ts: a real VS Code editor window (Dark+) ───────────── */
 
-.canvas-contact__shadow--a {
-  transform: rotate(-3.2deg) translate(-8px, 8px);
-}
-
-.canvas-contact__shadow--b {
-  transform: rotate(2.1deg) translate(10px, -6px);
-}
-
-.canvas-contact__card {
+.code-card {
   position: relative;
-  background: #14141c;
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  border-radius: 3px;
-  padding: 1.4rem 1.6rem 1.1rem;
-  transform: rotate(-1.2deg);
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  background: #1e1e1e;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
 }
 
-.canvas-contact__eyebrow {
-  margin: 0;
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+/* macOS title bar: traffic lights + window title */
+.code-card__bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0.6rem 0.9rem;
+  background: #323233;
+}
+
+.code-card__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.code-card__dot--r {
+  background: #ff5f57;
+}
+
+.code-card__dot--y {
+  background: #febc2e;
+}
+
+.code-card__dot--g {
+  background: #28c840;
+}
+
+.code-card__file {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
   color: rgba(255, 255, 255, 0.55);
+  white-space: nowrap;
 }
 
-.canvas-contact__links {
+/* Tab strip: one open tab, active-tab bg matches the editor */
+.code-card__tabs {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.45rem;
-  font-size: 0.95rem;
+  background: #252526;
 }
 
-.canvas-contact__sig {
-  align-self: flex-end;
-  font-family: var(--font-sans), sans-serif;
-  font-size: clamp(2.4rem, 3.4vw, 3.6rem);
+.code-card__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: #1e1e1e;
+  border-right: 1px solid #191919;
+  border-top: 1px solid #0078d4;
+  padding: 0.4rem 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: #e7e7e7;
+}
+
+.code-card__tsicon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 2px;
+  background: #3178c6;
+  color: #fff;
+  font-size: 0.5rem;
   font-weight: 700;
+  letter-spacing: 0;
+}
+
+.code-card__tabclose {
+  margin-left: 0.3rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
   line-height: 1;
-  color: #008fff;
+}
+
+/* Breadcrumbs row */
+.code-card__crumbs {
+  padding: 0.28rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: #9d9d9d;
+  background: #1e1e1e;
+}
+
+.code-card__crumb-sep {
+  margin: 0 0.25rem;
+  color: #6e6e6e;
+}
+
+/* Body: CSS-counter line numbers in the gutter */
+.code-card__body {
+  margin: 0;
+  padding: 0.9rem 1rem 1rem 0.4rem;
+  counter-reset: cc-line;
+  font-family: var(--font-mono);
+  font-size: clamp(0.72rem, 0.85vw, 0.85rem);
+  line-height: 1.75;
+  white-space: nowrap;
+}
+
+.code-card__body li {
+  counter-increment: cc-line;
+}
+
+.code-card__body li::before {
+  content: counter(cc-line);
+  display: inline-block;
+  width: 1.6em;
+  margin-right: 1em;
+  text-align: right;
+  color: #6e7681;
   user-select: none;
+}
+
+.cc-indent {
+  padding-left: 1.1em;
+}
+
+/* Syntax shades: VS Code Dark+ */
+.cc-comment {
+  color: #6a9955;
+}
+
+.cc-kw {
+  color: #569cd6;
+}
+
+.cc-id {
+  color: #4fc1ff;
+}
+
+.cc-op {
+  color: #d4d4d4;
+}
+
+.cc-prop {
+  color: #9cdcfe;
+}
+
+.cc-str {
+  color: #ce9178;
+}
+
+/* Clickable strings: underline like real editor link-detection */
+a.cc-link {
+  color: #ce9178;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, #ce9178 45%, transparent);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s ease;
+}
+
+a.cc-link:hover {
+  text-decoration-color: #ce9178;
+}
+
+a.cc-link:focus-visible {
+  outline: 2px solid var(--mono-blue);
+  outline-offset: 2px;
 }
 
 /* Selection handles shared by the contact card and the highlight. */
@@ -2735,12 +2789,7 @@ p a {
   width: 9px;
   height: 9px;
   background: #fff;
-  border: 1px solid #008fff;
-}
-
-.canvas-contact .sel-handle {
-  /* sit on the offset outline, not the card edge */
-  --sel-off: -15px;
+  border: 1px solid var(--mono-blue);
 }
 
 .canvas-intro__highlight .sel-handle {
@@ -2802,7 +2851,7 @@ p a {
 
 /* Polaroid frames: white border, thick chin, thrown-on-the-desk tilt. */
 .polaroid {
-  background: #f5f2ea;
+  background: #f7f5ef;
   padding: 0.8vw 0.8vw 3vw;
   box-shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
   border-radius: 2px;
@@ -2831,24 +2880,41 @@ p a {
   color: #26262e;
 }
 
-/* Blank frames behind — undeveloped shots waiting for real photos. */
-.polaroid--back-a,
-.polaroid--back-b {
+/* Second frame: a placeholder polaroid peeking out from behind. */
+.polaroid--second {
   position: absolute;
-  width: 22vw;
-  height: 24vw;
+  top: -4vh;
+  left: 16.5vw;
+  width: 17vw;
+  margin: 0;
+  transform: rotate(4.2deg);
 }
 
-.polaroid--back-a {
-  top: -3vh;
-  left: 4vw;
-  transform: rotate(3.4deg);
+.polaroid--second figcaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.7vw;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #8b8677;
 }
 
-.polaroid--back-b {
-  top: 4vh;
-  left: -2.5vw;
-  transform: rotate(-6.5deg);
+.polaroid__blank {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e9e5da;
+  border: 1px dashed #b9b4a4;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: #8b8677;
+}
+
+.polaroid--main {
+  z-index: 1;
 }
 
 /* ── About: simplified résumé doc ───────────────────────────────── */
@@ -2859,96 +2925,101 @@ p a {
   width: 27vw;
 }
 
-.resume-doc {
-  background: #f7f5ef;
-  color: #17171d;
-  border-radius: 2px;
-  padding: 2vw 2.2vw;
-  transform: rotate(1.3deg);
-  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
+/*
+ * resume.md open in VS Code's rendered markdown preview: same window
+ * chrome as contact.ts (reused classes), body set in the preview's
+ * sans type with GitHub-style ruled headings.
+ */
+.resume-md {
+  width: 100%;
 }
 
-.resume-doc__head h2 {
-  margin: 0;
-  font-family: var(--font-sans), sans-serif;
-  font-size: clamp(1.5rem, 1.9vw, 2.1rem);
+.code-card__mdicon {
+  color: #519aba;
+  font-size: 0.68rem;
   font-weight: 700;
-  color: #17171d;
+  letter-spacing: -0.02em;
 }
 
-.resume-doc__head p {
-  margin: 0.15rem 0 0;
+.resume-md__body {
+  padding: 1.3rem 1.6rem 1.5rem;
+  font-family: var(--font-sans), sans-serif;
   font-size: 0.85rem;
-  color: #55555f;
+  color: #cccccc;
 }
 
-.resume-doc__section {
-  margin: 1.6rem 0 0.6rem;
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #008fff;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+.resume-md__body h2 {
+  margin: 0 0 0.1rem;
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.resume-md__lede {
+  margin: 0 0 1rem;
+  color: #9d9d9d;
+}
+
+.resume-md__body h3 {
+  margin: 1.3rem 0 0.5rem;
   padding-bottom: 0.35rem;
+  border-bottom: 1px solid #3d3d3d;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
 }
 
-.resume-doc__rows {
+.resume-md__rows {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.resume-doc__rows li {
+.resume-md__rows li {
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-areas:
     'company period'
     'role role';
-  padding: 0.45rem 0;
-  font-size: 0.85rem;
+  padding: 0.4rem 0;
 }
 
-.resume-doc__rows li + li {
-  border-top: 1px dashed rgba(0, 0, 0, 0.12);
+.resume-md__rows li + li {
+  border-top: 1px solid #2c2c2c;
 }
 
-.resume-doc__company {
+.resume-md__company {
   grid-area: company;
-  font-weight: 500;
+  font-weight: 600;
+  color: #e7e7e7;
 }
 
-.resume-doc__role {
+.resume-md__role {
   grid-area: role;
-  color: #55555f;
   font-size: 0.78rem;
+  color: #9d9d9d;
 }
 
-.resume-doc__period {
+.resume-md__period {
   grid-area: period;
-  color: #55555f;
   font-size: 0.78rem;
+  color: #9d9d9d;
 }
 
-.resume-doc__tags {
+.resume-md__tags {
   margin: 0;
-  font-size: 0.82rem;
-  color: #26262e;
+  color: #cccccc;
 }
 
-.resume-doc__dl {
+.resume-md__dl {
   display: inline-block;
-  margin-top: 1.4rem;
-  font-size: 0.85rem;
-  color: #008fff;
+  margin-top: 1.2rem;
+  color: #3794ff;
   text-decoration: none;
-  border-bottom: 1px solid #008fff;
-  padding-bottom: 1px;
 }
 
-.resume-doc__dl:hover {
-  color: #0072cc;
-  border-color: #0072cc;
+.resume-md__dl:hover {
+  text-decoration: underline;
 }
 
 /* ── Outro: designed contact finale ─────────────────────────────── */
@@ -2963,133 +3034,922 @@ p a {
   justify-content: center;
 }
 
-.canvas-outro__card {
+.canvas-outro__stack {
   position: relative;
-  background: #14141c;
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  border-radius: 3px;
-  padding: 2.4vw 2.6vw;
-  transform: rotate(-1.1deg);
-  outline: 1px solid rgba(255, 255, 255, 0.35);
-  outline-offset: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1.4rem;
-}
-
-.canvas-outro__card .sel-handle {
-  --sel-off: -15px;
 }
 
 .canvas-outro__title {
-  margin: 0;
+  margin: 0 0 1.2rem;
   font-family: var(--font-sans), sans-serif;
-  font-size: clamp(2rem, 3.2vw, 3rem);
+  font-size: clamp(1.8rem, 2.6vw, 2.6rem);
   font-weight: 700;
   line-height: 1.05;
 }
 
-.canvas-outro__sub {
-  margin: 0;
-  font-size: clamp(0.95rem, 1.1vw, 1.1rem);
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.canvas-outro__cta {
-  display: inline-block;
-  background: #008fff;
-  color: #fff;
+/*
+ * The pull request card: GitHub anatomy — Open pill, title #001,
+ * merge-summary line, green checks, and the merge button as the
+ * email CTA.
+ */
+.pr-card {
+  background: #161b22;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  padding: 1.4rem 1.6rem;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
   font-family: var(--font-sans), sans-serif;
-  font-size: clamp(1.1rem, 1.4vw, 1.4rem);
+}
+
+.pr-card__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+
+.pr-card__state {
+  flex: 0 0 auto;
+  display: inline-block;
+  background: #238636;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+  margin-top: 0.15rem;
+}
+
+.pr-card__title {
+  margin: 0;
+  font-size: clamp(1.1rem, 1.5vw, 1.5rem);
   font-weight: 700;
-  padding: 0.7em 1.4em;
-  border-radius: 3px;
+  color: #fff;
+  line-height: 1.25;
+}
+
+.pr-card__num {
+  color: #8b949e;
+  font-weight: 400;
+}
+
+.pr-card__meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.82rem;
+  color: #8b949e;
+}
+
+.pr-card__meta b {
+  color: #e7e7e7;
+  font-weight: 600;
+}
+
+.pr-card__meta code {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  background: rgba(110, 118, 129, 0.3);
+  border-radius: 4px;
+  padding: 0.1em 0.4em;
+  color: #e7e7e7;
+}
+
+.pr-card__checks {
+  list-style: none;
+  margin: 1.1rem 0 0;
+  padding: 0.75rem 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.85rem;
+  color: #cccccc;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.pr-card__check {
+  color: #3fb950;
+  font-weight: 700;
+  margin-right: 0.5rem;
+}
+
+.pr-card__mergebox {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 1.2rem;
+}
+
+.pr-card__merge {
+  display: inline-block;
+  background: #238636;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  padding: 0.6em 1.3em;
   text-decoration: none;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: background 0.2s ease;
 }
 
-.canvas-outro__cta:hover {
-  background: #0072cc;
-  transform: rotate(1.1deg);
+.pr-card__merge:hover {
+  background: #2ea043;
 }
 
-.canvas-outro__links {
+.pr-card__merge:focus-visible {
+  outline: 2px solid var(--mono-blue);
+  outline-offset: 2px;
+}
+
+.pr-card__mergehint {
+  font-size: 0.75rem;
+  color: #8b949e;
+}
+
+.pr-card__links {
   display: flex;
   gap: 1.4rem;
-  font-size: 0.95rem;
+  margin-top: 1.2rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.9rem;
+  font-family: var(--font-mono);
 }
 
-/* ── Screen-fixed chrome: sticker nav + progress line ───────────── */
+/* ── Screen-fixed chrome: the nav as a tiny terminal (nav.sh) ───── */
 
-/* Dashed sticker nav, top-left. */
 .canvas-nav {
   position: absolute;
   top: 40px;
   left: 40px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 14px;
   z-index: 4;
 }
 
-.canvas-nav__btn {
-  display: inline-block;
-  border: 1px dashed rgba(255, 255, 255, 0.6);
-  background: rgba(0, 0, 0, 0.7);
-  color: #fff;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.9rem;
-  letter-spacing: 0.06em;
-  padding: 0.45rem 1.6rem;
+.term-nav {
+  min-width: 232px;
+  background: #1e1e1e;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
+  padding-bottom: 0.45rem;
+}
+
+/* Panel header: PROBLEMS · OUTPUT · TERMINAL, active title underlined */
+.term-nav__tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.5rem 0.85rem 0.4rem;
+  margin-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.term-nav__tabtitle {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #8a8a8a;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid transparent;
+}
+
+.term-nav__tabtitle.is-active {
+  color: #e7e7e7;
+  border-bottom-color: #e7e7e7;
+}
+
+.term-nav__shell {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: #8a8a8a;
+}
+
+.term-nav__line {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: #cccccc;
+  padding: 0.28rem 0.85rem;
   cursor: none;
   text-decoration: none;
-  transition: background 0.2s ease, border-color 0.2s ease;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
-.canvas-nav__btn:nth-child(1) {
-  transform: rotate(-2.4deg);
+/* oh-my-zsh robbyrussell: green arrow, cyan cwd */
+.term-nav__arrow {
+  color: #23d18b;
+  font-weight: 700;
+  margin-right: 0.45rem;
 }
 
-.canvas-nav__btn:nth-child(2) {
-  transform: rotate(1.8deg) translateX(10px);
+.term-nav__dir {
+  color: #29b8db;
+  margin-right: 0.45rem;
 }
 
-.canvas-nav__btn:nth-child(3) {
-  transform: rotate(-1.4deg) translateX(2px);
+.term-nav__line--idle {
+  padding-top: 0.1rem;
 }
 
-.canvas-nav__btn:nth-child(4) {
-  transform: rotate(2.2deg) translateX(12px);
+.term-nav__caret {
+  display: inline-block;
+  width: 7px;
+  height: 0.95em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: #cccccc;
+  opacity: 0;
 }
 
-.canvas-nav__btn:hover {
-  background: #008fff;
-  border-color: #008fff;
-  border-style: solid;
+.term-nav__line:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
 }
 
-.canvas-nav__btn:focus-visible {
+.term-nav__line:hover .term-nav__caret,
+.term-nav__line:focus-visible .term-nav__caret,
+.term-nav__caret.is-idle {
+  opacity: 1;
+  animation: term-caret-blink 1.1s step-end infinite;
+}
+
+@keyframes term-caret-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   Mobile homepage (MobileHome)
+   The canvas homepage with the glide removed: a queenie.works-style
+   plain vertical stack on the same dot-grid surface, under a fixed
+   name + hamburger bar. Renders below 48em and under reduced
+   motion, so — like the canvas — no media-query guards. The inner
+   column is capped so the reduced-motion desktop case reads as a
+   long phone page, not a stretched one.
+   ──────────────────────────────────────────────────────────────── */
+
+.mhome {
+  min-height: 100vh;
+  padding: 5rem 1.1rem 0;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.14) 1.5px, transparent 1.5px);
+  background-size: 30px 30px;
+  /* Any sideways spill widens the mobile layout viewport and shoves the
+     fixed bar's burger off-screen — nothing here may poke out. */
+  overflow-x: clip;
+}
+
+.mhome__inner {
+  max-width: 26rem;
+  margin: 0 auto;
+}
+
+/* ── Fixed bar: name + hamburger ─────────────────────────────────── */
+
+.mhome-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 1.1rem;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.mhome-nav__name {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-transform: lowercase;
+  color: #fff;
+  text-decoration: none;
+  /* Match the burger's tap target so the bar height comes from content */
+  padding: 0.55rem 0;
+}
+
+/* Three drawn bars; the outer two fold into an X when open. */
+.mhome-nav__burger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  background: none;
+  border: none;
+}
+
+.mhome-nav__burger span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: #fff;
+  border-radius: 1px;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+
+.mhome-nav__burger.is-open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.mhome-nav__burger.is-open span:nth-child(2) {
+  opacity: 0;
+}
+
+.mhome-nav__burger.is-open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.mhome-nav__burger:focus-visible {
   outline: 2px solid #008fff;
   outline-offset: 2px;
 }
 
-/* Thin progress line along the bottom edge — fills as the canvas is
-   traversed. */
-.canvas-progress {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 3px;
-  z-index: 4;
-  background: rgba(255, 255, 255, 0.12);
+/* ── Full-screen menu: oversized right-aligned links ─────────────── */
+
+.mhome-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+  padding: 5.5rem 1.5rem 0;
+  background: rgba(0, 0, 0, 0.96);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
-.canvas-progress__fill {
+.mhome-menu a {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.3;
+  color: #fff;
+  text-decoration: none;
+}
+
+.mhome-menu a:active {
+  color: #008fff;
+}
+
+/* ── Hero ────────────────────────────────────────────────────────── */
+
+.mhome-hero {
+  padding: 2.2rem 0 1rem;
+}
+
+/* Room for the highlight's selection handles at -5px */
+.mhome-hero .canvas-intro__highlight-wrap {
+  margin: 0 6px 1rem;
+}
+
+.mhome-hero__cred {
+  margin: 0 6px;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* The contact card is an absolutely-placed canvas object on desktop;
+   here it sits in flow. 15px margins clear the offset outline + handles. */
+.mhome .canvas-contact {
+  position: relative;
+  left: auto;
+  top: auto;
+  width: auto;
+  margin: 3rem 15px 1.5rem;
+}
+
+/* ── Work: numbered cards in a plain stack ───────────────────────── */
+
+.mhome-work {
+  display: flex;
+  flex-direction: column;
+  gap: 2.8rem;
+  padding: 2.4rem 0 1.5rem;
+  scroll-margin-top: 4rem;
+}
+
+/* Static version of .canvas-card__label — section heading and card
+   numbers both use it, matching the canvas's floating labels. */
+.mhome-label {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.mhome-work__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+/* Each tile framed as a selected canvas object, like the desktop cards. */
+.mhome-card {
+  position: relative;
+  margin: 0 13px;
+  outline: 1px solid rgba(255, 255, 255, 0.35);
+  outline-offset: 8px;
+}
+
+.mhome-card .sel-handle {
+  --sel-off: -13px;
+}
+
+/* The tiles fill a fixed frame here — the old mobile grid's full-screen
+   min-height would make each card a whole viewport. */
+.mhome-card .workgrid__item {
+  min-height: 0;
+  height: 72vh;
+}
+
+/* ── About ───────────────────────────────────────────────────────── */
+
+.mhome-about {
+  padding: 2.2rem 0 1rem;
+  scroll-margin-top: 4rem;
+}
+
+/* The polaroid's vw padding is sized for a desktop canvas object */
+.mhome-polaroid {
+  width: min(19rem, 82vw);
+  margin: 1.4rem auto 0;
+  padding: 10px 10px 46px;
+}
+
+.mhome-polaroid figcaption {
+  bottom: 14px;
+}
+
+/* ── Outro + footer ──────────────────────────────────────────────── */
+
+.mhome-outro {
+  padding: 3rem 15px 3.5rem;
+}
+
+/* Same PR card as the canvas finale, tightened for phones. Three links
+   don't fit one row at phone width — without the wrap the row overflows
+   the card and stretches the whole layout viewport. */
+.mhome-outro .pr-card {
+  padding: 1.2rem 1.1rem;
+}
+
+.mhome-outro .pr-card__links {
+  flex-wrap: wrap;
+  gap: 0.4rem 1.4rem;
+}
+
+.mhome-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 2rem 0 2.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.mhome-footer__name {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.mhome-footer__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  /* .footer-link carries its own padding; pull the row back to the edge */
+  margin-left: -9px;
+}
+
+.mhome-footer__meta {
+  margin: 0;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+
+/* ── Luke AI: a VS Code terminal running `luke-ai` ──────────────── */
+
+.ai-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #1e1e1e;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 6px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+}
+
+/* Panel header: reuses the nav terminal's tab titles */
+.ai-card__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.55rem 0.9rem 0.45rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ai-card__shell {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: #8a8a8a;
+}
+
+.ai-card__expand {
+  margin-left: 0.2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 3px;
+  padding: 0.3rem 0.6rem;
+  cursor: none;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.ai-card__expand:hover {
+  background: #008fff;
+  border-color: #008fff;
+  color: #fff;
+}
+
+.ai-card__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  /* keep inner scroll from chaining into the canvas glide */
+  overscroll-behavior: contain;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.ai-card__boot {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: #cccccc;
+}
+
+.ai-card__bootdot {
+  color: #23d18b;
+}
+
+.ai-card__greeting {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: #b8b8b8;
+}
+
+.ai-card__chips {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.ai-card__chip {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  color: #8a8a8a;
+  background: none;
+  border: none;
+  padding: 0.1rem 0;
+  cursor: none;
+  text-align: left;
+  transition: color 0.15s ease;
+}
+
+.ai-card__chip::before {
+  content: '↳ ';
+  color: #6e7681;
+}
+
+.ai-card__chip:hover {
+  color: #fff;
+}
+
+.ai-card__msg {
+  max-width: 88%;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+.ai-card__msg--user {
+  align-self: stretch;
+  max-width: 100%;
+  font-family: 'IBM Plex Mono', monospace;
+  color: #fff;
+  margin-top: 0.3rem;
+}
+
+.ai-card__msg--ai {
+  align-self: flex-start;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.ai-card__msg--ai p {
+  margin: 0 0 0.5em;
+}
+
+.ai-card__msg--ai p:last-child {
+  margin-bottom: 0;
+}
+
+.ai-card__msg--ai a {
+  color: #4db4ff;
+}
+
+.ai-card__thinking {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.ai-card__thinking i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  animation: ai-think 1.2s ease-in-out infinite;
+}
+
+.ai-card__thinking i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.ai-card__thinking i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes ai-think {
+  0%,
+  60%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+.ai-card__error {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #ff7a7a;
+}
+
+.ai-card__error button {
+  font-family: inherit;
+  font-size: inherit;
+  color: #4db4ff;
+  background: none;
+  border: none;
+  text-decoration: underline;
+  cursor: none;
+  padding: 0;
+}
+
+.ai-card__inputrow {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.55rem 1rem 0.7rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.82rem;
+}
+
+.ai-card__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  background: none;
+  border: none;
+  color: #fff;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.82rem;
+  padding: 0.2rem 0 0.2rem 0.35rem;
+  outline: none;
+  caret-color: #cccccc;
+}
+
+.ai-card__input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.ai-card__send {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 4px;
+  background: none;
+  color: #8a8a8a;
+  border: none;
+  cursor: none;
+  transition: color 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+}
+
+.ai-card__send:disabled {
+  opacity: 0.3;
+}
+
+.ai-card__send:not(:disabled):hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Mobile: the AI window sits in a fixed-height frame like the tiles. */
+.mhome-card--ai {
+  height: 72vh;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   Landing personality pass (2026-08-31): code tagline, vector-object
+   name plate, local-time line. Shared by the desktop canvas and the
+   mobile stack.
+   ──────────────────────────────────────────────────────────────── */
+
+/* ── Tagline: a line of code inside the blue selection highlight ── */
+
+.canvas-intro__highlight--code {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: clamp(1.2rem, 2.1vw, 2.1rem);
+  letter-spacing: -0.01em;
+}
+
+/* Keyword/operator shade — enough contrast shift to scan as syntax
+   while staying legible on the blue. */
+.ct-dim {
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 400;
+}
+
+/* ── Vector-object name plate ─────────────────────────────────────
+   Letters render outlined and fill solid as the cursor sweeps them
+   (state via .is-filled from VectorName). Browsers without
+   -webkit-text-stroke keep the plain solid name. */
+
+@supports (-webkit-text-stroke: 1px #fff) {
+  .vec-name [data-letter] {
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.75);
+    transition: color 0.5s ease, -webkit-text-stroke-color 0.5s ease;
+  }
+
+  .vec-name [data-letter].is-filled {
+    color: #fff;
+    -webkit-text-stroke-color: #fff;
+  }
+}
+
+/* Figma-style anchor points sitting on the letterform strokes */
+.vec-anchor {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #0b0b10;
+  border: 1px solid var(--mono-blue);
+  transition: opacity 0.6s ease;
+}
+
+/* Bezier handle arm off one anchor, hollow circle at its end */
+.vec-anchor__arm {
+  position: absolute;
+  left: 6px;
+  top: 3px;
+  width: 42px;
+  height: 1px;
+  background: var(--mono-blue);
+  transform: rotate(-24deg);
+  transform-origin: left center;
+}
+
+.vec-anchor__arm::after {
+  content: '';
+  position: absolute;
+  right: -3px;
+  top: -3px;
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--mono-blue);
+  border-radius: 50%;
+  background: #0b0b10;
+}
+
+/* The drawing is finished — the tool chrome puts itself away */
+.vec-name.is-done .vec-anchor {
+  opacity: 0;
+}
+
+/*
+ * Inspect-element hover: a devtools-style highlight box over the name
+ * with a measurement chip — h1.vec-name and its real rendered px.
+ */
+.vec-inspect {
   position: absolute;
   inset: 0;
-  background: #008fff;
-  transform-origin: left;
+  border: 1px solid var(--mono-blue);
+  background: rgba(0, 143, 255, 0.07);
+  pointer-events: none;
+  animation: vec-inspect-in 0.12s ease-out;
+}
+
+@keyframes vec-inspect-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.vec-inspect__chip {
+  position: absolute;
+  top: -2.3rem;
+  left: 0;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  white-space: nowrap;
+  background: #1b1b24;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  padding: 0.28rem 0.65rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.vec-inspect__chip b {
+  color: #4db4ff;
+  font-weight: 500;
+}
+
+.vec-inspect__chip i {
+  color: #b78cf7;
+  font-style: normal;
+}
+
+.vec-inspect__dims {
+  color: rgba(255, 255, 255, 0.65);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Local time + location line ─────────────────────────────────── */
+
+.local-time {
+  margin: 1.1rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.5);
+  /* ticking seconds must not wiggle the line */
+  font-variant-numeric: tabular-nums;
+}
+
+.mhome-hero__time {
+  margin: 0.9rem 6px 0;
 }

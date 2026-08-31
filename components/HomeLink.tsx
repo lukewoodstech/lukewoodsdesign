@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import type { MouseEvent, ReactNode } from 'react'
+import { useReducedMotion } from '@/lib/useReducedMotion'
 
 /*
  * `<Link href="/">` only scrolls when it actually navigates, so on the home
@@ -20,6 +21,7 @@ export default function HomeLink({
   'aria-label'?: string
 }) {
   const pathname = usePathname()
+  const reducedMotion = useReducedMotion()
 
   function handleClick(e: MouseEvent<HTMLAnchorElement>) {
     // Off the home page, let Link navigate — Next scrolls to the top for us.
@@ -27,11 +29,7 @@ export default function HomeLink({
 
     e.preventDefault()
 
-    const behavior: ScrollBehavior = window.matchMedia(
-      '(prefers-reduced-motion: reduce)',
-    ).matches
-      ? 'auto'
-      : 'smooth'
+    const behavior: ScrollBehavior = reducedMotion ? 'auto' : 'smooth'
 
     window.scrollTo({ top: 0, behavior })
     document.querySelector('.workgrid')?.scrollTo({ top: 0, behavior })

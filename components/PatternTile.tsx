@@ -85,14 +85,7 @@ export default function PatternTile() {
     >
       <div className="tile-stage">
         {/* Dark overlay — behind SVG, darkens the tile background on hover */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: 'rgba(0,0,0,0.72)',
-            opacity: hovered ? 1 : 0,
-            transition: 'opacity 0.4s ease',
-          }}
-        />
+        <div className="tile-scrim" style={{ opacity: hovered ? 1 : 0 }} />
 
         {/* SVG — rendered on top of overlay, stays fully visible */}
         <div className="workgrid__item__content">
@@ -108,33 +101,33 @@ export default function PatternTile() {
               fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
 
             <text x="28" y="28" fontSize="9.5" fontWeight="600"
-              fill="rgba(255,255,255,0.85)" fontFamily="'IBM Plex Mono', monospace">
+              fill="rgba(255,255,255,0.85)" fontFamily="var(--font-mono)">
               {typedTitle}
               {showCursor && <tspan className="tile-cursor" fill="rgba(255,255,255,0.5)">|</tspan>}
             </text>
             <rect x="290" y="16" width="42" height="18" rx="4"
               stroke="rgba(255,255,255,0.14)" strokeWidth="1" fill="rgba(255,255,255,0.04)" />
             <text x="311" y="27.5" fontSize="7.5" textAnchor="middle"
-              fill="rgba(255,255,255,0.4)" fontFamily="'IBM Plex Mono', monospace">EDIT</text>
+              fill="rgba(255,255,255,0.4)" fontFamily="var(--font-mono)">EDIT</text>
             <line x1="16" y1="41" x2="344" y2="41" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
 
             <circle cx="28" cy="57" r="3.5" fill="#00b37d" />
             <text x="38" y="61" fontSize="8"
-              fill="rgba(255,255,255,0.4)" fontFamily="'IBM Plex Mono', monospace">Ad Clicks</text>
+              fill="rgba(255,255,255,0.4)" fontFamily="var(--font-mono)">Ad Clicks</text>
             <text x="28" y="81" fontSize="19" fontWeight="400"
-              fill="rgba(255,255,255,0.92)" fontFamily="'IBM Plex Mono', monospace">{clicksVal}</text>
-            <text x="28"  y="95" fontSize="7.5" fill="rgba(255,255,255,0.3)"  fontFamily="'IBM Plex Mono', monospace">3,742</text>
-            <text x="56"  y="95" fontSize="7.5" fill="#ff537a"               fontFamily="'IBM Plex Mono', monospace">1.23% ▽</text>
+              fill="rgba(255,255,255,0.92)" fontFamily="var(--font-mono)">{clicksVal}</text>
+            <text x="28"  y="95" fontSize="7.5" fill="rgba(255,255,255,0.3)"  fontFamily="var(--font-mono)">3,742</text>
+            <text x="56"  y="95" fontSize="7.5" fill="var(--mono-red)"               fontFamily="var(--font-mono)">1.23% ▽</text>
 
             <line x1="181" y1="48" x2="181" y2="104" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
 
-            <circle cx="193" cy="57" r="3.5" fill="#008fff" />
+            <circle cx="193" cy="57" r="3.5" fill="var(--mono-blue)" />
             <text x="203" y="61" fontSize="8"
-              fill="rgba(255,255,255,0.4)" fontFamily="'IBM Plex Mono', monospace">ACOS</text>
+              fill="rgba(255,255,255,0.4)" fontFamily="var(--font-mono)">ACOS</text>
             <text x="193" y="81" fontSize="19" fontWeight="400"
-              fill="rgba(255,255,255,0.92)" fontFamily="'IBM Plex Mono', monospace">{acosVal}%</text>
-            <text x="193" y="95" fontSize="7.5" fill="rgba(255,255,255,0.3)"  fontFamily="'IBM Plex Mono', monospace">10.77</text>
-            <text x="220" y="95" fontSize="7.5" fill="#ff537a"               fontFamily="'IBM Plex Mono', monospace">20.23% ▽</text>
+              fill="rgba(255,255,255,0.92)" fontFamily="var(--font-mono)">{acosVal}%</text>
+            <text x="193" y="95" fontSize="7.5" fill="rgba(255,255,255,0.3)"  fontFamily="var(--font-mono)">10.77</text>
+            <text x="220" y="95" fontSize="7.5" fill="var(--mono-red)"               fontFamily="var(--font-mono)">20.23% ▽</text>
 
             <line x1="16" y1="104" x2="344" y2="104" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
 
@@ -145,17 +138,17 @@ export default function PatternTile() {
             <line x1="44" y1="203" x2="340" y2="203" stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
 
             <text x="44"  y="215" fontSize="7" textAnchor="middle"
-              fill="rgba(255,255,255,0.2)" fontFamily="'IBM Plex Mono', monospace">Jan 11</text>
+              fill="rgba(255,255,255,0.2)" fontFamily="var(--font-mono)">Jan 11</text>
             <text x="192" y="215" fontSize="7" textAnchor="middle"
-              fill="rgba(255,255,255,0.2)" fontFamily="'IBM Plex Mono', monospace">Jan 25</text>
+              fill="rgba(255,255,255,0.2)" fontFamily="var(--font-mono)">Jan 25</text>
             {/* End-anchored — centred on the last point would overhang the card edge at x=344 */}
             <text x="340" y="215" fontSize="7" textAnchor="end"
-              fill="rgba(255,255,255,0.2)" fontFamily="'IBM Plex Mono', monospace">Feb 7</text>
+              fill="rgba(255,255,255,0.2)" fontFamily="var(--font-mono)">Feb 7</text>
 
             <line x1="110" y1="227" x2="126" y2="227" stroke="#00b37d" strokeWidth="1.5" strokeLinecap="round" />
-            <text x="130" y="230" fontSize="7" fill="rgba(255,255,255,0.25)" fontFamily="'IBM Plex Mono', monospace">Ad Clicks</text>
-            <line x1="196" y1="227" x2="212" y2="227" stroke="#008fff" strokeWidth="1.5" strokeLinecap="round" />
-            <text x="216" y="230" fontSize="7" fill="rgba(255,255,255,0.25)" fontFamily="'IBM Plex Mono', monospace">ACOS</text>
+            <text x="130" y="230" fontSize="7" fill="rgba(255,255,255,0.25)" fontFamily="var(--font-mono)">Ad Clicks</text>
+            <line x1="196" y1="227" x2="212" y2="227" stroke="var(--mono-blue)" strokeWidth="1.5" strokeLinecap="round" />
+            <text x="216" y="230" fontSize="7" fill="rgba(255,255,255,0.25)" fontFamily="var(--font-mono)">ACOS</text>
 
             <g style={{ opacity: linesAppear }}>
               <path
@@ -166,7 +159,7 @@ export default function PatternTile() {
               />
               <path
                 d="M 44,152 L 81,146 L 118,161 L 155,152 L 192,140 L 229,155 L 266,130 L 303,140 L 340,124"
-                stroke="#008fff" strokeWidth="1.75"
+                stroke="var(--mono-blue)" strokeWidth="1.75"
                 strokeLinecap="round" strokeLinejoin="round"
                 strokeDasharray="350" strokeDashoffset={350 * (1 - line2Prog)}
               />

@@ -13,6 +13,7 @@ import FailureTabs from '@/components/lucid/FailureTabs'
 import PrismStage from '@/components/lucid/PrismStage'
 import ZoomShot from '@/components/lucid/ZoomShot'
 import ImpactStats from '@/components/lucid/ImpactStats'
+import { Section, Reframe, FactStrip } from '@/components/CaseStudy'
 import { SITE } from '@/lib/site'
 
 /*
@@ -24,9 +25,9 @@ import { SITE } from '@/lib/site'
  * internal project or team names, masked metrics, honest credit split.
  */
 
-const TITLE = 'Bringing Lucid AI out of the canvas'
+const TITLE = 'Bringing Lucid AI Out of the Canvas'
 const DESCRIPTION =
-  'Lucid AI lived inside the editor. I designed the chat panel that brought it to the docs list, so you can find a doc you cannot name. Shipped GA to every tier twelve weeks from zero.'
+  'Lucid AI lived inside the editor. I designed the chat panel that brought it to the docs list, so you can find a doc you cannot name. Shipped GA to every tier 12 weeks from zero.'
 
 export const metadata: Metadata = {
   title: `${TITLE} · Lucid`,
@@ -47,64 +48,41 @@ export const metadata: Metadata = {
 
 const IMG = '/case-studies/lucid'
 
-function Section({
-  eyebrow,
-  headline,
-  children,
-}: {
-  eyebrow: string
-  headline: string
-  children: React.ReactNode
-}) {
-  return (
-    <Reveal as="section" className="mt-20">
-      <span className="lcs-eyebrow">{eyebrow}</span>
-      <h2 className="lcs-headline">{headline}</h2>
-      {children}
-    </Reveal>
-  )
-}
-
 export default function LucidCaseStudy() {
   return (
-    <div className="lcs min-h-screen bg-black text-white font-medium">
+    <div className="cs lcs min-h-screen bg-black text-white font-medium">
       <SiteNav
         width="article"
         contact={false}
-        next={{ href: '/work/awardco-login-flow-redesign', title: 'Awardco Login Flow Redesign' }}
+        next={{ href: '/work/awardco-login-flow-redesign', title: 'Reducing Authentication Friction' }}
       />
 
       <div className="max-w-[860px] mx-auto px-8 pb-32 sitenav-offset">
         {/* ── Hero ── */}
         <header className="pt-10 pb-12">
-          <p className="lcs-eyebrow">Lucid · Product Design Internship</p>
-          <h1 className="text-4xl sm:text-6xl font-medium leading-tight tracking-tight">
+          <p className="cs-eyebrow mb-4">Lucid · Product Design Internship</p>
+          <h1 className="text-4xl md:text-6xl font-medium leading-tight tracking-tight text-white">
             {TITLE}
           </h1>
-          <p className="mt-4 text-xl leading-snug text-white/85">
+          <p className="mt-5 text-xl leading-snug text-white/85">
             So you can find a doc you can&rsquo;t name.
           </p>
 
-          <dl className="mt-8 border-y border-white/10 py-6 flex flex-wrap gap-x-12 gap-y-5">
-            {[
+          <FactStrip
+            facts={[
               ['Role', 'Product Design Intern'],
+              ['Timeline', 'May – Aug 2026'],
               ['Team', 'Two scrum teams: search + AI'],
-              ['Timeline', 'May to August 2026'],
-              ['Shipped', 'GA, all tiers, August 5'],
-            ].map(([label, value]) => (
-              <div key={label}>
-                <dt className="lcs-eyebrow !mb-1.5 !text-[0.7rem]">{label}</dt>
-                <dd className="text-base">{value}</dd>
-              </div>
-            ))}
-          </dl>
+              ['Shipped', 'GA, all tiers, Aug 5'],
+            ]}
+          />
 
           <ImpactStats
             stats={[
               { value: 12, label: 'weeks from zero to GA' },
               { value: 3, label: 'AI skills shipped at launch' },
               { value: 'All', label: 'tiers, free through enterprise' },
-              { value: 20, label: 'user interviews, five countries' },
+              { value: 20, label: 'user interviews, 5 countries' },
             ]}
             kicker="Beyond the numbers: every future docs list AI skill inherits this panel, its entry point, its response patterns, and its failure states."
           />
@@ -112,25 +90,25 @@ export default function LucidCaseStudy() {
 
         <Reveal as="figure" className="m-0">
           <SearchMock width="100%" height={560} />
-          <figcaption className="lcs-cap">
+          <figcaption className="cs-cap">
             Not a screenshot: the shipped experience rebuilt in code from our design
             file, running the Find docs loop. Content is the file&rsquo;s demo data.
           </figcaption>
         </Reveal>
 
         <Reveal className="mt-12">
-          <p className="lcs-prose text-lg">
+          <p className="cs-prose">
             Lucid AI could already help you inside a diagram. It could not help you find
             one. I designed the AI chat panel for the docs list: the entry point, the
             layout system, the response patterns, and the failure states that every
             future docs list skill now inherits. It shipped to general availability on
-            every tier, free through enterprise, twelve weeks after the project started.
+            every tier, free through enterprise, 12 weeks after the project started.
           </p>
         </Reveal>
 
         {/* ── Context ── */}
         <Section eyebrow="Context" headline="The AI lived in the editor. Your docs live everywhere else.">
-          <div className="lcs-prose">
+          <div className="cs-prose">
             <p>
               Lucid is a visual workspace: Lucidchart for diagramming, Lucidspark for
               whiteboarding. The docs list is home base. It is where every document
@@ -146,7 +124,7 @@ export default function LucidCaseStudy() {
 
         {/* ── Challenge ── */}
         <Section eyebrow="The challenge" headline="Search only matched titles. Titles are the first thing people forget.">
-          <div className="lcs-prose">
+          <div className="cs-prose">
             <p>
               Docs list search ran your keywords against document titles. If you
               remembered the exact name, you found your doc. If you remembered anything
@@ -159,7 +137,7 @@ export default function LucidCaseStudy() {
               success rate. A search works if you open something it surfaced.
             </p>
           </div>
-          <ul className="lcs-bullets mt-5">
+          <ul className="cs-bullets mt-5">
             <li>Prior research: analytics plus 39 external interviews, run by my PM before I joined</li>
             <li>Heavy users with 60+ docs found the right doc in the top 5 results 48% of the time. Lighter users, 35%</li>
             <li>When search failed, people asked a colleague, kept link lists in other tools, or rebuilt the doc from scratch</li>
@@ -195,7 +173,7 @@ export default function LucidCaseStudy() {
 
         {/* ── What shipped ── */}
         <Section eyebrow="What shipped" headline="One panel, three skills, every tier.">
-          <div className="lcs-prose">
+          <div className="cs-prose">
             <p>
               Two things went to general availability on August 5. The AI chat panel
               was my design end to end: a docked side panel that expands to a full
@@ -218,7 +196,7 @@ export default function LucidCaseStudy() {
                 height={1600}
                 sizes="(min-width: 860px) 430px, 100vw"
               />
-              <figcaption className="lcs-cap">Find docs: search by what you actually remember.</figcaption>
+              <figcaption className="cs-cap">Find docs: search by what you actually remember.</figcaption>
             </figure>
             <figure className="m-0">
               <ZoomShot
@@ -228,19 +206,19 @@ export default function LucidCaseStudy() {
                 height={1600}
                 sizes="(min-width: 860px) 430px, 100vw"
               />
-              <figcaption className="lcs-cap">Summarize: the gist of a doc or a group of them.</figcaption>
+              <figcaption className="cs-cap">Summarize: the gist of a doc or a group of them.</figcaption>
             </figure>
           </div>
         </Section>
 
         {/* ── Timeline ── */}
-        <Section eyebrow="Timeline" headline="Zero to general release in twelve weeks.">
+        <Section eyebrow="Timeline" headline="Zero to general release in 12 weeks.">
           <ShipTimeline />
         </Section>
 
         {/* ── Research ── */}
         <Section eyebrow="Research" headline="I inherited the problem. I tested the answer.">
-          <div className="lcs-prose">
+          <div className="cs-prose">
             <p>
               The problem was already validated when I joined, so my research was
               evaluative, not generative. I ran 20 interviews with external users
@@ -253,7 +231,7 @@ export default function LucidCaseStudy() {
               because the questions stayed small.
             </p>
           </div>
-          <Reveal as="figure" className="my-10 m-0">
+          <Reveal as="figure" className="my-12 m-0">
             <ZoomShot
               src={`${IMG}/skills-ideation.png`}
               alt="An ideation grid of twenty candidate skills for the docs list AI, from Find docs and Summarize to catch up, dormant files, and project status"
@@ -261,32 +239,30 @@ export default function LucidCaseStudy() {
               height={1956}
               sizes="(min-width: 860px) 860px, 100vw"
             />
-            <figcaption className="lcs-cap">
+            <figcaption className="cs-cap">
               The possibility space: twenty candidate skills, mapped before cutting to
               the three that shipped.
             </figcaption>
           </Reveal>
         </Section>
 
-        {/* ── Reframe pull quote ── */}
-        <Reveal className="mt-20">
-          <figure className="lcs-quote m-0">
-            <blockquote>
-              The AI could already create. What people wanted was for it to find,
-              explain, and catch them up.
-            </blockquote>
-            <figcaption>The reframe that came out of design testing</figcaption>
-          </figure>
-          <p className="lcs-prose mt-6">
+        {/* ── Reframe ── */}
+        <Reframe
+          quote="The AI could already create. What people wanted was for it to find, explain, and catch them up."
+        >
+          <p className="mt-3 text-sm text-white/60">
+            The reframe that came out of design testing
+          </p>
+          <p className="cs-prose mt-6">
             Generation alone was not enough. Build a diagram stayed, and shipped. But
             the testing kept surfacing the same additive finding: the assistant people
             described was one that knew their workspace, not just one that could draw.
           </p>
-        </Reveal>
+        </Reframe>
 
         {/* ── Design walkthrough ── */}
         <Section eyebrow="Design decisions" headline="The upgrade lives where the old behavior lived.">
-          <div className="lcs-prose">
+          <div className="cs-prose">
             <p>
               The entry point is an AI icon directly beside global search. People
               already look there when they are looking for something, so the new
@@ -295,7 +271,7 @@ export default function LucidCaseStudy() {
               gets out of the way.
             </p>
           </div>
-          <Reveal as="figure" className="my-10 m-0">
+          <Reveal as="figure" className="my-12 m-0">
             <ZoomShot
               src={`${IMG}/entry-point-callout.png`}
               alt="The docs list with a one-time callout anchored to the AI icon beside the global search bar, reading Find Lucid AI anytime"
@@ -303,7 +279,7 @@ export default function LucidCaseStudy() {
               height={1800}
               sizes="(min-width: 860px) 860px, 100vw"
             />
-            <figcaption className="lcs-cap">
+            <figcaption className="cs-cap">
               The AI icon docks beside search. The upgrade lives where the old
               behavior lived.
             </figcaption>
@@ -311,7 +287,7 @@ export default function LucidCaseStudy() {
         </Section>
 
         <Section eyebrow="Layout" headline="Four layouts went in front of users. One kept the page usable.">
-          <div className="lcs-prose">
+          <div className="cs-prose">
             <p>
               I prototyped four layouts in code and tested them: side panel, modal,
               floating panel, inline bar. The side panel won because it kept the docs
@@ -322,7 +298,7 @@ export default function LucidCaseStudy() {
           <div className="mt-8">
             <LayoutContest />
           </div>
-          <div className="lcs-prose mt-8">
+          <div className="cs-prose mt-8">
             <p>
               Continued testing showed power users felt cramped at 400px, so the full
               page became the panel&rsquo;s expand state, one click apart via the
@@ -354,7 +330,7 @@ export default function LucidCaseStudy() {
                 },
               ]}
             />
-            <p className="lcs-cap">
+            <p className="cs-cap">
               This toggle mirrors the shipped interaction: the expand icon in the
               panel header flips between these two states.
             </p>
@@ -362,7 +338,7 @@ export default function LucidCaseStudy() {
         </Section>
 
         <Section eyebrow="Teaching" headline="The first click teaches. Every click after does.">
-          <div className="lcs-prose">
+          <div className="cs-prose">
             <p>
               Clicking a skill tile in the zero state does not run the skill. It
               returns a hardcoded explanation of what the skill can do, with concrete
@@ -382,7 +358,7 @@ export default function LucidCaseStudy() {
           <div className="mt-2 mb-8">
             <ResultsCount />
           </div>
-          <div className="lcs-prose">
+          <div className="cs-prose">
             <p>
               Testing pushed the result count from a fixed 3 to up to 7, chosen by the
               AI on confidence. The existing 24px button component bloated at that
@@ -400,7 +376,7 @@ export default function LucidCaseStudy() {
                 height={2026}
                 sizes="(min-width: 860px) 430px, 100vw"
               />
-              <figcaption className="lcs-cap">V1: three results in the 24px component, rest behind a click.</figcaption>
+              <figcaption className="cs-cap">V1: three results in the 24px component, rest behind a click.</figcaption>
             </figure>
             <figure className="m-0">
               <ZoomShot
@@ -410,13 +386,13 @@ export default function LucidCaseStudy() {
                 height={1312}
                 sizes="(min-width: 860px) 430px, 100vw"
               />
-              <figcaption className="lcs-cap">Shipped: up to seven results in the 16px component, all visible.</figcaption>
+              <figcaption className="cs-cap">Shipped: up to seven results in the 16px component, all visible.</figcaption>
             </figure>
           </div>
         </Section>
 
         <Section eyebrow="The mention tool" headline="Free text can't tell one Sam from three others.">
-          <div className="lcs-prose">
+          <div className="cs-prose">
             <p>
               Collaborator was the detail people remembered most, and the one free
               text handled worst. I designed an @-mention that resolves the person
@@ -433,7 +409,7 @@ export default function LucidCaseStudy() {
         </Section>
 
         <Section eyebrow="Trust" headline="Every response shows its work.">
-          <div className="lcs-prose">
+          <div className="cs-prose">
             <p>
               Research kept surfacing the same anxiety: what is this thing reading?
               So every response names the skill that ran, as a pill on the message,
@@ -447,9 +423,9 @@ export default function LucidCaseStudy() {
               canvas never ambushes you; you choose when to enter it.
             </p>
           </div>
-          <Reveal as="figure" className="my-10 m-0">
+          <Reveal as="figure" className="my-12 m-0">
             <BoardGenClip />
-            <figcaption className="lcs-cap">
+            <figcaption className="cs-cap">
               The shipped flow, captured live: Build a diagram assembling a board in
               its own tab while the panel reports progress.
             </figcaption>
@@ -463,16 +439,12 @@ export default function LucidCaseStudy() {
                 {
                   label: 'Wrong results',
                   content: (
-                    <div className="lcs-statecard lcs-prose">
+                    <div className="lcs-statecard cs-prose">
                       <p>
                         When the results miss, the response admits it, asks for one
                         more clue, and offers refinement chips scoped to what it
                         already knows. The user refines instead of retyping from
                         zero.
-                      </p>
-                      <p className="lcs-cap !mt-3">
-                        Demo capture pending re-shoot. Described here rather than
-                        shown.
                       </p>
                     </div>
                   ),
@@ -488,7 +460,7 @@ export default function LucidCaseStudy() {
                         height={1100}
                         sizes="(min-width: 860px) 860px, 100vw"
                       />
-                      <figcaption className="lcs-cap">
+                      <figcaption className="cs-cap">
                         Asked for something it cannot do, it names the limit and
                         offers two things it can do as buttons.
                       </figcaption>
@@ -506,7 +478,7 @@ export default function LucidCaseStudy() {
                         height={1800}
                         sizes="420px"
                       />
-                      <figcaption className="lcs-cap">
+                      <figcaption className="cs-cap">
                         The spinner names what it is doing. Reused from the editor
                         assistant on purpose: saved engineering effort, kept the two
                         assistants consistent.
@@ -521,10 +493,10 @@ export default function LucidCaseStudy() {
 
         {/* ── Impact ── */}
         <Section eyebrow="Impact" headline="A ship, a harness, and the next iteration's data.">
-          <ul className="lcs-bullets mt-2">
+          <ul className="cs-bullets mt-2">
             <li>
               Shipped to general availability on every tier, free through enterprise,
-              twelve weeks from zero
+              12 weeks from zero
             </li>
             <li>
               Every future docs list AI skill inherits the panel, the entry point,
@@ -539,7 +511,7 @@ export default function LucidCaseStudy() {
 
         {/* ── Hackathon aside ── */}
         <Section eyebrow="Hackathon" headline="Third place in the AI category.">
-          <div className="lcs-prose">
+          <div className="cs-prose">
             <p>
               Midway through the summer, Lucid ran its internal hackathon. My team
               entered the AI category and took third place.
@@ -551,9 +523,9 @@ export default function LucidCaseStudy() {
               total internal reflection.
             </p>
           </div>
-          <Reveal as="figure" className="my-10 m-0">
+          <Reveal as="figure" className="my-12 m-0">
             <PrismStage />
-            <figcaption className="lcs-cap">
+            <figcaption className="cs-cap">
               Rendered in real time, one raytrace per pixel. It holds still if your
               system asks for reduced motion.
             </figcaption>
@@ -562,7 +534,7 @@ export default function LucidCaseStudy() {
 
         {/* ── Reflection ── */}
         <Section eyebrow="Reflection" headline="The model can do anything. The product is choosing what it should.">
-          <div className="lcs-prose">
+          <div className="cs-prose">
             <p>
               Every decision on this project traded off speed, cost, and usability.
               Being technical enough to hold those conversations with engineers
@@ -589,12 +561,12 @@ export default function LucidCaseStudy() {
           aria-label="More work"
         >
           <Link href="/work/awardco-login-flow-redesign" className="footer-link -mr-4 text-right">
-            Awardco Login Flow Redesign →
+            Reducing Authentication Friction →
           </Link>
         </nav>
       </div>
 
-      <Footer />
+      <Footer width="article" />
     </div>
   )
 }

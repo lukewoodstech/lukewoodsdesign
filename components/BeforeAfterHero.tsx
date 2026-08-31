@@ -37,7 +37,7 @@ export default function BeforeAfterHero({
   return (
     <div
       ref={ref}
-      className="relative w-full touch-pan-y select-none overflow-hidden rounded-lg"
+      className="relative w-full touch-pan-y select-none overflow-hidden rounded-lg border border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.45)]"
       style={{ aspectRatio: aspect }}
       onPointerMove={onPointerMove}
       role="img"

@@ -5,18 +5,14 @@ import { useRouter } from 'next/navigation'
 import ReactMarkdown from 'react-markdown'
 import Sidebar from '@/components/Sidebar'
 import { SITE, MAILTO } from '@/lib/site'
-
-type Message = {
-  role: 'user' | 'assistant'
-  content: string
-}
-
-type Conversation = {
-  id: string
-  title: string
-  messages: Message[]
-  updatedAt: number
-}
+import {
+  STORAGE_KEY,
+  HANDOFF_KEY,
+  genId,
+  makeTitle,
+  type Message,
+  type Conversation,
+} from '@/lib/lukeAiStorage'
 
 const GREETING: Message = {
   role: 'assistant',
@@ -27,9 +23,9 @@ const GREETING: Message = {
 // Reads from lib/site.ts like the nav and footer do — the résumé is
 // self-hosted now, and this page used to be the last Drive-link holdout.
 const PLUS_ITEMS = [
-  { label: 'Résumé',   description: 'Open in a new tab',  href: SITE.resume },
-  { label: 'LinkedIn', description: 'Connect with Luke',  href: SITE.linkedin },
-  { label: 'Email',    description: 'Send Luke a message', href: MAILTO },
+  { label: 'résumé',   description: 'open in a new tab',   href: SITE.resume },
+  { label: 'linkedin', description: 'connect with luke',   href: SITE.linkedin },
+  { label: 'email',    description: 'send luke a message', href: MAILTO },
 ]
 
 /*
@@ -102,16 +98,6 @@ const PROMPTS = [
   },
 ]
 
-const STORAGE_KEY = 'luke-ai-conversations'
-
-function genId() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2)
-}
-
-function makeTitle(text: string) {
-  return text.length > 38 ? text.slice(0, 38) + '…' : text
-}
-
 const IconMenu = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
     <line x1="3" y1="6" x2="21" y2="6" />
@@ -169,7 +155,19 @@ export default function ChatPage() {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY)
-      if (raw) setConversations(JSON.parse(raw))
+      const convs: Conversation[] = raw ? JSON.parse(raw) : []
+      if (raw) setConversations(convs)
+      /* Arriving from the homepage mini chat: open its conversation
+         instead of a fresh one. */
+      const handoffId = sessionStorage.getItem(HANDOFF_KEY)
+      if (handoffId) {
+        sessionStorage.removeItem(HANDOFF_KEY)
+        const conv = convs.find((c) => c.id === handoffId)
+        if (conv) {
+          setCurrentId(conv.id)
+          setMessages([GREETING, ...conv.messages])
+        }
+      }
     } catch {}
   }, [])
 
@@ -433,7 +431,7 @@ export default function ChatPage() {
 
         {isZeroState ? (
           <div className="chat-pg__zero">
-            <p className="chat-pg__zero-heading">ask me anything about luke's work.</p>
+            <p className="chat-pg__zero-heading">ask me anything about luke’s work.</p>
             <div className="chat-pg__float-wrap chat-pg__float-wrap--zero">
               {floatInput(true)}
               <div className="grid grid-cols-2 gap-2.5 mt-14">
@@ -451,10 +449,10 @@ export default function ChatPage() {
                       {p.icon}
                     </span>
                     <span className="flex min-w-0 flex-col gap-1">
-                      <span className="text-[1rem] font-semibold leading-snug text-white/90 transition-colors duration-200 group-hover:text-white">
+                      <span className="text-base font-semibold leading-snug text-white/90 transition-colors duration-200 group-hover:text-white">
                         {p.header}
                       </span>
-                      <span className="text-[0.85rem] leading-snug text-white/45 transition-colors duration-200 group-hover:text-white/65">
+                      <span className="text-sm leading-snug text-white/45 transition-colors duration-200 group-hover:text-white/65">
                         {p.desc}
                       </span>
                     </span>

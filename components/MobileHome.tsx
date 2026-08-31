@@ -1,0 +1,167 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import EmailLink from './EmailLink'
+import LukeAiCard from './LukeAiCard'
+import LocalTimeLine from './LocalTimeLine'
+import { CodeTagline, ContactCard, ContactFinale, SelectionHandles, WORK_TILES } from './CanvasBits'
+import { SITE } from '@/lib/site'
+
+/*
+ * The mobile homepage: the desktop canvas with the glide removed, laid out as
+ * a plain queenie.works-style vertical stack. Same dressing — dot grid,
+ * highlight tagline, selected-object contact card, numbered work cards —
+ * but everything scrolls normally under a fixed name + hamburger bar.
+ *
+ * The hamburger opens a full-screen menu of oversized right-aligned links,
+ * mirroring Queenie's mobile nav. It's the whole nav on this layout, so the
+ * bar itself carries only the name.
+ */
+
+const MENU_LINKS = [
+  { label: 'home', href: '#top' },
+  { label: 'work', href: '#work' },
+  { label: 'about', href: '#about' },
+] as const
+
+export default function MobileHome() {
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  /* The overlay is fixed; without this the page underneath keeps scrolling. */
+  useEffect(() => {
+    if (!menuOpen) return
+    const { overflow } = document.documentElement.style
+    document.documentElement.style.overflow = 'hidden'
+    return () => {
+      document.documentElement.style.overflow = overflow
+    }
+  }, [menuOpen])
+
+  return (
+    <div className="mhome" id="top">
+      <header className="mhome-nav">
+        <a
+          className="mhome-nav__name"
+          href="#top"
+          onClick={() => setMenuOpen(false)}
+        >
+          {SITE.name}
+        </a>
+        <button
+          type="button"
+          className={`mhome-nav__burger${menuOpen ? ' is-open' : ''}`}
+          aria-expanded={menuOpen}
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          onClick={() => setMenuOpen((v) => !v)}
+        >
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+        </button>
+      </header>
+
+      {menuOpen && (
+        <nav className="mhome-menu" aria-label="Primary">
+          {MENU_LINKS.map((link) => (
+            <a key={link.label} href={link.href} onClick={() => setMenuOpen(false)}>
+              {link.label}
+            </a>
+          ))}
+          <Link href="/chat" onClick={() => setMenuOpen(false)}>
+            luke ai
+          </Link>
+        </nav>
+      )}
+
+      <div className="mhome__inner">
+        {/* ── Hero: highlight tagline + contact card ── */}
+        <section className="mhome-hero">
+          <p className="canvas-intro__highlight-wrap">
+            <CodeTagline />
+          </p>
+          <p className="mhome-hero__cred">
+            recently at Lucid — previously Awardco, Pattern, and Hoth.
+          </p>
+          <LocalTimeLine className="mhome-hero__time" />
+
+          <ContactCard />
+        </section>
+
+        {/* ── Work: the canvas cards as a plain stack ── */}
+        <section className="mhome-work" id="work" aria-labelledby="mhome-work-heading">
+          <h2 id="mhome-work-heading" className="mhome-label">
+            work
+          </h2>
+          {WORK_TILES.map((item) => (
+            <div key={item.slug} className="mhome-work__item">
+              <span className="mhome-label" aria-hidden="true">
+                {item.label}
+              </span>
+              <div className="mhome-card">
+                {item.tile}
+                <SelectionHandles />
+              </div>
+            </div>
+          ))}
+
+          {/* Live Luke AI window — same card as the canvas, stacked */}
+          <div className="mhome-work__item">
+            <span className="mhome-label" aria-hidden="true">
+              05 · luke ai — ask it anything
+            </span>
+            <div className="mhome-card mhome-card--ai">
+              <LukeAiCard />
+              <SelectionHandles />
+            </div>
+          </div>
+        </section>
+
+        {/* ── About: the polaroid pair, minus the desk clutter ── */}
+        <section className="mhome-about" id="about" aria-label="About Luke">
+          <h2 className="mhome-label">06 · about me</h2>
+          <div className="mhome-polaroids">
+            <figure className="polaroid polaroid--second" aria-hidden="true">
+              <div className="polaroid__blank">next photo soon</div>
+              <figcaption>…</figcaption>
+            </figure>
+            <figure className="polaroid polaroid--main mhome-polaroid">
+              <Image
+                src="/luke-woods.jpg"
+                alt="Luke Woods standing on a stone balcony in a light blue suit"
+                width={700}
+                height={700}
+                sizes="(max-width: 48em) 80vw, 20rem"
+              />
+              <figcaption>luke woods — hello!</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        {/* ── Outro: same pull-request finale as the canvas ── */}
+        <section className="mhome-outro">
+          <h2 className="canvas-outro__title">like what you see?</h2>
+          <ContactFinale />
+        </section>
+
+        <footer className="mhome-footer">
+          <p className="mhome-footer__name">{SITE.name}</p>
+          <nav className="mhome-footer__nav" aria-label="Contact and social">
+            <a href="#work" className="footer-link">
+              work
+            </a>
+            <EmailLink />
+            <a href={SITE.linkedin} className="footer-link" target="_blank" rel="noopener noreferrer">
+              linkedin
+            </a>
+            <a href={SITE.resume} className="footer-link" target="_blank" rel="noopener noreferrer">
+              résumé
+            </a>
+          </nav>
+          <p className="mhome-footer__meta">designed &amp; built by luke woods</p>
+        </footer>
+      </div>
+    </div>
+  )
+}

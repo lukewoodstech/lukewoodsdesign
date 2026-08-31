@@ -54,12 +54,12 @@ export default function GateModal({
       aria-modal="true"
       aria-label={`Password required: ${title}`}
     >
-      <div className="relative mx-4 w-full max-w-md rounded-2xl border border-white/15 bg-[#0d0d12] shadow-2xl">
+      <div className="relative mx-4 w-full max-w-md rounded-xl border border-white/20 bg-[#0d0d12] shadow-2xl">
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-lg text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+          className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-lg text-white/60 transition-colors duration-200 hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-[var(--accent)]"
         >
           <svg
             width="16"

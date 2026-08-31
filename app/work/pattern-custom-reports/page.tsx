@@ -7,6 +7,7 @@ import Reveal from '@/components/lucid/Reveal'
 import ZoomShot from '@/components/lucid/ZoomShot'
 import CompareStage from '@/components/lucid/CompareStage'
 import ImpactStats from '@/components/lucid/ImpactStats'
+import { Section, Prose, Bullets, Reframe, FactStrip } from '@/components/CaseStudy'
 import { SITE } from '@/lib/site'
 
 /*
@@ -51,42 +52,6 @@ export const metadata: Metadata = {
 }
 
 const IMG = '/work/pattern'
-const SECTION_LABEL = 'text-sm font-semibold uppercase tracking-[0.18em] text-[#00b37d]'
-
-function Section({
-  eyebrow,
-  headline,
-  children,
-}: {
-  eyebrow: string
-  headline: string
-  children: React.ReactNode
-}) {
-  return (
-    <Reveal as="section" className="mt-20">
-      <span className={`${SECTION_LABEL} block`}>{eyebrow}</span>
-      <h2 className="mt-3 mb-6 text-2xl sm:text-[2rem] font-medium leading-snug tracking-tight text-white">
-        {headline}
-      </h2>
-      {children}
-    </Reveal>
-  )
-}
-
-const Prose = ({ children }: { children: React.ReactNode }) => (
-  <div className="space-y-4 text-lg text-white leading-[1.8]">{children}</div>
-)
-
-const Bullets = ({ items }: { items: string[] }) => (
-  <ul className="mt-5 space-y-2">
-    {items.map((item) => (
-      <li key={item} className="flex gap-3 text-lg text-white leading-relaxed">
-        <span aria-hidden="true" className="text-[#00b37d] flex-shrink-0">—</span>
-        {item}
-      </li>
-    ))}
-  </ul>
-)
 
 /*
  * The two personas, rebuilt in code rather than embedding the original Figma
@@ -120,7 +85,7 @@ const PERSONAS = [
 
 export default function PatternCaseStudy() {
   return (
-    <div className="acs min-h-screen bg-black text-white font-medium">
+    <div className="cs pcs min-h-screen bg-black text-white font-medium">
       <SiteNav
         width="article"
         contact={false}
@@ -130,7 +95,7 @@ export default function PatternCaseStudy() {
       <div className="max-w-[860px] mx-auto px-8 pb-32 sitenav-offset">
         {/* ── Hero ── */}
         <header className="pt-10 pb-12">
-          <p className={`${SECTION_LABEL} mb-4`}>Pattern · Product Design Internship</p>
+          <p className="cs-eyebrow mb-4">Pattern · Product Design Internship</p>
           <h1 className="text-4xl md:text-6xl font-medium leading-tight tracking-tight text-white">
             {TITLE}
           </h1>
@@ -140,32 +105,23 @@ export default function PatternCaseStudy() {
             back to Excel.
           </p>
 
-          <div className="mt-8 border-y border-white/10 py-6">
-            <dl className="flex flex-wrap gap-x-12 gap-y-5">
-              {[
-                ['Role', 'Product Design Intern'],
-                ['Timeline', 'Jan – Oct 2025 · 9-week project'],
-                ['Team', 'Julie Broadbent (Design Manager) +1'],
-              ].map(([label, value]) => (
-                <div key={label}>
-                  <dt className={`${SECTION_LABEL} mb-1.5 !text-[0.7rem]`}>{label}</dt>
-                  <dd className="text-base text-white">{value}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
+          <FactStrip
+            facts={[
+              ['Role', 'Product Design Intern'],
+              ['Timeline', 'Jan – Oct 2025 · 9-week project'],
+              ['Team', 'Julie Broadbent (Design Manager) +1'],
+            ]}
+          />
 
-          <div className="mt-10">
-            <ImpactStats
-              stats={[
-                { value: 50, label: 'discovery interviews surfaced the problem' },
-                { value: 20, label: 'daily users validated the redesign in live testing' },
-                { value: 5, label: 'metrics on one chart — the old cap was two' },
-                { value: 9, label: 'weeks from a one-line ticket to full handoff' },
-              ]}
-              kicker="Validated through usability testing and shipped by the team after my internship — the post-launch numbers belong to them, so this study claims only what testing showed."
-            />
-          </div>
+          <ImpactStats
+            stats={[
+              { value: 50, suffix: '+', label: 'discovery interviews surfaced the problem' },
+              { value: 20, label: 'daily users validated the redesign in live testing' },
+              { value: 5, label: 'metrics on one chart — the old cap was two' },
+              { value: 9, label: 'weeks from a one-line ticket to full handoff' },
+            ]}
+            kicker="Validated through usability testing and shipped by the team after my internship — the post-launch numbers belong to them, so this study claims only what testing showed."
+          />
         </header>
 
         <BeforeAfterHero
@@ -175,7 +131,7 @@ export default function PatternCaseStudy() {
           afterAlt="The redesigned Custom Reports home: a template row on top and a grid of report tiles, each with a live chart preview, title, and sharing state"
           aspect={1440 / 1024}
         />
-        <p className="mt-3 text-base text-white">
+        <p className="cs-cap">
           Drag across the frame: the old text list on the left, the redesigned
           home — templates plus a tile grid that shows each report before you
           open it — on the right.
@@ -215,7 +171,7 @@ export default function PatternCaseStudy() {
               started pulling on the thread behind it.
             </p>
           </Prose>
-          <figure className="my-12 max-w-[640px]">
+          <figure className="my-12 max-w-[640px] mx-auto">
             <ZoomShot
               src={`${IMG}/clickup-ticket.png`}
               alt="The ClickUp ticket that started the project: Custom Reports — Duplicate Widget Option, status DEV HANDOFF, t-shirt size X Small, one to two days"
@@ -223,7 +179,7 @@ export default function PatternCaseStudy() {
               height={581}
               sizes="(min-width: 860px) 640px, 100vw"
             />
-            <figcaption className="mt-3 text-base text-white/70">
+            <figcaption className="cs-cap">
               The ticket that became the redesign. T-shirt size: X&nbsp;Small, one
               to two days.
             </figcaption>
@@ -268,7 +224,7 @@ export default function PatternCaseStudy() {
               height={2048}
               sizes="(min-width: 860px) 860px, 100vw"
             />
-            <figcaption className="mt-3 text-base text-white/70">
+            <figcaption className="cs-cap">
               Where the old tool lived: a sub-tab behind System Reports — a tab
               most users never touched — and every report a line of text with no
               preview.
@@ -299,7 +255,7 @@ export default function PatternCaseStudy() {
               ]}
             />
           </div>
-          <figure className="my-12 max-w-[560px]">
+          <figure className="my-12 max-w-[560px] mx-auto">
             <ZoomShot
               src={`${IMG}/discovery-board.png`}
               alt="A discovery audit board: a grid of annotated screenshots of the old Custom Reports flows with green callout notes"
@@ -307,7 +263,7 @@ export default function PatternCaseStudy() {
               height={633}
               sizes="(min-width: 860px) 560px, 100vw"
             />
-            <figcaption className="mt-3 text-base text-white/70">
+            <figcaption className="cs-cap">
               The audit board — every screen of the old flow, annotated with what
               users said about it.
             </figcaption>
@@ -323,41 +279,36 @@ export default function PatternCaseStudy() {
               interviews:
             </p>
           </Prose>
-          <div className="mt-8 grid gap-5 sm:grid-cols-2">
+          <div className="mt-8 grid gap-6 sm:grid-cols-2">
             {PERSONAS.map((p) => (
               <div
                 key={p.name}
                 className="rounded-lg border border-white/10 bg-white/[0.03] p-6"
               >
-                <p className={`${SECTION_LABEL} !text-[0.7rem]`}>{p.role}</p>
+                <p className="cs-label-sm">{p.role}</p>
                 <p className="mt-1 text-xl text-white font-medium">{p.name}</p>
                 <p className="mt-1 text-sm text-white/60">{p.detail}</p>
                 <ul className="mt-4 space-y-1.5">
                   {p.pains.map((pain) => (
-                    <li key={pain} className="flex gap-2.5 text-[15px] text-white/85 leading-relaxed">
-                      <span aria-hidden="true" className="text-[#00b37d] flex-shrink-0">—</span>
+                    <li key={pain} className="flex gap-2.5 text-sm text-white/85 leading-relaxed">
+                      <span aria-hidden="true" className="text-[var(--accent)] flex-shrink-0">—</span>
                       {pain}
                     </li>
                   ))}
                 </ul>
-                <p className="mt-4 text-[15px] text-white/70 leading-relaxed">
+                <p className="mt-4 text-sm text-white/70 leading-relaxed">
                   <span className="text-white">Goal:</span> {p.goal}
                 </p>
               </div>
             ))}
           </div>
-          <p className="mt-4 text-sm text-white/50">
+          <p className="mt-4 text-sm text-white/60">
             Personas built from the research; names are fictional.
           </p>
         </Section>
 
         {/* ── Reframe ── */}
-        <Reveal className="mt-20">
-          <blockquote className="border-l-2 border-[#00b37d] pl-6 py-1">
-            <p className="text-2xl sm:text-3xl font-medium leading-snug tracking-tight text-white">
-              The ticket is not the problem definition.
-            </p>
-          </blockquote>
+        <Reframe quote="The ticket is not the problem definition.">
           <Prose>
             <p className="mt-6">
               I synthesized the interview patterns and the Pendo data and brought
@@ -369,7 +320,7 @@ export default function PatternCaseStudy() {
               report-building experience.
             </p>
           </Prose>
-        </Reveal>
+        </Reframe>
 
         {/* ── Constraints ── */}
         <Section
@@ -405,7 +356,7 @@ export default function PatternCaseStudy() {
               height={2048}
               sizes="(min-width: 860px) 860px, 100vw"
             />
-            <figcaption className="mt-3 text-base text-white/70">
+            <figcaption className="cs-cap">
               The mock that didn&rsquo;t ship: a Slides-style builder with a
               draggable thumbnail rail. Right mental model, wrong engineering
               budget — it lives on the roadmap.
@@ -450,7 +401,7 @@ export default function PatternCaseStudy() {
                   height={1560}
                   sizes="(min-width: 860px) 410px, 100vw"
                 />
-                <figcaption className="mt-3 text-base text-white/70">{f.cap}</figcaption>
+                <figcaption className="cs-cap">{f.cap}</figcaption>
               </figure>
             ))}
           </div>
@@ -472,7 +423,7 @@ export default function PatternCaseStudy() {
               height={2048}
               sizes="(min-width: 860px) 860px, 100vw"
             />
-            <figcaption className="mt-3 text-base text-white/70">
+            <figcaption className="cs-cap">
               Reordering that could ship: drag the list, not the canvas. The
               whole report reorders from one panel.
             </figcaption>
@@ -497,7 +448,7 @@ export default function PatternCaseStudy() {
               height={2048}
               sizes="(min-width: 860px) 860px, 100vw"
             />
-            <figcaption className="mt-3 text-base text-white/70">
+            <figcaption className="cs-cap">
               The redesigned widget: five metrics on one chart with color
               customization — the old tool allowed two.
             </figcaption>
@@ -510,7 +461,7 @@ export default function PatternCaseStudy() {
               height={1086}
               sizes="(min-width: 860px) 860px, 100vw"
             />
-            <figcaption className="mt-3 text-base text-white/70">
+            <figcaption className="cs-cap">
               Widget notes — one of the most requested features from testing:
               the &ldquo;why&rdquo; behind a chart rides along when it&rsquo;s
               exported or emailed to a brand.
@@ -549,7 +500,7 @@ export default function PatternCaseStudy() {
         {/* ── Templates ── */}
         <Section
           eyebrow="The templates"
-          headline="I didn't design the templates. I ran a contest for them."
+          headline="I didn’t design the templates. I ran a contest for them."
         >
           <Prose>
             <p>
@@ -631,7 +582,7 @@ export default function PatternCaseStudy() {
         </nav>
       </div>
 
-      <Footer />
+      <Footer width="article" />
     </div>
   )
 }
