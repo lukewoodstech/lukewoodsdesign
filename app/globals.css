@@ -2642,10 +2642,11 @@ p a {
   right: 4vw;
   top: 52vh;
   margin: 0;
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .canvas-intro__arrow {
