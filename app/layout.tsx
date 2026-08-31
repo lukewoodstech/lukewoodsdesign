@@ -38,6 +38,8 @@ export const metadata: Metadata = {
     template: `%s · ${SITE.name}`,
   },
   description: SITE.description,
+  authors: [{ name: SITE.name, url: SITE.url }],
+  creator: SITE.name,
   alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
@@ -57,10 +59,41 @@ export const viewport: Viewport = {
   themeColor: '#000000',
 }
 
+/*
+ * Person + WebSite structured data for the knowledge graph. Kept to public
+ * facts already on the page — name, role, site, LinkedIn — nothing scrapers
+ * couldn't read off the footer.
+ */
+const JSON_LD = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': `${SITE.url}/#person`,
+      name: SITE.name,
+      jobTitle: SITE.role,
+      url: SITE.url,
+      sameAs: [SITE.linkedin],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${SITE.url}/#website`,
+      name: `${SITE.name} · ${SITE.role}`,
+      description: SITE.description,
+      url: SITE.url,
+      author: { '@id': `${SITE.url}/#person` },
+    },
+  ],
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${ibmPlexMono.variable} ${ibmPlexSans.variable}`}>
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+        />
         <Cursor />
         <ViewTransition>
           <div className="wrapper">

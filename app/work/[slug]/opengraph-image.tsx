@@ -16,13 +16,12 @@ export default async function Image({ params }: { params: Promise<{ slug: string
   const { slug } = await params
   const cs = getCaseStudy(slug)
 
-  // "Hoth Landing Page" already names the company — an eyebrow would double it.
-  const eyebrow =
-    cs && !cs.title.toLowerCase().includes(cs.company.toLowerCase())
-      ? cs.company
-      : cs
-        ? undefined
-        : SITE.role
+  /*
+   * The eyebrow renders as the card's prompt line ("> ~ cd lucid"), so unlike
+   * the old uppercase label it can repeat a company the title already names —
+   * a command doesn't read as a duplicate heading.
+   */
+  const eyebrow = cs?.company ?? SITE.role
 
   return new ImageResponse(
     <OgCard title={cs?.title ?? SITE.name} eyebrow={eyebrow} accent={cs?.accent} />,
