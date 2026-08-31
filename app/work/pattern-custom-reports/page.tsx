@@ -2,8 +2,10 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
 import SiteNav from '@/components/SiteNav'
+import BeforeAfterHero from '@/components/BeforeAfterHero'
 import Reveal from '@/components/lucid/Reveal'
 import ZoomShot from '@/components/lucid/ZoomShot'
+import CompareStage from '@/components/lucid/CompareStage'
 import ImpactStats from '@/components/lucid/ImpactStats'
 import { SITE } from '@/lib/site'
 
@@ -166,19 +168,18 @@ export default function PatternCaseStudy() {
           </div>
         </header>
 
-        <Reveal as="figure" className="m-0">
-          <ZoomShot
-            src={`${IMG}/hifi-home-send-report.png`}
-            alt="Before and after of the Custom Reports home: the old text list of five reports on the left, and the redesigned home on the right with a template row on top and a grid of report tiles with chart previews"
-            width={1288}
-            height={450}
-            sizes="(min-width: 860px) 860px, 100vw"
-          />
-          <figcaption className="mt-3 text-base text-white/70">
-            The reports home, before and after: a text list became templates plus a
-            tile grid that shows each report before you open it.
-          </figcaption>
-        </Reveal>
+        <BeforeAfterHero
+          beforeSrc={`${IMG}/figma/old-home.png`}
+          afterSrc={`${IMG}/figma/new-home.png`}
+          beforeAlt="The old Custom Reports home: a plain text list of reports hidden behind a Custom Reports sub-tab, with no previews"
+          afterAlt="The redesigned Custom Reports home: a template row on top and a grid of report tiles, each with a live chart preview, title, and sharing state"
+          aspect={1440 / 1024}
+        />
+        <p className="mt-3 text-base text-white">
+          Drag across the frame: the old text list on the left, the redesigned
+          home — templates plus a tile grid that shows each report before you
+          open it — on the right.
+        </p>
 
         <Reveal className="mt-14">
           <Prose>
@@ -261,18 +262,43 @@ export default function PatternCaseStudy() {
           />
           <figure className="my-12">
             <ZoomShot
-              src={`${IMG}/old-ui-view-mode.png`}
-              alt="The old Custom Reports UI in view mode, with red annotation circles on the hidden filter controls, the two-metric chart header, and the Exit Report button"
-              width={755}
-              height={530}
-              sizes="(min-width: 860px) 720px, 100vw"
+              src={`${IMG}/figma/old-home.png`}
+              alt="The old Reports page: System Reports and Custom Reports as sub-tabs, with custom reports rendered as a plain text list and a context menu open on one row"
+              width={2880}
+              height={2048}
+              sizes="(min-width: 860px) 860px, 100vw"
             />
             <figcaption className="mt-3 text-base text-white/70">
-              Auditing the old UI. The red circles are the interview complaints,
-              located: opaque filters, a two-metric ceiling, and a separate edit
-              mode hiding behind &ldquo;Exit Report.&rdquo;
+              Where the old tool lived: a sub-tab behind System Reports — a tab
+              most users never touched — and every report a line of text with no
+              preview.
             </figcaption>
           </figure>
+          <div className="my-12">
+            <CompareStage
+              ariaLabel="The old report UI's two disconnected modes: preview mode versus edit mode"
+              layers={[
+                {
+                  src: `${IMG}/figma/old-preview-mode.png`,
+                  alt: 'The old report in preview mode: charts visible, editing controls hidden, an Exit Report button in the corner',
+                  label: 'Preview mode',
+                  caption:
+                    'Preview mode: where you present — but touch nothing. Editing hides behind a separate mode.',
+                  width: 2880,
+                  height: 2048,
+                },
+                {
+                  src: `${IMG}/figma/old-edit-mode.png`,
+                  alt: 'The same old report in edit mode: Add Widget bars and Edit buttons appear, with a Done button in the corner',
+                  label: 'Edit mode',
+                  caption:
+                    'Edit mode: the same report, different controls. Users lost track of which mode they were in.',
+                  width: 2880,
+                  height: 2048,
+                },
+              ]}
+            />
+          </div>
           <figure className="my-12 max-w-[560px]">
             <ZoomShot
               src={`${IMG}/discovery-board.png`}
@@ -371,6 +397,20 @@ export default function PatternCaseStudy() {
               report theming, which brands kept asking for.
             </p>
           </Prose>
+          <figure className="my-12">
+            <ZoomShot
+              src={`${IMG}/figma/dragdrop-concept.png`}
+              alt="The cut concept: a Google Slides-style report builder with a left rail of draggable widget thumbnails next to the report canvas"
+              width={2880}
+              height={2048}
+              sizes="(min-width: 860px) 860px, 100vw"
+            />
+            <figcaption className="mt-3 text-base text-white/70">
+              The mock that didn&rsquo;t ship: a Slides-style builder with a
+              draggable thumbnail rail. Right mental model, wrong engineering
+              budget — it lives on the roadmap.
+            </figcaption>
+          </figure>
         </Section>
 
         {/* ── The redesign ── */}
@@ -389,43 +429,91 @@ export default function PatternCaseStudy() {
               toggles, settings, and timeframes that used to be opaque.
             </p>
           </Prose>
+          <div className="mt-8 grid gap-6 sm:grid-cols-2">
+            {[
+              {
+                src: `${IMG}/figma/modal-general.png`,
+                alt: 'Create New Custom Report modal, step one: name and description fields, then an explained choice between a single filter for the entire report and unique filters per widget, and between dynamic brand selection and a specified brand group',
+                cap: 'Step one explains the choice that used to be invisible: one filter set for the whole report, or unique filters per widget.',
+              },
+              {
+                src: `${IMG}/figma/modal-scenario.png`,
+                alt: 'Create New Custom Report modal, scenario step: a timeframe picker with current, previous, and trailing periods, view-by aggregation, and compare-with options',
+                cap: 'The scenario step: timeframes, aggregation, and comparisons picked with context instead of guessed at.',
+              },
+            ].map((f) => (
+              <figure key={f.src} className="m-0">
+                <ZoomShot
+                  src={f.src}
+                  alt={f.alt}
+                  width={1700}
+                  height={1560}
+                  sizes="(min-width: 860px) 410px, 100vw"
+                />
+                <figcaption className="mt-3 text-base text-white/70">{f.cap}</figcaption>
+              </figure>
+            ))}
+          </div>
+          <Prose>
+            <p className="mt-10">
+              Inside a report, the view/edit split is gone — one mode serves both
+              presenting and editing, with actions in context. Filters became
+              clearer and editable after creation instead of locked in. And
+              widgets finally reorder: a Widget Order list in the report settings
+              with drag handles — the feasible version of reordering, shipped
+              while the full canvas drag-and-drop waited on the roadmap.
+            </p>
+          </Prose>
           <figure className="my-12">
             <ZoomShot
-              src={`${IMG}/new-report-flow.png`}
-              alt="The new report flow board: user-flow diagrams on the left, then the guided Create New Custom Report modal screens for blank and template paths"
-              width={1182}
-              height={443}
+              src={`${IMG}/figma/reorder-panel.png`}
+              alt="The Edit General Info panel over a report, with a Widget Order list showing six charts, each with a drag handle for reordering"
+              width={2880}
+              height={2048}
               sizes="(min-width: 860px) 860px, 100vw"
             />
             <figcaption className="mt-3 text-base text-white/70">
-              From flow map to high fidelity: the guided modal flow, with blank
-              and template paths, replaced the old side drawer.
+              Reordering that could ship: drag the list, not the canvas. The
+              whole report reorders from one panel.
             </figcaption>
           </figure>
           <Prose>
             <p>
-              Inside a report, the view/edit split is gone — one mode serves both
-              presenting and editing, with actions in context. Filters became
-              clearer and editable after creation instead of locked in. Widgets
-              reorder with inline move controls — drag-and-drop stayed on the
-              roadmap. And charts finally broke the two-metric cap: multi-metric
-              comparison, the single most requested capability, became the core of
-              the in-report experience. Reports gained share and export, plus
-              scheduled email sending, so the weekly client report could leave
-              Predict without a screenshot.
+              Charts broke the two-metric cap: multi-metric comparison, the
+              single most requested capability, became the core of the in-report
+              experience. Reports gained share and export, plus scheduled email
+              sending, so the weekly client report could leave Predict without a
+              screenshot. And because so much sharing happens asynchronously, a
+              widget can now carry a note — the context a manager would otherwise
+              write in the email next to a pasted screenshot travels with the
+              chart itself.
             </p>
           </Prose>
-          <figure className="my-12 max-w-[620px]">
+          <figure className="my-12">
             <ZoomShot
-              src={`${IMG}/final-chart-ui.png`}
-              alt="The redesigned report widget showing five metrics on one chart — Ad Clicks, ACOS, Ad Sales, Ad Spend, and Ad Orders — with color-coded stat headers above a dual-axis line chart"
-              width={765}
-              height={960}
-              sizes="(min-width: 860px) 620px, 100vw"
+              src={`${IMG}/figma/widget-redesign.png`}
+              alt="The redesigned report widget in context: five metrics — Ad Clicks, ACOS, Ad Sales, Ad Spend, and Ad Orders — as color-coded stat headers above one dual-axis line chart"
+              width={2880}
+              height={2048}
+              sizes="(min-width: 860px) 860px, 100vw"
             />
             <figcaption className="mt-3 text-base text-white/70">
-              Five metrics on one chart, with color customization — the old tool
-              allowed two. Brand and dollar figures are replaced in this mock.
+              The redesigned widget: five metrics on one chart with color
+              customization — the old tool allowed two.
+            </figcaption>
+          </figure>
+          <figure className="my-12">
+            <ZoomShot
+              src={`${IMG}/figma/widget-notes.png`}
+              alt="A report widget with a note beneath its title explaining what the chart shows and why, above the multi-metric stat row"
+              width={2656}
+              height={1086}
+              sizes="(min-width: 860px) 860px, 100vw"
+            />
+            <figcaption className="mt-3 text-base text-white/70">
+              Widget notes — one of the most requested features from testing:
+              the &ldquo;why&rdquo; behind a chart rides along when it&rsquo;s
+              exported or emailed to a brand.
             </figcaption>
           </figure>
         </Section>

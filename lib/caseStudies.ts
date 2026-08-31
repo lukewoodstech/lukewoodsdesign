@@ -171,10 +171,10 @@ export const caseStudies: CaseStudy[] = [
       'Templates seeded from a prized report-building competition among the tool’s actual users',
       'Full handoff: annotated specs, prototype, documentation, and a follow-up testing plan',
     ],
-    heroSrc: '/work/pattern/hifi-home-send-report.png',
-    heroCaption: 'Final design — Custom Reports home and send-report flow in Predict',
+    heroSrc: '/work/pattern/figma/new-home.png',
+    heroCaption: 'Final design — the redesigned Custom Reports home: templates plus a previewing tile grid',
     problemFigure: {
-      src: '/work/pattern/old-ui-view-mode.png',
+      src: '/work/pattern/figma/old-preview-mode.png',
       caption: 'The old UI — two-metric charts, buried controls, and filters you couldn’t change after creation',
     },
     processFigures: [
@@ -183,11 +183,11 @@ export const caseStudies: CaseStudy[] = [
         caption: 'Discovery — auditing the existing reporting flows and collecting feature feedback',
       },
       {
-        src: '/work/pattern/new-report-flow.png',
-        caption: 'New report flow — from user-flow mapping to high-fidelity create and configure screens',
+        src: '/work/pattern/figma/modal-general.png',
+        caption: 'The guided create-report modal — filter scope explained before you build',
       },
       {
-        src: '/work/pattern/final-chart-ui.png',
+        src: '/work/pattern/figma/widget-redesign.png',
         caption: 'Final in-report design — multi-metric comparison with color customization',
       },
     ],
