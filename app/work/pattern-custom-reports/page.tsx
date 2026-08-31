@@ -570,13 +570,13 @@ export default function PatternCaseStudy() {
 
         {/* ── Prev / next ── */}
         <nav
-          className="mt-24 pt-8 border-t border-white/10 flex items-center justify-between gap-4"
+          className="worknav mt-24 pt-8 border-t border-white/10 flex flex-wrap items-center justify-between gap-4"
           aria-label="More work"
         >
           <Link href="/work/awardco-login-flow-redesign" className="footer-link -ml-4">
             ← Reducing Authentication Friction
           </Link>
-          <Link href="/work/hoth" className="footer-link -mr-4 text-right">
+          <Link href="/work/hoth" className="footer-link -mr-4 ml-auto text-right">
             Hoth Landing Page →
           </Link>
         </nav>

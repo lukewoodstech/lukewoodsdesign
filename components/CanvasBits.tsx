@@ -15,10 +15,10 @@ import HothTile from './HothTile'
  */
 
 export const WORK_TILES: ReadonlyArray<{ slug: string; label: string; tile: ReactNode }> = [
-  { slug: 'lucid-ai', label: '01 · lucid ai', tile: <LucidTile /> },
+  { slug: 'lucid-ai', label: '02 · lucid ai', tile: <LucidTile /> },
   {
     slug: 'awardco',
-    label: '02 · awardco',
+    label: '03 · awardco',
     tile: (
       <BeforeAfterTile
         slug="awardco-login-flow-redesign"
@@ -32,8 +32,8 @@ export const WORK_TILES: ReadonlyArray<{ slug: string; label: string; tile: Reac
       />
     ),
   },
-  { slug: 'pattern', label: '03 · pattern', tile: <PatternTile /> },
-  { slug: 'hoth', label: '04 · hoth', tile: <HothTile /> },
+  { slug: 'pattern', label: '04 · pattern', tile: <PatternTile /> },
+  { slug: 'hoth', label: '05 · hoth', tile: <HothTile /> },
 ]
 
 /*
@@ -226,11 +226,6 @@ export function ContactCard() {
             >
               &apos;{SITE.resume}&apos;
             </a>
-            <span className="cc-op">,</span>
-          </li>
-          <li className="cc-indent">
-            <span className="cc-prop">status</span>
-            <span className="cc-op">:</span> <span className="cc-str">&apos;open to work&apos;</span>
             <span className="cc-op">,</span>
           </li>
           <li>

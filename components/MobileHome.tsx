@@ -28,8 +28,8 @@ import { SITE } from '@/lib/site'
 
 const MENU_LINKS = [
   { label: 'home', href: '#top' },
-  { label: 'work', href: '#work' },
   { label: 'luke ai', href: '#luke-ai' },
+  { label: 'work', href: '#work' },
   { label: 'about', href: '#about' },
 ] as const
 
@@ -96,6 +96,19 @@ export default function MobileHome() {
           <h2 id="mhome-work-heading" className="mhome-label">
             work
           </h2>
+          {/* Live Luke AI window — same card as the canvas, stacked first
+              like on the desktop strip. The menu's "luke ai" scrolls here;
+              the card itself links on to the full /chat page. */}
+          <div className="mhome-work__item" id="luke-ai">
+            <span className="mhome-label" aria-hidden="true">
+              01 · luke ai — ask it anything
+            </span>
+            <div className="mhome-card mhome-card--ai">
+              <LukeAiCard />
+              <SelectionHandles />
+            </div>
+          </div>
+
           {WORK_TILES.map((item) => (
             <div key={item.slug} className="mhome-work__item">
               <span className="mhome-label" aria-hidden="true">
@@ -107,19 +120,6 @@ export default function MobileHome() {
               </div>
             </div>
           ))}
-
-          {/* Live Luke AI window — same card as the canvas, stacked.
-              The menu's "luke ai" scrolls here; the card itself links on
-              to the full /chat page. */}
-          <div className="mhome-work__item" id="luke-ai">
-            <span className="mhome-label" aria-hidden="true">
-              05 · luke ai — ask it anything
-            </span>
-            <div className="mhome-card mhome-card--ai">
-              <LukeAiCard />
-              <SelectionHandles />
-            </div>
-          </div>
         </section>
 
         {/* ── About: the polaroid pair, minus the desk clutter ── */}

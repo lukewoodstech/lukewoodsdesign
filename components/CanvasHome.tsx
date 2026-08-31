@@ -38,19 +38,20 @@ type CardSpec = {
 }
 
 /* left/w in vw, top/h in vh — positions on the wide strip, one per
-   WORK_TILES entry in order. The landing screen owns the first ~100vw,
-   so the cards start past it. */
+   WORK_TILES entry in order. The landing screen owns the first ~100vw;
+   Luke AI leads the row, so the case studies start past it. */
 const CARDS: readonly CardSpec[] = [
   /* top ≥ 12vh keeps the floating labels from crowding the top edge */
-  { left: 112, top: 12, w: 40, h: 70, rot: -1.6, drift: 1 },
-  { left: 159, top: 16, w: 38, h: 68, rot: 1.2, drift: -1 },
-  { left: 204, top: 11, w: 38, h: 66, rot: -0.9, drift: 1 },
-  { left: 249, top: 14, w: 38, h: 68, rot: 1.7, drift: -1 },
+  { left: 151, top: 12, w: 40, h: 70, rot: -1.6, drift: 1 },
+  { left: 198, top: 16, w: 38, h: 68, rot: 1.2, drift: -1 },
+  { left: 243, top: 11, w: 38, h: 66, rot: -0.9, drift: 1 },
+  { left: 288, top: 14, w: 38, h: 68, rot: 1.7, drift: -1 },
 ]
 
-/* The live Luke AI window sits after the last case study. rot 0 per Luke —
+/* The live Luke AI window is the first card off the landing screen — the
+   clearest "AI-native" signal, so it leads the work row. rot 0 per Luke —
    a working app window sits straight, unlike the pinned-up case studies. */
-const AI_CARD: CardSpec = { left: 293, top: 13, w: 32, h: 68, rot: 0, drift: -1 }
+const AI_CARD: CardSpec = { left: 112, top: 13, w: 32, h: 68, rot: 0, drift: -1 }
 
 /* About section: photos + the combined README (blurb + résumé) → finale.
    Polaroids + README span ~90vw; the finale starts past them. */
@@ -128,9 +129,30 @@ function CanvasCard({
 }
 
 export default function CanvasHome() {
-  const trackRef = useRef<HTMLDivElement>(null)
   const isDesktop = useIsDesktop()
   const reducedMotion = useReducedMotion()
+
+  if (isDesktop === null) {
+    return <div style={{ height: '100vh' }} aria-hidden="true" />
+  }
+
+  /* The plain stack is the fallback, not a lesser version — same canvas
+     dressing, just scrolling normally. */
+  if (!isDesktop || reducedMotion) {
+    return <MobileHome />
+  }
+
+  return <DesktopCanvas />
+}
+
+/*
+ * All the motion hooks live here, below the desktop/mobile switch: useScroll
+ * throws "Target ref is defined but not hydrated" if its target never mounts,
+ * which is exactly what happened when CanvasHome rendered MobileHome while
+ * still wiring trackRef. In this component the track always renders.
+ */
+function DesktopCanvas() {
+  const trackRef = useRef<HTMLDivElement>(null)
 
   const { scrollYProgress } = useScroll({
     target: trackRef,
@@ -166,9 +188,7 @@ export default function CanvasHome() {
    * otherwise animate every wheel tick into mush. Arrow keys get the
    * same treatment.
    */
-  const canvasActive = isDesktop === true && !reducedMotion
   useEffect(() => {
-    if (!canvasActive) return
     const onWheel = (e: WheelEvent) => {
       if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return
       e.preventDefault()
@@ -187,7 +207,7 @@ export default function CanvasHome() {
       window.removeEventListener('wheel', onWheel)
       window.removeEventListener('keydown', onKey)
     }
-  }, [canvasActive])
+  }, [])
 
   /*
    * Coming back from a case study or /chat should land the visitor exactly
@@ -198,7 +218,6 @@ export default function CanvasHome() {
    * link navigation, which starts a fresh entry at the top.)
    */
   useEffect(() => {
-    if (!canvasActive) return
     try {
       const saved = sessionStorage.getItem(SCROLL_KEY)
       const vw = saved === null ? NaN : parseFloat(saved)
@@ -222,17 +241,7 @@ export default function CanvasHome() {
       window.removeEventListener('scroll', onScroll)
       if (raf) cancelAnimationFrame(raf)
     }
-  }, [canvasActive, smooth, scrollYProgress])
-
-  if (isDesktop === null) {
-    return <div style={{ height: '100vh' }} aria-hidden="true" />
-  }
-
-  /* The plain stack is the fallback, not a lesser version — same canvas
-     dressing, just scrolling normally. */
-  if (!isDesktop || reducedMotion) {
-    return <MobileHome />
-  }
+  }, [smooth, scrollYProgress])
 
   return (
     <div
@@ -270,16 +279,16 @@ export default function CanvasHome() {
             </p>
           </section>
 
+          {/* ── Live Luke AI window: chat right here, expand for the full page ── */}
+          <CanvasCard card={AI_CARD} label="01 · luke ai — ask it anything" progress={smooth}>
+            <LukeAiCard />
+          </CanvasCard>
+
           {WORK_TILES.map((item, i) => (
             <CanvasCard key={item.slug} card={CARDS[i]} label={item.label} progress={smooth}>
               {item.tile}
             </CanvasCard>
           ))}
-
-          {/* ── Live Luke AI window: chat right here, expand for the full page ── */}
-          <CanvasCard card={AI_CARD} label="05 · luke ai — ask it anything" progress={smooth}>
-            <LukeAiCard />
-          </CanvasCard>
 
           {/* ── About: photos → simplified résumé → contact finale ── */}
           <section
@@ -340,15 +349,6 @@ export default function CanvasHome() {
               <span className="term-nav__dir">~</span> cd home
               <span className="term-nav__caret" aria-hidden="true" />
             </button>
-            <button
-              type="button"
-              className="term-nav__line"
-              onClick={() => goToVw(CARDS[0].left - 8)}
-            >
-              <span className="term-nav__arrow">➜</span>
-              <span className="term-nav__dir">~</span> cd work
-              <span className="term-nav__caret" aria-hidden="true" />
-            </button>
             {/* Scrolls to the live preview card on the canvas — the card's
                 own expand affordance is the way into the full /chat page.
                 Centered in the viewport so the fixed terminal doesn't sit
@@ -360,6 +360,15 @@ export default function CanvasHome() {
             >
               <span className="term-nav__arrow">➜</span>
               <span className="term-nav__dir">~</span> cd luke-ai
+              <span className="term-nav__caret" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className="term-nav__line"
+              onClick={() => goToVw(CARDS[0].left - 8)}
+            >
+              <span className="term-nav__arrow">➜</span>
+              <span className="term-nav__dir">~</span> cd work
               <span className="term-nav__caret" aria-hidden="true" />
             </button>
             <button

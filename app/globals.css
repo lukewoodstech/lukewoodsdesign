@@ -705,7 +705,9 @@ p a {
 
 /* ─── Chat page (/chat) ─── */
 .chat-pg {
+  /* dvh so the input clears iOS Safari's bottom bar; vh is the fallback */
   height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: row;
   overflow: hidden;
@@ -921,6 +923,13 @@ p a {
   margin: 0;
   line-height: 1.25;
   white-space: nowrap;
+}
+
+/* One line doesn't fit a phone even at the clamp floor — let it wrap */
+@media (max-width: 40em) {
+  .chat-pg__zero-heading {
+    white-space: normal;
+  }
 }
 
 .chat-pg__float-wrap--zero {
@@ -1641,6 +1650,16 @@ p a {
 
 .footer-link:hover {
   background: rgba(255, 255, 255, 0.08);
+}
+
+/*
+ * Case-study prev/next at the article foot: two full project titles share
+ * one row, and `.footer-link`'s nowrap dragged the whole page into
+ * horizontal scroll on phones. Unlayered CSS beats Tailwind's layered
+ * utilities, so the override lives here rather than as a class on the links.
+ */
+.worknav .footer-link {
+  white-space: normal;
 }
 
 .footer-link--home {
@@ -4127,4 +4146,52 @@ a.cc-link:focus-visible {
 
 .mhome-hero__time {
   margin: 0.9rem 6px 0;
+}
+
+/* ─── 404 ─── */
+.notfound {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0 1.5rem;
+  text-align: center;
+}
+
+.notfound__term {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.notfound__arrow {
+  color: #23d18b;
+  font-weight: 700;
+  margin-right: 0.45rem;
+}
+
+.notfound__dir {
+  color: #29b8db;
+  margin-right: 0.45rem;
+}
+
+.notfound__code {
+  margin: 0;
+  font-size: clamp(4rem, 12vw, 7rem);
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+}
+
+.notfound__msg {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.notfound__home {
+  margin-top: 0.5rem;
 }

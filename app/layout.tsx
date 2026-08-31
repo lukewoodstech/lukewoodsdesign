@@ -90,10 +90,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${ibmPlexMono.variable} ${ibmPlexSans.variable}`}>
       <body>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
-        />
         <Cursor />
         <ViewTransition>
           <div className="wrapper">
@@ -102,6 +98,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </ViewTransition>
         <Analytics />
         <SpeedInsights />
+        {/*
+         * suppressHydrationWarning: PostHog's loader inserts its own <script>
+         * directly before the first script in the document — this one — so at
+         * hydration React finds PostHog's tag where it expects the JSON-LD and
+         * threw a mismatch on every page (forcing a full client re-render in
+         * prod). The tag is static and never updates, so letting React skip
+         * the comparison is safe; the server-rendered JSON-LD stays in the DOM.
+         */}
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+        />
       </body>
     </html>
   )

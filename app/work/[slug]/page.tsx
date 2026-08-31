@@ -233,7 +233,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
           Prev/next moved down from the top nav — a reader wants the next
           project after finishing this one, not before starting it.
         */}
-        <nav className="mt-24 pt-8 border-t border-white/10 flex items-center justify-between gap-4" aria-label="More work">
+        <nav className="worknav mt-24 pt-8 border-t border-white/10 flex flex-wrap items-center justify-between gap-4" aria-label="More work">
           {prev ? (
             <Link href={`/work/${prev.slug}`} className="footer-link -ml-4">
               ← {prev.title}
@@ -242,7 +242,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
             <span />
           )}
           {next && (
-            <Link href={`/work/${next.slug}`} className="footer-link -mr-4 text-right">
+            <Link href={`/work/${next.slug}`} className="footer-link -mr-4 ml-auto text-right">
               {next.title} →
             </Link>
           )}
