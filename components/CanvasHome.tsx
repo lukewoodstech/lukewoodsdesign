@@ -313,12 +313,12 @@ export default function CanvasHome() {
             <figure className="polaroid polaroid--second">
               <Image
                 src="/luke-fishing.jpg"
-                alt="Luke waist-deep in a river in waders, grinning and holding up a large salmon"
+                alt="Luke waist-deep in the Kenai River in Alaska, grinning and holding up a large salmon"
                 width={700}
                 height={700}
                 sizes="22vw"
               />
-              <figcaption>caught dinner.</figcaption>
+              <figcaption>kenai river, alaska</figcaption>
             </figure>
           </section>
 
@@ -408,15 +408,6 @@ export default function CanvasHome() {
               <span className="term-nav__dir">~</span> cd work
               <span className="term-nav__caret" aria-hidden="true" />
             </button>
-            <button
-              type="button"
-              className="term-nav__line"
-              onClick={() => goToVw(ABOUT_PHOTOS_LEFT - 8)}
-            >
-              <span className="term-nav__arrow">➜</span>
-              <span className="term-nav__dir">~</span> cd about
-              <span className="term-nav__caret" aria-hidden="true" />
-            </button>
             {/* Scrolls to the live preview card on the canvas — the card's
                 own expand affordance is the way into the full /chat page.
                 Centered in the viewport so the fixed terminal doesn't sit
@@ -428,6 +419,15 @@ export default function CanvasHome() {
             >
               <span className="term-nav__arrow">➜</span>
               <span className="term-nav__dir">~</span> cd luke-ai
+              <span className="term-nav__caret" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className="term-nav__line"
+              onClick={() => goToVw(ABOUT_PHOTOS_LEFT - 8)}
+            >
+              <span className="term-nav__arrow">➜</span>
+              <span className="term-nav__dir">~</span> cd about
               <span className="term-nav__caret" aria-hidden="true" />
             </button>
             {/* idle prompt, cursor always blinking — the shell is waiting */}

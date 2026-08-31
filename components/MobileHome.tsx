@@ -22,6 +22,7 @@ import { SITE } from '@/lib/site'
 const MENU_LINKS = [
   { label: 'home', href: '#top' },
   { label: 'work', href: '#work' },
+  { label: 'luke ai', href: '#luke-ai' },
   { label: 'about', href: '#about' },
 ] as const
 
@@ -68,9 +69,6 @@ export default function MobileHome() {
               {link.label}
             </a>
           ))}
-          <a href="#luke-ai" onClick={() => setMenuOpen(false)}>
-            luke ai
-          </a>
         </nav>
       )}
 
@@ -136,12 +134,12 @@ export default function MobileHome() {
             <figure className="polaroid polaroid--second mhome-polaroid">
               <Image
                 src="/luke-fishing.jpg"
-                alt="Luke waist-deep in a river in waders, grinning and holding up a large salmon"
+                alt="Luke waist-deep in the Kenai River in Alaska, grinning and holding up a large salmon"
                 width={700}
                 height={700}
                 sizes="(max-width: 48em) 80vw, 20rem"
               />
-              <figcaption>caught dinner.</figcaption>
+              <figcaption>kenai river, alaska</figcaption>
             </figure>
           </div>
         </section>
