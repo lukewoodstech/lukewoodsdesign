@@ -49,13 +49,16 @@ const CARDS: readonly CardSpec[] = [
   { left: 249, top: 14, w: 38, h: 68, rot: 1.7, drift: -1 },
 ]
 
-/* The live Luke AI window sits after the last case study. */
-const AI_CARD: CardSpec = { left: 293, top: 13, w: 32, h: 68, rot: 1.1, drift: -1 }
+/* The live Luke AI window sits after the last case study. rot 0 per Luke —
+   a working app window sits straight, unlike the pinned-up case studies. */
+const AI_CARD: CardSpec = { left: 293, top: 13, w: 32, h: 68, rot: 0, drift: -1 }
 
 /* About section: photos → simplified résumé → contact finale */
 const ABOUT_PHOTOS_LEFT = 336 // vw
-const ABOUT_RESUME_LEFT = 370 // vw
-const OUTRO_LEFT = 404 // vw
+/* Two full-size polaroids span ~42vw — the résumé starts past them
+   so the frames never touch the editor window. */
+const ABOUT_RESUME_LEFT = 382 // vw
+const OUTRO_LEFT = 416 // vw
 const STRIP_W = OUTRO_LEFT + 42 // vw — contact box + right margin
 const TRAVEL = STRIP_W - 100 // vw the strip translates over the full scroll
 
@@ -297,10 +300,6 @@ export default function CanvasHome() {
               06 · about me
             </span>
             {/* second frame: placeholder until the next real shot lands */}
-            <figure className="polaroid polaroid--second" aria-hidden="true">
-              <div className="polaroid__blank">next photo soon</div>
-              <figcaption>…</figcaption>
-            </figure>
             <figure className="polaroid polaroid--main">
               <Image
                 src="/luke-woods.jpg"
@@ -310,6 +309,16 @@ export default function CanvasHome() {
                 sizes="22vw"
               />
               <figcaption>luke woods — hello!</figcaption>
+            </figure>
+            <figure className="polaroid polaroid--second">
+              <Image
+                src="/luke-fishing.jpg"
+                alt="Luke waist-deep in a river in waders, grinning and holding up a large salmon"
+                width={700}
+                height={700}
+                sizes="22vw"
+              />
+              <figcaption>caught dinner.</figcaption>
             </figure>
           </section>
 
@@ -408,11 +417,19 @@ export default function CanvasHome() {
               <span className="term-nav__dir">~</span> cd about
               <span className="term-nav__caret" aria-hidden="true" />
             </button>
-            <a className="term-nav__line" href="/chat">
+            {/* Scrolls to the live preview card on the canvas — the card's
+                own expand affordance is the way into the full /chat page.
+                Centered in the viewport so the fixed terminal doesn't sit
+                on top of it. */}
+            <button
+              type="button"
+              className="term-nav__line"
+              onClick={() => goToVw(AI_CARD.left - (100 - AI_CARD.w) / 2)}
+            >
               <span className="term-nav__arrow">➜</span>
-              <span className="term-nav__dir">~</span> open luke-ai
+              <span className="term-nav__dir">~</span> cd luke-ai
               <span className="term-nav__caret" aria-hidden="true" />
-            </a>
+            </button>
             {/* idle prompt, cursor always blinking — the shell is waiting */}
             <div className="term-nav__line term-nav__line--idle" aria-hidden="true">
               <span className="term-nav__arrow">➜</span>

@@ -2740,42 +2740,44 @@ p a {
   padding-left: 1.1em;
 }
 
-/* Syntax shades: VS Code Dark+ */
+/* Syntax shades from the site palette — Dark+'s foreign blues read as
+   inconsistent against --mono-blue, so the editor borrows our colors:
+   pink keywords, one blue identifier, green string links, white props. */
 .cc-comment {
-  color: #6a9955;
+  color: rgba(255, 255, 255, 0.45);
 }
 
 .cc-kw {
-  color: #569cd6;
+  color: var(--mono-pink);
 }
 
 .cc-id {
-  color: #4fc1ff;
+  color: var(--mono-blue);
 }
 
 .cc-op {
-  color: #d4d4d4;
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .cc-prop {
-  color: #9cdcfe;
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .cc-str {
-  color: #ce9178;
+  color: var(--mono-green);
 }
 
 /* Clickable strings: underline like real editor link-detection */
 a.cc-link {
-  color: #ce9178;
+  color: var(--mono-green);
   text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, #ce9178 45%, transparent);
+  text-decoration-color: color-mix(in srgb, var(--mono-green) 45%, transparent);
   text-underline-offset: 3px;
   transition: text-decoration-color 0.2s ease;
 }
 
 a.cc-link:hover {
-  text-decoration-color: #ce9178;
+  text-decoration-color: var(--mono-green);
 }
 
 a.cc-link:focus-visible {
@@ -2880,37 +2882,31 @@ a.cc-link:focus-visible {
   color: #26262e;
 }
 
-/* Second frame: a placeholder polaroid peeking out from behind. */
+/* Second frame: same size as the main polaroid, only a sliver of
+   overlap — two photos side by side, not a pile. */
 .polaroid--second {
   position: absolute;
-  top: -4vh;
-  left: 16.5vw;
-  width: 17vw;
+  top: 7vh;
+  left: 20vw;
+  width: 22vw;
   margin: 0;
-  transform: rotate(4.2deg);
+  transform: rotate(3.2deg);
+}
+
+.polaroid--second img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .polaroid--second figcaption {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0.7vw;
+  bottom: 0.8vw;
   text-align: center;
   font-size: 0.85rem;
-  color: #8b8677;
-}
-
-.polaroid__blank {
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #e9e5da;
-  border: 1px dashed #b9b4a4;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.06em;
-  color: #8b8677;
+  color: #26262e;
 }
 
 .polaroid--main {
@@ -3464,6 +3460,8 @@ a.cc-link:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
+  /* the menu's "luke ai" anchors to an item — clear the fixed bar */
+  scroll-margin-top: 4rem;
 }
 
 /* Each tile framed as a selected canvas object, like the desktop cards. */
@@ -3501,6 +3499,14 @@ a.cc-link:focus-visible {
 
 .mhome-polaroid figcaption {
   bottom: 14px;
+}
+
+/* On the stack the second polaroid flows under the first — same size,
+   opposite tilt, tucked up for a slight overlap. */
+.mhome-polaroids .polaroid--second {
+  position: static;
+  transform: rotate(2.4deg);
+  margin-top: -0.6rem;
 }
 
 /* ── Outro + footer ──────────────────────────────────────────────── */
@@ -3693,7 +3699,7 @@ a.cc-link:focus-visible {
 }
 
 .ai-card__msg--ai a {
-  color: #4db4ff;
+  color: var(--mono-blue);
 }
 
 .ai-card__thinking {
@@ -3739,7 +3745,7 @@ a.cc-link:focus-visible {
 .ai-card__error button {
   font-family: inherit;
   font-size: inherit;
-  color: #4db4ff;
+  color: var(--mono-blue);
   background: none;
   border: none;
   text-decoration: underline;
@@ -3924,12 +3930,12 @@ a.cc-link:focus-visible {
 }
 
 .vec-inspect__chip b {
-  color: #4db4ff;
+  color: var(--mono-blue);
   font-weight: 500;
 }
 
 .vec-inspect__chip i {
-  color: #b78cf7;
+  color: var(--mono-pink);
   font-style: normal;
 }
 

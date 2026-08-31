@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { SITE, MAILTO } from '@/lib/site'
+import { SITE } from '@/lib/site'
 import EmailLink from './EmailLink'
 import LucidTile from './LucidTile'
 import BeforeAfterTile from './BeforeAfterTile'
@@ -191,10 +191,8 @@ export function ContactFinale() {
         </li>
       </ul>
       <div className="pr-card__mergebox">
-        <a className="pr-card__merge" href={MAILTO}>
-          merge pull request
-        </a>
-        <span className="pr-card__mergehint">opens an email to luke</span>
+        <EmailLink className="pr-card__merge">merge pull request</EmailLink>
+        <span className="pr-card__mergehint">opens an email to luke · click also copies the address</span>
       </div>
       <div className="pr-card__links">
         <a className="footer-link" href={SITE.linkedin} target="_blank" rel="noopener noreferrer">

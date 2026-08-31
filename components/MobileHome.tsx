@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
 import Image from 'next/image'
 import EmailLink from './EmailLink'
 import LukeAiCard from './LukeAiCard'
@@ -69,9 +68,9 @@ export default function MobileHome() {
               {link.label}
             </a>
           ))}
-          <Link href="/chat" onClick={() => setMenuOpen(false)}>
+          <a href="#luke-ai" onClick={() => setMenuOpen(false)}>
             luke ai
-          </Link>
+          </a>
         </nav>
       )}
 
@@ -106,8 +105,10 @@ export default function MobileHome() {
             </div>
           ))}
 
-          {/* Live Luke AI window — same card as the canvas, stacked */}
-          <div className="mhome-work__item">
+          {/* Live Luke AI window — same card as the canvas, stacked.
+              The menu's "luke ai" scrolls here; the card itself links on
+              to the full /chat page. */}
+          <div className="mhome-work__item" id="luke-ai">
             <span className="mhome-label" aria-hidden="true">
               05 · luke ai — ask it anything
             </span>
@@ -122,10 +123,6 @@ export default function MobileHome() {
         <section className="mhome-about" id="about" aria-label="About Luke">
           <h2 className="mhome-label">06 · about me</h2>
           <div className="mhome-polaroids">
-            <figure className="polaroid polaroid--second" aria-hidden="true">
-              <div className="polaroid__blank">next photo soon</div>
-              <figcaption>…</figcaption>
-            </figure>
             <figure className="polaroid polaroid--main mhome-polaroid">
               <Image
                 src="/luke-woods.jpg"
@@ -135,6 +132,16 @@ export default function MobileHome() {
                 sizes="(max-width: 48em) 80vw, 20rem"
               />
               <figcaption>luke woods — hello!</figcaption>
+            </figure>
+            <figure className="polaroid polaroid--second mhome-polaroid">
+              <Image
+                src="/luke-fishing.jpg"
+                alt="Luke waist-deep in a river in waders, grinning and holding up a large salmon"
+                width={700}
+                height={700}
+                sizes="(max-width: 48em) 80vw, 20rem"
+              />
+              <figcaption>caught dinner.</figcaption>
             </figure>
           </div>
         </section>
