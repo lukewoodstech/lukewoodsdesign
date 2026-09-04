@@ -53,8 +53,10 @@ export default function BeforeAfterHero({
         className="object-cover"
       />
 
-      {/* Before — revealed left of the divider */}
-      <div className="absolute inset-0" style={{ clipPath: `inset(0 ${100 - pct}% 0 0)` }}>
+      {/* Before — revealed right of the divider. Scrubber semantics, matching
+          the tile: the labels are endpoints, so sliding toward "after" (right)
+          shows the after screen. */}
+      <div className="absolute inset-0" style={{ clipPath: `inset(0 0 0 ${pct}%)` }}>
         <Image
           src={beforeSrc}
           alt=""

@@ -153,11 +153,14 @@ export default function BeforeAfterTile({
           />
         </div>
 
-        {/* Before — revealed left of the divider */}
+        {/* Before — revealed right of the divider. The handle reads as a
+            timeline scrubber between the label endpoints (before ← → after),
+            so sliding right must land on the after screen, not grow the
+            before region the way classic comparison sliders do. */}
         <div
           className="absolute inset-x-0 bottom-4 top-8"
           style={{
-            clipPath: `inset(0 ${100 - pct}% 0 0)`,
+            clipPath: `inset(0 0 0 ${pct}%)`,
             opacity: revealed ? 1 : 0,
             transition: 'opacity 0.2s ease',
           }}
