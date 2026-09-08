@@ -15,10 +15,10 @@ import HothTile from './HothTile'
  */
 
 export const WORK_TILES: ReadonlyArray<{ slug: string; label: string; tile: ReactNode }> = [
-  { slug: 'lucid-ai', label: '02 · lucid ai', tile: <LucidTile /> },
+  { slug: 'lucid-ai', label: '01 · lucid ai', tile: <LucidTile /> },
   {
     slug: 'awardco',
-    label: '03 · awardco',
+    label: '02 · awardco',
     tile: (
       <BeforeAfterTile
         slug="awardco-login-flow-redesign"
@@ -32,8 +32,8 @@ export const WORK_TILES: ReadonlyArray<{ slug: string; label: string; tile: Reac
       />
     ),
   },
-  { slug: 'pattern', label: '04 · pattern', tile: <PatternTile /> },
-  { slug: 'hoth', label: '05 · hoth', tile: <HothTile /> },
+  { slug: 'pattern', label: '03 · pattern', tile: <PatternTile /> },
+  { slug: 'hoth', label: '04 · hoth', tile: <HothTile /> },
 ]
 
 /*
@@ -144,95 +144,44 @@ export function CodeTagline() {
 
 /*
  * The line under the tagline, set as the comment on the declaration.
- * Deliberately plain and confident — no hedge, no comparison; the site
- * around it is the evidence. (Earlier drafts qualified the claim —
- * "real enough to user-test" — and Luke cut them for sounding weak.)
+ * This is the story in one sentence: one person holding the design, the
+ * build, and the outcome. Plain and positive — no hedge, no comparison;
+ * the site around it is the evidence. (Earlier drafts qualified the
+ * claim — "real enough to user-test" — and Luke cut them for sounding
+ * weak.)
  */
 export function CredComment() {
   return (
     <p className="code-cred">
-      <span>{'// I design and build.'}</span>
+      <span>{'// I design it, build it, and own the outcome.'}</span>
     </p>
   )
 }
 
 /*
- * The contact card as a real VS Code editor window — contact.ts. macOS
- * title bar, tab strip with the TS icon, breadcrumbs, Dark+ syntax colors.
- * The string values are the real links (email keeps EmailLink's
- * copy-to-clipboard toast). No selection frame — it reads as an actual
- * window sitting on the canvas (Luke's call).
+ * The landing lede, shared by the desktop canvas and the mobile stack:
+ * name, the code tagline, the one-line story, and three plain links.
+ * Everything here that looks clickable is clickable — the contact.ts
+ * editor window this replaced carried real links inside decorative
+ * window chrome, which read as a thing to click and mostly wasn't.
  */
-export function ContactCard() {
+export function IntroLede() {
   return (
-    <div className="canvas-contact">
-      <div className="code-card">
-        <div className="code-card__bar" aria-hidden="true">
-          <span className="code-card__dot code-card__dot--r" />
-          <span className="code-card__dot code-card__dot--y" />
-          <span className="code-card__dot code-card__dot--g" />
-          <span className="code-card__file">contact.ts — portfolio</span>
-        </div>
-        <div className="code-card__tabs" aria-hidden="true">
-          <span className="code-card__tab">
-            <span className="code-card__tsicon">TS</span>
-            contact.ts
-            <span className="code-card__tabclose">×</span>
-          </span>
-        </div>
-        <div className="code-card__crumbs" aria-hidden="true">
-          src <span className="code-card__crumb-sep">›</span> contact.ts
-        </div>
-        <ol className="code-card__body">
-          <li>
-            <span className="cc-comment">{'// if you like my work, contact me!'}</span>
-          </li>
-          <li>
-            <span className="cc-kw">export const</span> <span className="cc-id">luke</span>{' '}
-            <span className="cc-op">= {'{'}</span>
-          </li>
-          <li className="cc-indent">
-            <span className="cc-prop">role</span>
-            <span className="cc-op">:</span> <span className="cc-str">&apos;product designer&apos;</span>
-            <span className="cc-op">,</span>
-          </li>
-          <li className="cc-indent">
-            <span className="cc-prop">email</span>
-            <span className="cc-op">:</span>{' '}
-            <EmailLink className="cc-str cc-link">&apos;{SITE.email}&apos;</EmailLink>
-            <span className="cc-op">,</span>
-          </li>
-          <li className="cc-indent">
-            <span className="cc-prop">linkedin</span>
-            <span className="cc-op">:</span>{' '}
-            <a
-              className="cc-str cc-link"
-              href={SITE.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              &apos;/in/lukewoodstech&apos;
-            </a>
-            <span className="cc-op">,</span>
-          </li>
-          <li className="cc-indent">
-            <span className="cc-prop">resume</span>
-            <span className="cc-op">:</span>{' '}
-            <a
-              className="cc-str cc-link"
-              href={SITE.resume}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              &apos;{SITE.resume}&apos;
-            </a>
-            <span className="cc-op">,</span>
-          </li>
-          <li>
-            <span className="cc-op">{'}'}</span>
-          </li>
-        </ol>
-      </div>
+    <div className="intro-lede">
+      <h1 className="intro-name">luke woods</h1>
+      <p className="canvas-intro__highlight-wrap">
+        <CodeTagline />
+      </p>
+      <CredComment />
+      <nav className="intro-links" aria-label="Contact">
+        <EmailLink className="footer-link" />
+        <a className="footer-link" href={SITE.linkedin} target="_blank" rel="noopener noreferrer">
+          linkedin
+        </a>
+        <a className="footer-link" href={SITE.resume} target="_blank" rel="noopener noreferrer">
+          résumé
+        </a>
+      </nav>
     </div>
   )
 }

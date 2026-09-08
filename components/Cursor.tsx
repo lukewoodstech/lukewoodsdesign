@@ -97,7 +97,7 @@ export default function Cursor() {
     }
 
     const BTN_SEL =
-      '.btn, .footer-link, .chat-pg__send, .chat-pg__contact-btn, .chat-pg__retry, ' +
+      '.btn, .footer-link, .term-pg__send, .term-pg__plus, .ai-card__expand, .ai-card__send, ' +
       '.canvas-nav__btn, .canvas-outro__cta, .pub-card__publish, .resume-doc__dl, ' +
       '.lcs-seg__btn, .lcs-lightbox__close'
     const TEXT_SEL = 'p, h1, h2, h3, blockquote'

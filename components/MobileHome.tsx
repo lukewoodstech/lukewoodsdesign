@@ -4,22 +4,15 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import EmailLink from './EmailLink'
 import LukeAiCard from './LukeAiCard'
-import LocalTimeLine from './LocalTimeLine'
-import {
-  AboutReadme,
-  CodeTagline,
-  ContactCard,
-  CredComment,
-  SelectionHandles,
-  WORK_TILES,
-} from './CanvasBits'
+import { AboutReadme, IntroLede, SelectionHandles, WORK_TILES } from './CanvasBits'
 import { SITE } from '@/lib/site'
 
 /*
  * The mobile homepage: the desktop canvas with the glide removed, laid out as
  * a plain queenie.works-style vertical stack. Same dressing — dot grid,
- * highlight tagline, selected-object contact card, numbered work cards —
- * but everything scrolls normally under a fixed name + hamburger bar.
+ * highlight tagline, numbered work cards — but everything scrolls normally
+ * under a fixed name + hamburger bar. Luke AI is the hero here too: it sits
+ * directly under the lede, before any case study.
  *
  * The hamburger opens a full-screen menu of oversized right-aligned links,
  * mirroring Queenie's mobile nav. It's the whole nav on this layout, so the
@@ -80,15 +73,20 @@ export default function MobileHome() {
       )}
 
       <div className="mhome__inner">
-        {/* ── Hero: highlight tagline + contact card ── */}
+        {/* ── Hero: name, tagline, links, then the live Luke AI window ── */}
         <section className="mhome-hero">
-          <p className="canvas-intro__highlight-wrap">
-            <CodeTagline />
-          </p>
-          <CredComment />
-          <LocalTimeLine className="mhome-hero__time" />
+          <IntroLede />
 
-          <ContactCard />
+          {/* Same card as the desktop landing. The menu's "luke ai" scrolls
+              here; the card's expand button opens the full /chat page. */}
+          <div className="mhome-work__item mhome-hero__ai" id="luke-ai">
+            <span className="mhome-label" aria-hidden="true">
+              luke-ai · ask it anything
+            </span>
+            <div className="mhome-card mhome-card--ai">
+              <LukeAiCard />
+            </div>
+          </div>
         </section>
 
         {/* ── Work: the canvas cards as a plain stack ── */}
@@ -96,18 +94,6 @@ export default function MobileHome() {
           <h2 id="mhome-work-heading" className="mhome-label">
             work
           </h2>
-          {/* Live Luke AI window — same card as the canvas, stacked first
-              like on the desktop strip. The menu's "luke ai" scrolls here;
-              the card itself links on to the full /chat page. */}
-          <div className="mhome-work__item" id="luke-ai">
-            <span className="mhome-label" aria-hidden="true">
-              01 · luke ai — ask it anything
-            </span>
-            <div className="mhome-card mhome-card--ai">
-              <LukeAiCard />
-              <SelectionHandles />
-            </div>
-          </div>
 
           {WORK_TILES.map((item) => (
             <div key={item.slug} className="mhome-work__item">
@@ -124,7 +110,7 @@ export default function MobileHome() {
 
         {/* ── About: the polaroid pair, minus the desk clutter ── */}
         <section className="mhome-about" id="about" aria-label="About Luke">
-          <h2 className="mhome-label">06 · about me</h2>
+          <h2 className="mhome-label">05 · about me</h2>
           <div className="mhome-polaroids">
             <figure className="polaroid polaroid--main mhome-polaroid">
               <Image

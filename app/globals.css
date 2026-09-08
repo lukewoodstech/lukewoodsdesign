@@ -227,15 +227,15 @@ p a {
 .term-nav__line:focus-visible,
 .pub-card__links a:focus-visible,
 .resume-md__dl:focus-visible,
-.chat-pg__send:focus-visible,
-.chat-pg__contact-btn:focus-visible,
-.chat-pg__retry:focus-visible,
-.chat-pg__menu:focus-visible,
-.chat-pg__plus-btn:focus-visible,
-.sidebar__rail-btn:focus-visible,
-.sidebar__new:focus-visible,
-.sidebar__item:focus-visible,
-.sidebar__delete:focus-visible {
+.term-pg__send:focus-visible,
+.term-pg__plus:focus-visible,
+.term-pg__panel-btn:focus-visible,
+.term-pg__plus-item:focus-visible,
+.term-hist__new:focus-visible,
+.term-hist__item:focus-visible,
+.term-hist__delete:focus-visible,
+.term-hist__modal-cancel:focus-visible,
+.term-hist__modal-delete:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
@@ -389,764 +389,6 @@ p a {
 
 .btn--hero {
   font-size: clamp(1rem, 2vw, 1.5rem);
-}
-
-/* ─── Sidebar ─── */
-
-/*
-  Collapsed: 52px rail (icon strip) always visible on desktop.
-  Expanded:  260px — panel slides over the rail from the left.
-  Mobile:    rail hidden, entire sidebar starts at 0, opens as overlay.
-*/
-
-.sidebar {
-  position: relative;
-  width: 52px;
-  flex-shrink: 0;
-  background: #0d0d12;
-  overflow: hidden;
-  transition: width 0.22s var(--ease-out-quint);
-}
-
-.sidebar--open {
-  width: 260px;
-}
-
-/* Always-visible icon strip */
-.sidebar__rail {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 52px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0.6rem 0;
-  gap: 0.1rem;
-  z-index: 1;
-}
-
-/* Icon buttons used in both rail and panel header */
-.sidebar__rail-btn {
-  width: 40px;
-  height: 40px;
-  background: none;
-  border: none;
-  color: #fff;
-  cursor: none !important;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s ease;
-  flex-shrink: 0;
-}
-
-.sidebar__rail-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.sidebar__rail-item {
-  position: relative;
-}
-
-/* Positioned from JS (fixed, beside the rail button); looks live here so the
-   component and the stylesheet can't drift apart. */
-.sidebar__tooltip {
-  position: fixed;
-  transform: translateY(-50%);
-  background: #2a2a36;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.03em;
-  padding: 5px 10px;
-  border-radius: 8px;
-  white-space: nowrap;
-  pointer-events: none;
-  z-index: 9999;
-}
-
-/* Expanded panel — slides over the rail */
-.sidebar__panel {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 260px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background: #0d0d12;
-  transform: translateX(-260px);
-  transition: transform 0.22s var(--ease-out-quint);
-  z-index: 2;
-}
-
-.sidebar--open .sidebar__panel {
-  transform: translateX(0);
-}
-
-/* Hide rail icons while panel is visible so they don't bleed through */
-.sidebar--open .sidebar__rail {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Panel header: "luke ai." + collapse button */
-.sidebar__panel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.75rem 0.5rem 0.75rem 1rem;
-  height: 60px;
-  flex-shrink: 0;
-}
-
-.sidebar__brand {
-  font-size: 1.15rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: #fff;
-  user-select: none;
-}
-
-/* New chat button inside panel */
-.sidebar__new {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin: 0 0.5rem 0.5rem;
-  padding: 0.6rem 0.75rem;
-  background: none;
-  border: none;
-  border-radius: 8px;
-  color: #fff;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: none !important;
-  transition: background 0.2s ease;
-  flex-shrink: 0;
-  white-space: nowrap;
-  width: calc(100% - 1rem);
-}
-
-.sidebar__new:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-/* Conversation list */
-.sidebar__list {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 0.25rem 0.5rem 1rem;
-  scrollbar-width: none;
-}
-
-.sidebar__list::-webkit-scrollbar {
-  display: none;
-}
-
-.sidebar__section-label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #fff;
-  padding: 0.25rem 0.6rem 0.4rem;
-  margin: 0;
-}
-
-.sidebar__empty {
-  font-size: 0.75rem;
-  color: #fff;
-  padding: 0.5rem 0.5rem;
-  margin: 0;
-}
-
-.sidebar__item-wrap {
-  display: flex;
-  align-items: center;
-  border-radius: 8px;
-  transition: background 0.2s ease;
-}
-
-.sidebar__item-wrap:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.sidebar__item-wrap--active {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.sidebar__item {
-  flex: 1;
-  min-width: 0;
-  text-align: left;
-  background: none;
-  border: none;
-  color: #fff;
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  padding: 0.5rem 0.6rem;
-  cursor: none !important;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.4;
-}
-
-.sidebar__delete {
-  flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.35);
-  cursor: none !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  margin-right: 4px;
-  opacity: 0;
-  transition: opacity 0.2s ease, color 0.2s ease, background 0.2s ease;
-}
-
-.sidebar__item-wrap:hover .sidebar__delete {
-  opacity: 1;
-}
-
-.sidebar__delete:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.sidebar__backdrop {
-  display: none;
-}
-
-.sidebar__modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 200;
-}
-
-.sidebar__modal {
-  background: #16161e;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 28px 28px 24px;
-  width: 340px;
-  max-width: calc(100vw - 2rem);
-}
-
-.sidebar__modal-title {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 6px;
-  letter-spacing: -0.01em;
-}
-
-.sidebar__modal-body {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.45);
-  margin-bottom: 24px;
-  line-height: 1.6;
-}
-
-.sidebar__modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 6px;
-}
-
-.sidebar__modal-cancel {
-  padding: 6px 14px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: transparent;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.75rem;
-  font-family: inherit;
-  cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.sidebar__modal-cancel:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.sidebar__modal-delete {
-  padding: 6px 14px;
-  border-radius: 8px;
-  border: none;
-  background: #9b2335;
-  color: #fff;
-  font-size: 0.75rem;
-  font-family: inherit;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.sidebar__modal-delete:hover {
-  background: #b52a3e;
-}
-
-/* ─── Chat page (/chat) ─── */
-.chat-pg {
-  /* dvh so the input clears iOS Safari's bottom bar; vh is the fallback */
-  height: 100vh;
-  height: 100dvh;
-  display: flex;
-  flex-direction: row;
-  overflow: hidden;
-}
-
-.chat-pg__main {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.chat-pg__header {
-  display: flex;
-  align-items: center;
-  padding: 1.25rem 1.5rem;
-  gap: 0.5rem;
-  flex-shrink: 0;
-}
-
-.chat-pg__menu {
-  background: none;
-  border: none;
-  color: #fff;
-  opacity: 0.5;
-  cursor: none !important;
-  padding: 0.25rem 0.5rem;
-  transition: opacity 0.2s ease;
-  flex-shrink: 0;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.chat-pg__menu:hover {
-  opacity: 0.9;
-}
-
-.chat-pg__close {
-  margin-left: auto;
-  flex-shrink: 0;
-  padding: 0.9em;
-  line-height: 0;
-}
-
-.chat-pg__messages {
-  flex: 1;
-  overflow-y: auto;
-  scrollbar-width: none;
-  padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 5vw, 3rem);
-}
-
-.chat-pg__messages::-webkit-scrollbar { display: none; }
-
-.chat-pg__inner {
-  max-width: 720px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1.75rem;
-}
-
-.chat-pg__msg {
-  display: flex;
-  flex-direction: column;
-}
-
-.chat-pg__msg--user {
-  align-items: flex-end;
-}
-
-.chat-pg__msg--assistant {
-  align-items: flex-start;
-}
-
-/* User bubble */
-.chat-pg__bubble {
-  background: #2a2a36;
-  border-radius: 12px;
-  padding: 0.75rem 1rem;
-  max-width: 80%;
-  font-size: 1rem;
-  line-height: var(--mono-line-height);
-  color: #fff;
-}
-
-/* AI text with markdown */
-.chat-pg__ai-text {
-  font-size: 1rem;
-  line-height: var(--mono-line-height);
-  color: #fff;
-  max-width: 100%;
-}
-
-.chat-pg__ai-text p {
-  margin: 0 0 0.9rem;
-}
-
-.chat-pg__ai-text p:last-child {
-  margin-bottom: 0;
-}
-
-.chat-pg__ai-text ul,
-.chat-pg__ai-text ol {
-  margin: 0 0 0.9rem 1.4rem;
-  padding: 0;
-}
-
-.chat-pg__ai-text li {
-  margin-bottom: 0.3rem;
-  list-style: disc;
-}
-
-.chat-pg__ai-text ol li {
-  list-style: decimal;
-}
-
-.chat-pg__ai-text code {
-  background: rgba(255, 255, 255, 0.08);
-  padding: 0.1em 0.4em;
-  border-radius: 4px;
-  font-size: 0.9em;
-}
-
-.chat-pg__ai-text pre {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 1rem;
-  overflow-x: auto;
-  margin: 0 0 0.9rem;
-}
-
-.chat-pg__ai-text pre code {
-  background: none;
-  padding: 0;
-}
-
-.chat-pg__ai-text strong {
-  color: #fff;
-  font-weight: 600;
-}
-
-.chat-pg__contact-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-  margin-right: 0.5rem;
-  padding: 0.65em 1.1em;
-  border: 1.5px solid #fff;
-  border-radius: 3em;
-  color: #fff;
-  font-size: 0.82rem;
-  font-family: var(--font-mono);
-  text-decoration: none;
-  background: transparent;
-  cursor: none !important;
-  transition: border-color 0.3s ease, opacity 0.3s ease;
-}
-
-/* Same rest state as .btn, same hover: the magnetized cursor pill takes
-   over as the outline. */
-.chat-pg__contact-btn:hover {
-  border-color: transparent;
-}
-
-/* Typing dots */
-.chat-pg__typing {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  min-height: 1.65em;
-  margin: 0;
-  padding: 0;
-}
-
-.chat-pg__typing span {
-  display: inline-block;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.45);
-  animation: typingBounce 1.2s ease-in-out infinite;
-}
-.chat-pg__typing span:nth-child(2) { animation-delay: 0.18s; }
-.chat-pg__typing span:nth-child(3) { animation-delay: 0.36s; }
-
-@keyframes typingBounce {
-  0%, 60%, 100% { transform: translateY(0);    opacity: 0.35; }
-  30%            { transform: translateY(-5px); opacity: 1;    }
-}
-
-/* Zero state — centered input with heading */
-.chat-pg__zero {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0 clamp(1rem, 5vw, 3rem) 12vh;
-  gap: 2rem;
-  width: 100%;
-}
-
-.chat-pg__zero-heading {
-  font-size: clamp(1.2rem, 2.2vw, 1.8rem);
-  font-weight: 400;
-  color: #fff;
-  text-align: center;
-  margin: 0;
-  line-height: 1.25;
-  white-space: nowrap;
-}
-
-/* One line doesn't fit a phone even at the clamp floor — let it wrap */
-@media (max-width: 40em) {
-  .chat-pg__zero-heading {
-    white-space: normal;
-  }
-}
-
-.chat-pg__float-wrap--zero {
-  width: 100%;
-  max-width: 640px;
-}
-
-.chat-pg__float-wrap--zero .chat-pg__float-box {
-  border-color: rgba(0, 143, 255, 0.4);
-  box-shadow:
-    0 0 0 1px rgba(0, 143, 255, 0.3),
-    0 0 16px rgba(0, 143, 255, 0.45),
-    0 0 40px rgba(0, 143, 255, 0.3),
-    0 0 80px rgba(0, 100, 200, 0.2);
-}
-
-
-
-.chat-pg__float-wrap--zero .chat-pg__send {
-  width: 36px;
-  height: 36px;
-  flex-shrink: 0;
-}
-
-/* Floating input bar */
-.chat-pg__footer {
-  flex-shrink: 0;
-  padding: 0.75rem clamp(1rem, 5vw, 3rem) 1.75rem;
-}
-
-.chat-pg__float-wrap {
-  max-width: 720px;
-  margin: 0 auto;
-}
-
-.chat-pg__float-wrap-inner {
-  width: 100%;
-}
-
-.chat-pg__plus-btn {
-  flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  border: none;
-  border-radius: 0;
-  outline: none;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: color 0.2s ease;
-  padding: 0;
-  appearance: none;
-}
-
-.chat-pg__plus-btn:hover {
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.chat-pg__plus-menu {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 0;
-  right: 0;
-  background: #1a1a24;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  overflow: hidden;
-  z-index: 50;
-}
-
-.chat-pg__plus-menu--below {
-  bottom: unset;
-  top: calc(100% + 8px);
-}
-
-.chat-pg__plus-item {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
-  width: 100%;
-  padding: 12px 16px;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  cursor: pointer;
-  text-align: left;
-  transition: background 0.2s ease;
-}
-
-.chat-pg__plus-item:last-child {
-  border-bottom: none;
-}
-
-.chat-pg__plus-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.chat-pg__plus-item-label {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #fff;
-}
-
-.chat-pg__plus-item-desc {
-  font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.chat-pg__float-box {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: #1e1e28;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 9999px;
-  padding: 0.75rem;
-  transition: border-color 0.2s ease;
-}
-
-.chat-pg__float-box:focus-within {
-  border-color: rgba(255, 255, 255, 0.22);
-}
-
-.chat-pg__input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: #fff;
-  font-family: var(--font-mono);
-  font-size: 1rem;
-  cursor: none !important;
-  caret-color: var(--mono-blue);
-  min-width: 0;
-  resize: none;
-  overflow-y: auto;
-  line-height: 1.5;
-  max-height: 180px;
-  padding: 0;
-  scrollbar-width: none;
-  display: block;
-}
-
-.chat-pg__input::-webkit-scrollbar { display: none; }
-
-.chat-pg__input::placeholder {
-  color: rgba(255, 255, 255, 0.45);
-}
-
-.chat-pg__input:disabled {
-  opacity: 0.5;
-}
-
-.chat-pg__send {
-  flex-shrink: 0;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: var(--mono-blue);
-  border: none;
-  color: #fff;
-  font-size: 1.1rem;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: none !important;
-  transition: background 0.2s ease, opacity 0.2s ease;
-}
-
-.chat-pg__send:disabled {
-  background: rgba(0, 143, 255, 0.2);
-  color: rgba(255, 255, 255, 0.3);
-  pointer-events: none;
-}
-
-/* AI sender label above assistant messages */
-.chat-pg__ai-label {
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.3);
-  margin-bottom: 0.35rem;
-  display: block;
-  user-select: none;
-}
-
-
-/* Error state + retry button */
-.chat-pg__error {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.chat-pg__retry {
-  background: none;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 3em;
-  color: rgba(255, 255, 255, 0.55);
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  padding: 0.4em 0.9em;
-  cursor: none !important;
-  transition: border-color 0.2s ease, color 0.2s ease;
-}
-
-.chat-pg__retry:hover {
-  border-color: rgba(255, 255, 255, 0.45);
-  color: #fff;
 }
 
 /* ─── Work Grid ─── */
@@ -1490,7 +732,7 @@ p a {
 /*
   Fixed, not sticky: on mobile `.workgrid` is its own 100vh scroll container,
   so a sticky header in normal flow scrolls out of reach behind it. z-index
-  sits above the tile art and `.tile-footer` (20), below `.sidebar` (150).
+  sits above the tile art and `.tile-footer` (20).
 */
 .sitenav {
   position: fixed;
@@ -1741,48 +983,6 @@ p a {
     flex-wrap: wrap;
     gap: 0.25rem;
     margin-left: -0.75rem;
-  }
-}
-
-/* Chat header: shrink title on small screens to avoid overlap with back btn */
-@media (max-width: 36em) {
-  .chat-pg__header {
-    padding: 0.75rem 1rem;
-  }
-}
-
-/* Desktop: hide the header menu btn (rail handles toggle) */
-@media (min-width: 48em) {
-  .chat-pg__menu {
-    display: none !important;
-  }
-}
-
-/* Mobile: sidebar is fully hidden; opens as overlay */
-@media (max-width: 48em) {
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 0;
-    z-index: 150;
-  }
-
-  .sidebar--open {
-    width: 260px;
-  }
-
-  .sidebar__rail {
-    display: none;
-  }
-
-  .sidebar__backdrop {
-    display: block;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 149;
   }
 }
 
@@ -2544,11 +1744,6 @@ p a {
 }
 
 /* Highlighted tagline — text painted like a live selection. */
-.canvas-intro__tag {
-  position: absolute;
-  left: 6vw;
-  top: 46vh;
-}
 
 .canvas-intro__highlight-wrap {
   margin: 0 0 1.1rem;
@@ -2566,40 +1761,30 @@ p a {
   padding: 0.1em 0.35em;
 }
 
-.canvas-intro__cred {
-  margin: 0;
-  font-size: clamp(1rem, 1.4vw, 1.4rem);
-  font-family: var(--font-sans);
-  color: rgba(255, 255, 255, 0.9);
-}
-
-/* Name plate across the bottom, Queenie-style but lowercase like the
-   rest of the site. vw-sized so it always spans the landing screen. */
-.canvas-intro__giant {
-  position: absolute;
-  left: 3vw;
-  bottom: 1vh;
-  margin: 0;
-  font-family: var(--font-sans);
-  font-size: 14.5vw;
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 0.9;
-  white-space: nowrap;
-  color: #fff;
-  user-select: none;
-}
 
 .canvas-intro__hint {
   position: absolute;
   right: 4vw;
-  top: 52vh;
+  bottom: 5vh;
   margin: 0;
-  font-size: 1.35rem;
+  padding: 0.5rem 0.2rem;
+  font-family: var(--font-sans);
+  font-size: 1.1rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.92);
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  cursor: none;
+  transition: border-color 0.2s ease;
+}
+
+.canvas-intro__hint:hover,
+.canvas-intro__hint:focus-visible {
+  border-bottom-color: var(--mono-blue);
+  outline: none;
 }
 
 .canvas-intro__arrow {
@@ -2617,16 +1802,7 @@ p a {
   }
 }
 
-/* ── Contact card: a "selected object" on the canvas ────────────── */
-
-.canvas-contact {
-  position: absolute;
-  left: 58vw;
-  top: 9vh;
-  width: 30vw;
-}
-
-/* ── contact.ts: a real VS Code editor window (Dark+) ───────────── */
+/* ── code-card: a VS Code editor window (README, the finale) ─────── */
 
 .code-card {
   position: relative;
@@ -2695,39 +1871,12 @@ p a {
   color: #e7e7e7;
 }
 
-.code-card__tsicon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 15px;
-  height: 15px;
-  border-radius: 2px;
-  background: #3178c6;
-  color: #fff;
-  font-size: 0.5rem;
-  font-weight: 700;
-  letter-spacing: 0;
-}
 
 .code-card__tabclose {
   margin-left: 0.3rem;
   color: rgba(255, 255, 255, 0.5);
   font-size: 0.85rem;
   line-height: 1;
-}
-
-/* Breadcrumbs row */
-.code-card__crumbs {
-  padding: 0.28rem 1rem;
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  color: #9d9d9d;
-  background: #1e1e1e;
-}
-
-.code-card__crumb-sep {
-  margin: 0 0.25rem;
-  color: #6e6e6e;
 }
 
 /* Body: CSS-counter line numbers in the gutter */
@@ -2755,56 +1904,7 @@ p a {
   user-select: none;
 }
 
-.cc-indent {
-  padding-left: 1.1em;
-}
-
-/* Syntax shades from the site palette — Dark+'s foreign blues read as
-   inconsistent against --mono-blue, so the editor borrows our colors:
-   pink keywords, one blue identifier, green string links, white props. */
-.cc-comment {
-  color: rgba(255, 255, 255, 0.45);
-}
-
-.cc-kw {
-  color: var(--mono-pink);
-}
-
-.cc-id {
-  color: var(--mono-blue);
-}
-
-.cc-op {
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.cc-prop {
-  color: rgba(255, 255, 255, 0.92);
-}
-
-.cc-str {
-  color: var(--mono-green);
-}
-
-/* Clickable strings: underline like real editor link-detection */
-a.cc-link {
-  color: var(--mono-green);
-  text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--mono-green) 45%, transparent);
-  text-underline-offset: 3px;
-  transition: text-decoration-color 0.2s ease;
-}
-
-a.cc-link:hover {
-  text-decoration-color: var(--mono-green);
-}
-
-a.cc-link:focus-visible {
-  outline: 2px solid var(--mono-blue);
-  outline-offset: 2px;
-}
-
-/* Selection handles shared by the contact card and the highlight. */
+/* Selection handles on the highlight tagline (and the mobile cards). */
 .sel-handle {
   position: absolute;
   width: 9px;
@@ -3522,22 +2622,9 @@ a.cc-link:focus-visible {
   margin: 0 6px 1rem;
 }
 
-.mhome-hero__cred {
-  margin: 0 6px;
-  font-family: var(--font-sans), sans-serif;
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.9);
-}
 
 /* The contact card is an absolutely-placed canvas object on desktop;
    here it sits in flow. 15px margins clear the offset outline + handles. */
-.mhome .canvas-contact {
-  position: relative;
-  left: auto;
-  top: auto;
-  width: auto;
-  margin: 3rem 15px 1.5rem;
-}
 
 /* ── Work: numbered cards in a plain stack ───────────────────────── */
 
@@ -3948,21 +3035,9 @@ a.cc-link:focus-visible {
   height: min(52vh, 30rem);
 }
 
-/* Mobile touch targets: the code-card links render at ~15px tall and the
-   terminal's send button at 26px — well under comfortable thumb size.
-   Looser line spacing plus padded (layout-neutral, negative-margin) hit
-   boxes get each row to ~28px+ without changing the design. */
+/* Mobile touch targets: the terminal's send button renders at 26px —
+   well under comfortable thumb size. */
 @media (max-width: 47.99em) {
-  .code-card__body {
-    line-height: 2.1;
-  }
-
-  a.cc-link {
-    display: inline-block;
-    padding: 0.45em 0.2em;
-    margin: -0.45em -0.2em;
-  }
-
   .ai-card__send {
     width: 40px;
     height: 40px;
@@ -3974,9 +3049,8 @@ a.cc-link:focus-visible {
 }
 
 /* ────────────────────────────────────────────────────────────────
-   Landing personality pass (2026-08-31): code tagline, vector-object
-   name plate, local-time line. Shared by the desktop canvas and the
-   mobile stack.
+   Landing personality pass (2026-08-31): the code tagline and its
+   comment line. Shared by the desktop canvas and the mobile stack.
    ──────────────────────────────────────────────────────────────── */
 
 /* ── Tagline: a line of code inside the blue selection highlight ── */
@@ -4018,134 +3092,114 @@ a.cc-link:focus-visible {
   margin: 0 6px;
 }
 
-/* ── Vector-object name plate ─────────────────────────────────────
-   Letters render outlined and fill solid as the cursor sweeps them
-   (state via .is-filled from VectorName). Browsers without
-   -webkit-text-stroke keep the plain solid name. */
+/* ── The landing lede: name → tagline → story line → plain links ──
+   Left half of the desktop landing, vertically centred; the top of the
+   mobile stack. Every element that looks clickable is. */
 
-@supports (-webkit-text-stroke: 1px #fff) {
-  .vec-name [data-letter] {
-    color: transparent;
-    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.75);
-    transition: color 0.5s ease, -webkit-text-stroke-color 0.5s ease;
-  }
-
-  .vec-name [data-letter].is-filled {
-    color: #fff;
-    -webkit-text-stroke-color: #fff;
-  }
-}
-
-/* Figma-style anchor points sitting on the letterform strokes */
-.vec-anchor {
+.intro-lede {
   position: absolute;
-  width: 8px;
-  height: 8px;
-  background: #0b0b10;
-  border: 1px solid var(--mono-blue);
-  transition: opacity 0.6s ease;
+  left: 6vw;
+  top: 50%;
+  width: 42vw;
+  transform: translateY(-50%);
 }
 
-/* Bezier handle arm off one anchor, hollow circle at its end */
-.vec-anchor__arm {
-  position: absolute;
-  left: 6px;
-  top: 3px;
-  width: 42px;
-  height: 1px;
-  background: var(--mono-blue);
-  transform: rotate(-24deg);
-  transform-origin: left center;
+.intro-name {
+  margin: 0 0 1.6rem;
+  font-family: var(--font-sans);
+  font-size: clamp(3.2rem, 6.4vw, 7rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  color: #fff;
 }
 
-.vec-anchor__arm::after {
-  content: '';
-  position: absolute;
-  right: -3px;
-  top: -3px;
-  width: 7px;
-  height: 7px;
-  border: 1px solid var(--mono-blue);
-  border-radius: 50%;
-  background: #0b0b10;
-}
-
-/* The drawing is finished — the tool chrome puts itself away */
-.vec-name.is-done .vec-anchor {
-  opacity: 0;
-}
-
-/*
- * Inspect-element hover: a devtools-style highlight box over the name
- * with a measurement chip — h1.vec-name and its real rendered px.
- */
-.vec-inspect {
-  position: absolute;
-  inset: 0;
-  border: 1px solid var(--mono-blue);
-  background: rgba(0, 143, 255, 0.07);
-  pointer-events: none;
-  animation: vec-inspect-in 0.12s ease-out;
-}
-
-@keyframes vec-inspect-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.vec-inspect__chip {
-  position: absolute;
-  top: -2.3rem;
-  left: 0;
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.45rem;
-  white-space: nowrap;
-  background: #1b1b24;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 4px;
-  padding: 0.28rem 0.65rem;
+.intro-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1.6rem;
+  margin-top: 1.8rem;
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 400;
-  letter-spacing: 0.03em;
-  line-height: 1;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
 }
 
-.vec-inspect__chip b {
-  color: var(--mono-blue);
-  font-weight: 500;
+/* Underlined like links, not styled like buttons — the point is that
+   nothing on this screen pretends. */
+.intro-links .footer-link {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+  text-underline-offset: 4px;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
 }
 
-.vec-inspect__chip i {
-  color: var(--mono-pink);
-  font-style: normal;
+.intro-links .footer-link:hover {
+  color: #fff;
+  text-decoration-color: var(--mono-blue);
 }
 
-.vec-inspect__dims {
-  color: rgba(255, 255, 255, 0.65);
-  font-variant-numeric: tabular-nums;
+/* The hero: Luke AI's terminal window fills the right half of the
+   landing. Sized to leave the fixed nav terminal (top-left) and the
+   scroll button (bottom-right) clear. */
+.canvas-intro__ai {
+  position: absolute;
+  left: 52vw;
+  top: 14vh;
+  width: 42vw;
+  height: 70vh;
 }
 
-/* ── Local time + location line ─────────────────────────────────── */
-
-.local-time {
-  margin: 1.1rem 0 0;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.5);
-  /* ticking seconds must not wiggle the line */
-  font-variant-numeric: tabular-nums;
+/* Hero scale: the same window at card size runs ~0.8rem type; as the
+   landing's main object it gets a step up, and the chips read as the
+   prompts they are rather than footnotes. */
+.canvas-intro__ai .ai-card__boot,
+.canvas-intro__ai .ai-card__greeting,
+.canvas-intro__ai .ai-card__input,
+.canvas-intro__ai .ai-card__msg--user {
+  font-size: 0.98rem;
 }
 
-.mhome-hero__time {
-  margin: 0.9rem 6px 0;
+.canvas-intro__ai .ai-card__msg--ai {
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
+.canvas-intro__ai .ai-card__chip {
+  font-size: 0.94rem;
+  color: #b0b0b0;
+  padding: 0.22rem 0;
+}
+
+.canvas-intro__ai .ai-card__chip:hover {
+  color: #fff;
+}
+
+.canvas-intro__ai .ai-card__body {
+  padding: 1.2rem 1.3rem;
+}
+
+/* On mobile the lede stacks normally and the AI window follows it. */
+.mhome-hero .intro-lede {
+  position: static;
+  width: auto;
+  transform: none;
+}
+
+/* 6px insets match the tagline's handle clearance */
+.mhome-hero .intro-name {
+  font-size: clamp(2.6rem, 13vw, 4rem);
+  margin: 0 6px 1.2rem;
+}
+
+.mhome-hero .intro-links {
+  margin: 1.8rem 6px 0;
+  font-size: 0.95rem;
+  gap: 0.4rem 1.4rem;
+}
+
+.mhome-hero__ai {
+  margin-top: 2.4rem;
 }
 
 /* ─── 404 ─── */
@@ -4194,4 +3248,670 @@ a.cc-link:focus-visible {
 
 .notfound__home {
   margin-top: 0.5rem;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   Case-study story devices (2026-09): the three-lens strip and the
+   "ask luke-ai" outro. Both tie the studies back to the landing —
+   the code tagline and the terminal.
+   ──────────────────────────────────────────────────────────────── */
+
+.cs-lenses {
+  margin-top: 3rem;
+  padding: 1.6rem 0 0.4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cs-lenses__decl {
+  margin: 0 0 1.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.cs-lenses__grid {
+  display: grid;
+  gap: 1.4rem 2.2rem;
+  margin: 0;
+}
+
+@media (min-width: 40em) {
+  .cs-lenses__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.cs-lenses__label {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
+}
+
+.cs-lenses__text {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* The three lens colors, from the site palette: blue = craft, green =
+   built, pink = the business call. Same mapping as the tile tag pills. */
+.lens-design {
+  color: var(--mono-blue);
+}
+
+.lens-code {
+  color: var(--mono-green);
+}
+
+.lens-business {
+  color: var(--mono-pink);
+}
+
+/* "Ask luke-ai": the terminal again, with real links for prompts */
+.cs-ask {
+  margin-top: 0.5rem;
+  padding: 1.1rem 1.3rem 1.2rem;
+  background: #1e1e1e;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+}
+
+.cs-ask__boot {
+  margin: 0 0 0.7rem;
+  font-size: 0.9rem;
+  color: #cccccc;
+}
+
+.cs-ask__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.cs-ask__link {
+  display: inline-block;
+  padding: 0.25rem 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #b0b0b0;
+  transition: color 0.15s ease;
+}
+
+.cs-ask__link::before {
+  content: '↳ ';
+  color: #6e7681;
+}
+
+.cs-ask__link:hover,
+.cs-ask__link:focus-visible {
+  color: #fff;
+  outline: none;
+}
+
+.cs-ask__link--own {
+  color: var(--mono-blue);
+}
+
+.cs-ask__link--own::before {
+  content: '➜ ';
+  color: #23d18b;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   /chat — the luke-ai terminal, maximized (2026-09). The landing
+   screen's .ai-card window scaled to the viewport, with a VS Code
+   style history panel docked inside it. Reuses .ai-card__* for the
+   bar, boot line, greeting, chips, messages, thinking dots, error.
+   ──────────────────────────────────────────────────────────────── */
+
+.term-pg {
+  /* dvh so the prompt clears iOS Safari's bottom bar */
+  height: 100vh;
+  height: 100dvh;
+  padding: 20px;
+  background-color: #000;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.14) 1.5px, transparent 1.5px);
+  background-size: 30px 30px;
+}
+
+/* .ai-card supplies the window: bg, border, radius, shadow, flex column */
+.term-pg__window {
+  height: 100%;
+}
+
+.term-pg__bar {
+  padding-left: 0.6rem;
+}
+
+.term-pg__panel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-right: 0.3rem;
+  color: rgba(255, 255, 255, 0.55);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  cursor: none;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.term-pg__panel-btn:hover,
+.term-pg__panel-btn[aria-pressed='true'] {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.term-pg__body {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+}
+
+.term-pg__main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.term-pg__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+.term-pg__inner {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.6rem clamp(1rem, 3vw, 2rem) 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+/* Full-page scale: one step up from the card's 0.8rem terminal type */
+.term-pg .ai-card__boot,
+.term-pg .ai-card__greeting,
+.term-pg .ai-card__msg--user {
+  font-size: 1rem;
+}
+
+.term-pg .ai-card__chip {
+  font-size: 0.98rem;
+  color: #b0b0b0;
+  padding: 0.28rem 0;
+}
+
+.term-pg .ai-card__chip:hover {
+  color: #fff;
+}
+
+.term-pg__chips {
+  margin-top: 0.4rem;
+}
+
+.term-pg .ai-card__msg {
+  max-width: 100%;
+}
+
+.term-pg .ai-card__msg--user {
+  margin-top: 0.8rem;
+}
+
+.term-pg .ai-card__msg--ai {
+  font-size: 1.02rem;
+  line-height: 1.65;
+}
+
+.term-pg .ai-card__msg--ai p {
+  margin: 0 0 0.85em;
+}
+
+.term-pg .ai-card__msg--ai ul,
+.term-pg .ai-card__msg--ai ol {
+  margin: 0 0 0.85em;
+  padding-left: 1.4em;
+}
+
+.term-pg .ai-card__msg--ai li {
+  margin: 0.25em 0;
+}
+
+.term-pg .ai-card__msg--ai code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+
+.term-pg .ai-card__msg--ai strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ── Prompt row: full-width rule, content in the transcript's column ── */
+.term-pg__promptbar {
+  flex-shrink: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.term-pg__prompt {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.15rem;
+  padding: 0.75rem clamp(1rem, 3vw, 2rem) 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.term-pg__prompt .term-nav__arrow,
+.term-pg__prompt .term-nav__dir {
+  padding-top: 0.35rem;
+}
+
+.term-pg__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  resize: none;
+  max-height: 180px;
+  background: none;
+  border: none;
+  color: #fff;
+  font: inherit;
+  padding: 0.35rem 0 0.35rem 0.35rem;
+  outline: none;
+  caret-color: #cccccc;
+  scrollbar-width: none;
+}
+
+.term-pg__input::placeholder {
+  color: #7a7a7a;
+}
+
+.term-pg__input:disabled {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.term-pg__send {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin-top: 0.15rem;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  cursor: none;
+  transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.term-pg__send:disabled {
+  opacity: 0.35;
+}
+
+.term-pg__send:not(:disabled):hover {
+  background: #008fff;
+  border-color: #008fff;
+}
+
+/* `+` command menu, opening upward from the prompt */
+.term-pg__plus-wrap {
+  position: relative;
+  flex-shrink: 0;
+  margin-right: 0.4rem;
+}
+
+.term-pg__plus {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin-top: 0.15rem;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: none;
+  transition: transform 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.term-pg__plus:hover,
+.term-pg__plus.is-open {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.term-pg__plus.is-open {
+  transform: rotate(45deg);
+}
+
+.term-pg__plus-menu {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  min-width: 250px;
+  background: #1e1e1e;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 6px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+  padding: 0.4rem;
+  z-index: 5;
+}
+
+.term-pg__plus-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: #e7e7e7;
+  transition: background 0.15s ease;
+}
+
+.term-pg__plus-item:hover,
+.term-pg__plus-item:focus-visible {
+  background: rgba(0, 143, 255, 0.18);
+  outline: none;
+}
+
+.term-pg__plus-desc {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.45);
+  padding-left: 2.2em;
+}
+
+/* ── History panel (VS Code side panel) ── */
+.term-hist {
+  flex-shrink: 0;
+  width: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #181818;
+  border-right: 1px solid transparent;
+  font-family: var(--font-mono);
+  transition: width 0.22s var(--ease-out-quint), border-color 0.22s ease;
+}
+
+.term-hist.is-open {
+  width: 260px;
+  border-right-color: rgba(255, 255, 255, 0.1);
+}
+
+.term-hist__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem 0.5rem;
+  white-space: nowrap;
+}
+
+.term-hist__title {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.term-hist__count {
+  font-size: 0.62rem;
+  color: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  padding: 0 0.45em;
+  line-height: 1.5;
+}
+
+.term-hist__new {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0.2rem 0.6rem 0.4rem;
+  padding: 0.5rem 0.6rem;
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  background: none;
+  color: #e7e7e7;
+  font-family: inherit;
+  font-size: 0.85rem;
+  text-align: left;
+  white-space: nowrap;
+  cursor: none;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.term-hist__new:hover {
+  border-color: #008fff;
+  background: rgba(0, 143, 255, 0.1);
+}
+
+.term-hist__plus {
+  color: #23d18b;
+  font-weight: 700;
+}
+
+.term-hist__list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0.2rem 0.4rem 0.8rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+.term-hist__empty {
+  margin: 0.4rem 0.7rem;
+  font-size: 0.8rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.4);
+  white-space: nowrap;
+}
+
+.term-hist__row {
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+}
+
+.term-hist__row:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.term-hist__row.is-active {
+  background: rgba(0, 143, 255, 0.16);
+}
+
+.term-hist__item {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.6rem;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: inherit;
+  font-size: 0.82rem;
+  text-align: left;
+  cursor: none;
+}
+
+.term-hist__row.is-active .term-hist__item {
+  color: #fff;
+}
+
+.term-hist__ext {
+  color: rgba(255, 255, 255, 0.35);
+  flex-shrink: 0;
+}
+
+.term-hist__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.term-hist__delete {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-right: 0.2rem;
+  background: none;
+  border: none;
+  border-radius: 3px;
+  color: rgba(255, 255, 255, 0.4);
+  opacity: 0;
+  cursor: none;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.term-hist__row:hover .term-hist__delete,
+.term-hist__delete:focus-visible {
+  opacity: 1;
+}
+
+.term-hist__delete:hover {
+  color: #ff6b6b;
+}
+
+.term-hist__backdrop {
+  display: none;
+}
+
+/* Below 48em the panel overlays the transcript instead of pushing it */
+@media (max-width: 47.99em) {
+  .term-pg {
+    padding: 0;
+  }
+
+  .term-pg__window.ai-card {
+    border-radius: 0;
+    border-width: 0;
+  }
+
+  .term-hist {
+    position: absolute;
+    inset: 0 auto 0 0;
+    z-index: 6;
+    box-shadow: 12px 0 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .term-hist.is-open {
+    width: min(78vw, 300px);
+  }
+
+  .term-hist__backdrop {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .term-pg__send,
+  .term-pg__plus {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* rm confirmation */
+.term-hist__modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 1rem;
+}
+
+.term-hist__modal {
+  width: min(100%, 420px);
+  background: #1e1e1e;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 6px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+  padding: 1.1rem 1.2rem 1rem;
+  font-family: var(--font-mono);
+}
+
+.term-hist__modal-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  color: #fff;
+}
+
+.term-hist__modal-body {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.term-hist__modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.term-hist__modal-cancel,
+.term-hist__modal-delete {
+  padding: 0.45rem 0.8rem;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: none;
+  color: #e7e7e7;
+  font-family: inherit;
+  font-size: 0.82rem;
+  cursor: none;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.term-hist__modal-cancel:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.term-hist__modal-delete {
+  border-color: rgba(255, 107, 107, 0.5);
+  color: #ff6b6b;
+}
+
+.term-hist__modal-delete:hover {
+  background: rgba(255, 107, 107, 0.15);
 }

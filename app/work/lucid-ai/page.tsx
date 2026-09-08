@@ -13,7 +13,7 @@ import FailureTabs from '@/components/lucid/FailureTabs'
 import PrismStage from '@/components/lucid/PrismStage'
 import ZoomShot from '@/components/lucid/ZoomShot'
 import ImpactStats from '@/components/lucid/ImpactStats'
-import { Section, Reframe, FactStrip } from '@/components/CaseStudy'
+import { Section, Reframe, FactStrip, ThreeLenses, AskLukeAi } from '@/components/CaseStudy'
 import { SITE } from '@/lib/site'
 
 /*
@@ -95,6 +95,12 @@ export default function LucidCaseStudy() {
             file, running the Find docs loop. Content is the file&rsquo;s demo data.
           </figcaption>
         </Reveal>
+
+        <ThreeLenses
+          design="The panel end to end: entry point, layout system, response patterns, and the failure states every future skill inherits."
+          code="Four layouts prototyped in code so testing could measure the real thing; the working state reused from the editor assistant."
+          business="GA on every tier, free through enterprise, 12 weeks from zero, with an A/B test designed to settle the default after I left."
+        />
 
         <Reveal className="mt-12">
           <p className="cs-prose">
@@ -554,6 +560,15 @@ export default function LucidCaseStudy() {
             </p>
           </div>
         </Section>
+
+        <AskLukeAi
+          prompts={[
+            'Why did the side panel beat the modal, floating panel, and inline bar at Lucid?',
+            'What did Luke give up with the teaching first turn at Lucid, and why was it worth it?',
+            'How did engineering trade-offs change what Luke designed at Lucid?',
+            "What's the honest limitation of the Lucid docs-list assistant?",
+          ]}
+        />
 
         {/* ── Prev / next ── */}
         <nav

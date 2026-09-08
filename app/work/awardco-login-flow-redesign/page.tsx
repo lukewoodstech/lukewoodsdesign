@@ -7,7 +7,7 @@ import BeforeAfterHero from '@/components/BeforeAfterHero'
 import Reveal from '@/components/lucid/Reveal'
 import ZoomShot from '@/components/lucid/ZoomShot'
 import CompareStage from '@/components/lucid/CompareStage'
-import { Section, Prose, Bullets, Reframe, FactStrip } from '@/components/CaseStudy'
+import { Section, Prose, Bullets, Reframe, FactStrip, ThreeLenses, AskLukeAi } from '@/components/CaseStudy'
 import { SITE } from '@/lib/site'
 
 /*
@@ -98,6 +98,12 @@ export default function AwardcoCaseStudy() {
         <p className="cs-cap">
           Drag across the frame: the old login on the left, the redesign on the right.
         </p>
+
+        <ThreeLenses
+          design="One guided path across SSO, MFA, reset, and mobile: the system routes you from your email instead of asking you to choose."
+          code="Prototypes built as working code so testers could really type; the fix drawn as states and transitions, passed security review unchanged."
+          business="7.7M failed logins a year and the top support topic. I chose the slower design because it routed people to the method that works."
+        />
 
         <Reveal className="mt-14">
           <Prose>
@@ -549,6 +555,15 @@ export default function AwardcoCaseStudy() {
             </p>
           </Prose>
         </Section>
+
+        <AskLukeAi
+          prompts={[
+            'Why did Luke pick the slower login design at Awardco?',
+            'How did the token change fix double authentication at Awardco?',
+            'What did coding the Awardco prototypes reveal that Figma would have missed?',
+            "What would Luke do next on Awardco's login with more time?",
+          ]}
+        />
 
         {/* ── Prev / next ── */}
         <nav

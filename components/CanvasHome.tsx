@@ -2,21 +2,23 @@
 
 import { useEffect, useRef, useSyncExternalStore, type ReactNode } from 'react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { motion, useScroll, useSpring, useTransform, type MotionValue } from 'framer-motion'
 import MobileHome from './MobileHome'
 import LukeAiCard from './LukeAiCard'
-import VectorName from './VectorName'
-import LocalTimeLine from './LocalTimeLine'
-import { AboutReadme, CodeTagline, ContactCard, CredComment, WORK_TILES } from './CanvasBits'
+import { AboutReadme, IntroLede, WORK_TILES } from './CanvasBits'
 import { useReducedMotion } from '@/lib/useReducedMotion'
 
 /*
- * Prototype of a queenie.works-style homepage: one wide "designer's canvas"
- * that glides horizontally as the visitor scrolls (vertically OR sideways).
- * The first screen is a full landing: giant name plate, a business card
- * rendered as a selected canvas object (handles + frame), and dashed
- * sticker nav buttons on the left. The existing tiles become cards pinned
- * further down the canvas.
+ * A queenie.works-style homepage: one wide "designer's canvas" that glides
+ * horizontally as the visitor scrolls (vertically OR sideways). The first
+ * screen is the landing, and Luke AI is its hero: a live chat window fills
+ * the right half, the name + one-line story + three plain links sit on the
+ * left. (It used to be the first card off the landing, behind a contact.ts
+ * editor window, a vector-outline name plate, and a ticking clock — a
+ * reviewer's note: "lots of stuff looks clickable and turns out not to be,"
+ * and the bot was the one thing worth finding.) The existing tiles become
+ * cards pinned further down the canvas.
  *
  * Mechanics: a tall scroll track (100vh + TRAVEL vw, so scroll distance maps
  * ~1:1 to horizontal travel in pixels) pins a 100vh viewport; scroll progress
@@ -38,27 +40,22 @@ type CardSpec = {
 }
 
 /* left/w in vw, top/h in vh — positions on the wide strip, one per
-   WORK_TILES entry in order. The landing screen owns the first ~100vw;
-   Luke AI leads the row, so the case studies start past it. */
+   WORK_TILES entry in order. The landing screen owns the first 100vw
+   (Luke AI lives there), so the case studies start right past it. */
 const CARDS: readonly CardSpec[] = [
   /* top ≥ 12vh keeps the floating labels from crowding the top edge */
-  { left: 151, top: 12, w: 40, h: 70, rot: -1.6, drift: 1 },
-  { left: 198, top: 16, w: 38, h: 68, rot: 1.2, drift: -1 },
-  { left: 243, top: 11, w: 38, h: 66, rot: -0.9, drift: 1 },
-  { left: 288, top: 14, w: 38, h: 68, rot: 1.7, drift: -1 },
+  { left: 112, top: 12, w: 40, h: 70, rot: -1.6, drift: 1 },
+  { left: 159, top: 16, w: 38, h: 68, rot: 1.2, drift: -1 },
+  { left: 204, top: 11, w: 38, h: 66, rot: -0.9, drift: 1 },
+  { left: 249, top: 14, w: 38, h: 68, rot: 1.7, drift: -1 },
 ]
 
-/* The live Luke AI window is the first card off the landing screen — the
-   clearest "AI-native" signal, so it leads the work row. rot 0 per Luke —
-   a working app window sits straight, unlike the pinned-up case studies. */
-const AI_CARD: CardSpec = { left: 112, top: 13, w: 32, h: 68, rot: 0, drift: -1 }
-
-/* About section: photos + the combined README (blurb + résumé) → finale.
-   Polaroids + README span ~90vw; the finale starts past them. */
-const ABOUT_PHOTOS_LEFT = 336 // vw
-/* The README is the canvas's last object: photos section (336) + its
-   left offset (70) + its 30vw width, plus right margin. */
-const STRIP_W = 446 // vw
+/* About section: photos + the combined README (blurb + résumé).
+   Polaroids + README span ~90vw. */
+const ABOUT_PHOTOS_LEFT = 297 // vw
+/* The README is the canvas's last object: photos section (297) + its
+   left offset (65) + its 27vw width, plus right margin. */
+const STRIP_W = 407 // vw
 const TRAVEL = STRIP_W - 100 // vw the strip translates over the full scroll
 
 /*
@@ -152,6 +149,7 @@ export default function CanvasHome() {
  * still wiring trackRef. In this component the track always renders.
  */
 function DesktopCanvas() {
+  const router = useRouter()
   const trackRef = useRef<HTMLDivElement>(null)
 
   const { scrollYProgress } = useScroll({
@@ -254,7 +252,7 @@ function DesktopCanvas() {
           <span className="canvas-bg__name" style={{ left: '78vw' }}>
             product designer
           </span>
-          <span className="canvas-bg__name" style={{ left: '160vw', top: '48vh' }}>
+          <span className="canvas-bg__name" style={{ left: '121vw', top: '48vh' }}>
             research → shipped
           </span>
         </motion.div>
@@ -262,27 +260,27 @@ function DesktopCanvas() {
         <motion.div className="canvas-strip" style={{ x }}>
           {/* ── Landing screen: the first 100vw of canvas ── */}
           <section className="canvas-intro">
-            <div className="canvas-intro__tag">
-              <p className="canvas-intro__highlight-wrap">
-                <CodeTagline />
-              </p>
-              <CredComment />
-              <LocalTimeLine />
+            <IntroLede />
+
+            {/* The hero: a live Luke AI window, streaming from /api/chat.
+                Straight, not pinned at an angle — it's a working app, not
+                a case-study card. Expand hands the thread to /chat. */}
+            <div className="canvas-intro__ai">
+              <span className="canvas-card__label" aria-hidden="true">
+                luke-ai · ask it anything
+              </span>
+              <LukeAiCard />
             </div>
 
-            <ContactCard />
-
-            <VectorName />
-
-            <p className="canvas-intro__hint" aria-hidden="true">
-              scroll <span className="canvas-intro__arrow">→</span>
-            </p>
+            {/* A real button: it scrolls to the first case study. */}
+            <button
+              type="button"
+              className="canvas-intro__hint"
+              onClick={() => goToVw(CARDS[0].left - 8)}
+            >
+              the work <span className="canvas-intro__arrow">→</span>
+            </button>
           </section>
-
-          {/* ── Live Luke AI window: chat right here, expand for the full page ── */}
-          <CanvasCard card={AI_CARD} label="01 · luke ai — ask it anything" progress={smooth}>
-            <LukeAiCard />
-          </CanvasCard>
 
           {WORK_TILES.map((item, i) => (
             <CanvasCard key={item.slug} card={CARDS[i]} label={item.label} progress={smooth}>
@@ -297,7 +295,7 @@ function DesktopCanvas() {
             aria-label="Photos of Luke"
           >
             <span className="canvas-card__label" aria-hidden="true">
-              06 · about me
+              05 · about me
             </span>
             {/* second frame: placeholder until the next real shot lands */}
             <figure className="polaroid polaroid--main">
@@ -349,19 +347,6 @@ function DesktopCanvas() {
               <span className="term-nav__dir">~</span> cd home
               <span className="term-nav__caret" aria-hidden="true" />
             </button>
-            {/* Scrolls to the live preview card on the canvas — the card's
-                own expand affordance is the way into the full /chat page.
-                Centered in the viewport so the fixed terminal doesn't sit
-                on top of it. */}
-            <button
-              type="button"
-              className="term-nav__line"
-              onClick={() => goToVw(AI_CARD.left - (100 - AI_CARD.w) / 2)}
-            >
-              <span className="term-nav__arrow">➜</span>
-              <span className="term-nav__dir">~</span> cd luke-ai
-              <span className="term-nav__caret" aria-hidden="true" />
-            </button>
             <button
               type="button"
               className="term-nav__line"
@@ -378,6 +363,13 @@ function DesktopCanvas() {
             >
               <span className="term-nav__arrow">➜</span>
               <span className="term-nav__dir">~</span> cd about
+              <span className="term-nav__caret" aria-hidden="true" />
+            </button>
+            {/* Luke AI lives on the landing screen; this opens it full
+                screen, the way `open` launches an app. */}
+            <button type="button" className="term-nav__line" onClick={() => router.push('/chat')}>
+              <span className="term-nav__arrow">➜</span>
+              <span className="term-nav__dir">~</span> open luke-ai
               <span className="term-nav__caret" aria-hidden="true" />
             </button>
             {/* idle prompt, cursor always blinking — the shell is waiting */}

@@ -14,7 +14,7 @@ import { SITE } from '@/lib/site'
  * Fixed rather than sticky: the work grid is its own 100vh scroll container
  * on mobile, so a header in normal flow would scroll away behind it. The
  * links must keep `.footer-link` — the custom cursor in Cursor.tsx only
- * magnetizes to `.btn, .footer-link, .chat-pg__send, .chat-pg__contact-btn`.
+ * magnetizes to `.btn, .footer-link` and the terminal buttons.
  *
  * `width` picks which column the nav lines up with: `page` for the 1280px
  * `.section` grid the home page uses, `article` for the narrower 860px column

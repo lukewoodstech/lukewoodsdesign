@@ -7,7 +7,7 @@ import Reveal from '@/components/lucid/Reveal'
 import ZoomShot from '@/components/lucid/ZoomShot'
 import CompareStage from '@/components/lucid/CompareStage'
 import ImpactStats from '@/components/lucid/ImpactStats'
-import { Section, Prose, Bullets, Reframe, FactStrip } from '@/components/CaseStudy'
+import { Section, Prose, Bullets, Reframe, FactStrip, ThreeLenses, AskLukeAi } from '@/components/CaseStudy'
 import { SITE } from '@/lib/site'
 
 /*
@@ -136,6 +136,12 @@ export default function PatternCaseStudy() {
           home — templates plus a tile grid that shows each report before you
           open it — on the right.
         </p>
+
+        <ThreeLenses
+          design="Templates and a tile-grid home, guided creation, one combined view/edit mode, and charts that finally hold more than two metrics."
+          code="Drag-and-drop cut for engineering budget; reordering shipped as a list with handles instead, so the value survived the cut."
+          business="A two-day ticket became a nine-week redesign on the strength of 60% trial, 15% retention, and 50+ interviews."
+        />
 
         <Reveal className="mt-14">
           <Prose>
@@ -567,6 +573,15 @@ export default function PatternCaseStudy() {
             </p>
           </Prose>
         </Section>
+
+        <AskLukeAi
+          prompts={[
+            'How did a duplicate-widget ticket turn into a nine-week redesign at Pattern?',
+            'What did Luke cut at Pattern, and how did he keep the value?',
+            'What did twenty users overturn in Pattern testing?',
+            'How did Luke seed the Pattern templates?',
+          ]}
+        />
 
         {/* ── Prev / next ── */}
         <nav

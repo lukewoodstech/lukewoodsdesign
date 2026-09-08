@@ -141,3 +141,80 @@ export function FactStrip({
     </div>
   )
 }
+
+/*
+ * The one-person-product-team strip: the same three lenses on every study,
+ * one line each, right under the deliverable. This is where the site's
+ * story ("design + code + business, held at once") has to show up in the
+ * work rather than in the tagline. Keep each line to a single sentence.
+ */
+export function ThreeLenses({
+  design,
+  code,
+  business,
+}: {
+  design: string
+  code: string
+  business: string
+}) {
+  const rows: [string, string, string][] = [
+    ['design', 'lens-design', design],
+    ['code', 'lens-code', code],
+    ['business', 'lens-business', business],
+  ]
+  return (
+    <Reveal as="section" className="cs-lenses">
+      <h2 className="visually-hidden">Design, code, and business on this project</h2>
+      <p className="cs-lenses__decl" aria-hidden="true">
+        <span className="ct-dim">const</span> {'this'} <span className="ct-dim">=</span>{' '}
+        <span className="lens-design">design</span> <span className="ct-dim">+</span>{' '}
+        <span className="lens-code">code</span> <span className="ct-dim">+</span>{' '}
+        <span className="lens-business">business</span>
+        <span className="ct-dim">;</span>
+      </p>
+      <dl className="cs-lenses__grid">
+        {rows.map(([label, cls, text]) => (
+          <div key={label} className="cs-lenses__cell">
+            <dt className={`cs-lenses__label ${cls}`}>{label}</dt>
+            <dd className="cs-lenses__text">{text}</dd>
+          </div>
+        ))}
+      </dl>
+    </Reveal>
+  )
+}
+
+/*
+ * The depth that left the page lives in Luke AI. Each prompt is a real
+ * question the study no longer answers at length; the link opens the chat
+ * with it already sent (/chat?q=…). Styled as the bot's terminal so it reads
+ * as the same object the visitor met on the landing screen.
+ */
+export function AskLukeAi({ prompts }: { prompts: string[] }) {
+  return (
+    <Reveal as="section" className="mt-20">
+      <span className="cs-eyebrow">Go deeper</span>
+      <h2 className="cs-headline">The long version lives in luke-ai. Ask it.</h2>
+      <div className="cs-ask">
+        <p className="cs-ask__boot" aria-hidden="true">
+          <span className="term-nav__arrow">➜</span>
+          <span className="term-nav__dir">~</span> luke-ai
+        </p>
+        <ul className="cs-ask__list">
+          {prompts.map((q) => (
+            <li key={q}>
+              <a className="cs-ask__link" href={`/chat?q=${encodeURIComponent(q)}`}>
+                {q}
+              </a>
+            </li>
+          ))}
+          <li>
+            <a className="cs-ask__link cs-ask__link--own" href="/chat">
+              or ask your own question
+            </a>
+          </li>
+        </ul>
+      </div>
+    </Reveal>
+  )
+}

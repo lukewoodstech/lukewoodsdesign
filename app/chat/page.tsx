@@ -1,10 +1,10 @@
-'use client'
+"use client";
 
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
-import ReactMarkdown from 'react-markdown'
-import Sidebar from '@/components/Sidebar'
-import { SITE, MAILTO } from '@/lib/site'
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import ReactMarkdown from "react-markdown";
+import Sidebar from "@/components/Sidebar";
+import { SITE, MAILTO } from "@/lib/site";
 import {
   STORAGE_KEY,
   HANDOFF_KEY,
@@ -12,530 +12,608 @@ import {
   makeTitle,
   type Message,
   type Conversation,
-} from '@/lib/lukeAiStorage'
+} from "@/lib/lukeAiStorage";
 
 const GREETING: Message = {
-  role: 'assistant',
-  content:
-    "hi. i'm luke ai. the case studies tell you what luke shipped — i'm for everything else: map his experience to your role, compare how he works across teams, or get the 30-second version.",
-}
+  role: "assistant",
+  content: "luke-ai v1.0 — the portfolio you can interview.",
+};
 
-// Reads from lib/site.ts like the nav and footer do — the résumé is
-// self-hosted now, and this page used to be the last Drive-link holdout.
+/*
+ * The `+` menu beside the prompt: the three places to reach Luke directly,
+ * as terminal commands. Reads from lib/site.ts like the nav and footer do.
+ */
 const PLUS_ITEMS = [
-  { label: 'résumé',   description: 'open in a new tab',   href: SITE.resume },
-  { label: 'linkedin', description: 'connect with luke',   href: SITE.linkedin },
-  { label: 'email',    description: 'send luke a message', href: MAILTO },
-]
+  {
+    cmd: "open resume.pdf",
+    description: "opens in a new tab",
+    href: SITE.resume,
+  },
+  {
+    cmd: "open linkedin",
+    description: "connect with luke",
+    href: SITE.linkedin,
+  },
+  { cmd: "mail luke", description: "copies the address too", href: MAILTO },
+];
 
 /*
  * Zero-state suggestions do what the case-study pages can't: map Luke to a
- * specific role, compress everything for a skim, synthesize across teams,
- * and answer the interview-style questions. Summaries of individual
- * studies live one click away on the grid — no reason to duplicate them.
+ * specific role, compress everything for a skim, show the design + code +
+ * business judgment, and answer the interview-style questions. The first
+ * three match the chips on the landing-screen window, so the expanded page
+ * reads as the same terminal with more room.
  */
-const IconTarget = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
-    <circle cx="12" cy="12" r="8" />
-    <circle cx="12" cy="12" r="4" opacity="0.6" />
-    <circle cx="12" cy="12" r="0.8" fill="currentColor" stroke="none" />
-  </svg>
-)
-const IconBolt = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-    <path d="M13 2 4.5 13.5h5L11 22l8.5-11.5h-5L13 2Z" />
-  </svg>
-)
-const IconCode = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M8.5 7 4 12l4.5 5" />
-    <path d="M15.5 7 20 12l-4.5 5" />
-    <path d="M13.2 4.5 10.8 19.5" opacity="0.6" />
-  </svg>
-)
-const IconRedo = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M4 8v5h5" />
-    <path d="M4.5 13a8 8 0 1 0 2-7.5L4 8" />
-  </svg>
-)
-
 const PROMPTS = [
   {
-    key: 'fit',
-    icon: <IconTarget />,
-    color: 'var(--mono-blue)',
-    header: 'Is Luke your fit?',
-    desc: "Paste a job description — I'll map his experience to it.",
+    key: "pitch",
+    label: "give me the 30-second version",
     message:
-      "I'm evaluating Luke for a role. If I paste the job description, can you map his experience against it — honestly, including gaps?",
+      "Give me the 30-second version of Luke: who he is, proof, and why it matters.",
   },
   {
-    key: 'pitch',
-    icon: <IconBolt />,
-    color: 'var(--mono-yellow)',
-    header: 'The 30-second version',
-    desc: 'Four internships, distilled for the skim read.',
-    message: 'Give me the 30-second version of Luke: who he is, proof, and why it matters.',
-  },
-  {
-    key: 'worksample',
-    icon: <IconCode />,
-    color: 'var(--mono-green)',
-    header: "You're inside a work sample",
-    desc: 'Ask how any piece of this site was built.',
+    key: "decisions",
+    label: "where did code or business change a design call?",
     message:
-      'How was this site built? Walk me through what is actually running on the home page tiles.',
+      "Give me one concrete decision per project where knowing the code or the business changed what Luke designed.",
   },
   {
-    key: 'hard',
-    icon: <IconRedo />,
-    color: 'var(--mono-pink)',
-    header: 'Ask the hard question',
-    desc: "Trade-offs, limits, what he'd redo.",
+    key: "fit",
+    label: "map him to a job description",
+    message:
+      "I'm hiring. I'd like to paste a job description and get a fit map.",
+  },
+  {
+    key: "worksample",
+    label: "how was this site built?",
+    message:
+      "How was this site built? Walk me through what is actually running on the home page.",
+  },
+  {
+    key: "hard",
+    label: "what would he do differently?",
     message:
       "What would Luke do differently across his projects, and what are the honest limitations of his work so far?",
   },
-]
+];
 
-const IconMenu = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
-    <line x1="3" y1="6" x2="21" y2="6" />
-    <line x1="3" y1="12" x2="21" y2="12" />
-    <line x1="3" y1="18" x2="21" y2="18" />
+const IconCollapse = () => (
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M10 4H4v6" />
+    <path d="M4 4l7.5 7.5" />
+    <path d="M14 20h6v-6" />
+    <path d="M20 20l-7.5-7.5" />
   </svg>
-)
-
-const IconClose = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-    <line x1="18" y1="6" x2="6" y2="18" />
-    <line x1="6" y1="6" x2="18" y2="18" />
-  </svg>
-)
+);
 
 const IconArrowUp = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="12" y1="19" x2="12" y2="5" />
-    <polyline points="5 12 12 5 19 12" />
+  <svg
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M12 19V5m0 0-6 6m6-6 6 6" />
   </svg>
-)
+);
+
+const IconPanel = () => (
+  <svg
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <rect x="3" y="4" width="18" height="16" rx="2" />
+    <path d="M9 4v16" />
+  </svg>
+);
 
 export default function ChatPage() {
-  const router = useRouter()
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [conversations, setConversations] = useState<Conversation[]>([])
-  const [currentId, setCurrentId] = useState('')
-  const [messages, setMessages] = useState<Message[]>([GREETING])
-  const [input, setInput] = useState('')
-  const [isStreaming, setIsStreaming] = useState(false)
-  const [hasError, setHasError] = useState(false)
-  const [plusOpen, setPlusOpen] = useState(false)
-  const inputRef = useRef<HTMLTextAreaElement>(null)
-  const bottomRef = useRef<HTMLDivElement>(null)
-  const floatRef = useRef<HTMLDivElement>(null)
+  const router = useRouter();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [currentId, setCurrentId] = useState("");
+  const [messages, setMessages] = useState<Message[]>([GREETING]);
+  const [input, setInput] = useState("");
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [plusOpen, setPlusOpen] = useState(false);
+  /* A question carried in on the URL (/chat?q=…) — the "ask luke-ai" links
+     at the end of each case study. Held in state so it's sent on the render
+     AFTER stored conversations load; sending from the load effect itself
+     would persist over the visitor's history with a stale empty list. */
+  const [pendingQuestion, setPendingQuestion] = useState<string | null>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const floatRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const ta = inputRef.current
-    if (!ta) return
-    ta.style.height = 'auto'
-    ta.style.height = Math.min(ta.scrollHeight, 180) + 'px'
-  }, [input])
+    const ta = inputRef.current;
+    if (!ta) return;
+    ta.style.height = "auto";
+    ta.style.height = Math.min(ta.scrollHeight, 180) + "px";
+  }, [input]);
 
   useEffect(() => {
-    if (!plusOpen) return
+    if (!plusOpen) return;
     const handler = (e: MouseEvent) => {
       if (floatRef.current && !floatRef.current.contains(e.target as Node)) {
-        setPlusOpen(false)
+        setPlusOpen(false);
       }
-    }
-    document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
-  }, [plusOpen])
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [plusOpen]);
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY)
-      const convs: Conversation[] = raw ? JSON.parse(raw) : []
-      if (raw) setConversations(convs)
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const convs: Conversation[] = raw ? JSON.parse(raw) : [];
+      if (raw) setConversations(convs);
       /* Arriving from the homepage mini chat: open its conversation
          instead of a fresh one. */
-      const handoffId = sessionStorage.getItem(HANDOFF_KEY)
+      const handoffId = sessionStorage.getItem(HANDOFF_KEY);
       if (handoffId) {
-        sessionStorage.removeItem(HANDOFF_KEY)
-        const conv = convs.find((c) => c.id === handoffId)
+        sessionStorage.removeItem(HANDOFF_KEY);
+        const conv = convs.find((c) => c.id === handoffId);
         if (conv) {
-          setCurrentId(conv.id)
-          setMessages([GREETING, ...conv.messages])
+          setCurrentId(conv.id);
+          setMessages([GREETING, ...conv.messages]);
         }
       }
+      const q = new URLSearchParams(window.location.search).get("q")?.trim();
+      if (q) {
+        window.history.replaceState(null, "", "/chat");
+        setPendingQuestion(q);
+      }
     } catch {}
-  }, [])
+  }, []);
 
   useEffect(() => {
-    inputRef.current?.focus()
-  }, [])
+    inputRef.current?.focus();
+  }, []);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const persist = useCallback((convs: Conversation[]) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(convs))
-    setConversations(convs)
-  }, [])
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(convs));
+    setConversations(convs);
+  }, []);
 
   const startNewChat = useCallback(() => {
-    setCurrentId('')
-    setMessages([GREETING])
-    setInput('')
-    setHasError(false)
-    setSidebarOpen(false)
-    setTimeout(() => inputRef.current?.focus(), 50)
-  }, [])
+    setCurrentId("");
+    setMessages([GREETING]);
+    setInput("");
+    setHasError(false);
+    setSidebarOpen(false);
+    setTimeout(() => inputRef.current?.focus(), 50);
+  }, []);
 
   const selectConversation = useCallback(
     (id: string) => {
-      const conv = conversations.find((c) => c.id === id)
-      if (!conv) return
-      setCurrentId(id)
-      setMessages([GREETING, ...conv.messages])
-      setHasError(false)
-      setSidebarOpen(false)
-      setTimeout(() => inputRef.current?.focus(), 50)
+      const conv = conversations.find((c) => c.id === id);
+      if (!conv) return;
+      setCurrentId(id);
+      setMessages([GREETING, ...conv.messages]);
+      setHasError(false);
+      setSidebarOpen(false);
+      setTimeout(() => inputRef.current?.focus(), 50);
     },
     [conversations],
-  )
+  );
 
   const deleteConversation = useCallback(
     (id: string) => {
-      const updated = conversations.filter((c) => c.id !== id)
-      persist(updated)
+      const updated = conversations.filter((c) => c.id !== id);
+      persist(updated);
       if (currentId === id) {
-        setCurrentId('')
-        setMessages([GREETING])
-        setHasError(false)
+        setCurrentId("");
+        setMessages([GREETING]);
+        setHasError(false);
       }
     },
     [conversations, currentId, persist],
-  )
+  );
 
   const sendMessage = useCallback(
     async (text: string) => {
-      if (!text || isStreaming) return
+      if (!text || isStreaming) return;
 
-      setInput('')
-      if (inputRef.current) inputRef.current.style.height = 'auto'
-      setHasError(false)
+      setInput("");
+      if (inputRef.current) inputRef.current.style.height = "auto";
+      setHasError(false);
 
-      const userMsg: Message = { role: 'user', content: text }
-      const withUser = [...messages, userMsg]
-      setMessages(withUser)
+      const userMsg: Message = { role: "user", content: text };
+      const withUser = [...messages, userMsg];
+      setMessages(withUser);
 
-      const history = withUser.filter((m) => m !== GREETING)
-      const apiMessages = history.map(({ role, content }) => ({ role, content }))
+      const history = withUser.filter((m) => m !== GREETING);
+      const apiMessages = history.map(({ role, content }) => ({
+        role,
+        content,
+      }));
 
-      let convId = currentId
-      let updatedConvs = [...conversations]
+      let convId = currentId;
+      let updatedConvs = [...conversations];
 
       if (!convId) {
-        convId = genId()
-        setCurrentId(convId)
+        convId = genId();
+        setCurrentId(convId);
         updatedConvs = [
-          { id: convId, title: makeTitle(text), messages: history, updatedAt: Date.now() },
+          {
+            id: convId,
+            title: makeTitle(text),
+            messages: history,
+            updatedAt: Date.now(),
+          },
           ...updatedConvs,
-        ]
+        ];
       } else {
         updatedConvs = updatedConvs.map((c) =>
-          c.id === convId ? { ...c, messages: history, updatedAt: Date.now() } : c,
-        )
+          c.id === convId
+            ? { ...c, messages: history, updatedAt: Date.now() }
+            : c,
+        );
       }
-      persist(updatedConvs)
+      persist(updatedConvs);
 
-      setMessages((prev) => [...prev, { role: 'assistant', content: '' }])
-      setIsStreaming(true)
-      setTimeout(() => inputRef.current?.focus(), 60)
+      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+      setIsStreaming(true);
+      setTimeout(() => inputRef.current?.focus(), 60);
 
       try {
-        const res = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ messages: apiMessages }),
-        })
+        });
 
-        if (!res.ok || !res.body) throw new Error('stream failed')
+        if (!res.ok || !res.body) throw new Error("stream failed");
 
-        const reader = res.body.getReader()
-        const decoder = new TextDecoder()
-        let fullResponse = ''
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let fullResponse = "";
 
         while (true) {
-          const { done, value } = await reader.read()
-          if (done) break
-          const chunk = decoder.decode(value, { stream: true })
-          fullResponse += chunk
+          const { done, value } = await reader.read();
+          if (done) break;
+          const chunk = decoder.decode(value, { stream: true });
+          fullResponse += chunk;
           setMessages((prev) => {
-            const last = prev[prev.length - 1]
-            return [...prev.slice(0, -1), { ...last, content: last.content + chunk }]
-          })
+            const last = prev[prev.length - 1];
+            return [
+              ...prev.slice(0, -1),
+              { ...last, content: last.content + chunk },
+            ];
+          });
         }
 
-        const finalHistory = [...history, { role: 'assistant' as const, content: fullResponse }]
-        persist(updatedConvs.map((c) => (c.id === convId ? { ...c, messages: finalHistory } : c)))
+        const finalHistory = [
+          ...history,
+          { role: "assistant" as const, content: fullResponse },
+        ];
+        persist(
+          updatedConvs.map((c) =>
+            c.id === convId ? { ...c, messages: finalHistory } : c,
+          ),
+        );
       } catch {
-        setMessages((prev) => prev.slice(0, -1))
-        setHasError(true)
+        setMessages((prev) => prev.slice(0, -1));
+        setHasError(true);
       } finally {
-        setIsStreaming(false)
-        setTimeout(() => inputRef.current?.focus(), 50)
+        setIsStreaming(false);
+        setTimeout(() => inputRef.current?.focus(), 50);
       }
     },
     [messages, isStreaming, currentId, conversations, persist],
-  )
+  );
+
+  /* Guarded by a ref rather than clearing the state: sendMessage changes
+     identity as the thread grows, and this must fire exactly once. */
+  const askedRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!pendingQuestion || askedRef.current === pendingQuestion) return;
+    askedRef.current = pendingQuestion;
+    void sendMessage(pendingQuestion);
+  }, [pendingQuestion, sendMessage]);
 
   const handleRetry = useCallback(async () => {
-    setHasError(false)
+    setHasError(false);
 
-    const history = messages.filter((m) => m !== GREETING)
-    const apiMessages = history.map(({ role, content }) => ({ role, content }))
+    const history = messages.filter((m) => m !== GREETING);
+    const apiMessages = history.map(({ role, content }) => ({ role, content }));
 
-    setMessages((prev) => [...prev, { role: 'assistant', content: '' }])
-    setIsStreaming(true)
-    setTimeout(() => inputRef.current?.focus(), 60)
+    setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+    setIsStreaming(true);
+    setTimeout(() => inputRef.current?.focus(), 60);
 
     try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: apiMessages }),
-      })
+      });
 
-      if (!res.ok || !res.body) throw new Error('stream failed')
+      if (!res.ok || !res.body) throw new Error("stream failed");
 
-      const reader = res.body.getReader()
-      const decoder = new TextDecoder()
-      let fullResponse = ''
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let fullResponse = "";
 
       while (true) {
-        const { done, value } = await reader.read()
-        if (done) break
-        const chunk = decoder.decode(value, { stream: true })
-        fullResponse += chunk
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        fullResponse += chunk;
         setMessages((prev) => {
-          const last = prev[prev.length - 1]
-          return [...prev.slice(0, -1), { ...last, content: last.content + chunk }]
-        })
+          const last = prev[prev.length - 1];
+          return [
+            ...prev.slice(0, -1),
+            { ...last, content: last.content + chunk },
+          ];
+        });
       }
 
-      const finalHistory = [...history, { role: 'assistant' as const, content: fullResponse }]
-      persist(conversations.map((c) => (c.id === currentId ? { ...c, messages: finalHistory } : c)))
+      const finalHistory = [
+        ...history,
+        { role: "assistant" as const, content: fullResponse },
+      ];
+      persist(
+        conversations.map((c) =>
+          c.id === currentId ? { ...c, messages: finalHistory } : c,
+        ),
+      );
     } catch {
-      setMessages((prev) => prev.slice(0, -1))
-      setHasError(true)
+      setMessages((prev) => prev.slice(0, -1));
+      setHasError(true);
     } finally {
-      setIsStreaming(false)
-      setTimeout(() => inputRef.current?.focus(), 50)
+      setIsStreaming(false);
+      setTimeout(() => inputRef.current?.focus(), 50);
     }
-  }, [messages, conversations, currentId, persist])
+  }, [messages, conversations, currentId, persist]);
 
-  const handleSend = () => sendMessage(input.trim())
+  const handleSend = () => sendMessage(input.trim());
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSend()
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
     }
-  }
+  };
 
-  const isZeroState = messages.length === 1 && messages[0] === GREETING
+  const isZeroState = messages.length === 1 && messages[0] === GREETING;
 
-  const floatInput = (below: boolean) => (
-    <div ref={floatRef} className="chat-pg__float-wrap-inner" style={{ position: 'relative' }}>
-      {plusOpen && (
-        <div className={below ? 'chat-pg__plus-menu chat-pg__plus-menu--below' : 'chat-pg__plus-menu'}>
-          {PLUS_ITEMS.map((item) => (
-            <a
-              key={item.label}
-              className="chat-pg__plus-item"
-              href={item.href}
-              target={item.href.startsWith('mailto') ? '_self' : '_blank'}
-              rel="noopener noreferrer"
-              onClick={() => setPlusOpen(false)}
-            >
-              <span className="chat-pg__plus-item-label">{item.label}</span>
-              <span className="chat-pg__plus-item-desc">{item.description}</span>
-            </a>
-          ))}
-        </div>
-      )}
-      <div className="chat-pg__float-box" onClick={() => inputRef.current?.focus()}>
-        <button
-          className="chat-pg__plus-btn"
-          onClick={(e) => { e.stopPropagation(); setPlusOpen((v) => !v) }}
-          aria-label="Open menu"
-        >
-          <svg
-            width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-            style={{ transform: plusOpen ? 'rotate(45deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}
+  /* The prompt row: `➜ ~` + textarea + send, with the `+` command menu. */
+  const promptRow = (
+    <div className="term-pg__promptbar">
+      <form
+        className="term-pg__prompt"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSend();
+        }}
+      >
+        <div ref={floatRef} className="term-pg__plus-wrap">
+          <button
+            type="button"
+            className={`term-pg__plus${plusOpen ? " is-open" : ""}`}
+            onClick={() => setPlusOpen((v) => !v)}
+            aria-label="Contact commands"
+            aria-expanded={plusOpen}
           >
-            <line x1="7" y1="1" x2="7" y2="13" />
-            <line x1="1" y1="7" x2="13" y2="7" />
-          </svg>
-        </button>
+            +
+          </button>
+          {plusOpen && (
+            <div className="term-pg__plus-menu" role="menu">
+              {PLUS_ITEMS.map((item) => (
+                <a
+                  key={item.cmd}
+                  role="menuitem"
+                  className="term-pg__plus-item"
+                  href={item.href}
+                  target={item.href.startsWith("mailto") ? "_self" : "_blank"}
+                  rel="noopener noreferrer"
+                  onClick={() => setPlusOpen(false)}
+                >
+                  <span className="term-pg__plus-cmd">
+                    <span className="term-nav__arrow">➜</span>
+                    <span className="term-nav__dir">~</span> {item.cmd}
+                  </span>
+                  <span className="term-pg__plus-desc">{item.description}</span>
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+        <span className="term-nav__arrow" aria-hidden="true">
+          ➜
+        </span>
+        <span className="term-nav__dir" aria-hidden="true">
+          ~
+        </span>
         <textarea
           ref={inputRef}
-          className="chat-pg__input"
-          placeholder="ask luke ai"
+          className="term-pg__input"
+          placeholder="ask about luke's work…"
           value={input}
           rows={1}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           disabled={isStreaming}
+          aria-label="Message Luke AI"
         />
         <button
-          className="chat-pg__send"
-          onClick={handleSend}
+          type="submit"
+          className="term-pg__send"
           disabled={!input.trim() || isStreaming}
           aria-label="Send"
         >
           <IconArrowUp />
         </button>
-      </div>
+      </form>
     </div>
-  )
+  );
 
   return (
-    <div className="chat-pg">
-      <Sidebar
-        isOpen={sidebarOpen}
-        conversations={conversations}
-        currentId={currentId}
-        onSelect={selectConversation}
-        onNew={startNewChat}
-        onToggle={() => setSidebarOpen((v) => !v)}
-        onDelete={deleteConversation}
-      />
-
-      <div className="chat-pg__main">
-        <header className="chat-pg__header">
+    <div className="term-pg">
+      {/* One maximized terminal window — the same object as the landing
+          screen's luke-ai card, with a history panel docked on the left. */}
+      <div className="term-pg__window ai-card">
+        <header className="ai-card__bar term-pg__bar">
           <button
-            className="chat-pg__menu"
+            type="button"
+            className="term-pg__panel-btn"
             onClick={() => setSidebarOpen((v) => !v)}
-            aria-label="Toggle sidebar"
+            aria-label={sidebarOpen ? "Hide history" : "Show history"}
+            aria-pressed={sidebarOpen}
           >
-            <IconMenu />
+            <IconPanel />
           </button>
-          <button className="btn chat-pg__close" onClick={() => router.push('/')} aria-label="Back to portfolio">
-            <IconClose />
+          <span className="term-nav__tabtitle" aria-hidden="true">
+            output
+          </span>
+          <span className="term-nav__tabtitle is-active">terminal</span>
+          <span className="ai-card__shell" aria-hidden="true">
+            luke-ai — zsh
+          </span>
+          <button
+            type="button"
+            className="ai-card__expand"
+            onClick={() => router.push("/")}
+            title="Back to the portfolio"
+            aria-label="Collapse back to the portfolio"
+          >
+            <IconCollapse />
+            <span>collapse</span>
           </button>
         </header>
 
-        {isZeroState ? (
-          <div className="chat-pg__zero">
-            <p className="chat-pg__zero-heading">ask me anything about luke’s work.</p>
-            <div className="chat-pg__float-wrap chat-pg__float-wrap--zero">
-              {floatInput(true)}
-              <div className="grid grid-cols-2 gap-2.5 mt-14">
-                {PROMPTS.map((p) => (
-                  <button
-                    key={p.key}
-                    className="group flex items-start gap-3.5 rounded-[12px] border border-white/[0.08] bg-white/[0.03] p-4 text-left transition-all duration-200 hover:border-white/[0.18] hover:bg-white/[0.06]"
-                    onClick={() => sendMessage(p.message)}
-                  >
-                    <span
-                      className="flex size-10 shrink-0 items-center justify-center rounded-[9px] border border-white/[0.08] bg-white/[0.04]"
-                      style={{ color: p.color }}
-                      aria-hidden="true"
-                    >
-                      {p.icon}
-                    </span>
-                    <span className="flex min-w-0 flex-col gap-1">
-                      <span className="text-base font-semibold leading-snug text-white/90 transition-colors duration-200 group-hover:text-white">
-                        {p.header}
-                      </span>
-                      <span className="text-sm leading-snug text-white/45 transition-colors duration-200 group-hover:text-white/65">
-                        {p.desc}
-                      </span>
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        ) : (
-          <>
-            <main className="chat-pg__messages">
-              <div className="chat-pg__inner">
-                {messages.filter((msg) => msg !== GREETING).map((msg, i) => (
-                  <div key={i} className={`chat-pg__msg chat-pg__msg--${msg.role}`}>
-                    {msg.role === 'user' ? (
-                      <div className="chat-pg__bubble">{msg.content}</div>
-                    ) : (
-                      <>
-                        <span className="chat-pg__ai-label">luke ai</span>
-                        {msg.content === '' && isStreaming ? (
-                          <p className="chat-pg__typing">
-                            <span />
-                            <span />
-                            <span />
-                          </p>
-                        ) : (
-                          <div className="chat-pg__ai-text">
+        <div className="term-pg__body">
+          <Sidebar
+            isOpen={sidebarOpen}
+            conversations={conversations}
+            currentId={currentId}
+            onSelect={selectConversation}
+            onNew={startNewChat}
+            onToggle={() => setSidebarOpen((v) => !v)}
+            onDelete={deleteConversation}
+          />
+
+          <div className="term-pg__main">
+            <main className="term-pg__scroll">
+              <div className="term-pg__inner">
+                <p className="ai-card__boot" aria-hidden="true">
+                  <span className="term-nav__arrow">➜</span>
+                  <span className="term-nav__dir">~</span> luke-ai
+                </p>
+                <p className="ai-card__greeting">
+                  <span className="ai-card__bootdot" aria-hidden="true">
+                    ●
+                  </span>{" "}
+                  {GREETING.content}
+                </p>
+
+                {isZeroState ? (
+                  <div className="ai-card__chips term-pg__chips">
+                    {PROMPTS.map((p) => (
+                      <button
+                        key={p.key}
+                        type="button"
+                        className="ai-card__chip"
+                        onClick={() => sendMessage(p.message)}
+                      >
+                        {p.label}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  messages
+                    .filter((msg) => msg !== GREETING)
+                    .map((msg, i) =>
+                      msg.role === "user" ? (
+                        <div
+                          key={i}
+                          className="ai-card__msg ai-card__msg--user"
+                        >
+                          <span className="term-nav__arrow">➜</span>
+                          <span className="term-nav__dir">~</span> {msg.content}
+                        </div>
+                      ) : (
+                        <div key={i} className="ai-card__msg ai-card__msg--ai">
+                          {msg.content === "" && isStreaming ? (
+                            <span
+                              className="ai-card__thinking"
+                              aria-label="Luke AI is thinking"
+                            >
+                              <i />
+                              <i />
+                              <i />
+                            </span>
+                          ) : (
                             <ReactMarkdown
                               components={{
                                 a: ({ href, children }) => {
-                                  const isEmail = href?.startsWith('mailto:')
-                                  const isLinkedIn = href?.includes('linkedin.com')
-                                  if (isEmail || isLinkedIn) {
-                                    return (
-                                      <a href={href} target={isEmail ? '_self' : '_blank'} rel="noopener noreferrer" className="chat-pg__contact-btn">
-                                        {isEmail ? (
-                                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                                            <rect x="2" y="4" width="20" height="16" rx="2" />
-                                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                                          </svg>
-                                        ) : (
-                                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                                            <rect x="2" y="9" width="4" height="12" />
-                                            <circle cx="4" cy="4" r="2" />
-                                          </svg>
-                                        )}
-                                        {children}
-                                      </a>
-                                    )
-                                  }
-                                  return <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>
+                                  const isEmail = href?.startsWith("mailto:");
+                                  return (
+                                    <a
+                                      href={href}
+                                      target={isEmail ? "_self" : "_blank"}
+                                      rel="noopener noreferrer"
+                                    >
+                                      {children}
+                                    </a>
+                                  );
                                 },
                               }}
-                            >{msg.content}</ReactMarkdown>
-                          </div>
-                        )}
-                      </>
-                    )}
-                  </div>
-                ))}
+                            >
+                              {msg.content}
+                            </ReactMarkdown>
+                          )}
+                        </div>
+                      ),
+                    )
+                )}
 
                 {hasError && (
-                  <div className="chat-pg__error">
-                    <span>something went wrong.</span>
-                    <button className="chat-pg__retry" onClick={handleRetry}>
+                  <p className="ai-card__error">
+                    something broke mid-thought.{" "}
+                    <button type="button" onClick={handleRetry}>
                       try again
                     </button>
-                  </div>
+                  </p>
                 )}
 
                 <div ref={bottomRef} />
               </div>
             </main>
 
-            <footer className="chat-pg__footer">
-              <div className="chat-pg__float-wrap">
-                {floatInput(false)}
-              </div>
-            </footer>
-          </>
-        )}
+            {promptRow}
+          </div>
+        </div>
       </div>
     </div>
-  )
+  );
 }

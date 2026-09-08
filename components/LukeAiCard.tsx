@@ -13,20 +13,33 @@ import {
 } from '@/lib/lukeAiStorage'
 
 /*
- * A tile-sized live Luke AI window for the canvas homepage: visitors chat
- * right on the card, streaming from the same /api/chat route as the full
- * page. The expand button saves the conversation into the shared
- * localStorage store, stamps a sessionStorage handoff, and navigates to
- * /chat — which opens the same conversation full screen.
+ * The live Luke AI window that is the hero of the homepage (desktop landing
+ * and the top of the mobile stack): visitors chat right here, streaming
+ * from the same /api/chat route as the full page. The expand button saves
+ * the conversation into the shared localStorage store, stamps a
+ * sessionStorage handoff, and navigates to /chat — which opens the same
+ * conversation full screen.
+ *
+ * The chips are the pitch. Each one sends a prompt the system prompt is
+ * built to answer well: the short version, the design + code + business
+ * story, and the fit map (paste a job description, get requirement →
+ * evidence, one line each) — the thing a static page cannot do.
  */
 
-const GREETING = "luke-ai v1.0 — ask me anything about luke's work."
+const GREETING = 'luke-ai v1.0 — the portfolio you can interview.'
 
-const SUGGESTIONS = [
-  'give me the 30-second version',
-  'what did he ship at lucid?',
-  'how does he work with engineers?',
-] as const
+const SUGGESTIONS: ReadonlyArray<{ label: string; message: string }> = [
+  { label: 'give me the 30-second version', message: 'give me the 30-second version' },
+  {
+    label: 'where did code or business change a design call?',
+    message:
+      'Give me one concrete decision per project where knowing the code or the business changed what Luke designed.',
+  },
+  {
+    label: 'map him to a job description',
+    message: "I'm hiring. I'd like to paste a job description and get a fit map.",
+  },
+]
 
 const IconExpand = () => (
   <svg
@@ -185,12 +198,12 @@ export default function LukeAiCard() {
           <div className="ai-card__chips">
             {SUGGESTIONS.map((s) => (
               <button
-                key={s}
+                key={s.label}
                 type="button"
                 className="ai-card__chip"
-                onClick={() => sendMessage(s)}
+                onClick={() => sendMessage(s.message)}
               >
-                {s}
+                {s.label}
               </button>
             ))}
           </div>
