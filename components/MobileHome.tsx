@@ -110,7 +110,9 @@ export default function MobileHome() {
 
         {/* ── About: the polaroid pair, minus the desk clutter ── */}
         <section className="mhome-about" id="about" aria-label="About Luke">
-          <h2 className="mhome-label">05 · about me</h2>
+          <h2 className="mhome-label">
+            {String(WORK_TILES.length + 1).padStart(2, '0')} · about me
+          </h2>
           <div className="mhome-polaroids">
             <figure className="polaroid polaroid--main mhome-polaroid">
               <Image

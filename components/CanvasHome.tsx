@@ -50,13 +50,20 @@ const CARDS: readonly CardSpec[] = [
   { left: 249, top: 14, w: 38, h: 68, rot: 1.7, drift: -1 },
 ]
 
-/* About section: photos + the combined README (blurb + résumé).
+/* About section: photos + the combined README (blurb + résumé), placed
+   48vw past the last VISIBLE card so hiding a tile shortens the canvas.
    Polaroids + README span ~90vw. */
-const ABOUT_PHOTOS_LEFT = 297 // vw
-/* The README is the canvas's last object: photos section (297) + its
-   left offset (65) + its 27vw width, plus right margin. */
-const STRIP_W = 407 // vw
+const LAST_CARD = CARDS[WORK_TILES.length - 1]
+const ABOUT_PHOTOS_LEFT = LAST_CARD.left + 48 // vw
+/* The README is the canvas's last object: photos section + its left
+   offset (65) + its 27vw width, plus right margin. */
+const STRIP_W = ABOUT_PHOTOS_LEFT + 110 // vw
+/* Labels count the visible work cards; the about section comes next. */
+const ABOUT_LABEL = `${String(WORK_TILES.length + 1).padStart(2, '0')} · about me`
 const TRAVEL = STRIP_W - 100 // vw the strip translates over the full scroll
+/* Progress range over which the outline depth layer fades out — pinned to
+   where the about section arrives, so the ending is calm dot-grid. */
+const BG_FADE = [(ABOUT_PHOTOS_LEFT - 70) / TRAVEL, (ABOUT_PHOTOS_LEFT - 20) / TRAVEL]
 
 /*
  * Same pattern as lib/useReducedMotion: matchMedia is an external store.
@@ -174,7 +181,7 @@ function DesktopCanvas() {
   /* The outline names drift slower than the canvas, so stray letters can
      linger into the about section — fade the whole depth layer out over
      the last stretch so the ending is calm dot-grid. */
-  const bgOpacity = useTransform(smooth, [0.78, 0.92], [1, 0])
+  const bgOpacity = useTransform(smooth, BG_FADE, [1, 0])
 
   /*
    * Sideways input drives the canvas too: scroll distance maps ~1:1 to
@@ -295,7 +302,7 @@ function DesktopCanvas() {
             aria-label="Photos of Luke"
           >
             <span className="canvas-card__label" aria-hidden="true">
-              05 · about me
+              {ABOUT_LABEL}
             </span>
             {/* second frame: placeholder until the next real shot lands */}
             <figure className="polaroid polaroid--main">

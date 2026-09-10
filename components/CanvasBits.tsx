@@ -14,7 +14,14 @@ import HothTile from './HothTile'
  * list of work tiles with their canvas labels.
  */
 
-export const WORK_TILES: ReadonlyArray<{ slug: string; label: string; tile: ReactNode }> = [
+/*
+ * Studies not ready to show. A slug here drops the tile from both home
+ * layouts and the strip shortens to match; the route itself stays (Hoth's
+ * is password-gated). Delete the slug from this set to bring it back.
+ */
+export const HIDDEN_TILES: ReadonlySet<string> = new Set(['hoth'])
+
+const ALL_TILES: ReadonlyArray<{ slug: string; label: string; tile: ReactNode }> = [
   { slug: 'lucid-ai', label: '01 · lucid ai', tile: <LucidTile /> },
   {
     slug: 'awardco',
@@ -35,6 +42,8 @@ export const WORK_TILES: ReadonlyArray<{ slug: string; label: string; tile: Reac
   { slug: 'pattern', label: '03 · pattern', tile: <PatternTile /> },
   { slug: 'hoth', label: '04 · hoth', tile: <HothTile /> },
 ]
+
+export const WORK_TILES = ALL_TILES.filter((t) => !HIDDEN_TILES.has(t.slug))
 
 /*
  * A FigJam-style sticky note beside the polaroids: the personal blurb —

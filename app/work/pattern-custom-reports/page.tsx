@@ -86,11 +86,8 @@ const PERSONAS = [
 export default function PatternCaseStudy() {
   return (
     <div className="cs pcs min-h-screen bg-black text-white font-medium">
-      <SiteNav
-        width="article"
-        contact={false}
-        next={{ href: '/work/hoth', title: 'Hoth Landing Page' }}
-      />
+      {/* No `next` while the Hoth study is hidden (HIDDEN_TILES in CanvasBits). */}
+      <SiteNav width="article" contact={false} />
 
       <div className="max-w-[860px] mx-auto px-8 pb-32 sitenav-offset">
         {/* ── Hero ── */}
@@ -590,9 +587,6 @@ export default function PatternCaseStudy() {
         >
           <Link href="/work/awardco-login-flow-redesign" className="footer-link -ml-4">
             ← Reducing Authentication Friction
-          </Link>
-          <Link href="/work/hoth" className="footer-link -mr-4 ml-auto text-right">
-            Hoth Landing Page →
           </Link>
         </nav>
       </div>
