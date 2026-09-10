@@ -56,7 +56,7 @@ NASDAQ-listed ($3B+ revenue) ecommerce accelerator. Case study at /work/pattern-
 - *Paid Traffic Creative Types page redesign* and *filter indication spike for tables*.
 Collaborated with designers, PMs, brand managers, SEMs, and stakeholders.
 
-**Hoth — Product Design Intern** (Aug 2024–Dec 2024, Provo, UT)
+**Hoth — Product Design Intern** (Dec 2024–Apr 2025, Provo, UT)
 Encrypted work platform startup ($17M raised from Lachy Groom and Bedrock). Established Hoth's first design system, tokenizing typography, color, and reusable components. Cut time-to-value 30% by adding Google SSO and key download, storage, and recovery flows. Designed end-to-end flows for investor demos and roadmap validation, plus the brand identity and landing page shown on this site. Operated with startup-level ownership. (Formerly known as Mention.)
 Note: the Hoth case study page on this site is password-protected while it's being written. Share only the summary above; if a visitor wants the full study, point them to the email link so Luke can share the password.
 

@@ -47,7 +47,7 @@ const RESUME_ROWS = [
   { company: 'Lucid', period: 'May – Aug 2026' },
   { company: 'Awardco', period: 'Oct 2025 – Apr 2026' },
   { company: 'Pattern', period: 'Jan – Oct 2025' },
-  { company: 'Hoth', period: 'Aug – Dec 2024' },
+  { company: 'Hoth', period: 'Dec 2024 – Apr 2025' },
 ] as const
 
 /*

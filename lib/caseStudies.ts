@@ -197,7 +197,7 @@ export const caseStudies: CaseStudy[] = [
     company: 'Hoth',
     accent: '#008fff',
     role: 'Product Design Intern',
-    period: 'Aug – Dec 2024',
+    period: 'Dec 2024 – Apr 2025',
     team: '[Team — e.g. Solo project]',
     summary: 'Brand identity and landing page for an encrypted work platform.',
     tagline: '[One-sentence tagline: what was the project and why does it matter?]',
