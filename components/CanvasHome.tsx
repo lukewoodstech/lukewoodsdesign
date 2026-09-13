@@ -1,13 +1,13 @@
 'use client'
 
-import { useEffect, useRef, useSyncExternalStore, type ReactNode } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
 import { motion, useScroll, useSpring, useTransform, type MotionValue } from 'framer-motion'
 import MobileHome from './MobileHome'
 import LukeAiCard from './LukeAiCard'
 import { AboutReadme, IntroLede, WORK_TILES } from './CanvasBits'
 import { useReducedMotion } from '@/lib/useReducedMotion'
+import { SITE } from '@/lib/site'
 
 /*
  * A queenie.works-style homepage: one wide "designer's canvas" that glides
@@ -35,19 +35,19 @@ type CardSpec = {
   top: number // vh
   w: number // vw
   h: number // vh
-  rot: number
   drift: number
 }
 
 /* left/w in vw, top/h in vh — positions on the wide strip, one per
    WORK_TILES entry in order. The landing screen owns the first 100vw
-   (Luke AI lives there), so the case studies start right past it. */
+   (Luke AI lives there), so the case studies start right past it. The
+   cards sit at staggered heights but square, not tilted. */
 const CARDS: readonly CardSpec[] = [
   /* top ≥ 12vh keeps the floating labels from crowding the top edge */
-  { left: 112, top: 12, w: 40, h: 70, rot: -1.6, drift: 1 },
-  { left: 159, top: 16, w: 38, h: 68, rot: 1.2, drift: -1 },
-  { left: 204, top: 11, w: 38, h: 66, rot: -0.9, drift: 1 },
-  { left: 249, top: 14, w: 38, h: 68, rot: 1.7, drift: -1 },
+  { left: 112, top: 12, w: 40, h: 70, drift: 1 },
+  { left: 159, top: 16, w: 38, h: 68, drift: -1 },
+  { left: 204, top: 11, w: 38, h: 66, drift: 1 },
+  { left: 249, top: 14, w: 38, h: 68, drift: -1 },
 ]
 
 /* About section: photos + the combined README (blurb + résumé), placed
@@ -88,6 +88,29 @@ function useIsDesktop(): boolean | null {
 
 /* Scroll so the canvas has travelled `vw` viewport-widths — the 1:1 px
    mapping makes the conversion exact. */
+/* The nav's root "folder" is the site itself — derived, so a domain change follows. */
+const SITE_HOST = new URL(SITE.url).host
+
+/* VS Code's tree chevron: points right when closed, rotates down when open. */
+function Chevron({ open = false }: { open?: boolean }) {
+  return (
+    <svg
+      className={`term-nav__chevron${open ? ' is-open' : ''}`}
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M6 3.5 10.5 8 6 12.5" />
+    </svg>
+  )
+}
+
 function goToVw(vw: number) {
   window.scrollTo({ top: (vw / 100) * window.innerWidth, behavior: 'smooth' })
 }
@@ -120,7 +143,6 @@ function CanvasCard({
         top: `${card.top}vh`,
         width: `${card.w}vw`,
         height: `${card.h}vh`,
-        rotate: card.rot,
         y,
       }}
     >
@@ -156,7 +178,7 @@ export default function CanvasHome() {
  * still wiring trackRef. In this component the track always renders.
  */
 function DesktopCanvas() {
-  const router = useRouter()
+  const [navOpen, setNavOpen] = useState(true)
   const trackRef = useRef<HTMLDivElement>(null)
 
   const { scrollYProgress } = useScroll({
@@ -313,7 +335,7 @@ function DesktopCanvas() {
                 height={700}
                 sizes="22vw"
               />
-              <figcaption>luke woods — hello!</figcaption>
+              <figcaption>me</figcaption>
             </figure>
             <figure className="polaroid polaroid--second">
               <Image
@@ -323,7 +345,7 @@ function DesktopCanvas() {
                 height={700}
                 sizes="22vw"
               />
-              <figcaption>kenai river, alaska</figcaption>
+              <figcaption>fishing at kenai river, alaska</figcaption>
             </figure>
             <figure className="polaroid polaroid--third">
               <Image
@@ -333,58 +355,65 @@ function DesktopCanvas() {
                 height={700}
                 sizes="22vw"
               />
-              <figcaption>grand canyon, arizona</figcaption>
+              <figcaption>26 miles at the grand canyon</figcaption>
             </figure>
             <AboutReadme />
           </section>
         </motion.div>
 
-        {/* ── Screen-fixed chrome: the nav as a tiny terminal ── */}
+        {/* ── Screen-fixed chrome: the nav as the VS Code Explorer ── */}
         <nav className="canvas-nav" aria-label="Canvas navigation">
           <div className="term-nav">
-            {/* VS Code panel header: tab titles + shell name */}
-            <div className="term-nav__tabs" aria-hidden="true">
-              <span className="term-nav__tabtitle">problems</span>
-              <span className="term-nav__tabtitle">output</span>
-              <span className="term-nav__tabtitle is-active">terminal</span>
-              <span className="term-nav__shell">zsh</span>
+            {/* Side-panel header, the way the Explorer view is titled */}
+            <div className="term-nav__head" aria-hidden="true">
+              <span className="term-nav__title">explorer</span>
             </div>
-            <button type="button" className="term-nav__line" onClick={() => goToVw(0)}>
-              <span className="term-nav__arrow">➜</span>
-              <span className="term-nav__dir">~</span> cd home
-              <span className="term-nav__caret" aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              className="term-nav__line"
-              onClick={() => goToVw(CARDS[0].left - 8)}
-            >
-              <span className="term-nav__arrow">➜</span>
-              <span className="term-nav__dir">~</span> cd work
-              <span className="term-nav__caret" aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              className="term-nav__line"
-              onClick={() => goToVw(ABOUT_PHOTOS_LEFT - 8)}
-            >
-              <span className="term-nav__arrow">➜</span>
-              <span className="term-nav__dir">~</span> cd about
-              <span className="term-nav__caret" aria-hidden="true" />
-            </button>
-            {/* Luke AI lives on the landing screen; this opens it full
-                screen, the way `open` launches an app. */}
-            <button type="button" className="term-nav__line" onClick={() => router.push('/chat')}>
-              <span className="term-nav__arrow">➜</span>
-              <span className="term-nav__dir">~</span> open luke-ai
-              <span className="term-nav__caret" aria-hidden="true" />
-            </button>
-            {/* idle prompt, cursor always blinking — the shell is waiting */}
-            <div className="term-nav__line term-nav__line--idle" aria-hidden="true">
-              <span className="term-nav__arrow">➜</span>
-              <span className="term-nav__dir">~</span>
-              <span className="term-nav__caret is-idle" />
+
+            {/* Root folder: the site. The caret folds the sections away;
+                the name itself is `cd ~`. */}
+            <div className="term-nav__row term-nav__row--root">
+              <button
+                type="button"
+                className="term-nav__toggle"
+                aria-expanded={navOpen}
+                aria-label={navOpen ? 'Collapse navigation' : 'Expand navigation'}
+                onClick={() => setNavOpen((v) => !v)}
+              >
+                <Chevron open={navOpen} />
+              </button>
+              <button type="button" className="term-nav__label" onClick={() => goToVw(0)}>
+                {SITE_HOST}
+              </button>
             </div>
+
+            <ul className="term-nav__children" hidden={!navOpen}>
+              <li>
+                <button type="button" className="term-nav__row term-nav__item" onClick={() => goToVw(0)}>
+                  <Chevron />
+                  home
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  className="term-nav__row term-nav__item"
+                  onClick={() => goToVw(CARDS[0].left - 8)}
+                >
+                  <Chevron />
+                  work
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  className="term-nav__row term-nav__item"
+                  onClick={() => goToVw(ABOUT_PHOTOS_LEFT - 8)}
+                >
+                  <Chevron />
+                  about
+                </button>
+              </li>
+            </ul>
           </div>
         </nav>
 

@@ -46,24 +46,10 @@ const ALL_TILES: ReadonlyArray<{ slug: string; label: string; tile: ReactNode }>
 export const WORK_TILES = ALL_TILES.filter((t) => !HIDDEN_TILES.has(t.slug))
 
 /*
- * A FigJam-style sticky note beside the polaroids: the personal blurb —
- * who Luke is off the clock — in handwriting on the one yellow object
- * on the canvas. Shared by CanvasHome and MobileHome.
- */
-/* Résumé rows — dates follow public/resume.pdf, the single source of
-   truth (same strings as lib/caseStudies.ts). */
-const RESUME_ROWS = [
-  { company: 'Lucid', period: 'May – Aug 2026' },
-  { company: 'Awardco', period: 'Oct 2025 – Apr 2026' },
-  { company: 'Pattern', period: 'Jan – Oct 2025' },
-  { company: 'Hoth', period: 'Dec 2024 – Apr 2025' },
-] as const
-
-/*
  * README.md in rendered markdown preview — the classic "about this
  * project" file, except the project is Luke. One window carries the
- * whole about section: personal blurb (Luke's own words), then the
- * simplified résumé — experience, toolkit, download link.
+ * whole about section in Luke's own words. The résumé lives elsewhere
+ * on the site, so it isn't repeated here.
  */
 export function AboutReadme() {
   return (
@@ -88,36 +74,35 @@ export function AboutReadme() {
         <div className="readme-card__badges" aria-hidden="true">
           <span className="readme-card__badge readme-card__badge--blue">design + code</span>
           <span className="readme-card__badge readme-card__badge--purple">byu cs</span>
-          <span className="readme-card__badge readme-card__badge--green">open to work</span>
+          <span className="readme-card__badge readme-card__badge--green">business strategy</span>
         </div>
         <p>
-          I&apos;m Luke. I&apos;m curious, ambitious, and always building toward something. I love
-          big ideas, good people, and challenges that push me beyond what I already know.
+          Thanks for stopping by. I built this site to show how I think, what I&apos;ve worked
+          on, and how design, computer science, and business come together in my work.
         </p>
         <p>
-          Outside of work, I&apos;m usually lifting, playing basketball, watching anime, or
-          taking care of an unreasonable number of tarantulas. And if it involves being
-          outdoors — fishing, hiking, a good view — count me in. The polaroids are proof.
+          At BYU, I study computer science with an emphasis in HCI, along with business strategy.
+          I enjoy working across the entire product process and understanding how design,
+          technology, and business come together to create a great user experience and a
+          successful product.
         </p>
-        <blockquote>
-          That same curiosity shapes how I design: stay open, dig deeper, and build things that
-          genuinely improve people&apos;s lives.
-        </blockquote>
-        <h3>experience</h3>
-        <ul className="resume-md__rows">
-          {RESUME_ROWS.map((row) => (
-            <li key={row.company}>
-              <span className="resume-md__company">{row.company}</span>
-              <span className="resume-md__role">Product Design Intern</span>
-              <span className="resume-md__period">{row.period}</span>
-            </li>
-          ))}
-        </ul>
-        <h3>toolkit</h3>
-        <p className="resume-md__tags">research · design systems · prototyping · motion · code</p>
-        <a className="resume-md__dl" href={SITE.resume} target="_blank" rel="noopener noreferrer">
-          ⤓ download the full résumé
-        </a>
+        <p>
+          I do my best work alongside other people, whether I&apos;m leading design workshops
+          through BYU&apos;s UX Design Association or building late into the night at whatever
+          local hackathon my friends and I can find. Right now, as part of Sandbox, BYU&apos;s
+          startup incubator, I&apos;m building software for real estate and hotel operations.
+        </p>
+        <p>
+          My philosophy is simple: put people first, and results follow. Whether I&apos;m
+          researching at an internship, building at a hackathon, or starting a company, I begin
+          by connecting with people and understanding what&apos;s making their lives harder.
+        </p>
+        <p>
+          AI is an incredible tool, and I&apos;ve immersed myself in learning how to use it. But I
+          don&apos;t believe it can replace the human connection and understanding at the heart of
+          great design. The tools will keep changing, but my goal will stay the same: understand
+          people deeply and build things that are genuinely useful to them.
+        </p>
       </div>
     </div>
   )
@@ -162,7 +147,7 @@ export function CodeTagline() {
 export function CredComment() {
   return (
     <p className="code-cred">
-      <span>{'// I design it, build it, and own the outcome.'}</span>
+      <span>{"// I'm a product designer who builds and owns the outcome."}</span>
     </p>
   )
 }
@@ -183,13 +168,13 @@ export function IntroLede() {
       </p>
       <CredComment />
       <nav className="intro-links" aria-label="Contact">
-        <EmailLink className="footer-link" />
         <a className="footer-link" href={SITE.linkedin} target="_blank" rel="noopener noreferrer">
           linkedin
         </a>
         <a className="footer-link" href={SITE.resume} target="_blank" rel="noopener noreferrer">
           résumé
         </a>
+        <EmailLink className="footer-link" copy />
       </nav>
     </div>
   )

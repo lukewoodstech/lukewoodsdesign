@@ -4,6 +4,14 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import Sidebar from "@/components/Sidebar";
+import {
+  Ps1,
+  TermTitle,
+  IconPlus,
+  IconRestore,
+  IconPanel,
+  IconArrowUp,
+} from "@/components/TermChrome";
 import { SITE, MAILTO } from "@/lib/site";
 import {
   STORAGE_KEY,
@@ -76,58 +84,6 @@ const PROMPTS = [
       "What would Luke do differently across his projects, and what are the honest limitations of his work so far?",
   },
 ];
-
-const IconCollapse = () => (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M10 4H4v6" />
-    <path d="M4 4l7.5 7.5" />
-    <path d="M14 20h6v-6" />
-    <path d="M20 20l-7.5-7.5" />
-  </svg>
-);
-
-const IconArrowUp = () => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M12 19V5m0 0-6 6m6-6 6 6" />
-  </svg>
-);
-
-const IconPanel = () => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.8"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <rect x="3" y="4" width="18" height="16" rx="2" />
-    <path d="M9 4v16" />
-  </svg>
-);
 
 export default function ChatPage() {
   const router = useRouter();
@@ -439,8 +395,8 @@ export default function ChatPage() {
                   onClick={() => setPlusOpen(false)}
                 >
                   <span className="term-pg__plus-cmd">
-                    <span className="term-nav__arrow">➜</span>
-                    <span className="term-nav__dir">~</span> {item.cmd}
+                    <Ps1 />
+                    {item.cmd}
                   </span>
                   <span className="term-pg__plus-desc">{item.description}</span>
                 </a>
@@ -448,31 +404,28 @@ export default function ChatPage() {
             </div>
           )}
         </div>
-        <span className="term-nav__arrow" aria-hidden="true">
-          ➜
-        </span>
-        <span className="term-nav__dir" aria-hidden="true">
-          ~
-        </span>
-        <textarea
-          ref={inputRef}
-          className="term-pg__input"
-          placeholder="ask about luke's work…"
-          value={input}
-          rows={1}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          disabled={isStreaming}
-          aria-label="Message Luke AI"
-        />
-        <button
-          type="submit"
-          className="term-pg__send"
-          disabled={!input.trim() || isStreaming}
-          aria-label="Send"
-        >
-          <IconArrowUp />
-        </button>
+        <div className="term-pg__field">
+          <Ps1 />
+          <textarea
+            ref={inputRef}
+            className="term-pg__input"
+            placeholder="ask about luke's work…"
+            value={input}
+            rows={1}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            disabled={isStreaming}
+            aria-label="Message Luke AI"
+          />
+          <button
+            type="submit"
+            className="term-pg__send"
+            disabled={!input.trim() || isStreaming}
+            aria-label="Send"
+          >
+            <IconArrowUp />
+          </button>
+        </div>
       </form>
     </div>
   );
@@ -485,30 +438,36 @@ export default function ChatPage() {
         <header className="ai-card__bar term-pg__bar">
           <button
             type="button"
-            className="term-pg__panel-btn"
+            className="ai-card__tool term-pg__panel-btn"
             onClick={() => setSidebarOpen((v) => !v)}
+            title={sidebarOpen ? "Hide history" : "Show history"}
             aria-label={sidebarOpen ? "Hide history" : "Show history"}
             aria-pressed={sidebarOpen}
           >
             <IconPanel />
           </button>
-          <span className="term-nav__tabtitle" aria-hidden="true">
-            output
-          </span>
-          <span className="term-nav__tabtitle is-active">terminal</span>
-          <span className="ai-card__shell" aria-hidden="true">
-            luke-ai — zsh
-          </span>
-          <button
-            type="button"
-            className="ai-card__expand"
-            onClick={() => router.push("/")}
-            title="Back to the portfolio"
-            aria-label="Collapse back to the portfolio"
-          >
-            <IconCollapse />
-            <span>collapse</span>
-          </button>
+          <TermTitle />
+          <div className="ai-card__tools">
+            <button
+              type="button"
+              className="ai-card__tool"
+              onClick={startNewChat}
+              disabled={isStreaming}
+              title="New session"
+              aria-label="Start a new conversation"
+            >
+              <IconPlus />
+            </button>
+            <button
+              type="button"
+              className="ai-card__tool ai-card__expand"
+              onClick={() => router.push("/")}
+              title="Restore panel size"
+              aria-label="Collapse back to the portfolio"
+            >
+              <IconRestore />
+            </button>
+          </div>
         </header>
 
         <div className="term-pg__body">
@@ -526,12 +485,12 @@ export default function ChatPage() {
             <main className="term-pg__scroll">
               <div className="term-pg__inner">
                 <p className="ai-card__boot" aria-hidden="true">
-                  <span className="term-nav__arrow">➜</span>
-                  <span className="term-nav__dir">~</span> luke-ai
+                  <Ps1 />
+                  luke-ai
                 </p>
                 <p className="ai-card__greeting">
                   <span className="ai-card__bootdot" aria-hidden="true">
-                    ●
+                    ✱
                   </span>{" "}
                   {GREETING.content}
                 </p>
@@ -558,8 +517,8 @@ export default function ChatPage() {
                           key={i}
                           className="ai-card__msg ai-card__msg--user"
                         >
-                          <span className="term-nav__arrow">➜</span>
-                          <span className="term-nav__dir">~</span> {msg.content}
+                          <Ps1 />
+                          {msg.content}
                         </div>
                       ) : (
                         <div key={i} className="ai-card__msg ai-card__msg--ai">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Ps1 } from "./TermChrome";
 
 /*
  * The history panel inside the maximized luke-ai terminal window on /chat:
@@ -145,12 +146,7 @@ export default function Sidebar({
             onClick={(e) => e.stopPropagation()}
           >
             <p id="term-hist-modal-title" className="term-hist__modal-title">
-              <span className="term-nav__arrow" aria-hidden="true">
-                ➜
-              </span>
-              <span className="term-nav__dir" aria-hidden="true">
-                ~
-              </span>{" "}
+              <Ps1 />
               rm session
             </p>
             <p className="term-hist__modal-body">

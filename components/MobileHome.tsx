@@ -122,7 +122,7 @@ export default function MobileHome() {
                 height={700}
                 sizes="(max-width: 48em) 80vw, 20rem"
               />
-              <figcaption>luke woods — hello!</figcaption>
+              <figcaption>me</figcaption>
             </figure>
             <figure className="polaroid polaroid--second mhome-polaroid">
               <Image
@@ -132,7 +132,7 @@ export default function MobileHome() {
                 height={700}
                 sizes="(max-width: 48em) 80vw, 20rem"
               />
-              <figcaption>kenai river, alaska</figcaption>
+              <figcaption>fishing at kenai river, alaska</figcaption>
             </figure>
             <figure className="polaroid polaroid--third mhome-polaroid">
               <Image
@@ -142,7 +142,7 @@ export default function MobileHome() {
                 height={700}
                 sizes="(max-width: 48em) 80vw, 20rem"
               />
-              <figcaption>grand canyon, arizona</figcaption>
+              <figcaption>26 miles at the grand canyon</figcaption>
             </figure>
             <AboutReadme />
           </div>

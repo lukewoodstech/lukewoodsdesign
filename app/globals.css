@@ -226,7 +226,6 @@ p a {
 .tile-footer__logo-link:focus-visible,
 .term-nav__line:focus-visible,
 .pub-card__links a:focus-visible,
-.resume-md__dl:focus-visible,
 .term-pg__send:focus-visible,
 .term-pg__plus:focus-visible,
 .term-pg__panel-btn:focus-visible,
@@ -923,6 +922,19 @@ p a {
   position: relative;
 }
 
+/* Copy-first variant: icon sits inline with the label */
+.email-link--copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.email-link__icon {
+  width: 0.8em;
+  height: 0.8em;
+  flex-shrink: 0;
+}
+
 /*
   Absolutely positioned so confirming the copy never reflows the nav or the
   footer row. pointer-events: none keeps it clear of the custom cursor.
@@ -933,7 +945,8 @@ p a {
   left: 50%;
   z-index: 1;
   padding: 0.4em 0.65em;
-  border-radius: 8px;
+  /* Square corners — the site's UI is sharp-edged on purpose */
+  border-radius: 0;
   background: var(--mono-blue);
   color: #000;
   font-size: 0.5625rem;
@@ -2038,6 +2051,9 @@ p a {
   text-align: center;
   font-size: 0.85rem;
   color: #26262e;
+  /* "fishing at kenai river, alaska" is two lines on the small mobile
+     frame — balanced, so it never strands one word on the second line. */
+  text-wrap: balance;
 }
 
 /* README.md: the personal blurb as a rendered markdown preview window,
@@ -2125,74 +2141,17 @@ p a {
   color: #fff;
 }
 
-.readme-card__body .resume-md__rows li {
-  padding: 0.32rem 0;
-}
-
 .polaroid--main {
   z-index: 1;
 }
 
-/* ── Résumé fragments — now rendered inside the README window ───── */
+/* ── README tab chrome ───────────────────────────────────────────── */
 
 .code-card__mdicon {
   color: #519aba;
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-}
-
-.resume-md__rows {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.resume-md__rows li {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-areas:
-    'company period'
-    'role role';
-  padding: 0.4rem 0;
-}
-
-.resume-md__rows li + li {
-  border-top: 1px solid #2c2c2c;
-}
-
-.resume-md__company {
-  grid-area: company;
-  font-weight: 600;
-  color: #e7e7e7;
-}
-
-.resume-md__role {
-  grid-area: role;
-  font-size: 0.78rem;
-  color: #9d9d9d;
-}
-
-.resume-md__period {
-  grid-area: period;
-  font-size: 0.78rem;
-  color: #9d9d9d;
-}
-
-.resume-md__tags {
-  margin: 0;
-  color: #cccccc;
-}
-
-.resume-md__dl {
-  display: inline-block;
-  margin-top: 1.2rem;
-  color: #3794ff;
-  text-decoration: none;
-}
-
-.resume-md__dl:hover {
-  text-decoration: underline;
 }
 
 /* ── Outro: designed contact finale ─────────────────────────────── */
@@ -2373,7 +2332,7 @@ p a {
   font-family: var(--font-mono);
 }
 
-/* ── Screen-fixed chrome: the nav as a tiny terminal (nav.sh) ───── */
+/* ── Screen-fixed chrome: the nav as the VS Code Explorer ──────── */
 
 .canvas-nav {
   position: absolute;
@@ -2382,6 +2341,12 @@ p a {
   z-index: 4;
 }
 
+/*
+  The side-panel window: EXPLORER header, then the tree —
+    ⌄ lukewoodsdesign.com
+      › home  › work  › about
+  Same window chrome the terminal had; only the contents changed.
+*/
 .term-nav {
   min-width: 232px;
   background: #1e1e1e;
@@ -2389,57 +2354,112 @@ p a {
   border-radius: 6px;
   overflow: hidden;
   box-shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
-  padding-bottom: 0.45rem;
+  padding: 0 0.4rem 0.45rem;
+  font-family: var(--font-mono);
 }
 
-/* Panel header: PROBLEMS · OUTPUT · TERMINAL, active title underlined */
-.term-nav__tabs {
+.term-nav__head {
   display: flex;
   align-items: center;
-  gap: 0.9rem;
-  padding: 0.5rem 0.85rem 0.4rem;
-  margin-bottom: 0.4rem;
+  padding: 0.55rem 0.45rem 0.45rem;
+  margin-bottom: 0.3rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.term-nav__tabtitle {
-  font-family: var(--font-mono);
+.term-nav__title {
   font-size: 0.58rem;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: #8a8a8a;
-  padding-bottom: 0.2rem;
-  border-bottom: 1px solid transparent;
-}
-
-.term-nav__tabtitle.is-active {
   color: #e7e7e7;
-  border-bottom-color: #e7e7e7;
 }
 
-.term-nav__shell {
-  margin-left: auto;
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
-  color: #8a8a8a;
-}
-
-.term-nav__line {
-  display: block;
+/* A tree row: chevron box, then the label. Folders are buttons end to end. */
+.term-nav__row {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
   width: 100%;
-  text-align: left;
-  background: none;
+  padding: 0 0.25rem;
   border: none;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
+  border-radius: 4px;
+  background: none;
   color: #cccccc;
-  padding: 0.28rem 0.85rem;
+  font-family: inherit;
+  font-size: 0.8rem;
+  text-align: left;
   cursor: none;
-  text-decoration: none;
   transition: background 0.15s ease, color 0.15s ease;
 }
 
-/* oh-my-zsh robbyrussell: green arrow, cyan cwd */
+.term-nav__row:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+}
+
+.term-nav__toggle,
+.term-nav__row > .term-nav__chevron {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #8a8a8a;
+  cursor: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.term-nav__toggle:hover,
+.term-nav__row:hover > .term-nav__chevron {
+  color: #fff;
+}
+
+.term-nav__chevron {
+  display: block;
+  transition: transform 0.15s ease;
+}
+
+.term-nav__chevron.is-open {
+  transform: rotate(90deg);
+}
+
+/* Root label: the site, `cd ~`. */
+.term-nav__label {
+  flex: 1 1 auto;
+  padding: 0.28rem 0.35rem;
+  border: none;
+  background: none;
+  color: #e7e7e7;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: none;
+}
+
+.term-nav__label:hover {
+  color: #fff;
+}
+
+.term-nav__item {
+  padding: 0.28rem 0.35rem 0.28rem 0.25rem;
+}
+
+/*
+  Children sit under the root with VS Code's indent guide — a hairline on the
+  root chevron's centre (0.25rem row inset + half the 16px chevron box).
+*/
+.term-nav__children {
+  list-style: none;
+  margin: 0 0 0 calc(0.25rem + 8px);
+  padding: 0 0 0 calc(1rem - 8px);
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* oh-my-zsh robbyrussell: green arrow, cyan cwd — the chat sidebar's
+   rm-session prompt and the case-study luke-ai footer still use these. */
 .term-nav__arrow {
   color: #23d18b;
   font-weight: 700;
@@ -2451,39 +2471,9 @@ p a {
   margin-right: 0.45rem;
 }
 
-.term-nav__line--idle {
-  padding-top: 0.1rem;
-}
-
-.term-nav__caret {
-  display: inline-block;
-  width: 7px;
-  height: 0.95em;
-  margin-left: 2px;
-  vertical-align: text-bottom;
-  background: #cccccc;
-  opacity: 0;
-}
-
-.term-nav__line:hover {
-  background: rgba(255, 255, 255, 0.07);
-  color: #fff;
-}
-
-.term-nav__line:hover .term-nav__caret,
-.term-nav__line:focus-visible .term-nav__caret,
-.term-nav__caret.is-idle {
-  opacity: 1;
-  animation: term-caret-blink 1.1s step-end infinite;
-}
-
-@keyframes term-caret-blink {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
+@media (prefers-reduced-motion: reduce) {
+  .term-nav__chevron {
+    transition: none;
   }
 }
 
@@ -2699,7 +2689,8 @@ p a {
 .mhome-polaroids .polaroid--third {
   position: static;
   width: min(13rem, 62vw);
-  padding: 8px 8px 34px;
+  /* deep enough for a two-line caption */
+  padding: 8px 8px 44px;
 }
 
 /* smaller frame, smaller handwriting */
@@ -2784,81 +2775,116 @@ p a {
 }
 
 
-/* ── Luke AI: a VS Code terminal running `luke-ai` ──────────────── */
+/* ── Luke AI: the VS Code terminal panel, running `luke-ai` ──────
+   Dark Modern palette: #181818 panel, #cccccc text, #0078d4 accents.
+   Container queries drop the optional panel titles and the host half
+   of the prompt as the window narrows (42vw hero, the mobile card). */
 
 .ai-card {
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: #1e1e1e;
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: #181818;
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 6px;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
   overflow: hidden;
+  color: #cccccc;
 }
 
-/* Panel header: reuses the nav terminal's tab titles */
+/* Panel header: a title on the left, the real controls on the right */
 .ai-card__bar {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 0.9rem;
-  padding: 0.55rem 0.9rem 0.45rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 0.6rem;
+  height: 36px;
+  padding: 0 0.45rem 0 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.ai-card__shell {
-  margin-left: auto;
+.ai-card__title {
   font-family: var(--font-mono);
-  font-size: 0.58rem;
-  color: #8a8a8a;
+  font-size: 0.62rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #9d9d9d;
+}
+
+.ai-card__tools {
+  margin-left: auto;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
 }
 
 .ai-card__expand {
-  margin-left: 0.2rem;
+  margin-left: auto;
+}
+
+.ai-card__tool {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.75);
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 3px;
-  padding: 0.3rem 0.6rem;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: none;
+  background: none;
+  color: #cccccc;
   cursor: none;
-  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
 }
 
-.ai-card__expand:hover {
-  background: #008fff;
-  border-color: #008fff;
+.ai-card__tool:hover:not(:disabled) {
   color: #fff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
+.ai-card__tool:disabled {
+  opacity: 0.35;
+}
+
+/* Transcript */
 .ai-card__body {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
   /* keep inner scroll from chaining into the canvas glide */
   overscroll-behavior: contain;
-  padding: 1rem;
+  padding: 0.75rem 1rem 0.9rem;
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 0.6rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.ai-card__body::-webkit-scrollbar {
+  width: 10px;
+}
+
+.ai-card__body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* zsh prompt: `guest@portfolio ~ %` */
+.ps1 {
+  color: #cccccc;
+  white-space: nowrap;
 }
 
 .ai-card__boot {
+  position: relative;
   margin: 0;
   font-family: var(--font-mono);
   font-size: 0.82rem;
   color: #cccccc;
 }
 
-.ai-card__bootdot {
-  color: #23d18b;
-}
-
+/* `✱ luke-ai v1.0 — …`, the star in the notice blue */
 .ai-card__greeting {
   margin: 0;
   font-family: var(--font-mono);
@@ -2867,32 +2893,36 @@ p a {
   color: #b8b8b8;
 }
 
+.ai-card__bootdot {
+  color: #3794ff;
+}
+
 .ai-card__chips {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-wrap: wrap;
   gap: 0.5rem;
+  margin-top: 0.2rem;
 }
 
+/* Suggested prompts: read as buttons, drawn like terminal chrome */
 .ai-card__chip {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 0.78rem;
-  color: #8a8a8a;
-  background: none;
-  border: none;
-  padding: 0.1rem 0;
+  line-height: 1.3;
+  color: #cccccc;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 0.42rem 0.75rem;
   cursor: none;
   text-align: left;
-  transition: color 0.15s ease;
-}
-
-.ai-card__chip::before {
-  content: '↳ ';
-  color: #6e7681;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
 }
 
 .ai-card__chip:hover {
   color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.45);
 }
 
 .ai-card__msg {
@@ -2902,11 +2932,13 @@ p a {
 }
 
 .ai-card__msg--user {
+  position: relative;
   align-self: stretch;
   max-width: 100%;
-  font-family: 'IBM Plex Mono', monospace;
-  color: #fff;
+  font-family: var(--font-mono);
+  color: #e6e6e6;
   margin-top: 0.3rem;
+  overflow-wrap: anywhere;
 }
 
 .ai-card__msg--ai {
@@ -2977,13 +3009,34 @@ p a {
   padding: 0;
 }
 
+/* The live prompt line: a real field, VS Code input styling — bordered,
+   slightly raised, blue ring on focus. */
 .ai-card__inputrow {
+  position: relative;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 0.15rem;
-  padding: 0.55rem 1rem 0.7rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 0;
+  margin: 0.4rem 1rem 0.9rem;
+  padding: 0.3rem 0.3rem 0.3rem 0.75rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 4px;
+  font-family: var(--font-mono);
   font-size: 0.82rem;
+  color: #cccccc;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.ai-card__inputrow:focus-within {
+  border-color: #0078d4;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Flex rows drop the prompt's trailing space; put it back as margin */
+.ai-card__inputrow .ps1,
+.term-pg__field .ps1 {
+  margin-right: 0.6ch;
 }
 
 .ai-card__input {
@@ -2991,16 +3044,16 @@ p a {
   min-width: 0;
   background: none;
   border: none;
-  color: #fff;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.82rem;
-  padding: 0.2rem 0 0.2rem 0.35rem;
+  color: #e6e6e6;
+  font: inherit;
+  padding: 0.3rem 0;
   outline: none;
   caret-color: #cccccc;
+  caret-shape: block;
 }
 
 .ai-card__input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.35);
 }
 
 .ai-card__send {
@@ -3027,6 +3080,14 @@ p a {
   background: rgba(255, 255, 255, 0.08);
 }
 
+/* Narrow windows drop the host half of the prompt so there is still
+   room to type. */
+@container (max-width: 440px) {
+  .ps1__host {
+    display: none;
+  }
+}
+
 /* Mobile: the AI window sits in a fixed-height frame like the tiles —
    but shorter: its resting content is one boot line + three chips + the
    input, and 72vh left half the terminal as dead space. The body still
@@ -3044,7 +3105,7 @@ p a {
   }
 
   .ai-card__chip {
-    padding: 0.8em 0.8em 0.8em 0;
+    padding: 0.7em 0.9em;
   }
 }
 
@@ -3166,13 +3227,8 @@ p a {
 }
 
 .canvas-intro__ai .ai-card__chip {
-  font-size: 0.94rem;
-  color: #b0b0b0;
-  padding: 0.22rem 0;
-}
-
-.canvas-intro__ai .ai-card__chip:hover {
-  color: #fff;
+  font-size: 0.9rem;
+  padding: 0.5rem 0.85rem;
 }
 
 .canvas-intro__ai .ai-card__body {
@@ -3395,9 +3451,9 @@ p a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  margin-right: 0.3rem;
+  width: 24px;
+  height: 24px;
+  margin-right: 0.1rem;
   color: rgba(255, 255, 255, 0.55);
   background: none;
   border: 1px solid transparent;
@@ -3452,13 +3508,8 @@ p a {
 }
 
 .term-pg .ai-card__chip {
-  font-size: 0.98rem;
-  color: #b0b0b0;
-  padding: 0.28rem 0;
-}
-
-.term-pg .ai-card__chip:hover {
-  color: #fff;
+  font-size: 0.92rem;
+  padding: 0.55rem 0.9rem;
 }
 
 .term-pg__chips {
@@ -3523,10 +3574,28 @@ p a {
   line-height: 1.5;
 }
 
-.term-pg__prompt .term-nav__arrow,
-.term-pg__prompt .term-nav__dir {
+/* The field itself: prompt, textarea and send inside one bordered box */
+.term-pg__field {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  padding: 0.15rem 0.25rem 0.15rem 0.8rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 4px;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.term-pg__field:focus-within {
+  border-color: #0078d4;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.term-pg__prompt .ps1 {
   padding-top: 0.35rem;
 }
+
 
 .term-pg__input {
   flex: 1 1 auto;
@@ -3537,7 +3606,7 @@ p a {
   border: none;
   color: #fff;
   font: inherit;
-  padding: 0.35rem 0 0.35rem 0.35rem;
+  padding: 0.35rem 0;
   outline: none;
   caret-color: #cccccc;
   scrollbar-width: none;
@@ -3558,13 +3627,13 @@ p a {
   justify-content: center;
   width: 34px;
   height: 34px;
-  margin-top: 0.15rem;
+  margin-top: 0.1rem;
   border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
+  border: none;
+  background: none;
+  color: #8a8a8a;
   cursor: none;
-  transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
 }
 
 .term-pg__send:disabled {
@@ -3572,8 +3641,8 @@ p a {
 }
 
 .term-pg__send:not(:disabled):hover {
-  background: #008fff;
-  border-color: #008fff;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* `+` command menu, opening upward from the prompt */
