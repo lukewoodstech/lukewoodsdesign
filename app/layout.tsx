@@ -5,6 +5,7 @@ import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 import Cursor from '@/components/Cursor'
+import { LukeAiProvider } from '@/components/luke-ai/LukeAiProvider'
 import { SITE } from '@/lib/site'
 
 /*
@@ -57,6 +58,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: '#000000',
+  /* Lets /chat pad its composer past the iPhone home indicator. */
+  viewportFit: 'cover',
 }
 
 /*
@@ -88,14 +91,24 @@ const JSON_LD = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${ibmPlexMono.variable} ${ibmPlexSans.variable}`}>
+    <html
+      lang="en"
+      className={`${ibmPlexMono.variable} ${ibmPlexSans.variable}`}
+      /* globals.css sets scroll-behavior: smooth; this tells Next so route
+         transitions don't inherit the glide. */
+      data-scroll-behavior="smooth"
+    >
       <body>
         <Cursor />
-        <ViewTransition>
-          <div className="wrapper">
-            {children}
-          </div>
-        </ViewTransition>
+        {/* Luke AI's one session for the whole site: the homepage terminal
+            and /chat are two views of the same thread (see LukeAiProvider). */}
+        <LukeAiProvider>
+          <ViewTransition>
+            <div className="wrapper">
+              {children}
+            </div>
+          </ViewTransition>
+        </LukeAiProvider>
         <Analytics />
         <SpeedInsights />
         {/*

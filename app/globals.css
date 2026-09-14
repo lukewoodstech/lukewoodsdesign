@@ -61,6 +61,30 @@
   --mono-line-height:  1.65em;
   --mono-block-offset: 3.3em;
   --ease-out-quint:    cubic-bezier(0.23, 1, 0.32, 1);
+
+  /*
+   * Reading scale — every long-form surface (case-study prose, captions,
+   * the chat transcript) reads these instead of picking its own size.
+   * Desktop body is 18px on a ~29px line; phones step down to 17px below.
+   * The measure caps a paragraph at ~680px so a line stays around 60–65
+   * characters even though the article column (860px) is wider for media.
+   */
+  --reading-size:     1.125rem;   /* 18px */
+  --reading-leading:  1.6;        /* ≈29px at 18px */
+  --reading-lede:     1.3125rem;  /* 21px — hero standfirst */
+  --reading-intro:    1.25rem;    /* 20px — the opening overview paragraph */
+  --reading-caption:  0.875rem;   /* 14px — figure captions */
+  --reading-meta:     0.875rem;   /* 14px — attributions, notes */
+  --reading-label:    0.8125rem;  /* 13px — micro-labels on strips and tiles */
+  --reading-measure:  680px;
+}
+
+@media (max-width: 40em) {
+  :root {
+    --reading-size:  1.0625rem;   /* 17px */
+    --reading-lede:  1.1875rem;   /* 19px */
+    --reading-intro: 1.125rem;    /* 18px */
+  }
 }
 
 ::selection {
@@ -224,9 +248,11 @@ p a {
 .btn:focus-visible,
 .footer-link:focus-visible,
 .tile-footer__logo-link:focus-visible,
-.term-nav__line:focus-visible,
+.term-nav__toggle:focus-visible,
+.term-nav__label:focus-visible,
+.term-nav__item:focus-visible,
+.term-nav__file:focus-visible,
 .pub-card__links a:focus-visible,
-.term-pg__send:focus-visible,
 .term-pg__plus:focus-visible,
 .term-pg__panel-btn:focus-visible,
 .term-pg__plus-item:focus-visible,
@@ -1021,7 +1047,7 @@ p a {
 /* Fact-strip / persona micro-label: the eyebrow one step down */
 .cs-label-sm {
   display: block;
-  font-size: 0.75rem;
+  font-size: var(--reading-label);
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -1030,6 +1056,7 @@ p a {
 
 .cs-headline {
   display: block;
+  max-width: var(--reading-measure);
   font-size: 1.5rem;
   font-weight: 500;
   line-height: 1.375;
@@ -1042,20 +1069,42 @@ p a {
   .cs-headline { font-size: 2rem; }
 }
 
+/* Hero standfirst: the one-line promise under the title. Larger than body,
+   quieter than the headline; the global `p` margin supplies its spacing. */
+.cs-lede {
+  max-width: var(--reading-measure);
+  font-size: var(--reading-lede);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Body copy. Media can run the full 860px column; paragraphs stop at the
+   reading measure so a line never runs past ~65 characters. */
 .cs-prose {
-  font-size: 1.125rem;
-  line-height: 1.8;
+  max-width: var(--reading-measure);
+  font-size: var(--reading-size);
+  line-height: var(--reading-leading);
   color: #fff;
 }
 
-.cs-prose p { margin: 0 0 1.1rem; }
+.cs-prose p { margin: 0 0 1.15em; }
 .cs-prose p:last-child { margin-bottom: 0; }
+
+/* The opening overview paragraph on each study — one step up from body */
+.cs-prose--intro {
+  font-size: var(--reading-intro);
+  line-height: 1.55;
+}
+
+.cs-bullets {
+  max-width: var(--reading-measure);
+}
 
 .cs-bullets li {
   display: flex;
   gap: 0.75rem;
-  font-size: 1.125rem;
-  line-height: 1.625;
+  font-size: var(--reading-size);
+  line-height: var(--reading-leading);
   margin-bottom: 0.5rem;
 }
 
@@ -1066,10 +1115,18 @@ p a {
 }
 
 .cs-cap {
-  margin-top: 0.75rem;
-  font-size: 1rem;
-  line-height: 1.6;
+  margin: 0.75rem 0 0;
+  max-width: var(--reading-measure);
+  font-size: var(--reading-caption);
+  line-height: 1.55;
   color: rgba(255, 255, 255, 0.7);
+}
+
+/* Attributions and footnotes: the caption size, one shade quieter */
+.cs-meta {
+  font-size: var(--reading-meta);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 /* Impact strip — the numbers hook under the hero. Tiles rise in staggered,
@@ -1145,7 +1202,7 @@ p a {
 }
 
 .lcs-impact__label {
-  font-size: 0.78rem;
+  font-size: var(--reading-label);
   line-height: 1.5;
   letter-spacing: 0.02em;
   color: rgba(255, 255, 255, 0.7);
@@ -1153,7 +1210,8 @@ p a {
 
 .lcs-impact__kicker {
   margin: 1.15rem 0 0;
-  font-size: 0.9rem;
+  max-width: var(--reading-measure);
+  font-size: 1rem;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.7);
 }
@@ -1466,7 +1524,7 @@ p a {
   position: absolute;
   transform: translateX(-50%);
   text-align: center;
-  font-size: 0.72rem;
+  font-size: var(--reading-label);
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.75);
   white-space: nowrap;
@@ -1495,7 +1553,7 @@ p a {
     border-left: 2px solid var(--accent);
     padding-left: 1.1rem;
   }
-  .lcs-tl__vlist li { font-size: 0.9rem; line-height: 1.5; }
+  .lcs-tl__vlist li { font-size: 0.9375rem; line-height: 1.55; }
   .lcs-tl__vlist strong { display: block; color: #fff; }
   .lcs-tl__vlist span { color: rgba(255, 255, 255, 0.65); }
 }
@@ -1546,14 +1604,14 @@ p a {
 .lcs-lay__card--winner .lcs-lay__block { background: var(--accent); opacity: 0.75; }
 
 .lcs-lay__name {
-  font-size: 0.78rem;
+  font-size: var(--reading-label);
   color: #fff;
   display: block;
 }
 
 .lcs-lay__verdict {
-  font-size: 0.7rem;
-  line-height: 1.45;
+  font-size: var(--reading-label);
+  line-height: 1.5;
   color: rgba(255, 255, 255, 0.55);
   display: block;
   margin-top: 0.15rem;
@@ -2061,24 +2119,28 @@ p a {
 .readme-card {
   position: absolute;
   /* clear air between the last polaroid (ends ~62.5vw) and the window */
-  left: 70vw;
-  /* the section sits at 16vh; -8vh puts the window near the top of the
-     screen so the combined blurb + résumé fits above the fold */
-  top: -8vh;
-  width: 30vw;
+  left: 68vw;
+  /* the section sits at 16vh; -12vh puts the window near the top of the
+     screen so the bio at reading size fits above the fold */
+  top: -12vh;
+  width: 36vw;
 }
 
+/* The bio is portfolio content, not canvas decoration: it reads at the
+   same 16px as the other reading surfaces. The card grew a little wider
+   and starts a little higher to keep the whole thing on one screen; the
+   editor chrome around it keeps its 11–13px mono. */
 .readme-card__body {
-  padding: 1.1rem 1.4rem 1.2rem;
+  padding: 1rem 1.4rem 1.1rem;
   font-family: var(--font-sans), sans-serif;
-  font-size: 0.82rem;
-  line-height: 1.5;
+  font-size: 1rem;
+  line-height: 1.55;
   color: #cccccc;
 }
 
 .readme-card__body h2 {
-  margin: 0 0 0.6rem;
-  padding-bottom: 0.4rem;
+  margin: 0 0 0.55rem;
+  padding-bottom: 0.35rem;
   border-bottom: 1px solid #3d3d3d;
   font-size: 1.35rem;
   font-weight: 700;
@@ -2090,7 +2152,7 @@ p a {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-  margin: 0 0 0.9rem;
+  margin: 0 0 0.8rem;
 }
 
 /* Site-palette badge pills (same recipe as the tile tag pills) — no
@@ -2120,7 +2182,26 @@ p a {
 }
 
 .readme-card__body p {
-  margin: 0 0 0.8em;
+  margin: 0 0 0.7em;
+}
+
+/* Short laptop screens (1280×800, 1366×768): keep the 16px bio on one
+   screen by giving the card more width instead of less type. */
+@media (min-width: 48em) and (max-height: 860px) {
+  .readme-card {
+    left: 66vw;
+    top: -13vh;
+    width: 42vw;
+  }
+
+  .readme-card__body {
+    padding-bottom: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .readme-card__body p {
+    margin-bottom: 0.6em;
+  }
 }
 
 /* GitHub-style blockquote for the design-philosophy line */
@@ -2344,8 +2425,12 @@ p a {
 /*
   The side-panel window: EXPLORER header, then the tree —
     ⌄ lukewoodsdesign.com
-      › home  › work  › about
-  Same window chrome the terminal had; only the contents changed.
+      › home        (luke-ai.tsx)
+      ⌄ work        lucid-ai.tsx · awardco.tsx · pattern.tsx
+      › about       (README.md · resume.pdf)
+  The open folder follows the section under the middle of the screen, and
+  the file nearest it is highlighted. Same window chrome the terminal had;
+  only the contents changed.
 */
 .term-nav {
   min-width: 232px;
@@ -2443,8 +2528,85 @@ p a {
   color: #fff;
 }
 
+/* Folder name: navigates and drops the caret. Sits beside its toggle the
+   way the root label sits beside the root caret. */
 .term-nav__item {
-  padding: 0.28rem 0.35rem 0.28rem 0.25rem;
+  flex: 1 1 auto;
+  padding: 0.28rem 0.35rem 0.28rem 0.1rem;
+  border: none;
+  background: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  text-align: left;
+  cursor: none;
+}
+
+/* The folder for the section under the middle of the screen reads
+   white, so the visitor's place shows even with its files folded away. */
+.term-nav__item[aria-current='location'] {
+  color: #fff;
+}
+
+/*
+  A folder's files: one more indent guide, hung from the folder's caret the
+  same way the folders hang from the root's. Files have no caret, so the
+  name starts where a nested folder's name would (caret box + gap).
+*/
+.term-nav__files {
+  list-style: none;
+  margin: 0 0 0 calc(0.25rem + 8px);
+  padding: 0 0 0 calc(1rem - 8px);
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.term-nav__file {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.24rem 0.35rem 0.24rem calc(0.25rem + 16px + 0.15rem);
+  border: none;
+  border-radius: 4px;
+  background: none;
+  color: #a8a8a8;
+  font-family: inherit;
+  font-size: 0.78rem;
+  text-align: left;
+  text-decoration: none;
+  cursor: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.term-nav__file:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+}
+
+/* The file under the middle of the screen — VS Code's selected row, in the
+   site's editor blue. */
+/* Rows that leave the canvas show a ↗ on hover and focus */
+.term-nav__goto {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  margin-left: auto;
+  color: rgba(255, 255, 255, 0.8);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.term-nav__file--route {
+  gap: 0.5rem;
+}
+
+.term-nav__file--route:hover .term-nav__goto,
+.term-nav__file--route:focus-visible .term-nav__goto {
+  opacity: 1;
+}
+
+.term-nav__file.is-active {
+  background: rgba(0, 143, 255, 0.18);
+  color: #fff;
 }
 
 /*
@@ -2715,6 +2877,13 @@ p a {
   margin: 1.8rem auto 0;
 }
 
+/* On the stack the README is the about section itself, not a miniature
+   canvas object — give the bio a real reading size. */
+.mhome-polaroids .readme-card__body {
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
 /* ── Outro + footer ──────────────────────────────────────────────── */
 
 .mhome-outro {
@@ -2847,17 +3016,15 @@ p a {
   opacity: 0.35;
 }
 
-/* Transcript */
+/* Transcript: the scrolling body of the window. Spacing between turns is
+   the thread's job (.lai below), so the body is a plain padded box. */
 .ai-card__body {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
   /* keep inner scroll from chaining into the canvas glide */
   overscroll-behavior: contain;
-  padding: 0.75rem 1rem 0.9rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
+  padding: 0.85rem 1.1rem 1rem;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
@@ -2870,135 +3037,493 @@ p a {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* zsh prompt: `guest@portfolio ~ %` */
+/* The card's prompt row sits under the transcript, inside the window. */
+.ai-card__foot {
+  flex-shrink: 0;
+  padding: 0.35rem 1.1rem 0.9rem;
+}
+
+/* zsh prompt: `guest@portfolio ~ %` — lower contrast than what follows it */
 .ps1 {
-  color: #cccccc;
+  color: var(--lai-muted, #8b8b8b);
   white-space: nowrap;
 }
 
-.ai-card__boot {
-  position: relative;
-  margin: 0;
+/* ────────────────────────────────────────────────────────────────
+   Luke AI, the shared system (2026-09-14). One set of tokens and one
+   set of rules for both surfaces; `.lai--card` (homepage window) and
+   `.lai--page` (/chat) only retune the tokens. Two type layers:
+   monospace for the terminal personality — prompt, commands, status,
+   the LUKE_AI tag, follow-up actions, route links — and the site sans
+   for the answers themselves, set on a reading measure.
+   ──────────────────────────────────────────────────────────────── */
+
+.lai {
+  /* terminal layer */
+  --lai-mono: 0.8125rem;        /* 13px */
+  --lai-mono-lh: 1.5;
+  /* reading layer */
+  --lai-prose: 1rem;            /* 16px */
+  --lai-prose-lh: 1.6;
+  --lai-measure: 640px;
+  /* rhythm */
+  --lai-turn-gap: 1.75rem;      /* between one answer and the next command */
+  --lai-cmd-gap: 1.25rem;       /* message → ✦ LUKE_AI */
+  /* palette (VS Code Dark Modern) */
+  --lai-fg: #e9e9e9;
+  --lai-fg-mono: #cccccc;
+  --lai-bright: #f4f4f4;
+  --lai-muted: #8b8b8b;
+  --lai-dim: #6a6a6a;
+  --lai-accent: #3794ff;
+  --lai-rule: rgba(255, 255, 255, 0.12);
+
+  display: flex;
+  flex-direction: column;
   font-family: var(--font-mono);
-  font-size: 0.82rem;
-  color: #cccccc;
+  font-size: var(--lai-mono);
+  line-height: var(--lai-mono-lh);
+  color: var(--lai-fg-mono);
 }
 
-/* `✱ luke-ai v1.0 — …`, the star in the notice blue */
-.ai-card__greeting {
+.lai--page {
+  --lai-mono: 0.875rem;         /* 14px */
+  --lai-prose: 1.0625rem;       /* 17px */
+  --lai-prose-lh: 1.62;
+  --lai-measure: 720px;
+  --lai-turn-gap: 2.25rem;
+  --lai-cmd-gap: 1.4rem;
+}
+
+/* Phones: answers never drop below 16px; the terminal layer may. */
+@media (max-width: 47.99em) {
+  .lai,
+  .lai--page {
+    --lai-mono: 0.8125rem;
+    --lai-prose: 1rem;
+    --lai-prose-lh: 1.6;
+    --lai-turn-gap: 1.75rem;
+  }
+}
+
+/* boot line + greeting: `guest@portfolio ~ % luke-ai`, `✱ luke-ai v1.0 — …` */
+.lai__boot {
   margin: 0;
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  line-height: 1.6;
-  color: #b8b8b8;
+  color: var(--lai-fg-mono);
 }
 
-.ai-card__bootdot {
-  color: #3794ff;
+.lai__boot .ps1 {
+  color: var(--lai-muted);
 }
 
-.ai-card__chips {
+.lai__greeting {
+  margin: 0.15rem 0 0;
+  color: var(--lai-muted);
+}
+
+.lai__star {
+  color: var(--lai-accent);
+}
+
+/* Zero state: suggested prompts, drawn like terminal chrome. A real
+   list, so screen readers hear "3 items". */
+.lai__chips {
+  list-style: none;
+  margin: 0.85rem 0 0;
+  padding: 0;
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: 0.2rem;
 }
 
-/* Suggested prompts: read as buttons, drawn like terminal chrome */
-.ai-card__chip {
+.lai__chip {
+  display: inline-block;
+  max-width: 100%;
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  line-height: 1.3;
-  color: #cccccc;
+  font-size: var(--lai-mono);
+  line-height: 1.35;
+  color: var(--lai-fg-mono);
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 4px;
-  padding: 0.42rem 0.75rem;
-  cursor: none;
+  padding: 0.5rem 0.8rem;
   text-align: left;
+  overflow-wrap: anywhere;
+  cursor: none;
   transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
 }
 
-.ai-card__chip:hover {
+.lai__chip::before {
+  content: '↳ ';
+  color: var(--lai-dim);
+  transition: color 0.15s ease;
+}
+
+.lai__chip:hover,
+.lai__chip:focus-visible {
   color: #fff;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.07);
   border-color: rgba(255, 255, 255, 0.45);
 }
 
-.ai-card__msg {
-  max-width: 88%;
-  font-size: 0.85rem;
-  line-height: 1.55;
+.lai__chip:hover::before,
+.lai__chip:focus-visible::before {
+  color: var(--lai-accent);
 }
 
-.ai-card__msg--user {
-  position: relative;
-  align-self: stretch;
-  max-width: 100%;
-  font-family: var(--font-mono);
-  color: #e6e6e6;
-  margin-top: 0.3rem;
+.lai--page .lai__chips {
+  margin-top: 1.1rem;
+  gap: 0.55rem;
+}
+
+.lai--page .lai__chip {
+  padding: 0.6rem 0.9rem;
+}
+
+/* The transcript proper */
+.lai__turns {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* The visitor's turn: a compact, right-aligned message with the prompt
+   `guest@portfolio ~ %` as a small mono line above it. The container is
+   a shade lighter than the panel with a hairline border and a modest
+   radius — a message object, not a pill — and it is the only thing in
+   the transcript that gets one: answers stay open on the canvas, which
+   is the contrast that separates the two voices. */
+.lai__cmd {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin: var(--lai-turn-gap) 0 var(--lai-cmd-gap);
+}
+
+.lai__cmd:first-child {
+  margin-top: 1.1rem;
+}
+
+/* The label sits flush with the message's right edge, so it reads as
+   the message's own prompt line rather than a stray caption. */
+.lai__cmd-ps1 {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;     /* 12px */
+  letter-spacing: 0.02em;
+  color: var(--lai-dim);
+}
+
+.lai__cmd-ps1 .ps1 {
+  color: inherit;
+}
+
+.lai--page .lai__cmd-ps1 {
+  font-size: 0.8125rem;   /* 13px */
+}
+
+.lai__cmd-text {
+  display: block;
+  max-width: 62%;
+  padding: 0.65rem 0.95rem;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 7px;
+  font-family: var(--font-sans);
+  font-size: 1rem;        /* 16px on both surfaces */
+  font-weight: 400;
+  line-height: 1.5;
+  color: #ececec;
+  text-align: left;
   overflow-wrap: anywhere;
+  white-space: pre-wrap;
 }
 
-.ai-card__msg--ai {
-  align-self: flex-start;
-  color: rgba(255, 255, 255, 0.92);
+.lai--page .lai__cmd-text {
+  padding: 0.7rem 1rem;
 }
 
-.ai-card__msg--ai p {
-  margin: 0 0 0.5em;
+/* Narrow columns (the phone stack, the card at small hero widths): the
+   message may take most of the width, short of the edge. */
+@media (max-width: 47.99em) {
+  .lai__cmd-text {
+    max-width: 88%;
+  }
 }
 
-.ai-card__msg--ai p:last-child {
+@container (max-width: 560px) {
+  .lai__cmd-text {
+    max-width: 82%;
+  }
+}
+
+/* `✦ LUKE_AI` */
+.lai__who {
+  display: block;
+  margin-bottom: 0.6rem;
+  font-size: 0.6875rem;   /* 11px */
+  letter-spacing: 0.12em;
+  color: var(--lai-muted);
+}
+
+.lai--page .lai__who {
+  font-size: 0.75rem;
+  margin-bottom: 0.7rem;
+}
+
+/* status line while the model has not started: `searching portfolio...▍` */
+.lai__status {
+  margin: 0;
+  color: var(--lai-muted);
+}
+
+.lai__cursor::after,
+.lai__prose.is-streaming > :last-child::after,
+.lai__prose.is-streaming > :is(ul, ol):last-child > li:last-child::after {
+  content: '▍';
+  margin-left: 0.1em;
+  color: var(--lai-accent);
+  animation: lai-blink 1s steps(2, start) infinite;
+}
+
+.lai__prose.is-streaming > :is(ul, ol):last-child::after {
+  content: none;
+}
+
+@keyframes lai-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+/* ── The answer: prose, sans, on a measure ── */
+/* Body copy is regular weight in a slightly softer white; emphasis is
+   the medium cut in pure white, so a name or a number stands out without
+   the whole line going heavy. Labels are the only bold. */
+.lai__prose {
+  max-width: var(--lai-measure);
+  font-family: var(--font-sans);
+  font-size: var(--lai-prose);
+  font-weight: 400;
+  line-height: var(--lai-prose-lh);
+  color: #dedede;
+  overflow-wrap: break-word;
+}
+
+.lai__prose > :first-child {
+  margin-top: 0;
+}
+
+.lai__prose > :last-child {
   margin-bottom: 0;
 }
 
-.ai-card__msg--ai a {
+.lai__prose p {
+  margin: 0 0 0.8em;
+}
+
+.lai__prose strong {
+  color: #fff;
+  font-weight: 500;
+}
+
+.lai__prose em {
+  font-style: italic;
+}
+
+/* A bold line on its own (`**Why it matters**`) or a markdown heading
+   reads as a section label: a little air above, tight to what follows. */
+.lai__prose .lai__label,
+.lai__prose p:has(> strong:only-child) {
+  margin: 1.25em 0 0.4em;
+  font-weight: 700;
+  color: #fff;
+}
+
+.lai__prose .lai__label strong,
+.lai__prose p:has(> strong:only-child) > strong {
+  font-weight: 700;
+}
+
+.lai__prose .lai__label {
+  font-size: 1em;
+}
+
+/* Tailwind's preflight strips list markers; put the numbers back and
+   draw the bullets as dashes. */
+.lai__prose ul,
+.lai__prose ol {
+  margin: 0 0 0.9em;
+  padding-left: 1.35em;
+}
+
+.lai__prose ol {
+  list-style: decimal;
+}
+
+.lai__prose ol::marker,
+.lai__prose ol > li::marker {
+  color: var(--lai-muted);
+}
+
+.lai__prose ul {
+  list-style: none;
+  padding-left: 1.25em;
+}
+
+.lai__prose ul > li {
+  position: relative;
+}
+
+/* Evidence lists carry the terminal's arrow; nested lists fall back to
+   a dash so two levels stay distinct. */
+.lai__prose ul > li::before {
+  content: '→';
+  position: absolute;
+  left: -1.2em;
+  color: var(--lai-muted);
+}
+
+.lai__prose ul ul > li::before {
+  content: '–';
+}
+
+.lai__prose li {
+  margin: 0.3em 0;
+}
+
+.lai__prose li > p {
+  margin: 0;
+}
+
+.lai__prose li > ul,
+.lai__prose li > ol {
+  margin: 0.25em 0 0.25em;
+}
+
+.lai__prose a {
+  color: var(--mono-blue);
+  text-decoration: underline;
+  text-decoration-color: rgba(0, 143, 255, 0.4);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s ease;
+}
+
+.lai__prose a:hover {
+  text-decoration-color: var(--mono-blue);
+}
+
+/* site routes read as paths */
+.lai__prose a.lai__route,
+.lai__prose code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+}
+
+.lai__prose code {
+  padding: 0.1em 0.35em;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow-wrap: anywhere;
+}
+
+.lai__prose pre {
+  margin: 0 0 0.9em;
+  padding: 0.7em 0.9em;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--lai-rule);
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 0.85em;
+  line-height: 1.5;
+}
+
+.lai__prose pre code {
+  padding: 0;
+  background: none;
+}
+
+/* the one-line aside */
+.lai__prose blockquote {
+  margin: 0 0 0.9em;
+  padding: 0.1em 0 0.1em 0.9em;
+  border-left: 2px solid rgba(55, 148, 255, 0.55);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.lai__prose hr {
+  border: 0;
+  border-top: 1px solid var(--lai-rule);
+  margin: 1em 0;
+}
+
+/* ── Follow-ups under an answer: terminal actions, not pills ── */
+.lai__actions {
+  list-style: none;
+  margin: 0.9rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.lai--page .lai__actions {
+  margin-top: 1.1rem;
+}
+
+.lai__action {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5ch;
+  max-width: 100%;
+  padding: 0.22rem 0.35rem 0.22rem 0.2rem;
+  margin-left: -0.2rem;
+  border: 0;
+  border-radius: 3px;
+  background: none;
+  font-family: var(--font-mono);
+  font-size: var(--lai-mono);
+  line-height: 1.45;
+  text-align: left;
+  color: #b4b4b4;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  cursor: none;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.lai__arrow {
+  flex-shrink: 0;
+  color: var(--lai-dim);
+  transition: color 0.15s ease;
+}
+
+.lai__action:hover,
+.lai__action:focus-visible {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.lai__action:hover .lai__arrow,
+.lai__action:focus-visible .lai__arrow {
+  color: var(--lai-accent);
+}
+
+.lai__action--route {
   color: var(--mono-blue);
 }
 
-.ai-card__thinking {
-  display: inline-flex;
-  gap: 4px;
+.lai__action--route:hover,
+.lai__action--route:focus-visible {
+  color: #5eaeff;
 }
 
-.ai-card__thinking i {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.6);
-  animation: ai-think 1.2s ease-in-out infinite;
-}
-
-.ai-card__thinking i:nth-child(2) {
-  animation-delay: 0.15s;
-}
-
-.ai-card__thinking i:nth-child(3) {
-  animation-delay: 0.3s;
-}
-
-@keyframes ai-think {
-  0%,
-  60%,
-  100% {
-    opacity: 0.35;
-    transform: translateY(0);
-  }
-  30% {
-    opacity: 1;
-    transform: translateY(-3px);
-  }
-}
-
-.ai-card__error {
-  margin: 0;
-  font-size: 0.78rem;
+.lai__error {
+  margin: 0.9rem 0 0;
+  font-size: var(--lai-mono);
   color: #ff7a7a;
 }
 
-.ai-card__error button {
+.lai__error button {
   font-family: inherit;
   font-size: inherit;
   color: var(--mono-blue);
@@ -3009,60 +3534,77 @@ p a {
   padding: 0;
 }
 
-/* The live prompt line: a real field, VS Code input styling — bordered,
-   slightly raised, blue ring on focus. */
-.ai-card__inputrow {
-  position: relative;
-  flex-shrink: 0;
+/* ── The composer: fixed prompt, real textarea, send ── */
+.lai-composer {
+  --lai-composer-size: 0.8125rem;
+  --lai-composer-pad: 0.4rem;
   display: flex;
-  align-items: center;
-  gap: 0;
-  margin: 0.4rem 1rem 0.9rem;
-  padding: 0.3rem 0.3rem 0.3rem 0.75rem;
+  align-items: flex-start;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: var(--lai-composer-size);
+  line-height: 1.5;
+  color: #cccccc;
+}
+
+.lai-composer--page {
+  --lai-composer-size: 0.9375rem;   /* 15px */
+  --lai-composer-pad: 0.7rem;
+}
+
+/* VS Code input styling — bordered, slightly raised, blue ring on focus */
+.lai-composer__field {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  padding: var(--lai-composer-pad) 0.3rem var(--lai-composer-pad) 0.8rem;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 4px;
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  color: #cccccc;
   transition: border-color 0.15s ease, background 0.15s ease;
 }
 
-.ai-card__inputrow:focus-within {
+.lai-composer__field:focus-within {
   border-color: #0078d4;
   background: rgba(255, 255, 255, 0.05);
 }
 
-/* Flex rows drop the prompt's trailing space; put it back as margin */
-.ai-card__inputrow .ps1,
-.term-pg__field .ps1 {
+/* Flex rows drop the prompt's trailing space; put it back as margin. The
+   prompt is text, so it lines up with the textarea's first line. */
+.lai-composer__field .ps1 {
   margin-right: 0.6ch;
+  padding: 0.3rem 0;
+  color: #9a9a9a;
 }
 
-.ai-card__input {
+.lai-composer__input {
   flex: 1 1 auto;
   min-width: 0;
+  resize: none;
+  max-height: 200px;
   background: none;
   border: none;
-  color: #e6e6e6;
+  color: #f4f4f4;
   font: inherit;
   padding: 0.3rem 0;
   outline: none;
   caret-color: #cccccc;
-  caret-shape: block;
+  scrollbar-width: none;
 }
 
-.ai-card__input::placeholder {
-  color: rgba(255, 255, 255, 0.35);
+.lai-composer__input::placeholder {
+  color: rgba(255, 255, 255, 0.38);
 }
 
-.ai-card__send {
+.lai-composer__send {
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
+  margin: 0.05rem 0 0 0.2rem;
   border-radius: 4px;
   background: none;
   color: #8a8a8a;
@@ -3071,13 +3613,36 @@ p a {
   transition: color 0.2s ease, background 0.2s ease, opacity 0.2s ease;
 }
 
-.ai-card__send:disabled {
+.lai-composer--page .lai-composer__send {
+  width: 34px;
+  height: 34px;
+  margin-top: 0;
+}
+
+.lai-composer__send:disabled {
   opacity: 0.3;
 }
 
-.ai-card__send:not(:disabled):hover {
+.lai-composer__send:not(:disabled):hover {
   color: #fff;
   background: rgba(255, 255, 255, 0.08);
+}
+
+/* Keyboard focus, everywhere in the terminal */
+.lai__chip:focus-visible,
+.lai__action:focus-visible,
+.lai__error button:focus-visible,
+.lai-composer__send:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lai__cursor::after,
+  .lai__prose.is-streaming > :last-child::after,
+  .lai__prose.is-streaming > :is(ul, ol):last-child > li:last-child::after {
+    animation: none;
+  }
 }
 
 /* Narrow windows drop the host half of the prompt so there is still
@@ -3085,6 +3650,12 @@ p a {
 @container (max-width: 440px) {
   .ps1__host {
     display: none;
+  }
+
+  /* …but the label over a sent message has the room, and reads better
+     as the full `guest@portfolio ~ %` than as a bare `~ %`. */
+  .lai__cmd-ps1 .ps1__host {
+    display: inline;
   }
 }
 
@@ -3096,16 +3667,29 @@ p a {
   height: min(52vh, 30rem);
 }
 
-/* Mobile touch targets: the terminal's send button renders at 26px —
+/* Mobile touch targets: the terminal's send button renders at 28px —
    well under comfortable thumb size. */
 @media (max-width: 47.99em) {
-  .ai-card__send {
+  .lai-composer__send,
+  .lai-composer--page .lai-composer__send {
     width: 40px;
     height: 40px;
   }
 
-  .ai-card__chip {
-    padding: 0.7em 0.9em;
+  .lai-composer__field .ps1 {
+    padding-top: 0.55rem;
+  }
+
+  .lai-composer__input {
+    padding: 0.55rem 0;
+  }
+
+  .lai__chip {
+    padding: 0.65rem 0.85rem;
+  }
+
+  .lai__action {
+    padding: 0.4rem 0.35rem 0.4rem 0.2rem;
   }
 }
 
@@ -3160,7 +3744,9 @@ p a {
 .intro-lede {
   position: absolute;
   left: 6vw;
-  top: 50%;
+  /* centred, but never so high that the name runs into the Explorer on
+     a short window (its panel ends ~240px down) */
+  top: max(50%, 23.5rem);
   width: 42vw;
   transform: translateY(-50%);
 }
@@ -3211,28 +3797,15 @@ p a {
   height: 70vh;
 }
 
-/* Hero scale: the same window at card size runs ~0.8rem type; as the
-   landing's main object it gets a step up, and the chips read as the
-   prompts they are rather than footnotes. */
-.canvas-intro__ai .ai-card__boot,
-.canvas-intro__ai .ai-card__greeting,
-.canvas-intro__ai .ai-card__input,
-.canvas-intro__ai .ai-card__msg--user {
-  font-size: 0.98rem;
-}
-
-.canvas-intro__ai .ai-card__msg--ai {
-  font-size: 0.98rem;
-  line-height: 1.6;
-}
-
-.canvas-intro__ai .ai-card__chip {
-  font-size: 0.9rem;
-  padding: 0.5rem 0.85rem;
-}
-
+/* Hero scale: at 42vw the window is the landing's main object, and the
+   shared tokens (13px terminal, 16px answers) already fit; the body just
+   gets a little more inset than the mobile card. */
 .canvas-intro__ai .ai-card__body {
-  padding: 1.2rem 1.3rem;
+  padding: 1.1rem 1.3rem 1rem;
+}
+
+.canvas-intro__ai .ai-card__foot {
+  padding: 0.4rem 1.3rem 1rem;
 }
 
 /* On mobile the lede stacks normally and the AI window follows it. */
@@ -3349,7 +3922,7 @@ p a {
 .cs-lenses__text {
   margin: 0;
   font-size: 1rem;
-  line-height: 1.55;
+  line-height: 1.6;
   color: rgba(255, 255, 255, 0.85);
 }
 
@@ -3395,8 +3968,8 @@ p a {
 .cs-ask__link {
   display: inline-block;
   padding: 0.25rem 0;
-  font-size: 0.95rem;
-  line-height: 1.5;
+  font-size: 1rem;
+  line-height: 1.55;
   color: #b0b0b0;
   transition: color 0.15s ease;
 }
@@ -3422,10 +3995,11 @@ p a {
 }
 
 /* ────────────────────────────────────────────────────────────────
-   /chat — the luke-ai terminal, maximized (2026-09). The landing
-   screen's .ai-card window scaled to the viewport, with a VS Code
-   style history panel docked inside it. Reuses .ai-card__* for the
-   bar, boot line, greeting, chips, messages, thinking dots, error.
+   /chat — Luke AI, maximized (2026-09). The landing screen's .ai-card
+   window scaled to the viewport with the sessions panel docked inside
+   it. Everything in the transcript and the composer is the shared
+   .lai-* system above; this block is only the composition: the
+   reading column, the sticky prompt, the panel, the `+` menu.
    ──────────────────────────────────────────────────────────────── */
 
 .term-pg {
@@ -3448,22 +4022,11 @@ p a {
 }
 
 .term-pg__panel-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
   margin-right: 0.1rem;
   color: rgba(255, 255, 255, 0.55);
-  background: none;
-  border: 1px solid transparent;
-  border-radius: 3px;
-  cursor: none;
-  transition: color 0.15s ease, background 0.15s ease;
 }
 
-.term-pg__panel-btn:hover,
-.term-pg__panel-btn[aria-pressed='true'] {
+.term-pg__panel-btn[aria-expanded='true'] {
   color: #fff;
   background: rgba(255, 255, 255, 0.08);
 }
@@ -3475,15 +4038,10 @@ p a {
   display: flex;
 }
 
-.term-pg__main {
-  flex: 1 1 auto;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
+/* The column scrolls as one piece: transcript, then the prompt. */
 .term-pg__scroll {
   flex: 1 1 auto;
+  min-width: 0;
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -3491,174 +4049,46 @@ p a {
   scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
 }
 
-.term-pg__inner {
-  max-width: 760px;
+.term-pg__column {
+  --term-pg-x: clamp(1rem, 4vw, 2.5rem);
+  max-width: calc(760px + 2 * var(--term-pg-x));
   margin: 0 auto;
-  padding: 1.6rem clamp(1rem, 3vw, 2rem) 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
+  padding: 1.5rem var(--term-pg-x) 0;
 }
 
-/* Full-page scale: one step up from the card's 0.8rem terminal type */
-.term-pg .ai-card__boot,
-.term-pg .ai-card__greeting,
-.term-pg .ai-card__msg--user {
-  font-size: 1rem;
-}
-
-.term-pg .ai-card__chip {
-  font-size: 0.92rem;
-  padding: 0.55rem 0.9rem;
-}
-
-.term-pg__chips {
-  margin-top: 0.4rem;
-}
-
-.term-pg .ai-card__msg {
-  max-width: 100%;
-}
-
-.term-pg .ai-card__msg--user {
-  margin-top: 0.8rem;
-}
-
-.term-pg .ai-card__msg--ai {
-  font-size: 1.02rem;
-  line-height: 1.65;
-}
-
-.term-pg .ai-card__msg--ai p {
-  margin: 0 0 0.85em;
-}
-
-.term-pg .ai-card__msg--ai ul,
-.term-pg .ai-card__msg--ai ol {
-  margin: 0 0 0.85em;
-  padding-left: 1.4em;
-}
-
-.term-pg .ai-card__msg--ai li {
-  margin: 0.25em 0;
-}
-
-.term-pg .ai-card__msg--ai code {
-  font-family: var(--font-mono);
-  font-size: 0.92em;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 0.1em 0.35em;
-  border-radius: 3px;
-}
-
-.term-pg .ai-card__msg--ai strong {
-  color: #fff;
-  font-weight: 600;
-}
-
-/* ── Prompt row: full-width rule, content in the transcript's column ── */
+/* The prompt: last in the column, so a short thread reads top-down with
+   the prompt right under the last line, the way a terminal's does;
+   sticky, so a long thread keeps it at the bottom edge while the
+   transcript scrolls under it. The window's own background makes it
+   opaque. */
 .term-pg__promptbar {
-  flex-shrink: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  padding: 1.25rem 0 calc(1.1rem + env(safe-area-inset-bottom, 0px));
+  background: #181818;
 }
 
-.term-pg__prompt {
-  max-width: 760px;
-  margin: 0 auto;
-  display: flex;
-  align-items: flex-start;
-  gap: 0.15rem;
-  padding: 0.75rem clamp(1rem, 3vw, 2rem) 0.8rem;
-  font-family: var(--font-mono);
-  font-size: 1rem;
-  line-height: 1.5;
-}
-
-/* The field itself: prompt, textarea and send inside one bordered box */
-.term-pg__field {
-  flex: 1 1 auto;
-  min-width: 0;
-  display: flex;
-  align-items: flex-start;
-  padding: 0.15rem 0.25rem 0.15rem 0.8rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 4px;
-  transition: border-color 0.15s ease, background 0.15s ease;
-}
-
-.term-pg__field:focus-within {
-  border-color: #0078d4;
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.term-pg__prompt .ps1 {
-  padding-top: 0.35rem;
-}
-
-
-.term-pg__input {
-  flex: 1 1 auto;
-  min-width: 0;
-  resize: none;
-  max-height: 180px;
-  background: none;
-  border: none;
-  color: #fff;
-  font: inherit;
-  padding: 0.35rem 0;
-  outline: none;
-  caret-color: #cccccc;
-  scrollbar-width: none;
-}
-
-.term-pg__input::placeholder {
-  color: #7a7a7a;
-}
-
-.term-pg__input:disabled {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.term-pg__send {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  margin-top: 0.1rem;
-  border-radius: 4px;
-  border: none;
-  background: none;
-  color: #8a8a8a;
-  cursor: none;
-  transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
-}
-
-.term-pg__send:disabled {
-  opacity: 0.35;
-}
-
-.term-pg__send:not(:disabled):hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.08);
+.lai--page + .term-pg__promptbar .lai-composer {
+  align-items: stretch;
 }
 
 /* `+` command menu, opening upward from the prompt */
 .term-pg__plus-wrap {
   position: relative;
   flex-shrink: 0;
-  margin-right: 0.4rem;
+  display: flex;
 }
 
+/* Stretches to the field's resting height; capped so a multi-line
+   prompt doesn't drag it into a tall bar. */
 .term-pg__plus {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
-  margin-top: 0.15rem;
+  width: 46px;
+  min-height: 46px;
+  max-height: 60px;
   border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   background: none;
@@ -3684,7 +4114,7 @@ p a {
   position: absolute;
   bottom: calc(100% + 8px);
   left: 0;
-  min-width: 250px;
+  min-width: 260px;
   background: #1e1e1e;
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 6px;
@@ -3700,7 +4130,7 @@ p a {
   padding: 0.5rem 0.65rem;
   border-radius: 4px;
   font-family: var(--font-mono);
-  font-size: 0.88rem;
+  font-size: 0.875rem;
   color: #e7e7e7;
   transition: background 0.15s ease;
 }
@@ -3711,13 +4141,17 @@ p a {
   outline: none;
 }
 
+.term-pg__plus-cmd .ps1 {
+  color: #8b8b8b;
+}
+
 .term-pg__plus-desc {
   font-size: 0.72rem;
   color: rgba(255, 255, 255, 0.45);
   padding-left: 2.2em;
 }
 
-/* ── History panel (VS Code side panel) ── */
+/* ── Sessions panel (VS Code side panel, reads like a file navigator) ── */
 .term-hist {
   flex-shrink: 0;
   width: 0;
@@ -3731,7 +4165,7 @@ p a {
 }
 
 .term-hist.is-open {
-  width: 260px;
+  width: 272px;
   border-right-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -3739,7 +4173,7 @@ p a {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.7rem 1rem 0.5rem;
+  padding: 0.8rem 1rem 0.5rem;
   white-space: nowrap;
 }
 
@@ -3764,14 +4198,14 @@ p a {
   display: flex;
   align-items: center;
   gap: 0.55rem;
-  margin: 0.2rem 0.6rem 0.4rem;
+  margin: 0.2rem 0.6rem 0.75rem;
   padding: 0.5rem 0.6rem;
   border: 1px dashed rgba(255, 255, 255, 0.25);
   border-radius: 4px;
   background: none;
   color: #e7e7e7;
   font-family: inherit;
-  font-size: 0.85rem;
+  font-size: 0.8125rem;
   text-align: left;
   white-space: nowrap;
   cursor: none;
@@ -3792,46 +4226,76 @@ p a {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-  padding: 0.2rem 0.4rem 0.8rem;
+  padding: 0 0.4rem 0.8rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
 }
 
+.term-hist__rows {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .term-hist__empty {
-  margin: 0.4rem 0.7rem;
+  margin: 0.8rem 0.7rem;
   font-size: 0.8rem;
   font-style: italic;
   color: rgba(255, 255, 255, 0.4);
   white-space: nowrap;
 }
 
+/* A row: two-line title, a meta line, the delete control on hover. The
+   active session gets a hairline of the accent down its left edge. */
 .term-hist__row {
+  position: relative;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   border-radius: 4px;
   transition: background 0.15s ease;
 }
 
+.term-hist__row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  border-radius: 2px;
+  background: transparent;
+  transition: background 0.15s ease;
+}
+
 .term-hist__row:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .term-hist__row.is-active {
-  background: rgba(0, 143, 255, 0.16);
+  background: rgba(0, 143, 255, 0.09);
+}
+
+.term-hist__row.is-active::before {
+  background: var(--mono-blue);
 }
 
 .term-hist__item {
   flex: 1 1 auto;
   min-width: 0;
   display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.45rem 0.6rem;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.5rem 0.5rem 0.5rem 0.75rem;
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.78);
   font-family: inherit;
-  font-size: 0.82rem;
+  font-size: 0.8125rem;
+  line-height: 1.4;
   text-align: left;
   cursor: none;
 }
@@ -3840,25 +4304,34 @@ p a {
   color: #fff;
 }
 
-.term-hist__ext {
-  color: rgba(255, 255, 255, 0.35);
-  flex-shrink: 0;
+.term-hist__name {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
 }
 
-.term-hist__name {
-  overflow: hidden;
-  text-overflow: ellipsis;
+.term-hist__meta {
+  font-size: 0.6875rem;
+  color: rgba(255, 255, 255, 0.4);
   white-space: nowrap;
+}
+
+.term-hist__row.is-active .term-hist__meta {
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .term-hist__delete {
   flex-shrink: 0;
+  align-self: flex-start;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 28px;
   height: 28px;
-  margin-right: 0.2rem;
+  margin: 0.3rem 0.2rem 0 0;
   background: none;
   border: none;
   border-radius: 3px;
@@ -3869,6 +4342,7 @@ p a {
 }
 
 .term-hist__row:hover .term-hist__delete,
+.term-hist__row:focus-within .term-hist__delete,
 .term-hist__delete:focus-visible {
   opacity: 1;
 }
@@ -3881,7 +4355,13 @@ p a {
   display: none;
 }
 
-/* Below 48em the panel overlays the transcript instead of pushing it */
+@media (prefers-reduced-motion: reduce) {
+  .term-hist {
+    transition: none;
+  }
+}
+
+/* Below 48em: window fills the screen, the panel overlays the transcript */
 @media (max-width: 47.99em) {
   .term-pg {
     padding: 0;
@@ -3892,6 +4372,19 @@ p a {
     border-width: 0;
   }
 
+  .term-pg__column {
+    padding-top: 1rem;
+  }
+
+  .term-pg__promptbar {
+    padding-top: 0.8rem;
+    padding-bottom: calc(0.8rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .term-pg__plus {
+    width: 48px;
+  }
+
   .term-hist {
     position: absolute;
     inset: 0 auto 0 0;
@@ -3900,7 +4393,7 @@ p a {
   }
 
   .term-hist.is-open {
-    width: min(78vw, 300px);
+    width: min(82vw, 320px);
   }
 
   .term-hist__backdrop {
@@ -3911,10 +4404,9 @@ p a {
     background: rgba(0, 0, 0, 0.5);
   }
 
-  .term-pg__send,
-  .term-pg__plus {
-    width: 40px;
-    height: 40px;
+  /* touch: the delete control is always visible */
+  .term-hist__delete {
+    opacity: 0.7;
   }
 }
 
@@ -3931,7 +4423,7 @@ p a {
 }
 
 .term-hist__modal {
-  width: min(100%, 420px);
+  width: min(100%, 440px);
   background: #1e1e1e;
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 6px;
@@ -3951,6 +4443,7 @@ p a {
   font-size: 0.85rem;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.65);
+  overflow-wrap: anywhere;
 }
 
 .term-hist__modal-actions {
@@ -3983,4 +4476,76 @@ p a {
 
 .term-hist__modal-delete:hover {
   background: rgba(255, 107, 107, 0.15);
+}
+
+/* ────────────────────────────────────────────────────────────────
+   Case study "Read next" — the home tiles reused as a closing pair.
+   The tiles size themselves for the home grid (100vh cells on phones),
+   so this frame gives them a fixed height instead: two across on
+   desktop, stacked on phones. Hover and keyboard behavior is the
+   tiles' own; focus-within lifts the card ring so the footer link's
+   focus reads at card scale too.
+   ──────────────────────────────────────────────────────────────── */
+.cs-next {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 40em) {
+  .cs-next {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.cs-next .workgrid__item {
+  min-height: 0;
+  height: clamp(20rem, 70vw, 24rem);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (min-width: 40em) {
+  .cs-next .workgrid__item {
+    height: 24rem;
+  }
+}
+
+.cs-next .workgrid__item:focus-within {
+  outline-color: var(--mono-blue);
+}
+
+/* Four core skills — a plain definition grid in page language, not a
+   recreation of the product's skill tiles. */
+.lcs-skills {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+@media (min-width: 40em) {
+  .lcs-skills {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.lcs-skills > div {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 1rem 1.1rem;
+}
+
+.lcs-skills dt {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.lcs-skills dd {
+  margin: 0.25rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.7);
 }

@@ -21,11 +21,30 @@ import HothTile from './HothTile'
  */
 export const HIDDEN_TILES: ReadonlySet<string> = new Set(['hoth'])
 
-const ALL_TILES: ReadonlyArray<{ slug: string; label: string; tile: ReactNode }> = [
-  { slug: 'lucid-ai', label: '01 · lucid ai', tile: <LucidTile /> },
+/*
+ * `file` is the tile's name in the Explorer nav's work/ folder and `href`
+ * is where opening that file goes — the case study itself, so the nav's
+ * children are real links, not decoration.
+ */
+const ALL_TILES: ReadonlyArray<{
+  slug: string
+  label: string
+  file: string
+  href: string
+  tile: ReactNode
+}> = [
+  {
+    slug: 'lucid-ai',
+    label: '01 · lucid ai',
+    file: 'lucid-ai.tsx',
+    href: '/work/lucid-ai',
+    tile: <LucidTile />,
+  },
   {
     slug: 'awardco',
     label: '02 · awardco',
+    file: 'awardco.tsx',
+    href: '/work/awardco-login-flow-redesign',
     tile: (
       <BeforeAfterTile
         slug="awardco-login-flow-redesign"
@@ -39,8 +58,14 @@ const ALL_TILES: ReadonlyArray<{ slug: string; label: string; tile: ReactNode }>
       />
     ),
   },
-  { slug: 'pattern', label: '03 · pattern', tile: <PatternTile /> },
-  { slug: 'hoth', label: '04 · hoth', tile: <HothTile /> },
+  {
+    slug: 'pattern',
+    label: '03 · pattern',
+    file: 'pattern.tsx',
+    href: '/work/pattern-custom-reports',
+    tile: <PatternTile />,
+  },
+  { slug: 'hoth', label: '04 · hoth', file: 'hoth.tsx', href: '/work/hoth', tile: <HothTile /> },
 ]
 
 export const WORK_TILES = ALL_TILES.filter((t) => !HIDDEN_TILES.has(t.slug))

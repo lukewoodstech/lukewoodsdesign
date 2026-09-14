@@ -1,35 +1,23 @@
-"use client";
+'use client'
 
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import ReactMarkdown from "react-markdown";
-import {
-  STORAGE_KEY,
-  HANDOFF_KEY,
-  genId,
-  makeTitle,
-  type Message,
-  type Conversation,
-} from "@/lib/lukeAiStorage";
-import {
-  Ps1,
-  TermTitle,
-  IconPlus,
-  IconMaximize,
-  IconArrowUp,
-} from "./TermChrome";
+import { useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useLukeAi } from './LukeAiProvider'
+import LukeAiThread, { type Suggestion } from './LukeAiThread'
+import LukeAiComposer, { type ComposerHandle } from './LukeAiComposer'
+import { useAutoScroll } from './useAutoScroll'
+import { TermTitle, IconPlus, IconMaximize } from './TermChrome'
 
 /*
  * The live Luke AI window that is the hero of the homepage (desktop landing
- * and the top of the mobile stack): visitors chat right here, streaming
- * from the same /api/chat route as the full page. It is drawn as the VS
- * Code terminal panel — a title, the zsh prompt — with two controls, and
- * one of them only once it has a job: `+` appears after a conversation
- * starts and resets the card to its zero state; maximize saves the
- * conversation into the shared localStorage store, stamps a sessionStorage
- * handoff, and navigates to /chat, which opens the same conversation full
- * screen. Nothing else in the chrome is clickable, so nothing pretends
- * to be.
+ * and the top of the mobile stack): the compact, playful entry point. It is
+ * drawn as the VS Code terminal panel — a title, the zsh prompt — with two
+ * controls, and one of them only once it has a job: `+` appears after a
+ * conversation starts and resets to the zero state; maximize opens /chat.
+ *
+ * There is no handoff to do on maximize: the conversation lives in
+ * LukeAiProvider (mounted in the root layout), so /chat renders the same
+ * thread — mid-stream, even — and coming back finds it here again.
  *
  * The chips are the pitch. Each one sends a prompt the system prompt is
  * built to answer well: the short version, the design + code + business
@@ -37,120 +25,40 @@ import {
  * evidence, one line each) — the thing a static page cannot do.
  */
 
-const GREETING = "luke-ai v1.0 — the portfolio you can interview.";
-
-const SUGGESTIONS: ReadonlyArray<{ label: string; message: string }> = [
+const SUGGESTIONS: ReadonlyArray<Suggestion> = [
   {
-    label: "give me the 30-second version",
-    message: "give me the 30-second version",
+    label: 'give me the 30-second version',
+    message: 'give me the 30-second version',
   },
   {
-    label: "where did code or business change a design call?",
+    label: 'where did code or business change a design call?',
     message:
-      "Give me one concrete decision per project where knowing the code or the business changed what Luke designed.",
+      'Give me one concrete decision per project where knowing the code or the business changed what Luke designed.',
   },
   {
-    label: "map him to a job description",
-    message:
-      "I'm hiring. I'd like to paste a job description and get a fit map.",
+    label: 'map him to a job description',
+    message: "I'm hiring. I'd like to paste a job description and get a fit map.",
   },
-];
+]
 
 export default function LukeAiCard() {
-  const router = useRouter();
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState("");
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const listRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter()
+  const { messages, phase, busy, send, startNew } = useLukeAi()
+  const [input, setInput] = useState('')
+  const bodyRef = useRef<HTMLDivElement>(null)
+  const composerRef = useRef<ComposerHandle>(null)
 
-  useEffect(() => {
-    const el = listRef.current;
-    if (el) el.scrollTop = el.scrollHeight;
-  }, [messages]);
+  const userTurns = messages.filter((m) => m.role === 'user').length
+  useAutoScroll(bodyRef, messages, userTurns)
 
-  const sendMessage = (text: string) => sendWith(messages, text);
+  const submit = (text: string) => {
+    if (!text.trim() || busy) return
+    send(text, 'card')
+    setInput('')
+    setTimeout(() => composerRef.current?.focus(), 30)
+  }
 
-  /* Retry replays the failed prompt without duplicating it in the thread. */
-  const retry = () => {
-    const last = messages[messages.length - 1];
-    if (!last || last.role !== "user") return;
-    void sendWith(messages.slice(0, -1), last.content);
-  };
-
-  const sendWith = async (base: Message[], text: string) => {
-    if (!text || isStreaming) return;
-    setInput("");
-    setHasError(false);
-
-    const withUser: Message[] = [...base, { role: "user", content: text }];
-    setMessages([...withUser, { role: "assistant", content: "" }]);
-    setIsStreaming(true);
-
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: withUser.map(({ role, content }) => ({ role, content })),
-        }),
-      });
-      if (!res.ok || !res.body) throw new Error("stream failed");
-
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const chunk = decoder.decode(value, { stream: true });
-        setMessages((prev) => {
-          const last = prev[prev.length - 1];
-          return [
-            ...prev.slice(0, -1),
-            { ...last, content: last.content + chunk },
-          ];
-        });
-      }
-    } catch {
-      setMessages(withUser);
-      setHasError(true);
-    } finally {
-      setIsStreaming(false);
-      setTimeout(() => inputRef.current?.focus(), 50);
-    }
-  };
-
-  /* `+`: back to the zero state, like opening a fresh terminal. */
-  const startNew = () => {
-    if (isStreaming) return;
-    setMessages([]);
-    setInput("");
-    setHasError(false);
-    setTimeout(() => inputRef.current?.focus(), 50);
-  };
-
-  /* Hand the conversation to the full page (see lib/lukeAiStorage.ts). */
-  const expand = () => {
-    try {
-      const real = messages.filter((m) => m.content);
-      if (real.length) {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        const convs: Conversation[] = raw ? JSON.parse(raw) : [];
-        const conv: Conversation = {
-          id: genId(),
-          title: makeTitle(real[0].content),
-          messages: real,
-          updatedAt: Date.now(),
-        };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify([conv, ...convs]));
-        sessionStorage.setItem(HANDOFF_KEY, conv.id);
-      }
-    } catch {}
-    router.push("/chat");
-  };
-
-  const zeroState = messages.length === 0;
+  const zeroState = messages.length === 0
 
   return (
     <div className="ai-card">
@@ -161,8 +69,11 @@ export default function LukeAiCard() {
             <button
               type="button"
               className="ai-card__tool"
-              onClick={startNew}
-              disabled={isStreaming}
+              onClick={() => {
+                startNew()
+                setInput('')
+                setTimeout(() => composerRef.current?.focus(), 30)
+              }}
               title="New session"
               aria-label="Start a new conversation"
             >
@@ -172,7 +83,7 @@ export default function LukeAiCard() {
           <button
             type="button"
             className="ai-card__tool ai-card__expand"
-            onClick={expand}
+            onClick={() => router.push('/chat')}
             title="Maximize"
             aria-label="Open this conversation full screen"
           >
@@ -181,108 +92,20 @@ export default function LukeAiCard() {
         </div>
       </header>
 
-      <div className="ai-card__body" ref={listRef}>
-        {/* the session opener: the visitor "launched" luke-ai */}
-        <p className="ai-card__boot" aria-hidden="true">
-          <Ps1 />
-          luke-ai
-        </p>
-        <p className="ai-card__greeting">
-          <span className="ai-card__bootdot" aria-hidden="true">
-            ✱
-          </span>{" "}
-          {GREETING}
-        </p>
-        {zeroState ? (
-          <div className="ai-card__chips">
-            {SUGGESTIONS.map((s) => (
-              <button
-                key={s.label}
-                type="button"
-                className="ai-card__chip"
-                onClick={() => sendMessage(s.message)}
-              >
-                {s.label}
-              </button>
-            ))}
-          </div>
-        ) : (
-          messages.map((msg, i) =>
-            msg.role === "user" ? (
-              <div key={i} className="ai-card__msg ai-card__msg--user">
-                <Ps1 />
-                {msg.content}
-              </div>
-            ) : (
-              <div key={i} className="ai-card__msg ai-card__msg--ai">
-                {msg.content === "" &&
-                isStreaming &&
-                i === messages.length - 1 ? (
-                  <span
-                    className="ai-card__thinking"
-                    aria-label="Luke AI is thinking"
-                  >
-                    <i />
-                    <i />
-                    <i />
-                  </span>
-                ) : (
-                  <ReactMarkdown
-                    components={{
-                      a: ({ href, children }) => (
-                        <a
-                          href={href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {children}
-                        </a>
-                      ),
-                    }}
-                  >
-                    {msg.content}
-                  </ReactMarkdown>
-                )}
-              </div>
-            ),
-          )
-        )}
-        {hasError && (
-          <p className="ai-card__error">
-            something broke mid-thought.{" "}
-            <button type="button" onClick={retry}>
-              try again
-            </button>
-          </p>
-        )}
+      <div className="ai-card__body" ref={bodyRef}>
+        <LukeAiThread surface="card" suggestions={SUGGESTIONS} />
       </div>
 
-      <form
-        className="ai-card__inputrow"
-        onSubmit={(e) => {
-          e.preventDefault();
-          sendMessage(input.trim());
-        }}
-      >
-        <Ps1 />
-        <input
-          ref={inputRef}
-          className="ai-card__input"
-          type="text"
+      <div className="ai-card__foot">
+        <LukeAiComposer
+          ref={composerRef}
+          size="card"
           value={input}
-          placeholder="ask about luke's work…"
-          onChange={(e) => setInput(e.target.value)}
-          aria-label="Message Luke AI"
+          onChange={setInput}
+          onSubmit={() => submit(input)}
+          canSend={phase === 'idle'}
         />
-        <button
-          type="submit"
-          className="ai-card__send"
-          disabled={!input.trim() || isStreaming}
-          aria-label="Send"
-        >
-          <IconArrowUp />
-        </button>
-      </form>
+      </div>
     </div>
-  );
+  )
 }

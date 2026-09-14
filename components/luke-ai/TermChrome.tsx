@@ -12,7 +12,8 @@
 export const HOST = 'guest@portfolio'
 export const CWD = '~'
 
-/* `guest@portfolio ~ %` */
+/* `guest@portfolio ~ %` — always aria-hidden: the surrounding element
+   says who is speaking in words a screen reader can use. */
 export const Ps1 = () => (
   <span className="ps1" aria-hidden="true">
     <span className="ps1__host">{HOST} </span>
@@ -20,9 +21,20 @@ export const Ps1 = () => (
   </span>
 )
 
-export const TermTitle = () => (
+/* `✦ LUKE_AI` — the restrained identity above every answer. */
+export const AiTag = () => (
+  <span className="lai__who">
+    <span className="lai__star" aria-hidden="true">
+      ✦
+    </span>{' '}
+    <span aria-hidden="true">LUKE_AI</span>
+    <span className="sr-only">Luke AI</span>
+  </span>
+)
+
+export const TermTitle = ({ label = 'terminal' }: { label?: string }) => (
   <span className="ai-card__title" aria-hidden="true">
-    terminal
+    {label}
   </span>
 )
 

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import EmailLink from './EmailLink'
-import LukeAiCard from './LukeAiCard'
+import LukeAiCard from './luke-ai/LukeAiCard'
 import { AboutReadme, IntroLede, SelectionHandles, WORK_TILES } from './CanvasBits'
 import { SITE } from '@/lib/site'
 
