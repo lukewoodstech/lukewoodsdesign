@@ -42,18 +42,19 @@ export const caseStudies: CaseStudy[] = [
      * this entry only feeds the home-grid tile and the prev/next chain.
      */
     slug: 'lucid-ai',
-    title: 'Bringing Lucid AI Out of the Canvas',
+    title: 'Bringing Lucid AI to the homepage',
     company: 'Lucid',
     accent: '#34d399',
     role: 'Product Design Intern',
     period: 'May – Aug 2026 · 12 weeks',
     team: 'Two scrum teams: search + AI',
-    summary: 'The AI chat panel that brought Lucid AI to the docs list, GA on every tier.',
+    summary: 'An AI assistant that finds, summarizes, and creates work from the Lucid homepage.',
     headline: [
-      'GA on all tiers in 12 weeks',
-      'Harness for every future docs list skill',
+      'General availability on every tier in 12 weeks',
+      'Four core skills: Find Docs, Summarize, Generate a New Board, Catch Up',
     ],
-    tagline: "So you can find a doc you can't name.",
+    tagline:
+      'An AI assistant that helps users find, understand, and create work from the Lucid homepage.',
     overview:
       '[2–4 sentences: the situation, what you did end-to-end, and the headline result. This paragraph sits directly under the hero image.]',
     problemIntro:

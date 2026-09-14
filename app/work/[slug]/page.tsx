@@ -153,7 +153,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
             {cs.title}
           </h1>
           {real(cs.tagline) && (
-            <p className="mt-5 text-xl text-white/85 leading-snug">
+            <p className="cs-lede">
               {cs.tagline}
             </p>
           )}
@@ -190,7 +190,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
           </figure>
         ) : null}
 
-        {real(cs.overview) && <Prose className="mt-14">{cs.overview}</Prose>}
+        {real(cs.overview) && <Prose className="cs-prose--intro mt-14">{cs.overview}</Prose>}
 
         {(real(cs.problemIntro) || problemPoints.length > 0) && (
           <Section eyebrow="Problem">

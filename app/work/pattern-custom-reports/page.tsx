@@ -96,7 +96,7 @@ export default function PatternCaseStudy() {
           <h1 className="text-4xl md:text-6xl font-medium leading-tight tracking-tight text-white">
             {TITLE}
           </h1>
-          <p className="mt-5 text-xl text-white/85 leading-snug">
+          <p className="cs-lede">
             Redesigning the reporting tool everyone tried once — so brand managers
             could build, edit, and share multi-metric client reports without falling
             back to Excel.
@@ -141,7 +141,7 @@ export default function PatternCaseStudy() {
         />
 
         <Reveal className="mt-14">
-          <Prose>
+          <Prose className="cs-prose--intro">
             <p>
               Pattern&rsquo;s Predict platform tracks billions of ecommerce data
               points, and its Custom Reports tool was built to end the
@@ -290,22 +290,22 @@ export default function PatternCaseStudy() {
               >
                 <p className="cs-label-sm">{p.role}</p>
                 <p className="mt-1 text-xl text-white font-medium">{p.name}</p>
-                <p className="mt-1 text-sm text-white/60">{p.detail}</p>
+                <p className="cs-meta">{p.detail}</p>
                 <ul className="mt-4 space-y-1.5">
                   {p.pains.map((pain) => (
-                    <li key={pain} className="flex gap-2.5 text-sm text-white/85 leading-relaxed">
+                    <li key={pain} className="flex gap-2.5 text-base text-white/85 leading-[1.6]">
                       <span aria-hidden="true" className="text-[var(--accent)] flex-shrink-0">—</span>
                       {pain}
                     </li>
                   ))}
                 </ul>
-                <p className="mt-4 text-sm text-white/70 leading-relaxed">
+                <p className="text-base text-white/70 leading-[1.6]">
                   <span className="text-white">Goal:</span> {p.goal}
                 </p>
               </div>
             ))}
           </div>
-          <p className="mt-4 text-sm text-white/60">
+          <p className="cs-meta">
             Personas built from the research; names are fictional.
           </p>
         </Section>

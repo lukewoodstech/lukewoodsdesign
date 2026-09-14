@@ -21,9 +21,12 @@ export type ImpactStat = {
 export default function ImpactStats({
   stats,
   kicker,
+  eyebrow = 'Impact',
 }: {
   stats: ImpactStat[]
   kicker?: string
+  /** Label over the strip. Pages that show facts rather than outcomes pass their own. */
+  eyebrow?: string
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [inView, setInView] = useState(false)
@@ -70,7 +73,7 @@ export default function ImpactStats({
 
   return (
     <div ref={ref} className={`lcs-impact ${inView ? 'is-inview' : ''}`}>
-      <span className="cs-eyebrow">Impact</span>
+      <span className="cs-eyebrow">{eyebrow}</span>
       <div className="lcs-impact__grid">
         {stats.map((stat, i) => (
           <div

@@ -1,19 +1,17 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import Footer from '@/components/Footer'
 import SiteNav from '@/components/SiteNav'
+import BeforeAfterTile from '@/components/BeforeAfterTile'
+import PatternTile from '@/components/PatternTile'
 import Reveal from '@/components/lucid/Reveal'
 import CompareStage from '@/components/lucid/CompareStage'
 import ShipTimeline from '@/components/lucid/ShipTimeline'
-import LayoutContest from '@/components/lucid/LayoutContest'
-import ResultsCount from '@/components/lucid/ResultsCount'
 import SearchMock from '@/components/lucid/SearchMock'
 import BoardGenClip from '@/components/lucid/BoardGenClip'
 import FailureTabs from '@/components/lucid/FailureTabs'
-import PrismStage from '@/components/lucid/PrismStage'
 import ZoomShot from '@/components/lucid/ZoomShot'
 import ImpactStats from '@/components/lucid/ImpactStats'
-import { Section, Reframe, FactStrip, ThreeLenses, AskLukeAi } from '@/components/CaseStudy'
+import { Section, FactStrip } from '@/components/CaseStudy'
 import { SITE } from '@/lib/site'
 
 /*
@@ -21,13 +19,18 @@ import { SITE } from '@/lib/site'
  * generic /work/[slug] template. The tile on the home grid still reads from
  * lib/caseStudies.ts; everything below is bespoke to the Lucid story.
  *
- * Copy and structure follow the case study brief: shipped work only, no
- * internal project or team names, masked metrics, honest credit split.
+ * Copy is Luke's (rewrite of 2026-09-14). Rules that still bind: shipped
+ * work only, no internal project or team names, no colleague names, no
+ * long-term adoption numbers (the internship ended shortly after GA), no
+ * interview count (no single source of truth), honest credit split on the
+ * search-bar summary. Captures from the design file predate the release and
+ * carry the skill's earlier label, "Build a diagram"; captions say so rather
+ * than the artifacts being altered.
  */
 
-const TITLE = 'Bringing Lucid AI Out of the Canvas'
+const TITLE = 'Bringing Lucid AI to the homepage'
 const DESCRIPTION =
-  'Lucid AI lived inside the editor. I designed the chat panel that brought it to the docs list, so you can find a doc you cannot name. Shipped GA to every tier 12 weeks from zero.'
+  'An AI assistant on the Lucid homepage: find documents by whatever you remember, summarize them, catch up, or generate a new board. Shipped to every tier in 12 weeks.'
 
 export const metadata: Metadata = {
   title: `${TITLE} · Lucid`,
@@ -48,6 +51,14 @@ export const metadata: Metadata = {
 
 const IMG = '/case-studies/lucid'
 
+/* Names as shipped. Descriptions are the design file's own one-liners. */
+const SKILLS: [string, string][] = [
+  ['Find Docs', 'Locate a doc by topic, person, or what is inside it.'],
+  ['Summarize', 'Get the gist of a doc or a group of them.'],
+  ['Generate a New Board', 'Create flowcharts and visual layouts from a text prompt.'],
+  ['Catch Up', 'See what changed recently or what you missed.'],
+]
+
 export default function LucidCaseStudy() {
   return (
     <div className="cs lcs min-h-screen bg-black text-white font-medium">
@@ -64,145 +75,200 @@ export default function LucidCaseStudy() {
           <h1 className="text-4xl md:text-6xl font-medium leading-tight tracking-tight text-white">
             {TITLE}
           </h1>
-          <p className="mt-5 text-xl leading-snug text-white/85">
-            So you can find a doc you can&rsquo;t name.
+          <p className="cs-lede">
+            An AI assistant that helps users find, understand, and create work from the
+            Lucid homepage.
           </p>
 
           <FactStrip
             facts={[
               ['Role', 'Product Design Intern'],
-              ['Timeline', 'May – Aug 2026'],
-              ['Team', 'Two scrum teams: search + AI'],
-              ['Shipped', 'GA, all tiers, Aug 5'],
+              ['Timeline', 'May to August 2026'],
+              ['Team', 'Two scrum teams, Search and AI'],
+              ['Released', 'General availability, August 5, every Lucid tier'],
             ]}
           />
 
           <ImpactStats
+            eyebrow="At a glance"
             stats={[
-              { value: 12, label: 'weeks from zero to GA' },
-              { value: 3, label: 'AI skills shipped at launch' },
-              { value: 'All', label: 'tiers, free through enterprise' },
-              { value: 20, label: 'user interviews, 5 countries' },
+              { value: 12, label: 'weeks from a blank page to general availability' },
+              { value: 4, label: 'core skills: Find Docs, Summarize, Generate a New Board, Catch Up' },
+              { value: 20, suffix: '+', label: 'capabilities prototyped and tested before the cut to four' },
+              { value: 'All', label: 'Lucid tiers at release, free through enterprise' },
             ]}
-            kicker="Beyond the numbers: every future docs list AI skill inherits this panel, its entry point, its response patterns, and its failure states."
           />
         </header>
 
         <Reveal as="figure" className="m-0">
           <SearchMock width="100%" height={560} />
           <figcaption className="cs-cap">
-            Not a screenshot: the shipped experience rebuilt in code from our design
-            file, running the Find docs loop. Content is the file&rsquo;s demo data.
+            The Find Docs loop, rebuilt in code from our design file rather than
+            screenshotted. The documents are the file&rsquo;s demo data.
           </figcaption>
         </Reveal>
 
-        <ThreeLenses
-          design="The panel end to end: entry point, layout system, response patterns, and the failure states every future skill inherits."
-          code="Four layouts prototyped in code so testing could measure the real thing; the working state reused from the editor assistant."
-          business="GA on every tier, free through enterprise, 12 weeks from zero, with an A/B test designed to settle the default after I left."
-        />
-
         <Reveal className="mt-12">
-          <p className="cs-prose">
-            Lucid AI could already help you inside a diagram. It could not help you find
-            one. I designed the AI chat panel for the docs list: the entry point, the
-            layout system, the response patterns, and the failure states that every
-            future docs list skill now inherits. It shipped to general availability on
-            every tier, free through enterprise, 12 weeks after the project started.
+          <p className="cs-prose cs-prose--intro">
+            I designed an AI assistant for Lucid&rsquo;s homepage that allowed users to
+            search for documents using whatever details they could remember, not just
+            the document title. Within the same experience, I designed high-value AI
+            skills for summarizing documents, synthesizing information across multiple
+            documents, and generating new documents.
           </p>
         </Reveal>
 
-        {/* ── Context ── */}
-        <Section eyebrow="Context" headline="The AI lived in the editor. Your docs live everywhere else.">
+        {/* ── The problem ── */}
+        <Section eyebrow="Before" headline="The problem">
           <div className="cs-prose">
             <p>
-              Lucid is a visual workspace: Lucidchart for diagramming, Lucidspark for
-              whiteboarding. The docs list is home base. It is where every document
-              lives and where every session starts.
+              When I joined Lucid, finding documents created a lot of friction,
+              especially for enterprise users who belonged to multiple teams and had
+              years of document history.
             </p>
             <p>
-              Lucid AI existed before this project, but only inside the editor canvas,
-              working on one open doc at a time. The docs list, where you decide what to
-              open in the first place, had no intelligence at all.
+              The existing search relied on keywords from document titles. If someone
+              could not remember the title, finding the right document became
+              difficult. Their alternatives were to scroll endlessly through recent
+              documents or use advanced filters that many users found confusing and
+              cumbersome.
             </p>
           </div>
         </Section>
 
-        {/* ── Challenge ── */}
-        <Section eyebrow="The challenge" headline="Search only matched titles. Titles are the first thing people forget.">
+        {/* ── The opportunity ── */}
+        <Section eyebrow="Why now" headline="The opportunity">
           <div className="cs-prose">
             <p>
-              Docs list search ran your keywords against document titles. If you
-              remembered the exact name, you found your doc. If you remembered anything
-              else about it, who worked on it with you, roughly when, what was inside,
-              you were out of luck. Advanced filters existed but were hidden, slow to
-              fill out, and still could not see inside a doc.
-            </p>
-            <p>
-              The team defined the metric before any design work: search-to-open
-              success rate. A search works if you open something it surfaced.
+              Lucid AI already allowed users to generate diagrams and flowcharts inside
+              a document, but none of that natural-language functionality existed on
+              the homepage. We saw an opportunity to bring Lucid AI into this part of
+              the product, helping users find existing work and accomplish more before
+              opening a document.
             </p>
           </div>
-          <ul className="cs-bullets mt-5">
-            <li>Prior research: analytics plus 39 external interviews, run by my PM before I joined</li>
-            <li>Heavy users with 60+ docs found the right doc in the top 5 results 48% of the time. Lighter users, 35%</li>
-            <li>When search failed, people asked a colleague, kept link lists in other tools, or rebuilt the doc from scratch</li>
-          </ul>
+          <div className="mt-8">
+            <CompareStage
+              ariaLabel="Before and after: the title-based search versus the Lucid AI assistant on the homepage"
+              layers={[
+                {
+                  src: `${IMG}/before-old-search.png`,
+                  alt: 'The old Lucid homepage: a search bar that only matches keywords against document titles, with no AI entry point',
+                  label: 'Before',
+                  caption:
+                    'The old homepage. Search matched keywords in titles and nothing else.',
+                  width: 2880,
+                  height: 1800,
+                },
+                {
+                  src: `${IMG}/side-panel-zero.png`,
+                  alt: 'The Lucid AI side panel docked beside the homepage document list, offering skill tiles above the chat input',
+                  label: 'After',
+                  caption:
+                    'Lucid AI on the homepage. Describe the document by collaborator, timeframe, or content while the page stays usable. Design-file capture: the third tile here carries the earlier label for Generate a New Board.',
+                  width: 2880,
+                  height: 1800,
+                },
+              ]}
+            />
+          </div>
         </Section>
 
-        {/* ── The before / after ── */}
-        <Section eyebrow="The before" headline="Feel the jump.">
-          <CompareStage
-            ariaLabel="Before and after: old title search versus the shipped AI panel"
-            layers={[
-              {
-                src: `${IMG}/before-old-search.png`,
-                alt: 'The old Lucid docs list homepage: a search bar that only matches keywords against document titles, with no AI entry point',
-                label: 'Before',
-                caption:
-                  'The old docs list. The search bar matched titles and nothing else.',
-                width: 2880,
-                height: 1800,
-              },
-              {
-                src: `${IMG}/side-panel-zero.png`,
-                alt: 'The shipped Lucid AI side panel docked beside the docs list, offering Find docs, Summarize, and Build a diagram skills',
-                label: 'After',
-                caption:
-                  'The shipped panel. Describe the doc by collaborator, timeframe, or content, and keep the page usable while you ask.',
-                width: 2880,
-                height: 1800,
-              },
-            ]}
-          />
-        </Section>
-
-        {/* ── What shipped ── */}
-        <Section eyebrow="What shipped" headline="One panel, three skills, every tier.">
+        {/* ── Discovery ── */}
+        <Section eyebrow="Discovery" headline="People remembered the document, not its title">
           <div className="cs-prose">
             <p>
-              Two things went to general availability on August 5. The AI chat panel
-              was my design end to end: a docked side panel that expands to a full
-              page, carrying three skills at launch. Find docs, Summarize, and Build a
-              diagram.
+              I started scheduling discovery calls as quickly as possible so I could
+              better understand the problem. Across conversations with users from
+              around the world, I noticed a consistent pattern: people often remembered
+              what a document was about or specific content inside it, but they rarely
+              remembered its exact title.
             </p>
             <p>
-              The second piece is the AI summary section inside the regular search
-              bar: direct answers above the keyword results, triggered when a query
-              runs four words or longer. My manager led that design. I contributed
-              ideation and some of the UI.
+              This created two problems. Users could not translate what they remembered
+              into a keyword search, and document titles alone did not give them enough
+              information to confidently identify the correct result.
+            </p>
+            <p>
+              In response, I designed a compact document result with an AI-generated
+              summary that explained the contents of each document. Hovering over a
+              result revealed additional information, including when the document was
+              last modified, who owned it, and which team it belonged to. This gave
+              users enough context to recognize the right document and verify that the
+              assistant had understood their search.
             </p>
           </div>
+          <Reveal as="figure" className="my-12 m-0">
+            <ZoomShot
+              src={`${IMG}/results-final-16px.png`}
+              alt="The shipped document results: seven compact document chips, each followed by a one-line AI-generated summary, ranked strongest match first"
+              width={2400}
+              height={1312}
+              sizes="(min-width: 860px) 860px, 100vw"
+            />
+            <figcaption className="cs-cap">
+              The shipped results component: a document chip with a one-line AI summary,
+              up to seven in view. Hovering a result showed last modified, owner, and
+              team.
+            </figcaption>
+          </Reveal>
+        </Section>
+
+        {/* ── Scope ── */}
+        <Section eyebrow="Scope" headline="Search was only the starting point">
+          <div className="cs-prose">
+            <p>
+              My discovery interviews showed that search was only one of the tasks
+              users struggled with from the homepage. Managers wanted a faster way to
+              understand their teams&rsquo; work. Product leaders wanted visibility into
+              what was happening across their organization and quick summaries of
+              roadmaps and other planning documents. More broadly, users wanted the
+              assistant to help them get started, not only find files.
+            </p>
+            <p>
+              That expanded the scope of the project. We rapidly prototyped and tested
+              more than 20 potential capabilities before narrowing the experience to
+              four core skills: Find Docs, Summarize, Generate a New Board, and Catch
+              Up.
+            </p>
+          </div>
+
+          <Reveal as="figure" className="my-12 m-0">
+            <ZoomShot
+              src={`${IMG}/skills-ideation.png`}
+              alt="An ideation grid of twenty candidate capabilities for the homepage assistant, including Find docs, Summarize, Catch up, Build a diagram, dormant files, and project status"
+              width={1680}
+              height={1956}
+              sizes="(min-width: 860px) 860px, 100vw"
+            />
+            <figcaption className="cs-cap">
+              Twenty of the candidate capabilities, from the design file, before the
+              cut to four.
+            </figcaption>
+          </Reveal>
+
+          <dl className="lcs-skills" aria-label="The four core skills">
+            {SKILLS.map(([name, desc]) => (
+              <div key={name}>
+                <dt>{name}</dt>
+                <dd>{desc}</dd>
+              </div>
+            ))}
+          </dl>
+
           <div className="mt-8 grid gap-6 sm:grid-cols-2">
             <figure className="m-0">
               <ZoomShot
                 src={`${IMG}/find-docs-flow.png`}
-                alt="The Find docs skill explaining it can search by collaborators, timeframe, canvas content, and connected project views, with quick view chips"
+                alt="The Find Docs skill explaining it can search by collaborators, timeframe, canvas content, and connected project views, with quick view chips"
                 width={2400}
                 height={1600}
                 sizes="(min-width: 860px) 430px, 100vw"
               />
-              <figcaption className="cs-cap">Find docs: search by what you actually remember.</figcaption>
+              <figcaption className="cs-cap">
+                Find Docs: search by collaborator, timeframe, or what is written on the
+                canvas.
+              </figcaption>
             </figure>
             <figure className="m-0">
               <ZoomShot
@@ -212,199 +278,38 @@ export default function LucidCaseStudy() {
                 height={1600}
                 sizes="(min-width: 860px) 430px, 100vw"
               />
-              <figcaption className="cs-cap">Summarize: the gist of a doc or a group of them.</figcaption>
+              <figcaption className="cs-cap">
+                Summarize: one document or a group of them. In this capture, catch-up
+                reports still sit under Summarize. Catch Up shipped as its own skill.
+              </figcaption>
             </figure>
           </div>
-        </Section>
 
-        {/* ── Timeline ── */}
-        <Section eyebrow="Timeline" headline="Zero to general release in 12 weeks.">
-          <ShipTimeline />
-        </Section>
-
-        {/* ── Research ── */}
-        <Section eyebrow="Research" headline="I inherited the problem. I tested the answer.">
-          <div className="cs-prose">
-            <p>
-              The problem was already validated when I joined, so my research was
-              evaluative, not generative. I ran 20 interviews with external users
-              across the US, UK, Chile, India, and New Zealand, putting concepts and
-              iterations in front of them to answer two questions. Are we building the
-              right thing. Can people use it.
-            </p>
-            <p>
-              Every design round went back in front of users. The loops stayed short
-              because the questions stayed small.
-            </p>
-          </div>
           <Reveal as="figure" className="my-12 m-0">
-            <ZoomShot
-              src={`${IMG}/skills-ideation.png`}
-              alt="An ideation grid of twenty candidate skills for the docs list AI, from Find docs and Summarize to catch up, dormant files, and project status"
-              width={1680}
-              height={1956}
-              sizes="(min-width: 860px) 860px, 100vw"
-            />
+            <BoardGenClip />
             <figcaption className="cs-cap">
-              The possibility space: twenty candidate skills, mapped before cutting to
-              the three that shipped.
+              Generate a New Board, captured live from the product: the board assembles
+              in its own tab while the panel reports progress.
             </figcaption>
           </Reveal>
         </Section>
 
-        {/* ── Reframe ── */}
-        <Reframe
-          quote="The AI could already create. What people wanted was for it to find, explain, and catch them up."
-        >
-          <p className="mt-3 text-sm text-white/60">
-            The reframe that came out of design testing
-          </p>
-          <p className="cs-prose mt-6">
-            Generation alone was not enough. Build a diagram stayed, and shipped. But
-            the testing kept surfacing the same additive finding: the assistant people
-            described was one that knew their workspace, not just one that could draw.
-          </p>
-        </Reframe>
-
-        {/* ── Design walkthrough ── */}
-        <Section eyebrow="Design decisions" headline="The upgrade lives where the old behavior lived.">
+        {/* ── Release ── */}
+        <Section eyebrow="Release" headline="Releasing early exposed problems we could not predict">
           <div className="cs-prose">
             <p>
-              The entry point is an AI icon directly beside global search. People
-              already look there when they are looking for something, so the new
-              capability sits exactly where the old habit points. No new surface to
-              discover, no education campaign. A one-time callout introduces it, then
-              gets out of the way.
-            </p>
-          </div>
-          <Reveal as="figure" className="my-12 m-0">
-            <ZoomShot
-              src={`${IMG}/entry-point-callout.png`}
-              alt="The docs list with a one-time callout anchored to the AI icon beside the global search bar, reading Find Lucid AI anytime"
-              width={2880}
-              height={1800}
-              sizes="(min-width: 860px) 860px, 100vw"
-            />
-            <figcaption className="cs-cap">
-              The AI icon docks beside search. The upgrade lives where the old
-              behavior lived.
-            </figcaption>
-          </Reveal>
-        </Section>
-
-        <Section eyebrow="Layout" headline="Four layouts went in front of users. One kept the page usable.">
-          <div className="cs-prose">
-            <p>
-              I prototyped four layouts in code and tested them: side panel, modal,
-              floating panel, inline bar. The side panel won because it kept the docs
-              list usable while you asked. You could see the results it referenced
-              without the answer covering them.
-            </p>
-          </div>
-          <div className="mt-8">
-            <LayoutContest />
-          </div>
-          <div className="cs-prose mt-8">
-            <p>
-              Continued testing showed power users felt cramped at 400px, so the full
-              page became the panel&rsquo;s expand state, one click apart via the
-              expand and collapse icons. Which one should be the default is a real
-              question, so I designed an A/B test to settle it: side panel default
-              versus full page default, measuring discovery, toggle rates, and layout
-              persistence.
-            </p>
-          </div>
-          <div className="mt-8">
-            <CompareStage
-              ariaLabel="The shipped expand interaction: side panel versus full page"
-              layers={[
-                {
-                  src: `${IMG}/side-panel-zero.png`,
-                  alt: 'Lucid AI docked as a side panel beside the docs list',
-                  label: 'Side panel',
-                  caption: 'Docked: ask without leaving the docs list.',
-                  width: 2880,
-                  height: 1800,
-                },
-                {
-                  src: `${IMG}/full-page-zero.png`,
-                  alt: 'Lucid AI expanded to a full page over the docs list',
-                  label: 'Full page',
-                  caption: 'Expanded: room to work for the heavy sessions. One click back.',
-                  width: 2880,
-                  height: 1800,
-                },
-              ]}
-            />
-            <p className="cs-cap">
-              This toggle mirrors the shipped interaction: the expand icon in the
-              panel header flips between these two states.
-            </p>
-          </div>
-        </Section>
-
-        <Section eyebrow="Teaching" headline="The first click teaches. Every click after does.">
-          <div className="cs-prose">
-            <p>
-              Clicking a skill tile in the zero state does not run the skill. It
-              returns a hardcoded explanation of what the skill can do, with concrete
-              examples and quick-start chips. These are brand-new capabilities, and
-              the first click is the best teaching moment you will ever get. I
-              accepted a slower first turn so people learn what each skill can do and
-              get more from every turn after.
+              AI also changed how quickly we could move. By using it throughout
+              prototyping and development, we got the assistant in front of internal
+              users on July 20 and began learning from real usage.
             </p>
             <p>
-              Find docs is the clearest case: it searches by content, date, and
-              collaborator. None of that is guessable from an empty text box.
-            </p>
-          </div>
-        </Section>
-
-        <Section eyebrow="The results component" headline="Seven results in a 400px panel.">
-          <div className="mt-2 mb-8">
-            <ResultsCount />
-          </div>
-          <div className="cs-prose">
-            <p>
-              Testing pushed the result count from a fixed 3 to up to 7, chosen by the
-              AI on confidence. The existing 24px button component bloated at that
-              count, especially in the 400px side panel. So I designed a 16px inline
-              component: a doc chip plus a one-line description, keeping a full result
-              set scannable in one glance.
-            </p>
-          </div>
-          <div className="mt-8 grid gap-6 sm:grid-cols-2">
-            <figure className="m-0">
-              <ZoomShot
-                src={`${IMG}/results-v1-24px.png`}
-                alt="Version one of doc search results: three large 24px bordered result buttons with a see last two results chip"
-                width={2400}
-                height={2026}
-                sizes="(min-width: 860px) 430px, 100vw"
-              />
-              <figcaption className="cs-cap">V1: three results in the 24px component, rest behind a click.</figcaption>
-            </figure>
-            <figure className="m-0">
-              <ZoomShot
-                src={`${IMG}/results-final-16px.png`}
-                alt="The shipped doc search results: seven compact 16px doc chips, each with a one-line description, ranked strongest match first"
-                width={2400}
-                height={1312}
-                sizes="(min-width: 860px) 430px, 100vw"
-              />
-              <figcaption className="cs-cap">Shipped: up to seven results in the 16px component, all visible.</figcaption>
-            </figure>
-          </div>
-        </Section>
-
-        <Section eyebrow="The mention tool" headline="Free text can't tell one Sam from three others.">
-          <div className="cs-prose">
-            <p>
-              Collaborator was the detail people remembered most, and the one free
-              text handled worst. I designed an @-mention that resolves the person
-              before the search runs: autocomplete mid-type, a resolved chip in the
-              query. It removes a whole class of failed searches instead of improving
-              their error message.
+              That early release exposed friction we had not fully anticipated. For
+              example, the assistant sometimes guessed incorrectly when users referred
+              to a collaborator. Instead of asking the AI to make that assumption, I
+              designed an @mention interaction that allowed users to reference a
+              specific team member they had collaborated with on a document. This
+              removed ambiguity and gave users more control over the assistant&rsquo;s
+              response.
             </p>
           </div>
           <p className="lcs-mention mt-6" aria-label="Example query using a resolved mention chip">
@@ -412,63 +317,33 @@ export default function LucidCaseStudy() {
             <span className="lcs-mention__chip">@Sam T.</span>
             <span>and I worked on in May</span>
           </p>
-        </Section>
+          <p className="cs-cap">
+            The @mention resolves the person before the search runs, so the assistant
+            never has to guess which Sam you meant.
+          </p>
 
-        <Section eyebrow="Trust" headline="Every response shows its work.">
-          <div className="cs-prose">
-            <p>
-              Research kept surfacing the same anxiety: what is this thing reading?
-              So every response names the skill that ran, as a pill on the message,
-              and shows what it searched in an expandable chip. Searched users, plus
-              two more. Tap to see the full list. Trust came from receipts, not
-              reassurance.
+          <div className="mt-12">
+            <p className="cs-cap mb-5">
+              Failure states shipped with the release. Every dead end hands the user a
+              next step.
             </p>
-            <p>
-              Generated work follows the same principle of staying in your control.
-              Build a diagram creates in a new tab and returns a clickable chip. The
-              canvas never ambushes you; you choose when to enter it.
-            </p>
-          </div>
-          <Reveal as="figure" className="my-12 m-0">
-            <BoardGenClip />
-            <figcaption className="cs-cap">
-              The shipped flow, captured live: Build a diagram assembling a board in
-              its own tab while the panel reports progress.
-            </figcaption>
-          </Reveal>
-        </Section>
-
-        <Section eyebrow="Failure states" headline="Every dead end converts to a next step.">
-          <div className="mt-2">
             <FailureTabs
               tabs={[
-                {
-                  label: 'Wrong results',
-                  content: (
-                    <div className="lcs-statecard cs-prose">
-                      <p>
-                        When the results miss, the response admits it, asks for one
-                        more clue, and offers refinement chips scoped to what it
-                        already knows. The user refines instead of retyping from
-                        zero.
-                      </p>
-                    </div>
-                  ),
-                },
                 {
                   label: 'Out of scope',
                   content: (
                     <figure className="m-0">
                       <ZoomShot
                         src={`${IMG}/out-of-scope.png`}
-                        alt="Asked to write a full PRD, the assistant names its limit, offers to find product roadmaps or generate a feature flowchart as buttons instead"
+                        alt="Asked for something it cannot do, the assistant names its limit and offers to find product roadmaps or generate a feature flowchart as buttons, then shows three roadmap results"
                         width={2400}
                         height={1100}
                         sizes="(min-width: 860px) 860px, 100vw"
                       />
                       <figcaption className="cs-cap">
-                        Asked for something it cannot do, it names the limit and
-                        offers two things it can do as buttons.
+                        Asked for something outside its scope, the assistant names the
+                        limit and offers two things it can do. This capture predates the
+                        compact results component.
                       </figcaption>
                     </figure>
                   ),
@@ -485,9 +360,8 @@ export default function LucidCaseStudy() {
                         sizes="420px"
                       />
                       <figcaption className="cs-cap">
-                        The spinner names what it is doing. Reused from the editor
-                        assistant on purpose: saved engineering effort, kept the two
-                        assistants consistent.
+                        The working state names each step. It reuses the editor
+                        assistant&rsquo;s pattern so the two assistants stay consistent.
                       </figcaption>
                     </figure>
                   ),
@@ -495,90 +369,106 @@ export default function LucidCaseStudy() {
               ]}
             />
           </div>
+
+          <div className="cs-prose mt-12">
+            <p>
+              On August 5, we released the experience to general availability across
+              every Lucid tier. Over the course of my 12-week internship, I helped take
+              the project from a blank page through discovery, prototyping, internal
+              testing, and an external release.
+            </p>
+          </div>
+          <ShipTimeline />
         </Section>
 
         {/* ── Impact ── */}
-        <Section eyebrow="Impact" headline="A ship, a harness, and the next iteration's data.">
-          <ul className="cs-bullets mt-2">
-            <li>
-              Shipped to general availability on every tier, free through enterprise,
-              12 weeks from zero
-            </li>
-            <li>
-              Every future docs list AI skill inherits the panel, the entry point,
-              the response patterns, and the failure states
-            </li>
-            <li>
-              The A/B test I designed settles the layout default with data and drives
-              the next iteration after my internship ends
-            </li>
-          </ul>
-        </Section>
-
-        {/* ── Hackathon aside ── */}
-        <Section eyebrow="Hackathon" headline="Third place in the AI category.">
+        <Section eyebrow="Impact" headline="Impact and what came next">
           <div className="cs-prose">
             <p>
-              Midway through the summer, Lucid ran its internal hackathon. My team
-              entered the AI category and took third place.
+              My internship ended shortly after the external release, so I do not have
+              access to long-term adoption data. However, I built the foundation for
+              future iterations, including the side panel and full-page experiences,
+              results component, core skills, and failure states.
             </p>
             <p>
-              What we built stays inside Lucid. The prism below stands in for it: a
-              glass pyramid raytraced live in your browser by a WebGL2 fragment
-              shader I wrote for this site, with real refraction, dispersion, and
-              total internal reflection.
+              I explored multiple layouts for the assistant. The side panel allowed
+              users to continue viewing and interacting with their documents while
+              chatting with AI. For people who needed more room for longer
+              conversations, I also designed a full-page state that was accessible from
+              the panel.
             </p>
           </div>
-          <Reveal as="figure" className="my-12 m-0">
-            <PrismStage />
-            <figcaption className="cs-cap">
-              Rendered in real time, one raytrace per pixel. It holds still if your
-              system asks for reduced motion.
-            </figcaption>
-          </Reveal>
+          <div className="mt-8">
+            <CompareStage
+              ariaLabel="The shipped expand interaction: side panel versus full page"
+              layers={[
+                {
+                  src: `${IMG}/side-panel-zero.png`,
+                  alt: 'Lucid AI docked as a side panel beside the homepage document list',
+                  label: 'Side panel',
+                  caption: 'Docked: ask without leaving your documents.',
+                  width: 2880,
+                  height: 1800,
+                },
+                {
+                  src: `${IMG}/full-page-zero.png`,
+                  alt: 'Lucid AI expanded to a full page over the homepage',
+                  label: 'Full page',
+                  caption: 'Expanded: room for longer conversations. One click back to the panel.',
+                  width: 2880,
+                  height: 1800,
+                },
+              ]}
+            />
+          </div>
+          <div className="cs-prose mt-8">
+            <p>
+              Before leaving, I also designed and implemented an A/B test comparing the
+              side panel and full-page experiences and measuring which capabilities
+              performed best. This gave the team a clear way to use real behavior to
+              guide the next version.
+            </p>
+          </div>
         </Section>
 
         {/* ── Reflection ── */}
-        <Section eyebrow="Reflection" headline="The model can do anything. The product is choosing what it should.">
+        <Section eyebrow="Looking back" headline="Reflection">
           <div className="cs-prose">
             <p>
-              Every decision on this project traded off speed, cost, and usability.
-              Being technical enough to hold those conversations with engineers
-              changed what I could design: the working-state reuse, the
-              confidence-based result count, and the teaching turn all came out of those
-              trade-off discussions, not from a spec.
+              Every decision on this project involved tradeoffs between speed, cost, and
+              usability. Having enough technical understanding to work through those
+              decisions with engineers expanded what I was able to design.
             </p>
             <p>
-              We shipped fast because feedback was constant. Users saw every round,
-              engineering saw designs days after they existed, and nothing waited for
-              a big reveal. The speed came from communication, not from skipping
-              steps.
+              We shipped quickly because the feedback loop never stopped. Users saw
+              each round, engineers saw designs within days of their creation, and
+              nothing waited for a big reveal.
             </p>
             <p>
-              The honest limitation: the editor assistant and the docs list assistant
-              do not share context yet. Closing that gap is the obvious next chapter.
+              One limitation remained: the AI inside the editor and the Docs List AI
+              could not share context. Closing that gap was the clear next step. Before
+              leaving, I handed off designs for memory controls and chat history so the
+              team could continue building toward it.
             </p>
           </div>
         </Section>
 
-        <AskLukeAi
-          prompts={[
-            'Why did the side panel beat the modal, floating panel, and inline bar at Lucid?',
-            'What did Luke give up with the teaching first turn at Lucid, and why was it worth it?',
-            'How did engineering trade-offs change what Luke designed at Lucid?',
-            "What's the honest limitation of the Lucid docs-list assistant?",
-          ]}
-        />
-
-        {/* ── Prev / next ── */}
-        <nav
-          className="worknav mt-24 pt-8 border-t border-white/10 flex flex-wrap items-center justify-end gap-4"
-          aria-label="More work"
-        >
-          <Link href="/work/awardco-login-flow-redesign" className="footer-link -mr-4 ml-auto text-right">
-            Reducing Authentication Friction →
-          </Link>
-        </nav>
+        {/* ── Read next ── */}
+        <Section eyebrow="More work" headline="Read next">
+          <div className="cs-next">
+            <BeforeAfterTile
+              slug="awardco-login-flow-redesign"
+              href="/work/awardco-login-flow-redesign"
+              beforeSrc="/before.png"
+              afterSrc="/after.png"
+              beforeAlt="Awardco's original login screen, showing every authentication method at once"
+              afterAlt="The redesigned Awardco login screen, leading with single sign-on"
+              logoSrc="/logos/awardco.png"
+              companyHref="https://www.awardco.com"
+            />
+            <PatternTile />
+          </div>
+        </Section>
       </div>
 
       <Footer width="article" />

@@ -33,7 +33,7 @@ export const Prose = ({
 }: {
   children: React.ReactNode
   className?: string
-}) => <div className={`cs-prose space-y-4 ${className}`.trim()}>{children}</div>
+}) => <div className={`cs-prose ${className}`.trim()}>{children}</div>
 
 export const Bullets = ({ items }: { items: string[] }) => (
   <ul className="cs-bullets mt-5">

@@ -68,7 +68,7 @@ export default function AwardcoCaseStudy() {
           <h1 className="text-4xl md:text-6xl font-medium leading-tight tracking-tight text-white">
             {TITLE}
           </h1>
-          <p className="mt-5 text-xl text-white/85 leading-snug">
+          <p className="cs-lede">
             Turning 7.7 million failed logins into a unified, guided authentication
             system across SSO, MFA, and standard login.
           </p>
@@ -106,7 +106,7 @@ export default function AwardcoCaseStudy() {
         />
 
         <Reveal className="mt-14">
-          <Prose>
+          <Prose className="cs-prose--intro">
             <p>
               Awardco is a B2B employee-recognition platform, and every company on it
               configures authentication differently — SSO, passwords, MFA, login codes.
@@ -517,10 +517,10 @@ export default function AwardcoCaseStudy() {
               },
             ].map((q) => (
               <figure key={q.name} className="m-0 flex flex-col">
-                <blockquote className="text-base text-white leading-relaxed flex-1">
+                <blockquote className="text-base text-white leading-[1.6] flex-1">
                   &ldquo;{q.quote}&rdquo;
                 </blockquote>
-                <figcaption className="mt-4 text-sm text-white/60">
+                <figcaption className="cs-meta mt-4">
                   {q.name} · {q.title}
                 </figcaption>
               </figure>
@@ -571,7 +571,7 @@ export default function AwardcoCaseStudy() {
           aria-label="More work"
         >
           <Link href="/work/lucid-ai" className="footer-link -ml-4">
-            ← Bringing Lucid AI out of the canvas
+            ← Bringing Lucid AI to the homepage
           </Link>
           <Link href="/work/pattern-custom-reports" className="footer-link -mr-4 ml-auto text-right">
             Custom Reports in Predict →
