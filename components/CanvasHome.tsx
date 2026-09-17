@@ -1,6 +1,13 @@
 'use client'
 
-import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react'
+import {
+  Fragment,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from 'react'
 import Image from 'next/image'
 import {
   motion,
@@ -12,7 +19,7 @@ import {
 } from 'framer-motion'
 import MobileHome from './MobileHome'
 import LukeAiCard from './luke-ai/LukeAiCard'
-import { AboutReadme, IntroLede, WORK_TILES } from './CanvasBits'
+import { ABOUT_PHOTOS, AboutReadme, IntroLede, WORK_TILES } from './CanvasBits'
 import { useReducedMotion } from '@/lib/useReducedMotion'
 import { SITE } from '@/lib/site'
 
@@ -65,14 +72,24 @@ const CARDS: readonly CardSpec[] = [
    wide on an iPad, mostly empty stage). Cap it relative to the width. */
 const MAX_ASPECT = 1.3
 
-/* About section: photos + the combined README (blurb + résumé), placed
+/* About section: the README flanked by two polaroids on each side, placed
    48vw past the last VISIBLE card so hiding a tile shortens the canvas.
-   Polaroids + README span ~90vw. */
+   The whole composition spans 98vw. */
 const LAST_CARD = CARDS[WORK_TILES.length - 1]
 const ABOUT_PHOTOS_LEFT = LAST_CARD.left + 48 // vw
-/* The README is the canvas's last object: photos section + its left
-   offset (68) + its 36vw width, plus right margin. */
-const STRIP_W = ABOUT_PHOTOS_LEFT + 114 // vw
+/* The about section is the canvas's last object and it's sized to land
+   whole in the closing frame: 98vw of photos + README, with ~1vw of air
+   each side for the frames' tilt and shadow. Changing the polaroid
+   geometry in globals.css means changing this too. */
+const STRIP_W = ABOUT_PHOTOS_LEFT + 99 // vw
+/* Which slot each about photo lands in, in ABOUT_PHOTOS order: the two
+   left of the README, then the two right of it. globals.css places them. */
+const PHOTO_SLOT = [
+  'polaroid--main',
+  'polaroid--second',
+  'polaroid--third',
+  'polaroid--fourth',
+] as const
 /* Labels count the visible work cards; the about section comes next. */
 const ABOUT_LABEL = `${String(WORK_TILES.length + 1).padStart(2, '0')} · about me`
 const TRAVEL = STRIP_W - 100 // vw the strip translates over the full scroll
@@ -399,38 +416,25 @@ function DesktopCanvas() {
             <span className="canvas-card__label" aria-hidden="true">
               {ABOUT_LABEL}
             </span>
-            {/* second frame: placeholder until the next real shot lands */}
-            <figure className="polaroid polaroid--main">
-              <Image
-                src="/luke-woods.jpg"
-                alt="Luke Woods standing on a stone balcony in a light blue suit"
-                width={700}
-                height={700}
-                sizes="22vw"
-              />
-              <figcaption>me</figcaption>
-            </figure>
-            <figure className="polaroid polaroid--second">
-              <Image
-                src="/luke-fishing.jpg"
-                alt="Luke waist-deep in the Kenai River in Alaska, grinning and holding up a large salmon"
-                width={700}
-                height={700}
-                sizes="22vw"
-              />
-              <figcaption>fishing at kenai river, alaska</figcaption>
-            </figure>
-            <figure className="polaroid polaroid--third">
-              <Image
-                src="/luke-grand-canyon.jpg"
-                alt="Luke smiling in a selfie on a Grand Canyon trail, canyon ridges stretching out behind him"
-                width={700}
-                height={700}
-                sizes="22vw"
-              />
-              <figcaption>26 miles at the grand canyon</figcaption>
-            </figure>
-            <AboutReadme />
+            {/* Two frames, the README, two frames — the window reads as the
+                middle of the pile rather than the end of a row. The README
+                is dealt in the middle of the list so the DOM order matches
+                what you see. */}
+            {ABOUT_PHOTOS.map((photo, i) => (
+              <Fragment key={photo.src}>
+                {i === 2 && <AboutReadme />}
+                <figure className={`polaroid ${PHOTO_SLOT[i]}`}>
+                  <Image
+                    src={photo.src}
+                    alt={photo.alt}
+                    width={photo.w}
+                    height={photo.h}
+                    sizes="16vw"
+                  />
+                  <figcaption>{photo.caption}</figcaption>
+                </figure>
+              </Fragment>
+            ))}
           </section>
         </motion.div>
 

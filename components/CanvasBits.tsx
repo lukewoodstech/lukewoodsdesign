@@ -72,6 +72,50 @@ const ALL_TILES: ReadonlyArray<{
 export const WORK_TILES = ALL_TILES.filter((t) => !HIDDEN_TILES.has(t.slug))
 
 /*
+ * The about photos, in canvas order: the desktop places them around the
+ * README, the mobile stack deals them as a swipeable pile. One list so the
+ * two never drift apart.
+ */
+export const ABOUT_PHOTOS: ReadonlyArray<{
+  src: string
+  alt: string
+  caption: string
+  /* Intrinsic size, so the frame reserves the right box before the photo
+     lands — the snake shot is a hair off square. */
+  w: number
+  h: number
+}> = [
+  {
+    src: '/luke-woods.jpg',
+    alt: 'Luke Woods standing on a stone balcony in a light blue suit',
+    caption: 'me',
+    w: 1400,
+    h: 1400,
+  },
+  {
+    src: '/luke-fishing.jpg',
+    alt: 'Luke waist-deep in the Kenai River in Alaska, grinning and holding up a large salmon',
+    caption: 'fishing at kenai river, alaska',
+    w: 1400,
+    h: 1400,
+  },
+  {
+    src: '/luke-grand-canyon.jpg',
+    alt: 'Luke smiling in a selfie on a Grand Canyon trail, canyon ridges stretching out behind him',
+    caption: '26 miles at the grand canyon',
+    w: 1400,
+    h: 1400,
+  },
+  {
+    src: '/luke-snake.jpg',
+    alt: 'Luke holding a large white leucistic python coiled around his arms',
+    caption: 'woods exotics est. 2018',
+    w: 1400,
+    h: 1376,
+  },
+]
+
+/*
  * README.md in rendered markdown preview — the classic "about this
  * project" file, except the project is Luke. One window carries the
  * whole about section in Luke's own words. The résumé lives elsewhere
@@ -96,20 +140,6 @@ export function AboutReadme() {
       <div className="readme-card__body">
         <h2>
           hi, i&apos;m luke <span aria-hidden="true">👋</span>
-          {/* The one outbound link in the header rule: same URL as the hero,
-              as a glyph so the title line stays the title line. */}
-          <a
-            className="readme-card__in"
-            href={SITE.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Connect with Luke on LinkedIn"
-            title="Connect with Luke on LinkedIn"
-          >
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9.5 9h3.83v1.64h.05c.53-.96 1.84-1.97 3.79-1.97 4.05 0 4.8 2.53 4.8 5.82V21h-4v-5.02c0-1.2-.02-2.74-1.75-2.74-1.76 0-2.02 1.3-2.02 2.65V21h-4z" />
-            </svg>
-          </a>
         </h2>
         <div className="readme-card__badges" aria-hidden="true">
           <span className="readme-card__badge readme-card__badge--blue">design + code</span>

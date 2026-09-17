@@ -1,9 +1,9 @@
 'use client'
 
-import Image from 'next/image'
 import EmailLink from './EmailLink'
 import LukeAiCard from './luke-ai/LukeAiCard'
 import { AboutReadme, IntroLede, SelectionHandles, WORK_TILES } from './CanvasBits'
+import PolaroidStack from './PolaroidStack'
 import { SITE } from '@/lib/site'
 
 /*
@@ -74,42 +74,13 @@ export default function MobileHome() {
           ))}
         </section>
 
-        {/* ── About: the polaroid pair, minus the desk clutter ── */}
+        {/* ── About: the photos as a swipeable pile, then the README ── */}
         <section className="mhome-about" id="about" aria-label="About Luke">
           <h2 className="mhome-label">
             {String(WORK_TILES.length + 1).padStart(2, '0')} · about me
           </h2>
           <div className="mhome-polaroids">
-            <figure className="polaroid polaroid--main mhome-polaroid">
-              <Image
-                src="/luke-woods.jpg"
-                alt="Luke Woods standing on a stone balcony in a light blue suit"
-                width={700}
-                height={700}
-                sizes="(max-width: 48em) 80vw, 20rem"
-              />
-              <figcaption>me</figcaption>
-            </figure>
-            <figure className="polaroid polaroid--second mhome-polaroid">
-              <Image
-                src="/luke-fishing.jpg"
-                alt="Luke waist-deep in the Kenai River in Alaska, grinning and holding up a large salmon"
-                width={700}
-                height={700}
-                sizes="(max-width: 48em) 80vw, 20rem"
-              />
-              <figcaption>fishing at kenai river, alaska</figcaption>
-            </figure>
-            <figure className="polaroid polaroid--third mhome-polaroid">
-              <Image
-                src="/luke-grand-canyon.jpg"
-                alt="Luke smiling in a selfie on a Grand Canyon trail, canyon ridges stretching out behind him"
-                width={700}
-                height={700}
-                sizes="(max-width: 48em) 80vw, 20rem"
-              />
-              <figcaption>26 miles at the grand canyon</figcaption>
-            </figure>
+            <PolaroidStack />
             <AboutReadme />
           </div>
         </section>

@@ -303,7 +303,7 @@ p a {
 .term-hist__modal-cancel:focus-visible,
 .term-hist__modal-delete:focus-visible,
 .readme-cta__mail:focus-visible,
-.readme-card__in:focus-visible {
+.pstack__dot:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
@@ -2306,7 +2306,14 @@ p a {
 
 .about-photos {
   position: absolute;
-  top: 16vh;
+  /*
+   * The whole about composition now lands in the closing frame, which puts
+   * the left pair under the fixed explorer nav (its box ends at 201px, in
+   * px at every viewport height). The rem floor keeps the section label
+   * clear of it on short screens where 24vh would not.
+   */
+  --about-top: max(24vh, 15rem);
+  top: var(--about-top);
   width: 26vw;
 }
 
@@ -2322,7 +2329,7 @@ p a {
   position: relative;
   z-index: 1;
   margin: 0;
-  width: 22vw;
+  width: 16vw;
   transform: rotate(-2.2deg);
 }
 
@@ -2342,36 +2349,56 @@ p a {
   color: #26262e;
 }
 
-/* Second frame: same size as the main polaroid, only a sliver of
-   overlap — two photos side by side, not a pile. */
+/*
+ * The about composition is symmetrical: two frames, the README, two more
+ * frames, spanning 0-98vw with the window's centre at 49vw. Inside a pair
+ * the frames overlap by 3vw and the second hangs a long way below the
+ * first — a dealt pair, not a row of thumbnails — and each pair keeps 4vw
+ * of air off the window. The numbers here and STRIP_W in CanvasHome move
+ * together.
+ */
 .polaroid--second {
   position: absolute;
-  top: 7vh;
-  left: 20vw;
-  width: 22vw;
+  top: 13vh;
+  left: 13vw;
+  width: 16vw;
   margin: 0;
-  transform: rotate(3.2deg);
+  transform: rotate(3.4deg);
 }
 
-/* Third frame: the Grand Canyon shot, continuing the loose row. */
+/* Right pair: the Grand Canyon shot and the snake, mirroring the left —
+   including which frame sits on top, so neither caption is covered. */
 .polaroid--third {
   position: absolute;
-  top: 1vh;
-  left: 40.5vw;
-  width: 22vw;
+  z-index: 2;
+  top: 2vh;
+  left: 69vw;
+  width: 16vw;
   margin: 0;
   transform: rotate(-1.8deg);
 }
 
+.polaroid--fourth {
+  position: absolute;
+  z-index: 1;
+  top: 14vh;
+  left: 82vw;
+  width: 16vw;
+  margin: 0;
+  transform: rotate(2.6deg);
+}
+
 .polaroid--second img,
-.polaroid--third img {
+.polaroid--third img,
+.polaroid--fourth img {
   display: block;
   width: 100%;
   height: auto;
 }
 
 .polaroid--second figcaption,
-.polaroid--third figcaption {
+.polaroid--third figcaption,
+.polaroid--fourth figcaption {
   position: absolute;
   left: 0;
   right: 0;
@@ -2388,12 +2415,47 @@ p a {
    following the polaroid row — same chrome as contact.ts / resume.md. */
 .readme-card {
   position: absolute;
-  /* clear air between the last polaroid (ends ~62.5vw) and the window */
-  left: 68vw;
-  /* the section sits at 16vh; -12vh puts the window near the top of the
-     screen so the bio at reading size fits above the fold */
-  top: -12vh;
-  width: 36vw;
+  /* centred in the 98vw composition: 33 + 32/2 = 49vw */
+  left: 33vw;
+  /* Pinned 5vh from the top of the screen whatever the photos do: the
+     section's own offset is subtracted back out, so pushing the pile
+     down to clear the nav never pushes the bio below the fold. */
+  top: calc(5vh - var(--about-top));
+  width: 32vw;
+  /* The window lies on top of the pile. Without this the right-hand pair
+     (z-index 2, so their captions clear each other) would ride over its
+     edge wherever the card widens enough to meet them. */
+  z-index: 3;
+}
+
+/*
+ * Narrow desktop canvas (768-1024px, a portrait tablet). Two constraints
+ * fight here: 32vw is only ~250px of measure, so the bio runs taller than
+ * the pinned 100vh viewport and gets cut — and the explorer nav is fixed
+ * in px, ending at 248px, so a truly centred window would sit under it.
+ * The card widens and shifts right until its text clears the nav; the
+ * inner pair of photos tucks under its edges, which the z-index handles.
+ */
+@media (min-width: 48em) and (max-width: 64em) {
+  .readme-card {
+    left: 30vw;
+    width: 44vw;
+  }
+
+  /* The inner pair slides outward so the window covers photo, never
+     caption; the third still paints over the fourth, so its own caption
+     stays readable. */
+  .polaroid--second {
+    left: 12vw;
+  }
+
+  .polaroid--third {
+    left: 74vw;
+  }
+
+  .polaroid--fourth {
+    left: 82vw;
+  }
 }
 
 /* The bio is portfolio content, not canvas decoration: it reads at the
@@ -2409,9 +2471,6 @@ p a {
 }
 
 .readme-card__body h2 {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
   margin: 0 0 0.55rem;
   padding-bottom: 0.35rem;
   border-bottom: 1px solid #3d3d3d;
@@ -2419,36 +2478,6 @@ p a {
   font-weight: 600;
   letter-spacing: -0.01em;
   color: #fff;
-}
-
-/* The LinkedIn link in the title row: icon-only, so the box is a 1.75rem
-   tap target around a 1rem glyph — big enough for a thumb without reading
-   as a button. Muted until hover so it doesn't compete with the name. */
-.readme-card__in {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 1.75rem;
-  height: 1.75rem;
-  color: #9d9d9d;
-  transition: color 0.2s ease;
-}
-
-.readme-card__in svg {
-  width: 1.05rem;
-  height: 1.05rem;
-}
-
-.readme-card__in:hover {
-  color: var(--mono-blue);
-}
-
-@media (hover: none) {
-  .readme-card__in {
-    width: 2.25rem;
-    height: 2.25rem;
-  }
 }
 
 /* shields.io-style badge row under the heading */
@@ -2532,9 +2561,9 @@ p a {
    screen by giving the card more width instead of less type. */
 @media (min-width: 48em) and (max-height: 860px) {
   .readme-card {
-    left: 66vw;
-    top: -13vh;
-    width: 42vw;
+    left: 31vw;
+    top: calc(4vh - var(--about-top));
+    width: 36vw;
   }
 
   .readme-card__body {
@@ -2995,42 +3024,101 @@ p a {
   scroll-margin-top: 4rem;
 }
 
-/* The polaroid's vw padding is sized for a desktop canvas object */
-.mhome-polaroid {
+/* ── Mobile: the photos as a swipeable pile ──────────────────────
+   Four frames down the page was four screens of scroll for what is one
+   idea ("here's me"), so on the stack they become a deck: the top frame
+   drags aside and the next is under it. The dots are real buttons, so the
+   deck is reachable without a swipe. */
+.pstack {
+  margin: 0.4rem auto 0;
   width: min(19rem, 82vw);
-  margin: 1.4rem auto 0;
+}
+
+.pstack__pile {
+  position: relative;
+  /* square photo + the frame's chin, plus room for the two peeking
+     frames' offsets — the pile can't reflow as it deals. */
+  height: calc(min(19rem, 82vw) + 3.9rem);
+  touch-action: pan-y;
+}
+
+/* Every frame sits in the same place; framer-motion does the dealing. */
+.pstack__card {
+  position: absolute;
+  inset: 0;
+  margin: 0;
   padding: 10px 10px 46px;
+  cursor: grab;
+  /* the drag is the gesture — don't let iOS pick the photo up instead */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
-.mhome-polaroid figcaption {
+.pstack__card:active {
+  cursor: grabbing;
+}
+
+.pstack__card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+}
+
+.pstack__card figcaption {
+  position: absolute;
+  left: 0;
+  right: 0;
   bottom: 14px;
+  text-align: center;
+  text-wrap: balance;
+  font-size: 0.85rem;
+  color: #26262e;
 }
 
-/* On the stack the first photo stays big as the anchor; the other two
-   shrink to snapshot size and zigzag right/left with a deeper tuck — a
-   loose pile on the desk instead of three full screens of scroll. */
-.mhome-polaroids .polaroid--second,
-.mhome-polaroids .polaroid--third {
-  position: static;
-  width: min(13rem, 62vw);
-  /* deep enough for a two-line caption */
-  padding: 8px 8px 44px;
+.pstack__dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
 }
 
-/* smaller frame, smaller handwriting */
-.mhome-polaroids .polaroid--second figcaption,
-.mhome-polaroids .polaroid--third figcaption {
-  font-size: 0.75rem;
+/* 2.25rem of tap target around a 0.5rem dot */
+.pstack__dot {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: none;
 }
 
-.mhome-polaroids .polaroid--second {
-  margin: -1.4rem 6vw 0 auto;
-  transform: rotate(2.8deg);
+.pstack__dot::before {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.3);
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.mhome-polaroids .polaroid--third {
-  margin: -1.1rem auto 0 7vw;
-  transform: rotate(-2.6deg);
+.pstack__dot.is-current::before {
+  background: var(--mono-blue);
+  transform: scale(1.15);
+}
+
+.pstack__hint {
+  margin: -0.35rem 0 0;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
 }
 
 .mhome-polaroids .readme-card {
