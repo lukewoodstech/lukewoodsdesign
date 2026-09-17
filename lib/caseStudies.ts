@@ -255,16 +255,16 @@ export const caseStudies: CaseStudy[] = [
     role: 'Product Design Intern',
     period: 'Oct 2025 – Apr 2026',
     team: 'Natalie McKenzie (PM) · Robert Jensen (Tech Lead) · Michelle Rodabough (UX Manager)',
-    summary: 'Turning 7.7M failed logins into one guided path across SSO, MFA, and mobile.',
+    summary: 'Unifying login, MFA, recovery, and SSO across desktop and mobile.',
     headline: [
       '27s → 5.9s login decision (−78%)',
       '25% faster login in testing',
       '+4.5% successful sign-ins',
     ],
     tagline:
-      'Turning 7.7 million failed logins into a unified, guided authentication system across SSO, MFA, and standard login.',
+      "Redesigning Awardco's login, MFA, SSO, recovery, and mobile verification into one guided authentication system — 25% faster logins and 4.5% more successful sign-ins.",
     overview:
-      "Awardco is a B2B employee-recognition platform, and every company on it configures authentication differently — SSO, passwords, MFA, login codes. The result was a fragmented login experience that quietly became the platform's biggest point of friction: a year of login telemetry showed 7.7 million failed attempts, and login help was the top customer-support topic. I redesigned authentication end-to-end into a single guided path across mobile and desktop — eliminating redundant authentication steps without reducing security. In usability testing, the new SSO-first flow cut login decision time by 78%.",
+      "Awardco's authentication was fragmented across login, MFA, SSO, password recovery, and mobile verification, and a year of telemetry showed 7.7 million failed login attempts. I redesigned the system end-to-end into one guided path, building coded prototypes and testing with more than 20 users to validate the flow ahead of handoff. In usability testing, the redesign delivered a 25% faster login and a 4.5% increase in successful sign-ins.",
     problemIntro:
       "Awardco's universal login only identified the user — it didn't authenticate them. After entering an email and a login code, users were routed to their company's login page and asked to fully authenticate again, often entering a second code. Mobile and desktop diverged (magic links vs. codes), deskless workers without work email on their phones were blocked entirely, and with multiple authentication methods shown upfront, users guessed wrong and failed repeatedly. The data made the case impossible to ignore:",
     problemPoints: [

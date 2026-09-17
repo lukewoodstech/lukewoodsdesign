@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { SITE } from '@/lib/site'
 import EmailLink from './EmailLink'
 import LucidTile from './LucidTile'
-import BeforeAfterTile from './BeforeAfterTile'
+import AwardcoMobileTile from './AwardcoMobileTile'
 import PatternTile from './PatternTile'
 import HothTile from './HothTile'
 
@@ -29,6 +29,8 @@ export const HIDDEN_TILES: ReadonlySet<string> = new Set(['hoth'])
 const ALL_TILES: ReadonlyArray<{
   slug: string
   label: string
+  /** Plain-words name for the explorer row: what a visitor scans for. */
+  title: string
   file: string
   href: string
   tile: ReactNode
@@ -36,6 +38,7 @@ const ALL_TILES: ReadonlyArray<{
   {
     slug: 'lucid-ai',
     label: '01 · lucid ai',
+    title: 'lucid ai search',
     file: 'lucid-ai.tsx',
     href: '/work/lucid-ai',
     tile: <LucidTile />,
@@ -43,29 +46,27 @@ const ALL_TILES: ReadonlyArray<{
   {
     slug: 'awardco',
     label: '02 · awardco',
+    title: 'awardco login',
     file: 'awardco.tsx',
     href: '/work/awardco-login-flow-redesign',
-    tile: (
-      <BeforeAfterTile
-        slug="awardco-login-flow-redesign"
-        href="/work/awardco-login-flow-redesign"
-        beforeSrc="/before.png"
-        afterSrc="/after.png"
-        beforeAlt="Awardco's original login screen, showing every authentication method at once"
-        afterAlt="The redesigned Awardco login screen, leading with single sign-on"
-        logoSrc="/logos/awardco.png"
-        companyHref="https://www.awardco.com"
-      />
-    ),
+    tile: <AwardcoMobileTile />,
   },
   {
     slug: 'pattern',
     label: '03 · pattern',
+    title: 'pattern custom reports',
     file: 'pattern.tsx',
     href: '/work/pattern-custom-reports',
     tile: <PatternTile />,
   },
-  { slug: 'hoth', label: '04 · hoth', file: 'hoth.tsx', href: '/work/hoth', tile: <HothTile /> },
+  {
+    slug: 'hoth',
+    label: '04 · hoth',
+    title: 'hoth',
+    file: 'hoth.tsx',
+    href: '/work/hoth',
+    tile: <HothTile />,
+  },
 ]
 
 export const WORK_TILES = ALL_TILES.filter((t) => !HIDDEN_TILES.has(t.slug))

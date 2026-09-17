@@ -1,9 +1,18 @@
 /*
- * The bits that make the luke-ai window read as a VS Code terminal panel,
- * shared by the homepage card and the maximized /chat page so they stay
- * the same object. Deliberately sparse: a title, the zsh prompt, and the
- * codicon-style glyphs for the few controls that actually do something.
- * Nothing decorative that could be mistaken for a control.
+ * The bits shared by the homepage Luke AI window and the maximized /chat
+ * page so they stay the same object: the window title, the identity tag
+ * over every answer, and the glyphs for the few controls that actually do
+ * something. Nothing decorative that could be mistaken for a control.
+ *
+ * 2026-09-16: the terminal dressing (zsh prompt, boot line, LUKE_AI tag)
+ * came out. It read as unfriendly and confusing to first-time visitors;
+ * the window now reads like a chat assistant, the way an editor
+ * extension's chat panel does. `Ps1` stays exported for the case-study
+ * "ask Luke AI" footer, which still uses the shell arrow.
+ *
+ * The name is "Luke AI" everywhere a visitor can read it — the window
+ * title (set in caps by its style), the wordmark, the tag over answers.
+ * No `luke-ai` / `LUKE-AI` variants.
  */
 
 /* The visitor is the one typing, so the prompt is theirs, not Luke's
@@ -21,18 +30,20 @@ export const Ps1 = () => (
   </span>
 )
 
-/* `✦ LUKE_AI` — the restrained identity above every answer. */
+/* `✱ Luke AI` — the identity above every answer. */
 export const AiTag = () => (
   <span className="lai__who">
     <span className="lai__star" aria-hidden="true">
-      ✦
+      ✱
     </span>{' '}
-    <span aria-hidden="true">LUKE_AI</span>
+    <span aria-hidden="true">Luke AI</span>
     <span className="sr-only">Luke AI</span>
   </span>
 )
 
-export const TermTitle = ({ label = 'terminal' }: { label?: string }) => (
+/* The window title, small and quiet like a panel title (rendered in
+   caps: LUKE AI). */
+export const TermTitle = ({ label = 'Luke AI' }: { label?: string }) => (
   <span className="ai-card__title" aria-hidden="true">
     {label}
   </span>

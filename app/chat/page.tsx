@@ -3,18 +3,13 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import HistoryPanel from '@/components/luke-ai/HistoryPanel'
-import LukeAiThread, { type Suggestion } from '@/components/luke-ai/LukeAiThread'
+import LukeAiThread from '@/components/luke-ai/LukeAiThread'
 import LukeAiComposer, { type ComposerHandle } from '@/components/luke-ai/LukeAiComposer'
 import { useLukeAi } from '@/components/luke-ai/LukeAiProvider'
 import { useAutoScroll } from '@/components/luke-ai/useAutoScroll'
-import {
-  Ps1,
-  TermTitle,
-  IconPlus,
-  IconRestore,
-  IconPanel,
-} from '@/components/luke-ai/TermChrome'
+import { TermTitle, IconPlus, IconRestore, IconPanel } from '@/components/luke-ai/TermChrome'
 import { SITE, MAILTO } from '@/lib/site'
+import { SUGGESTIONS } from '@/lib/lukeAiStorage'
 
 /*
  * /chat — Luke AI, maximized: the same terminal window as the homepage
@@ -26,46 +21,18 @@ import { SITE, MAILTO } from '@/lib/site'
  */
 
 /*
- * The `+` menu beside the prompt: the three places to reach Luke directly,
- * as terminal commands. Reads from lib/site.ts like the nav and footer do.
+ * The `+` menu beside the message field: the three places to reach Luke
+ * directly. Reads from lib/site.ts like the nav and footer do.
  */
 const PLUS_ITEMS = [
-  { cmd: 'open resume.pdf', description: 'opens in a new tab', href: SITE.resume },
-  { cmd: 'open linkedin', description: 'connect with luke', href: SITE.linkedin },
-  { cmd: 'mail luke', description: 'copies the address too', href: MAILTO },
+  { label: 'résumé', description: 'opens in a new tab', href: SITE.resume },
+  { label: 'linkedin', description: 'connect with luke', href: SITE.linkedin },
+  { label: 'email luke', description: 'opens your mail app', href: MAILTO },
 ]
 
-/*
- * Zero-state suggestions do what the case-study pages can't: map Luke to a
- * specific role, compress everything for a skim, show the design + code +
- * business judgment, and answer the interview-style questions. The first
- * three match the chips on the homepage window, so the expanded page reads
- * as the same terminal with more room.
- */
-const PROMPTS: ReadonlyArray<Suggestion> = [
-  {
-    label: 'give me the 30-second version',
-    message: 'Give me the 30-second version of Luke: who he is, proof, and why it matters.',
-  },
-  {
-    label: 'where did code or business change a design call?',
-    message:
-      'Give me one concrete decision per project where knowing the code or the business changed what Luke designed.',
-  },
-  {
-    label: 'map him to a job description',
-    message: "I'm hiring. I'd like to paste a job description and get a fit map.",
-  },
-  {
-    label: 'how was this site built?',
-    message: 'How was this site built? Walk me through what is actually running on the home page.',
-  },
-  {
-    label: 'what would he do differently?',
-    message:
-      'What would Luke do differently across his projects, and what are the honest limitations of his work so far?',
-  },
-]
+/* The zero-state questions are SUGGESTIONS in lib/lukeAiStorage — the
+   same four as the homepage window, so the expanded page reads as the
+   same terminal with more room. */
 
 export default function ChatPage() {
   const router = useRouter()
@@ -112,7 +79,7 @@ export default function ChatPage() {
     }
   }, [plusOpen])
 
-  /* A question carried in on the URL (/chat?q=…) — the "ask luke-ai" links
+  /* A question carried in on the URL (/chat?q=…) — the "ask Luke AI" links
      at the end of each case study. Sent once, into a fresh session, after
      stored conversations have loaded. */
   const askedRef = useRef(false)
@@ -146,7 +113,7 @@ export default function ChatPage() {
         type="button"
         className={`term-pg__plus${plusOpen ? ' is-open' : ''}`}
         onClick={() => setPlusOpen((v) => !v)}
-        aria-label="Contact commands"
+        aria-label="More ways to reach Luke"
         aria-expanded={plusOpen}
         aria-haspopup="menu"
       >
@@ -156,7 +123,7 @@ export default function ChatPage() {
         <div className="term-pg__plus-menu" role="menu">
           {PLUS_ITEMS.map((item) => (
             <a
-              key={item.cmd}
+              key={item.label}
               role="menuitem"
               className="term-pg__plus-item"
               href={item.href}
@@ -164,10 +131,7 @@ export default function ChatPage() {
               rel="noopener noreferrer"
               onClick={() => setPlusOpen(false)}
             >
-              <span className="term-pg__plus-cmd">
-                <Ps1 />
-                {item.cmd}
-              </span>
+              <span className="term-pg__plus-cmd">{item.label}</span>
               <span className="term-pg__plus-desc">{item.description}</span>
             </a>
           ))}
@@ -179,21 +143,21 @@ export default function ChatPage() {
   return (
     <div className="term-pg">
       {/* One maximized terminal window — the same object as the landing
-          screen's luke-ai card, with the sessions panel docked on the left. */}
+          screen's Luke AI card, with the sessions panel docked on the left. */}
       <div className="term-pg__window ai-card">
         <header className="ai-card__bar term-pg__bar">
           <button
             type="button"
             className="ai-card__tool term-pg__panel-btn"
             onClick={toggleHistory}
-            title={historyOpen ? 'Hide sessions' : 'Show sessions'}
-            aria-label={historyOpen ? 'Hide sessions' : 'Show sessions'}
+            title={historyOpen ? 'Hide conversations' : 'Show conversations'}
+            aria-label={historyOpen ? 'Hide conversations' : 'Show conversations'}
             aria-expanded={historyOpen}
             aria-controls="luke-ai-history"
           >
             <IconPanel />
           </button>
-          <TermTitle label="luke_ai / interview mode" />
+          <TermTitle />
           <div className="ai-card__tools">
             <button
               type="button"
@@ -203,8 +167,8 @@ export default function ChatPage() {
                 setInput('')
                 closeIfNarrow()
               }}
-              title="New session"
-              aria-label="Start a new session"
+              title="New conversation"
+              aria-label="Start a new conversation"
             >
               <IconPlus />
             </button>
@@ -212,8 +176,8 @@ export default function ChatPage() {
               type="button"
               className="ai-card__tool ai-card__expand"
               onClick={() => router.push('/')}
-              title="Restore panel size"
-              aria-label="Collapse back to the portfolio"
+              title="Back to the portfolio"
+              aria-label="Back to the portfolio"
             >
               <IconRestore />
             </button>
@@ -245,7 +209,7 @@ export default function ChatPage() {
               one keeps the prompt in reach. */}
           <main className="term-pg__scroll" ref={scrollRef} aria-label="Luke AI conversation">
             <div className="term-pg__column">
-              <LukeAiThread surface="page" suggestions={PROMPTS} />
+              <LukeAiThread surface="page" suggestions={SUGGESTIONS} />
               <div className="term-pg__promptbar">
                 <LukeAiComposer
                   ref={composerRef}

@@ -105,7 +105,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
     const store = await cookies()
     if (store.get(UNLOCK_COOKIE)?.value !== '1') {
       return (
-        <div className="cs min-h-screen bg-black text-white font-medium" style={accentStyle}>
+        <div className="cs min-h-screen bg-black text-white" style={accentStyle}>
           <SiteNav
             width="article"
             contact={false}
@@ -137,7 +137,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
   ).filter((f): f is ['Role' | 'Timeline' | 'Team', string] => Boolean(f[1]))
 
   return (
-    <div className="cs min-h-screen bg-black text-white font-medium" style={accentStyle}>
+    <div className="cs min-h-screen bg-black text-white" style={accentStyle}>
 
       <SiteNav
         width="article"
@@ -149,7 +149,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
 
         <header className="pt-10 pb-12">
           <p className="cs-eyebrow mb-4">{cs.company}</p>
-          <h1 className="text-4xl md:text-6xl font-medium leading-tight tracking-tight text-white">
+          <h1 className="cs-title">
             {cs.title}
           </h1>
           {real(cs.tagline) && (
@@ -206,7 +206,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
             <div className="mt-8 space-y-8">
               {processSteps.map((step, i) => (
                 <div key={i}>
-                  <h3 className="text-lg text-white mb-1 block font-medium">
+                  <h3 className="cs-subhead mb-2">
                     <span className="text-[var(--accent)] mr-3 tabular-nums">
                       {String(i + 1).padStart(2, '0')}
                     </span>

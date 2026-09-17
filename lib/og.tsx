@@ -9,20 +9,31 @@ export const OG_CONTENT_TYPE = 'image/png'
 export const OG_ACCENT = '#008fff'
 
 /*
- * Satori renders in a generic sans unless handed real font data — and the
- * site is IBM Plex Mono end to end, so the link preview must be too.
- * TTFs live in lib/og-fonts (OFL-licensed); process.cwd() is the project root.
+ * Satori renders in a generic sans unless handed real font data. The card
+ * follows the site's type system: Geist Sans for the title and byline,
+ * Geist Mono for the terminal chrome around them. Static TTFs (Satori has no
+ * variable-font or woff2 support) live in lib/og-fonts (OFL-licensed);
+ * process.cwd() is the project root.
  */
+const FONT_DIR = 'lib/og-fonts'
+
 export async function ogFonts() {
-  const [regular, medium] = await Promise.all([
-    readFile(join(process.cwd(), 'lib/og-fonts/IBMPlexMono-Regular.ttf')),
-    readFile(join(process.cwd(), 'lib/og-fonts/IBMPlexMono-Medium.ttf')),
+  const [sansRegular, sansSemiBold, monoRegular, monoMedium] = await Promise.all([
+    readFile(join(process.cwd(), FONT_DIR, 'Geist-Regular.ttf')),
+    readFile(join(process.cwd(), FONT_DIR, 'Geist-SemiBold.ttf')),
+    readFile(join(process.cwd(), FONT_DIR, 'GeistMono-Regular.ttf')),
+    readFile(join(process.cwd(), FONT_DIR, 'GeistMono-Medium.ttf')),
   ])
   return [
-    { name: 'IBM Plex Mono', data: regular, style: 'normal' as const, weight: 400 as const },
-    { name: 'IBM Plex Mono', data: medium, style: 'normal' as const, weight: 500 as const },
+    { name: 'Geist', data: sansRegular, style: 'normal' as const, weight: 400 as const },
+    { name: 'Geist', data: sansSemiBold, style: 'normal' as const, weight: 600 as const },
+    { name: 'Geist Mono', data: monoRegular, style: 'normal' as const, weight: 400 as const },
+    { name: 'Geist Mono', data: monoMedium, style: 'normal' as const, weight: 500 as const },
   ]
 }
+
+const SANS = '"Geist", sans-serif'
+const MONO = '"Geist Mono", monospace'
 
 // "Product Designer" → "product-designer": the prompt line cd's somewhere real.
 const slugify = (s: string) =>
@@ -54,7 +65,7 @@ export function OgCard({
         display: 'flex',
         background: '#000000',
         padding: '44px',
-        fontFamily: '"IBM Plex Mono", monospace',
+        fontFamily: SANS,
       }}
     >
       <div
@@ -74,6 +85,7 @@ export function OgCard({
             gap: 36,
             padding: '26px 44px 0',
             borderBottom: '2px solid rgba(255,255,255,0.1)',
+            fontFamily: MONO,
           }}
         >
           <span style={{ ...tab, color: '#8a8a8a', paddingBottom: 20 }}>problems</span>
@@ -103,7 +115,15 @@ export function OgCard({
           }}
         >
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div style={{ display: 'flex', alignItems: 'center', fontSize: 30, marginBottom: 40 }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                fontSize: 30,
+                marginBottom: 40,
+                fontFamily: MONO,
+              }}
+            >
               <span style={{ color: '#23d18b', fontWeight: 500 }}>&gt;</span>
               <span style={{ color: '#29b8db', marginLeft: 18 }}>~</span>
               <span style={{ color: '#cccccc', marginLeft: 18 }}>
@@ -113,9 +133,9 @@ export function OgCard({
             </div>
             <div
               style={{
-                fontSize: title.length > 40 ? 60 : 78,
-                fontWeight: 500,
-                lineHeight: 1.12,
+                fontSize: title.length > 40 ? 64 : 84,
+                fontWeight: 600,
+                lineHeight: 1.08,
                 letterSpacing: '-0.02em',
                 color: '#ffffff',
               }}

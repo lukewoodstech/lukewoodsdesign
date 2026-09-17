@@ -6,8 +6,8 @@
  * Colors here generate utilities: text-accent, bg-mono-blue, etc.
  */
 @theme inline {
-  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
-  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
   --color-mono-blue: var(--mono-blue);
   --color-mono-blue-deep: var(--mono-blue-deep);
   --color-mono-pink: #ffb3ff;
@@ -52,6 +52,14 @@
   --mono-green:        #00ffb5;
   --mono-tile:         #1e1e28;
   /*
+   * The work card's one stroke. A neutral hairline at rest (the same
+   * white as the footer divider), and a subdued blue on hover/focus —
+   * refined, not "selected". The electric --mono-blue stays for the
+   * keyboard focus rings, where it has to shout.
+   */
+  --card-ring:         rgba(255, 255, 255, 0.1);
+  --card-ring-hover:   #3f7fc4;
+  /*
    * Per-case-study accent. Case study roots override it (.lcs green,
    * .pcs Pattern green); everything portable — eyebrows, bullet dashes,
    * focus rings, the lightbox — reads this instead of a page-specific color.
@@ -63,20 +71,49 @@
   --ease-out-quint:    cubic-bezier(0.23, 1, 0.32, 1);
 
   /*
-   * Reading scale — every long-form surface (case-study prose, captions,
-   * the chat transcript) reads these instead of picking its own size.
-   * Desktop body is 18px on a ~29px line; phones step down to 17px below.
-   * The measure caps a paragraph at ~680px so a line stays around 60–65
+   * Type scale (Geist Sans, 2026-09-16). One set of tokens for every
+   * surface; components read these instead of picking their own sizes.
+   *
+   * Display — the headings. Weight 600 throughout; the line-height
+   * tightens as the size grows.
+   */
+  --display-hero:       clamp(3.5rem, 7vw, 5rem);    /* homepage name */
+  --display-hero-lh:    1.04;
+  --display-title:      clamp(3rem, 6vw, 4rem);      /* case-study h1 */
+  --display-title-lh:   1.08;
+  --display-h2:         clamp(2rem, 4vw, 2.5rem);    /* major section */
+  --display-h2-lh:      1.15;
+  --display-h3:         1.625rem;                    /* 26px — subheading */
+  --display-h3-lh:      1.25;
+  --display-weight:     600;
+  --display-tracking:   -0.02em;
+
+  /*
+   * Reading — every long-form surface (case-study prose, captions, notes).
+   * Desktop body is 18px on a ~30px line; phones step down to 17px below.
+   * The measure caps a paragraph at ~680px so a line stays around 65–75
    * characters even though the article column (860px) is wider for media.
    */
   --reading-size:     1.125rem;   /* 18px */
-  --reading-leading:  1.6;        /* ≈29px at 18px */
+  --reading-leading:  1.65;       /* ≈30px at 18px */
   --reading-lede:     1.3125rem;  /* 21px — hero standfirst */
+  --reading-lede-lh:  1.55;
   --reading-intro:    1.25rem;    /* 20px — the opening overview paragraph */
-  --reading-caption:  0.875rem;   /* 14px — figure captions */
-  --reading-meta:     0.875rem;   /* 14px — attributions, notes */
-  --reading-label:    0.8125rem;  /* 13px — micro-labels on strips and tiles */
+  --reading-intro-lh: 1.55;
+  --reading-caption:  0.9375rem;  /* 15px — figure captions */
+  --reading-meta:     0.9375rem;  /* 15px — attributions, notes */
+  --reading-small-lh: 1.5;
   --reading-measure:  680px;
+
+  /*
+   * Labels — eyebrows, strip labels, canvas tags, metadata. 13px at 500;
+   * an eyebrow that has to carry a section goes to 600.
+   */
+  --label-size:       0.8125rem;  /* 13px */
+  --label-weight:     500;
+  --label-lh:         1.5;
+  /* Kept for the rules that read it by the old name. */
+  --reading-label:    var(--label-size);
 }
 
 @media (max-width: 40em) {
@@ -106,9 +143,10 @@ body {
   padding: 0;
   background: #000;
   color: #fff;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 16px;
   line-height: var(--mono-line-height);
+  text-rendering: optimizeLegibility;
   cursor: none !important;
   -webkit-font-smoothing: antialiased;
   overscroll-behavior: none;
@@ -195,6 +233,11 @@ p a {
   width: 3px !important;
 }
 
+/* Pointer outside the window: no dot left behind */
+#cursor.is-away {
+  opacity: 0;
+}
+
 #cursor.is-locked {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.25);
@@ -213,7 +256,8 @@ p a {
   border-radius: 3em;
   padding: 1.1em 1.4em;
   line-height: 1em;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
+  font-weight: 500;
   font-size: clamp(0.875rem, 1.2vw, 1.05rem);
   color: #fff;
   background: transparent;
@@ -248,10 +292,7 @@ p a {
 .btn:focus-visible,
 .footer-link:focus-visible,
 .tile-footer__logo-link:focus-visible,
-.term-nav__toggle:focus-visible,
-.term-nav__label:focus-visible,
 .term-nav__item:focus-visible,
-.term-nav__file:focus-visible,
 .pub-card__links a:focus-visible,
 .term-pg__plus:focus-visible,
 .term-pg__panel-btn:focus-visible,
@@ -475,16 +516,63 @@ p a {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  /* Inset so the ring survives overflow:hidden and doesn't shift layout */
-  outline: 1px solid transparent;
-  outline-offset: -1px;
-  transition: outline-color 0.3s ease;
+  /*
+   * The card's only edge: a real 1px border. Not an outline, inset shadow
+   * or pseudo-element — a border is the one stroke Blink pixel-snaps
+   * together with the rounded corners, and nothing inside can sit on it
+   * (the absolutely positioned art lives in the padding box). Only the
+   * colour ever transitions; the width is 1px at rest and on hover.
+   */
+  border: 1px solid var(--card-ring);
+  transition: border-color 0.3s ease, transform 0.25s ease;
 }
 
-/* Hover affordance for the whole tile — desktop pointers only */
+/*
+ * The whole card is one link (the title's ::after stretches over it), so
+ * the card carries the hover state: the muted-blue ring, a 3px lift, and the
+ * "View case study →" row brightening with its arrow nudged right. Pointer
+ * devices only — a sticky hover on touch would leave a lifted card behind.
+ */
 @media (hover: hover) {
   .workgrid__item:hover {
-    outline-color: var(--mono-blue);
+    border-color: var(--card-ring-hover);
+    transform: translateY(-3px);
+  }
+
+  .workgrid__item:hover .tile-footer__cta {
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  .workgrid__item:hover .tile-footer__cta-arrow {
+    transform: translateX(4px);
+  }
+}
+
+/* Keyboard: focus on the title link lights the same ring and row (not the
+   company mark's focus — that link goes somewhere else). */
+.workgrid__item:has(.tile-footer__link:focus-visible) {
+  border-color: var(--card-ring-hover);
+}
+
+.workgrid__item:has(.tile-footer__link:focus-visible) .tile-footer__cta {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.workgrid__item:has(.tile-footer__link:focus-visible) .tile-footer__cta-arrow {
+  transform: translateX(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workgrid__item,
+  .tile-footer__cta,
+  .tile-footer__cta-arrow {
+    transition: none;
+  }
+
+  .workgrid__item:hover,
+  .workgrid__item:hover .tile-footer__cta-arrow,
+  .workgrid__item:has(.tile-footer__link:focus-visible) .tile-footer__cta-arrow {
+    transform: none;
   }
 }
 
@@ -522,10 +610,11 @@ p a {
 
 /* ─── Tile footer — company lockup, title, summary, tags ─── */
 .tile-footer {
-  position: relative;
+  /* Static on purpose: the title link's ::after must stretch over the whole
+     card, and a positioned footer would become its containing block. The
+     stage clips its own artwork, so the footer needs no z-index either. */
   flex: 0 0 auto;
-  z-index: 20;
-  padding: 0.85rem clamp(1.1rem, 1.8vw, 1.5rem) 0.95rem;
+  padding: 0.85rem clamp(1.1rem, 1.8vw, 1.5rem) 0.9rem;
   background: rgba(0, 0, 0, 0.34);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   transition: background 0.4s ease;
@@ -569,6 +658,9 @@ p a {
   hit area grows past the 24px minimum, without shifting the row it sits in.
 */
 .tile-footer__logo-link {
+  /* Above the stretched card link, so the mark still opens the company site */
+  position: relative;
+  z-index: 4;
   display: inline-flex;
   flex: 0 0 auto;
   padding: 5px;
@@ -602,6 +694,9 @@ p a {
   overflow: hidden;
   min-width: 0;
   margin: 0.45rem 0 0;
+  /* Pinned to the sans display face so every card title matches, whatever
+     face the tile's artwork uses. */
+  font-family: var(--font-sans);
   font-size: clamp(0.95rem, 1.1vw, 1.08rem);
   font-weight: 600;
   line-height: 1.3;
@@ -610,14 +705,24 @@ p a {
 }
 
 /*
- * The only keyboard- and crawler-reachable path to a case study — the tile
- * itself is a click-only div, so this link carries the whole grid's
- * accessibility. Focus ring must stay visible.
+ * The card's one real link. Its ::after stretches over the whole
+ * .workgrid__item (the nearest positioned ancestor), so every pixel of the
+ * card opens the case study with true anchor behaviour — middle-click,
+ * cmd-click, prefetch — without nesting an <a> around the company mark.
+ * The title's overflow:hidden can't clip it: the pseudo's containing block
+ * is the card, not the title. Focus ring must stay visible.
  */
 .tile-footer__link {
   color: inherit;
   text-decoration: none;
   cursor: none !important;
+}
+
+.tile-footer__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
 }
 
 .tile-footer__link:focus-visible {
@@ -641,7 +746,90 @@ p a {
   margin: 0.4rem 0 0;
   font-size: 0.8125rem;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* "View case study →" — quiet at rest; the card's hover/focus rules
+   brighten it and nudge the arrow. aria-hidden in the markup: the title
+   link already names the destination. */
+.tile-footer__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.6rem 0 0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.2s ease;
+}
+
+.tile-footer__cta-arrow {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+/*
+ * ─── Awardco tile — three real mobile screens as phones rising from the
+ * stage's bottom edge. Sizes are container-query units of the stage, so
+ * the trio scales with the card at every breakpoint and the stage's
+ * overflow crops the empty lower third of each screenshot. --pc is the
+ * primary (center) phone's width; the two supporting phones are 84% of it,
+ * set lower and behind, and a touch dimmer for depth. The bezel is a hair
+ * of padding on a dark rounded box — enough to read as a phone, no more.
+ */
+.phone-trio {
+  position: absolute;
+  inset: 0;
+  container-type: size;
+}
+
+.phone {
+  --pc: min(44cqw, 54cqh);
+  --pw: var(--pc);
+  position: absolute;
+  top: 9cqh;
+  left: 50%;
+  z-index: 1;
+  width: var(--pw);
+  aspect-ratio: 393 / 852;
+  transform: translateX(-50%);
+  padding: calc(var(--pw) * 0.024);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: calc(var(--pw) * 0.13);
+  background: #0e0e14;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.5);
+}
+
+.phone--left,
+.phone--right {
+  --pw: calc(var(--pc) * 0.84);
+  top: 20cqh;
+  z-index: 0;
+  filter: brightness(0.86);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+}
+
+.phone--left {
+  left: calc(50% - var(--pc) * 0.64);
+}
+
+.phone--right {
+  left: calc(50% + var(--pc) * 0.64);
+}
+
+.phone__screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: calc(var(--pw) * 0.105);
+  background: #fff;
+}
+
+.phone__screen img {
+  object-fit: cover;
+  object-position: top center;
 }
 
 /* Tile SVG base */
@@ -1039,7 +1227,7 @@ p a {
   display: block;
   font-size: 0.875rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--accent);
 }
@@ -1047,26 +1235,67 @@ p a {
 /* Fact-strip / persona micro-label: the eyebrow one step down */
 .cs-label-sm {
   display: block;
-  font-size: var(--reading-label);
-  font-weight: 600;
-  letter-spacing: 0.18em;
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  line-height: var(--label-lh);
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--accent);
 }
 
+/* The study's title. `balance` keeps a two-line title from stranding one
+   word on its second line. */
+.cs-title {
+  display: block;
+  margin: 0;
+  font-size: var(--display-title);
+  font-weight: var(--display-weight);
+  line-height: var(--display-title-lh);
+  letter-spacing: var(--display-tracking);
+  color: #fff;
+  text-wrap: balance;
+}
+
+/* Section heading, under its eyebrow */
 .cs-headline {
   display: block;
   max-width: var(--reading-measure);
-  font-size: 1.5rem;
-  font-weight: 500;
-  line-height: 1.375;
-  letter-spacing: -0.025em;
+  font-size: var(--display-h2);
+  font-weight: var(--display-weight);
+  line-height: var(--display-h2-lh);
+  letter-spacing: var(--display-tracking);
   color: #fff;
   margin: 0.75rem 0 1.5rem;
+  text-wrap: balance;
+}
+
+/* Subheading inside a section (process steps, persona names) */
+.cs-subhead {
+  display: block;
+  margin: 0;
+  font-size: var(--display-h3);
+  font-weight: var(--display-weight);
+  line-height: var(--display-h3-lh);
+  letter-spacing: -0.01em;
+  color: #fff;
+  text-wrap: balance;
+}
+
+/* The pull-quote "reframe": subheading size, one weight lighter than a
+   heading so it reads as a spoken line, not a title. */
+.cs-quote {
+  margin: 0;
+  max-width: var(--reading-measure);
+  font-size: var(--display-h3);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: #fff;
+  text-wrap: balance;
 }
 
 @media (min-width: 40em) {
-  .cs-headline { font-size: 2rem; }
+  .cs-quote { font-size: 1.75rem; }
 }
 
 /* Hero standfirst: the one-line promise under the title. Larger than body,
@@ -1074,17 +1303,21 @@ p a {
 .cs-lede {
   max-width: var(--reading-measure);
   font-size: var(--reading-lede);
-  line-height: 1.45;
+  font-weight: 400;
+  line-height: var(--reading-lede-lh);
   color: rgba(255, 255, 255, 0.85);
+  text-wrap: pretty;
 }
 
 /* Body copy. Media can run the full 860px column; paragraphs stop at the
-   reading measure so a line never runs past ~65 characters. */
+   reading measure so a line never runs past ~75 characters. */
 .cs-prose {
   max-width: var(--reading-measure);
   font-size: var(--reading-size);
+  font-weight: 400;
   line-height: var(--reading-leading);
   color: #fff;
+  text-wrap: pretty;
 }
 
 .cs-prose p { margin: 0 0 1.15em; }
@@ -1093,7 +1326,7 @@ p a {
 /* The opening overview paragraph on each study — one step up from body */
 .cs-prose--intro {
   font-size: var(--reading-intro);
-  line-height: 1.55;
+  line-height: var(--reading-intro-lh);
 }
 
 .cs-bullets {
@@ -1104,8 +1337,10 @@ p a {
   display: flex;
   gap: 0.75rem;
   font-size: var(--reading-size);
+  font-weight: 400;
   line-height: var(--reading-leading);
   margin-bottom: 0.5rem;
+  text-wrap: pretty;
 }
 
 .cs-bullets li::before {
@@ -1118,14 +1353,17 @@ p a {
   margin: 0.75rem 0 0;
   max-width: var(--reading-measure);
   font-size: var(--reading-caption);
-  line-height: 1.55;
+  font-weight: 400;
+  line-height: var(--reading-small-lh);
   color: rgba(255, 255, 255, 0.7);
+  text-wrap: pretty;
 }
 
 /* Attributions and footnotes: the caption size, one shade quieter */
 .cs-meta {
   font-size: var(--reading-meta);
-  line-height: 1.5;
+  font-weight: 400;
+  line-height: var(--reading-small-lh);
   color: rgba(255, 255, 255, 0.6);
 }
 
@@ -1202,9 +1440,10 @@ p a {
 }
 
 .lcs-impact__label {
-  font-size: var(--reading-label);
-  line-height: 1.5;
-  letter-spacing: 0.02em;
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  line-height: var(--label-lh);
+  letter-spacing: 0.01em;
   color: rgba(255, 255, 255, 0.7);
 }
 
@@ -1274,8 +1513,9 @@ p a {
   display: inline-flex;
   align-items: center;
   gap: 0.45em;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
   letter-spacing: 0.04em;
   color: #fff;
   background: rgba(0, 0, 0, 0.72);
@@ -1425,8 +1665,9 @@ p a {
   border: none;
   background: transparent;
   color: rgba(255, 255, 255, 0.6);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 0.8125rem;
+  font-weight: 500;
   line-height: 1;
   padding: 0.6em 1.05em;
   border-radius: 999px;
@@ -1524,8 +1765,9 @@ p a {
   position: absolute;
   transform: translateX(-50%);
   text-align: center;
-  font-size: var(--reading-label);
-  line-height: 1.5;
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  line-height: var(--label-lh);
   color: rgba(255, 255, 255, 0.75);
   white-space: nowrap;
 }
@@ -1604,14 +1846,15 @@ p a {
 .lcs-lay__card--winner .lcs-lay__block { background: var(--accent); opacity: 0.75; }
 
 .lcs-lay__name {
-  font-size: var(--reading-label);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
   color: #fff;
   display: block;
 }
 
 .lcs-lay__verdict {
-  font-size: var(--reading-label);
-  line-height: 1.5;
+  font-size: var(--label-size);
+  line-height: var(--label-lh);
   color: rgba(255, 255, 255, 0.55);
   display: block;
   margin-top: 0.15rem;
@@ -1626,7 +1869,7 @@ p a {
   text-transform: uppercase;
   background: var(--accent);
   color: #04170f;
-  font-weight: 700;
+  font-weight: 600;
   border-radius: 999px;
   padding: 0.28em 0.7em;
 }
@@ -1747,6 +1990,26 @@ p a {
   border-color: var(--accent);
   color: #fff;
   font-weight: 600;
+}
+
+/* Awardco (2026-09-16 rewrite): three metric tiles, not four. One row on
+   desktop; on phones the long third value spans the full width instead of
+   sitting alone. The type itself is the shared .cs-* system, unchanged. */
+.acs .lcs-impact__grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.acs .lcs-impact__num {
+  font-size: clamp(1.6rem, 3.4vw, 2.2rem);
+}
+
+@media (max-width: 40em) {
+  .acs .lcs-impact__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .acs .lcs-impact__tile:last-child {
+    grid-column: 1 / -1;
+  }
 }
 
 /* ────────────────────────────────────────────────────────────────
@@ -2023,12 +2286,16 @@ p a {
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
 }
 
+/* Layer-name tags on the canvas — design-tool chrome, so they keep the
+   mono, at the label size and weight. */
 .canvas-card__label {
   position: absolute;
   top: -1.8rem;
   left: 0.2rem;
-  font-size: 0.75rem;
-  letter-spacing: 0.12em;
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.45);
 }
@@ -2051,6 +2318,7 @@ p a {
 
 .polaroid--main {
   position: relative;
+  z-index: 1;
   margin: 0;
   width: 22vw;
   transform: rotate(-2.2deg);
@@ -2143,7 +2411,8 @@ p a {
   padding-bottom: 0.35rem;
   border-bottom: 1px solid #3d3d3d;
   font-size: 1.35rem;
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   color: #fff;
 }
 
@@ -2222,10 +2491,6 @@ p a {
   color: #fff;
 }
 
-.polaroid--main {
-  z-index: 1;
-}
-
 /* ── README tab chrome ───────────────────────────────────────────── */
 
 .code-card__mdicon {
@@ -2255,8 +2520,9 @@ p a {
   margin: 0 0 1.2rem;
   font-family: var(--font-sans), sans-serif;
   font-size: clamp(1.8rem, 2.6vw, 2.6rem);
-  font-weight: 700;
-  line-height: 1.05;
+  font-weight: 600;
+  letter-spacing: var(--display-tracking);
+  line-height: 1.1;
 }
 
 /*
@@ -2334,7 +2600,8 @@ p a {
   gap: 0.5rem;
   margin: 0;
   font-size: clamp(1.05rem, 1.4vw, 1.4rem);
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   color: #fff;
   line-height: 1.25;
 }
@@ -2410,7 +2677,7 @@ p a {
   padding: 0.9rem 0 1.2rem;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   font-size: 0.9rem;
-  font-family: var(--font-mono);
+  font-weight: 500;
 }
 
 /* ── Screen-fixed chrome: the nav as the VS Code Explorer ──────── */
@@ -2423,201 +2690,66 @@ p a {
 }
 
 /*
-  The side-panel window: EXPLORER header, then the tree —
-    ⌄ lukewoodsdesign.com
-      › home        (luke-ai.tsx)
-      ⌄ work        lucid-ai.tsx · awardco.tsx · pattern.tsx
-      › about       (README.md · resume.pdf)
-  The open folder follows the section under the middle of the screen, and
-  the file nearest it is highlighted. Same window chrome the terminal had;
-  only the contents changed.
+  The nav as a small file panel, screen-fixed at the top left:
+    lukewoodsdesign.com
+    │ home
+    │ work
+    │ about
+  The site is the root; the three sections hang under it on one indent
+  guide, drawn as rows a visitor can read as nav. The row for the section
+  under the middle of the screen is selected (the editor's selection blue).
+  No carets, no files, no menus.
 */
 .term-nav {
-  min-width: 232px;
+  min-width: 208px;
   background: #1e1e1e;
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 6px;
-  overflow: hidden;
   box-shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
-  padding: 0 0.4rem 0.45rem;
+  padding: 0.5rem 0.45rem 0.5rem;
   font-family: var(--font-mono);
 }
 
-.term-nav__head {
-  display: flex;
-  align-items: center;
-  padding: 0.55rem 0.45rem 0.45rem;
-  margin-bottom: 0.3rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.term-nav__title {
-  font-size: 0.58rem;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: #e7e7e7;
-}
-
-/* A tree row: chevron box, then the label. Folders are buttons end to end. */
-.term-nav__row {
-  display: flex;
-  align-items: center;
-  gap: 0.15rem;
-  width: 100%;
-  padding: 0 0.25rem;
-  border: none;
-  border-radius: 4px;
-  background: none;
-  color: #cccccc;
-  font-family: inherit;
-  font-size: 0.8rem;
-  text-align: left;
-  cursor: none;
-  transition: background 0.15s ease, color 0.15s ease;
-}
-
-.term-nav__row:hover {
-  background: rgba(255, 255, 255, 0.07);
-  color: #fff;
-}
-
-.term-nav__toggle,
-.term-nav__row > .term-nav__chevron {
-  flex: 0 0 16px;
-  width: 16px;
-  height: 16px;
-  padding: 0;
-  border: none;
-  background: none;
-  color: #8a8a8a;
-  cursor: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.term-nav__toggle:hover,
-.term-nav__row:hover > .term-nav__chevron {
-  color: #fff;
-}
-
-.term-nav__chevron {
+.term-nav__root {
   display: block;
-  transition: transform 0.15s ease;
-}
-
-.term-nav__chevron.is-open {
-  transform: rotate(90deg);
-}
-
-/* Root label: the site, `cd ~`. */
-.term-nav__label {
-  flex: 1 1 auto;
-  padding: 0.28rem 0.35rem;
-  border: none;
-  background: none;
-  color: #e7e7e7;
-  font-family: inherit;
+  padding: 0.2rem 0.4rem 0.35rem;
   font-size: 0.8rem;
   font-weight: 500;
-  text-align: left;
-  cursor: none;
+  color: #e7e7e7;
 }
 
-.term-nav__label:hover {
-  color: #fff;
-}
-
-/* Folder name: navigates and drops the caret. Sits beside its toggle the
-   way the root label sits beside the root caret. */
-.term-nav__item {
-  flex: 1 1 auto;
-  padding: 0.28rem 0.35rem 0.28rem 0.1rem;
-  border: none;
-  background: none;
-  color: inherit;
-  font-family: inherit;
-  font-size: inherit;
-  text-align: left;
-  cursor: none;
-}
-
-/* The folder for the section under the middle of the screen reads
-   white, so the visitor's place shows even with its files folded away. */
-.term-nav__item[aria-current='location'] {
-  color: #fff;
-}
-
-/*
-  A folder's files: one more indent guide, hung from the folder's caret the
-  same way the folders hang from the root's. Files have no caret, so the
-  name starts where a nested folder's name would (caret box + gap).
-*/
-.term-nav__files {
+/* The rows hang from the root on an indent guide, the way a tree's
+   children do. */
+.term-nav__list {
   list-style: none;
-  margin: 0 0 0 calc(0.25rem + 8px);
-  padding: 0 0 0 calc(1rem - 8px);
-  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  margin: 0 0 0 calc(0.4rem + 4px);
+  padding: 0 0 0 0.5rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.14);
 }
 
-.term-nav__file {
-  display: flex;
-  align-items: center;
+.term-nav__item {
+  display: block;
   width: 100%;
-  padding: 0.24rem 0.35rem 0.24rem calc(0.25rem + 16px + 0.15rem);
-  border: none;
-  border-radius: 4px;
+  padding: 0.3rem 0.55rem;
+  border: 0;
+  border-radius: 3px;
   background: none;
-  color: #a8a8a8;
+  color: #b9b9b9;
   font-family: inherit;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   text-align: left;
-  text-decoration: none;
   cursor: none;
   transition: background 0.15s ease, color 0.15s ease;
 }
 
-.term-nav__file:hover {
+.term-nav__item:hover {
   background: rgba(255, 255, 255, 0.07);
   color: #fff;
 }
 
-/* The file under the middle of the screen — VS Code's selected row, in the
-   site's editor blue. */
-/* Rows that leave the canvas show a ↗ on hover and focus */
-.term-nav__goto {
-  flex-shrink: 0;
-  width: 14px;
-  height: 14px;
-  margin-left: auto;
-  color: rgba(255, 255, 255, 0.8);
-  opacity: 0;
-  transition: opacity 0.15s ease;
-}
-
-.term-nav__file--route {
-  gap: 0.5rem;
-}
-
-.term-nav__file--route:hover .term-nav__goto,
-.term-nav__file--route:focus-visible .term-nav__goto {
-  opacity: 1;
-}
-
-.term-nav__file.is-active {
+.term-nav__item.is-current {
   background: rgba(0, 143, 255, 0.18);
   color: #fff;
-}
-
-/*
-  Children sit under the root with VS Code's indent guide — a hairline on the
-  root chevron's centre (0.25rem row inset + half the 16px chevron box).
-*/
-.term-nav__children {
-  list-style: none;
-  margin: 0 0 0 calc(0.25rem + 8px);
-  padding: 0 0 0 calc(1rem - 8px);
-  border-left: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 /* oh-my-zsh robbyrussell: green arrow, cyan cwd — the chat sidebar's
@@ -2631,12 +2763,6 @@ p a {
 .term-nav__dir {
   color: #29b8db;
   margin-right: 0.45rem;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .term-nav__chevron {
-    transition: none;
-  }
 }
 
 /* ────────────────────────────────────────────────────────────────
@@ -2685,7 +2811,7 @@ p a {
 .mhome-nav__name {
   font-family: var(--font-sans), sans-serif;
   font-size: 1.05rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.02em;
   text-transform: lowercase;
   color: #fff;
@@ -2694,73 +2820,32 @@ p a {
   padding: 0.55rem 0;
 }
 
-/* Three drawn bars; the outer two fold into an X when open. */
-.mhome-nav__burger {
+/* The section links, right in the bar beside the name. */
+.mhome-nav__links {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 5px;
-  width: 44px;
-  height: 44px;
-  padding: 10px;
-  background: none;
-  border: none;
+  align-items: center;
+  gap: 0.1rem;
 }
 
-.mhome-nav__burger span {
-  display: block;
-  width: 100%;
-  height: 2px;
-  background: #fff;
-  border-radius: 1px;
-  transition: transform 0.25s ease, opacity 0.2s ease;
-}
-
-.mhome-nav__burger.is-open span:nth-child(1) {
-  transform: translateY(7px) rotate(45deg);
-}
-
-.mhome-nav__burger.is-open span:nth-child(2) {
-  opacity: 0;
-}
-
-.mhome-nav__burger.is-open span:nth-child(3) {
-  transform: translateY(-7px) rotate(-45deg);
-}
-
-.mhome-nav__burger:focus-visible {
-  outline: 2px solid #008fff;
-  outline-offset: 2px;
-}
-
-/* ── Full-screen menu: oversized right-aligned links ─────────────── */
-
-.mhome-menu {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.4rem;
-  padding: 5.5rem 1.5rem 0;
-  background: rgba(0, 0, 0, 0.96);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.mhome-menu a {
-  font-family: var(--font-sans), sans-serif;
-  font-size: 2.6rem;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.3;
-  color: #fff;
+.mhome-nav__links a {
+  padding: 0.55rem 0.7rem;
+  border-radius: 999px;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.78);
   text-decoration: none;
 }
 
-.mhome-menu a:active {
-  color: #008fff;
+.mhome-nav__links a:hover,
+.mhome-nav__links a:active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.mhome-nav__links a:focus-visible {
+  outline: 2px solid #008fff;
+  outline-offset: 2px;
 }
 
 /* ── Hero ────────────────────────────────────────────────────────── */
@@ -2792,9 +2877,10 @@ p a {
    numbers both use it, matching the canvas's floating labels. */
 .mhome-label {
   margin: 0;
-  font-size: 0.75rem;
-  font-weight: 400;
-  letter-spacing: 0.12em;
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.45);
 }
@@ -2820,10 +2906,12 @@ p a {
 }
 
 /* The tiles fill a fixed frame here — the old mobile grid's full-screen
-   min-height would make each card a whole viewport. */
+   min-height would make each card a whole viewport. 63vh, down from 72vh
+   on 2026-09-16, takes ~20% off the media area; the rem cap keeps a tall
+   phone from stretching the stage back out. */
 .mhome-card .workgrid__item {
   min-height: 0;
-  height: 72vh;
+  height: min(63vh, 36rem);
 }
 
 /* ── About ───────────────────────────────────────────────────────── */
@@ -2944,7 +3032,7 @@ p a {
 }
 
 
-/* ── Luke AI: the VS Code terminal panel, running `luke-ai` ──────
+/* ── Luke AI: the VS Code terminal panel, running Luke AI ────────
    Dark Modern palette: #181818 panel, #cccccc text, #0078d4 accents.
    Container queries drop the optional panel titles and the host half
    of the prompt as the window narrows (42vw hero, the mobile card). */
@@ -3024,9 +3112,17 @@ p a {
   overflow-y: auto;
   /* keep inner scroll from chaining into the canvas glide */
   overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
   padding: 0.85rem 1.1rem 1rem;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+/* Empty, the questions dock at the body's foot: less inset there, so
+   they sit close over the message field. */
+.ai-card__body:has(> .lai--zero) {
+  padding-bottom: 0.5rem;
 }
 
 .ai-card__body::-webkit-scrollbar {
@@ -3050,12 +3146,15 @@ p a {
 }
 
 /* ────────────────────────────────────────────────────────────────
-   Luke AI, the shared system (2026-09-14). One set of tokens and one
-   set of rules for both surfaces; `.lai--card` (homepage window) and
-   `.lai--page` (/chat) only retune the tokens. Two type layers:
-   monospace for the terminal personality — prompt, commands, status,
-   the LUKE_AI tag, follow-up actions, route links — and the site sans
-   for the answers themselves, set on a reading measure.
+   Luke AI, the shared system (2026-09-14; reset 2026-09-16; zero
+   state 2026-09-16). One set of tokens and one set of rules for both
+   surfaces; `.lai--card` (homepage window) and `.lai--page` (/chat)
+   only retune the tokens. Two faces: the mono for the terminal layer
+   (window title, suggested questions, tags, actions, notes) and the
+   site's sans for anything read at length — the intro line, the
+   visitor's messages, the answers, the field they are typed in.
+   Corners stay sharp. Empty, the wordmark takes the room up top and
+   the questions dock over the field.
    ──────────────────────────────────────────────────────────────── */
 
 .lai {
@@ -3063,18 +3162,19 @@ p a {
   --lai-mono: 0.8125rem;        /* 13px */
   --lai-mono-lh: 1.5;
   /* reading layer */
-  --lai-prose: 1rem;            /* 16px */
-  --lai-prose-lh: 1.6;
+  --lai-prose: 0.9375rem;       /* 15px */
+  --lai-prose-lh: 1.65;
   --lai-measure: 640px;
   /* rhythm */
   --lai-turn-gap: 1.75rem;      /* between one answer and the next command */
-  --lai-cmd-gap: 1.25rem;       /* message → ✦ LUKE_AI */
-  /* palette (VS Code Dark Modern) */
+  --lai-cmd-gap: 1.25rem;       /* message → ✱ Luke AI */
+  /* palette (VS Code Dark Modern); secondary text a step brighter than
+     the editor's so it clears the panel without competing */
   --lai-fg: #e9e9e9;
   --lai-fg-mono: #cccccc;
   --lai-bright: #f4f4f4;
-  --lai-muted: #8b8b8b;
-  --lai-dim: #6a6a6a;
+  --lai-muted: #9c9c9c;
+  --lai-dim: #767676;
   --lai-accent: #3794ff;
   --lai-rule: rgba(255, 255, 255, 0.12);
 
@@ -3086,10 +3186,20 @@ p a {
   color: var(--lai-fg-mono);
 }
 
+/* Empty: fill the window; the welcome takes the free space up top and
+   the questions dock at the foot, right over the message field. Never
+   shrinks: on a short window the body scrolls from the top instead of
+   the welcome vanishing above a flex-end edge. */
+.lai--zero {
+  flex: 1 0 auto;
+  min-height: 100%;
+  justify-content: flex-end;
+}
+
 .lai--page {
   --lai-mono: 0.875rem;         /* 14px */
-  --lai-prose: 1.0625rem;       /* 17px */
-  --lai-prose-lh: 1.62;
+  --lai-prose: 1rem;            /* 16px */
+  --lai-prose-lh: 1.65;
   --lai-measure: 720px;
   --lai-turn-gap: 2.25rem;
   --lai-cmd-gap: 1.4rem;
@@ -3100,84 +3210,155 @@ p a {
   .lai,
   .lai--page {
     --lai-mono: 0.8125rem;
-    --lai-prose: 1rem;
+    --lai-prose: 0.9375rem;
     --lai-prose-lh: 1.6;
     --lai-turn-gap: 1.75rem;
   }
-}
-
-/* boot line + greeting: `guest@portfolio ~ % luke-ai`, `✱ luke-ai v1.0 — …` */
-.lai__boot {
-  margin: 0;
-  color: var(--lai-fg-mono);
-}
-
-.lai__boot .ps1 {
-  color: var(--lai-muted);
-}
-
-.lai__greeting {
-  margin: 0.15rem 0 0;
-  color: var(--lai-muted);
 }
 
 .lai__star {
   color: var(--lai-accent);
 }
 
-/* Zero state: suggested prompts, drawn like terminal chrome. A real
-   list, so screen readers hear "3 items". */
+/* ── The welcome: the wordmark in the mono, one line in the sans,
+   left-aligned like the transcript that replaces it. It takes the free
+   space above the questions and centers in it, biased upward. ── */
+.lai__welcome {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 52ch;
+  padding: 1rem 0 2rem;
+}
+
+.lai__hello {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: #fff;
+}
+
+.lai__intro {
+  margin: 0.6rem 0 0;
+  font-family: var(--font-sans);
+  font-size: var(--lai-prose);
+  line-height: 1.55;
+  color: var(--lai-muted);
+}
+
+.lai--page .lai__welcome {
+  padding: 1.5rem 0 2.5rem;
+}
+
+.lai--page .lai__hello {
+  font-size: 1.5rem;
+}
+
+/* Narrow windows (the phone card): a tighter welcome. */
+@container (max-width: 440px) {
+  .lai__welcome {
+    padding: 0.5rem 0 1.25rem;
+  }
+
+  .lai__hello {
+    font-size: 1.15rem;
+  }
+}
+
+/* ── The start block: the four questions on a grid, then one note,
+   docked right over the message field ── */
+.lai__start {
+  flex-shrink: 0;
+}
+
+/* Suggested questions: sharp, outlined, in the mono. A real list, so
+   screen readers hear how many there are. One column, two once the
+   window has the room (the desktop hero, /chat, a tablet); equal rows
+   so all four buttons share one size. */
 .lai__chips {
   list-style: none;
-  margin: 0.85rem 0 0;
+  margin: 0;
   padding: 0;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-auto-rows: 1fr;
   gap: 0.5rem;
 }
 
+.lai__chips > li {
+  display: flex;
+  min-width: 0;
+}
+
+@container (min-width: 480px) {
+  .lai__chips {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .lai__chip {
-  display: inline-block;
-  max-width: 100%;
-  font-family: var(--font-mono);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.7rem 0.8rem 0.7rem 0.9rem;
+  font-family: inherit;
   font-size: var(--lai-mono);
-  line-height: 1.35;
+  line-height: 1.4;
+  text-align: left;
   color: var(--lai-fg-mono);
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-  padding: 0.5rem 0.8rem;
-  text-align: left;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 3px;
   overflow-wrap: anywhere;
   cursor: none;
   transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
 }
 
-.lai__chip::before {
-  content: '↳ ';
-  color: var(--lai-dim);
+.lai__chip-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* The arrow sits dim until the button is hovered or focused, then goes
+   blue with the border: one treatment for both. */
+.lai__chip .lai__arrow {
   transition: color 0.15s ease;
 }
 
 .lai__chip:hover,
 .lai__chip:focus-visible {
   color: #fff;
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(55, 148, 255, 0.08);
+  border-color: var(--lai-accent);
 }
 
-.lai__chip:hover::before,
-.lai__chip:focus-visible::before {
+.lai__chip:hover .lai__arrow,
+.lai__chip:focus-visible .lai__arrow {
   color: var(--lai-accent);
 }
 
-.lai--page .lai__chips {
-  margin-top: 1.1rem;
-  gap: 0.55rem;
+.lai--page .lai__chip {
+  padding: 0.8rem 0.9rem 0.8rem 1rem;
 }
 
-.lai--page .lai__chip {
-  padding: 0.6rem 0.9rem;
+/* The one note under the questions: what the field can do that the
+   pages cannot. Small, in the mono, a step under the buttons. */
+.lai__note {
+  margin: 0.7rem 0 0;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--lai-muted);
+}
+
+.lai--page .lai__note {
+  margin-top: 0.85rem;
+  font-size: 0.8125rem;
 }
 
 /* The transcript proper */
@@ -3187,12 +3368,11 @@ p a {
   padding: 0;
 }
 
-/* The visitor's turn: a compact, right-aligned message with the prompt
-   `guest@portfolio ~ %` as a small mono line above it. The container is
-   a shade lighter than the panel with a hairline border and a modest
-   radius — a message object, not a pill — and it is the only thing in
-   the transcript that gets one: answers stay open on the canvas, which
-   is the contrast that separates the two voices. */
+/* The visitor's turn: a compact, right-aligned message. The container is
+   a shade lighter than the panel with a hairline border and a soft radius,
+   and it is the only thing in the transcript that gets one: answers stay
+   open on the canvas, which is the contrast that separates the two
+   voices. */
 .lai__cmd {
   display: flex;
   flex-direction: column;
@@ -3204,34 +3384,17 @@ p a {
   margin-top: 1.1rem;
 }
 
-/* The label sits flush with the message's right edge, so it reads as
-   the message's own prompt line rather than a stray caption. */
-.lai__cmd-ps1 {
-  margin: 0 0 0.35rem;
-  font-size: 0.75rem;     /* 12px */
-  letter-spacing: 0.02em;
-  color: var(--lai-dim);
-}
-
-.lai__cmd-ps1 .ps1 {
-  color: inherit;
-}
-
-.lai--page .lai__cmd-ps1 {
-  font-size: 0.8125rem;   /* 13px */
-}
-
 .lai__cmd-text {
   display: block;
   max-width: 62%;
-  padding: 0.65rem 0.95rem;
-  background: rgba(255, 255, 255, 0.045);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 7px;
+  padding: 0.6rem 0.9rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
   font-family: var(--font-sans);
-  font-size: 1rem;        /* 16px on both surfaces */
+  font-size: var(--lai-prose);
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1.55;
   color: #ececec;
   text-align: left;
   overflow-wrap: anywhere;
@@ -3256,17 +3419,17 @@ p a {
   }
 }
 
-/* `✦ LUKE_AI` */
+/* `✱ Luke AI` */
 .lai__who {
   display: block;
   margin-bottom: 0.6rem;
-  font-size: 0.6875rem;   /* 11px */
-  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
   color: var(--lai-muted);
 }
 
 .lai--page .lai__who {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   margin-bottom: 0.7rem;
 }
 
@@ -3367,7 +3530,7 @@ p a {
 
 .lai__prose ul {
   list-style: none;
-  padding-left: 1.25em;
+  padding-left: 1.7em;
 }
 
 .lai__prose ul > li {
@@ -3379,7 +3542,7 @@ p a {
 .lai__prose ul > li::before {
   content: '→';
   position: absolute;
-  left: -1.2em;
+  left: -1.7em;
   color: var(--lai-muted);
 }
 
@@ -3412,11 +3575,11 @@ p a {
   text-decoration-color: var(--mono-blue);
 }
 
-/* site routes read as paths */
+/* inline code and route paths: back in the mono, a shade smaller */
 .lai__prose a.lai__route,
 .lai__prose code {
   font-family: var(--font-mono);
-  font-size: 0.88em;
+  font-size: 0.92em;
 }
 
 .lai__prose code {
@@ -3433,6 +3596,7 @@ p a {
   border: 1px solid var(--lai-rule);
   border-radius: 4px;
   overflow-x: auto;
+  font-family: var(--font-mono);
   font-size: 0.85em;
   line-height: 1.5;
 }
@@ -3456,65 +3620,67 @@ p a {
   margin: 1em 0;
 }
 
-/* ── Follow-ups under an answer: terminal actions, not pills ── */
+/* ── Follow-ups under an answer: the same sharp outlined prompts as
+   the welcome, one size down; case-study links in the blue ── */
 .lai__actions {
   list-style: none;
-  margin: 0.9rem 0 0;
+  margin: 1rem 0 0;
   padding: 0;
   display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
 .lai--page .lai__actions {
-  margin-top: 1.1rem;
+  margin-top: 1.2rem;
 }
 
 .lai__action {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.5ch;
   max-width: 100%;
-  padding: 0.22rem 0.35rem 0.22rem 0.2rem;
-  margin-left: -0.2rem;
-  border: 0;
+  padding: 0.38rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 3px;
   background: none;
-  font-family: var(--font-mono);
-  font-size: var(--lai-mono);
-  line-height: 1.45;
+  font-family: inherit;
+  font-size: 0.8125rem;
+  line-height: 1.4;
   text-align: left;
-  color: #b4b4b4;
+  color: #c9c9c9;
   text-decoration: none;
   overflow-wrap: anywhere;
   cursor: none;
-  transition: color 0.15s ease, background 0.15s ease;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
 }
 
 .lai__arrow {
   flex-shrink: 0;
   color: var(--lai-dim);
-  transition: color 0.15s ease;
 }
 
 .lai__action:hover,
 .lai__action:focus-visible {
   color: #fff;
   background: rgba(255, 255, 255, 0.06);
-}
-
-.lai__action:hover .lai__arrow,
-.lai__action:focus-visible .lai__arrow {
-  color: var(--lai-accent);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .lai__action--route {
   color: var(--mono-blue);
+  border-color: rgba(0, 143, 255, 0.45);
+}
+
+.lai__action--route .lai__arrow {
+  color: inherit;
 }
 
 .lai__action--route:hover,
 .lai__action--route:focus-visible {
   color: #5eaeff;
+  background: rgba(0, 143, 255, 0.1);
+  border-color: var(--mono-blue);
 }
 
 .lai__error {
@@ -3534,13 +3700,13 @@ p a {
   padding: 0;
 }
 
-/* ── The composer: fixed prompt, real textarea, send ── */
+/* ── The composer: a bordered box one row tall — anything passed in
+   at the left, the field, send at the right. The field grows with the
+   text; the controls stay on its bottom edge ── */
 .lai-composer {
-  --lai-composer-size: 0.8125rem;
-  --lai-composer-pad: 0.4rem;
+  --lai-composer-size: 0.875rem;    /* 14px, the sans */
+  --lai-composer-pad: 0.16rem;      /* one line sits level with send */
   display: flex;
-  align-items: flex-start;
-  gap: 0.4rem;
   font-family: var(--font-mono);
   font-size: var(--lai-composer-size);
   line-height: 1.5;
@@ -3549,52 +3715,59 @@ p a {
 
 .lai-composer--page {
   --lai-composer-size: 0.9375rem;   /* 15px */
-  --lai-composer-pad: 0.7rem;
+  --lai-composer-pad: 0.23rem;
 }
 
-/* VS Code input styling — bordered, slightly raised, blue ring on focus */
 .lai-composer__field {
   flex: 1 1 auto;
   min-width: 0;
   display: flex;
-  align-items: flex-start;
-  padding: var(--lai-composer-pad) 0.3rem var(--lai-composer-pad) 0.8rem;
+  align-items: flex-end;
+  gap: 0.45rem;
+  padding: 0.4rem 0.4rem 0.4rem 0.85rem;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 4px;
   transition: border-color 0.15s ease, background 0.15s ease;
 }
 
+.lai-composer--page .lai-composer__field {
+  padding: 0.5rem 0.5rem 0.5rem 1rem;
+}
+
 .lai-composer__field:focus-within {
-  border-color: #0078d4;
+  border-color: var(--mono-blue);
   background: rgba(255, 255, 255, 0.05);
 }
 
-/* Flex rows drop the prompt's trailing space; put it back as margin. The
-   prompt is text, so it lines up with the textarea's first line. */
-.lai-composer__field .ps1 {
-  margin-right: 0.6ch;
-  padding: 0.3rem 0;
-  color: #9a9a9a;
-}
-
+/* Typed in the sans: what is typed here becomes a message in the sans. */
 .lai-composer__input {
   flex: 1 1 auto;
   min-width: 0;
+  width: 100%;
   resize: none;
   max-height: 200px;
   background: none;
   border: none;
   color: #f4f4f4;
-  font: inherit;
-  padding: 0.3rem 0;
+  font-family: var(--font-sans);
+  font-size: var(--lai-composer-size);
+  line-height: 1.5;
+  padding: var(--lai-composer-pad) 0;
   outline: none;
   caret-color: #cccccc;
   scrollbar-width: none;
 }
 
 .lai-composer__input::placeholder {
-  color: rgba(255, 255, 255, 0.38);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Anything passed in (the + menu on /chat) sits at the left of the row. */
+.lai-composer__left {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
 }
 
 .lai-composer__send {
@@ -3602,30 +3775,45 @@ p a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  margin: 0.05rem 0 0 0.2rem;
-  border-radius: 4px;
-  background: none;
-  color: #8a8a8a;
+  width: 26px;
+  height: 26px;
+  border-radius: 3px;
+  background: var(--mono-blue);
+  color: #fff;
   border: none;
   cursor: none;
-  transition: color 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+  transition: color 0.2s ease, background 0.2s ease;
 }
 
 .lai-composer--page .lai-composer__send {
-  width: 34px;
-  height: 34px;
-  margin-top: 0;
+  width: 30px;
+  height: 30px;
 }
 
 .lai-composer__send:disabled {
-  opacity: 0.3;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .lai-composer__send:not(:disabled):hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.08);
+  background: #2a9dff;
+}
+
+/* The + menu on /chat lives in the composer's row: a small square the
+   size of send, not the tall bordered block it was beside the old
+   prompt. */
+.lai-composer__left .term-pg__plus {
+  width: 26px;
+  min-height: 26px;
+  max-height: 26px;
+  border-color: rgba(255, 255, 255, 0.2);
+  font-size: 1rem;
+}
+
+.lai-composer--page .lai-composer__left .term-pg__plus {
+  width: 30px;
+  min-height: 30px;
+  max-height: 30px;
 }
 
 /* Keyboard focus, everywhere in the terminal */
@@ -3651,41 +3839,36 @@ p a {
   .ps1__host {
     display: none;
   }
-
-  /* …but the label over a sent message has the room, and reads better
-     as the full `guest@portfolio ~ %` than as a bare `~ %`. */
-  .lai__cmd-ps1 .ps1__host {
-    display: inline;
-  }
 }
 
 /* Mobile: the AI window sits in a fixed-height frame like the tiles —
-   but shorter: its resting content is one boot line + three chips + the
-   input, and 72vh left half the terminal as dead space. The body still
-   scrolls internally once a real conversation grows past this. */
+   but shorter, so the welcome, the four questions and the field show
+   together on a phone without scrolling inside the card, and there is
+   no dead space over them. The body still scrolls internally once a
+   real conversation grows past this. */
 .mhome-card--ai {
-  height: min(52vh, 30rem);
+  height: min(72vh, 38rem);
 }
 
-/* Mobile touch targets: the terminal's send button renders at 28px —
+/* Mobile touch targets: the terminal's send button renders at 26px —
    well under comfortable thumb size. */
 @media (max-width: 47.99em) {
   .lai-composer__send,
-  .lai-composer--page .lai-composer__send {
+  .lai-composer--page .lai-composer__send,
+  .lai-composer__left .term-pg__plus,
+  .lai-composer--page .lai-composer__left .term-pg__plus {
     width: 40px;
     height: 40px;
+    min-height: 40px;
+    max-height: 40px;
   }
 
-  .lai-composer__field .ps1 {
-    padding-top: 0.55rem;
-  }
-
-  .lai-composer__input {
-    padding: 0.55rem 0;
+  .lai-composer {
+    --lai-composer-pad: 0.55rem;
   }
 
   .lai__chip {
-    padding: 0.65rem 0.85rem;
+    min-height: 48px;
   }
 
   .lai__action {
@@ -3754,11 +3937,12 @@ p a {
 .intro-name {
   margin: 0 0 1.6rem;
   font-family: var(--font-sans);
-  font-size: clamp(3.2rem, 6.4vw, 7rem);
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 0.95;
+  font-size: var(--display-hero);
+  font-weight: var(--display-weight);
+  letter-spacing: -0.03em;
+  line-height: var(--display-hero-lh);
   color: #fff;
+  text-wrap: balance;
 }
 
 .intro-links {
@@ -3766,9 +3950,9 @@ p a {
   flex-wrap: wrap;
   gap: 0.2rem 1.6rem;
   margin-top: 1.8rem;
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  letter-spacing: 0.04em;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 500;
 }
 
 /* Underlined like links, not styled like buttons — the point is that
@@ -3817,7 +4001,6 @@ p a {
 
 /* 6px insets match the tagline's handle clearance */
 .mhome-hero .intro-name {
-  font-size: clamp(2.6rem, 13vw, 4rem);
   margin: 0 6px 1.2rem;
 }
 
@@ -3846,6 +4029,7 @@ p a {
 
 .notfound__term {
   margin: 0;
+  font-family: var(--font-mono);
   font-size: 0.9rem;
   line-height: 1.7;
   color: rgba(255, 255, 255, 0.55);
@@ -3865,7 +4049,8 @@ p a {
 .notfound__code {
   margin: 0;
   font-size: clamp(4rem, 12vw, 7rem);
-  font-weight: 700;
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-tracking);
   line-height: 1;
   color: #fff;
 }
@@ -3940,7 +4125,7 @@ p a {
   color: var(--mono-pink);
 }
 
-/* "Ask luke-ai": the terminal again, with real links for prompts */
+/* "Ask Luke AI": the terminal again, with real links for prompts */
 .cs-ask {
   margin-top: 0.5rem;
   padding: 1.1rem 1.3rem 1.2rem;
@@ -4051,6 +4236,9 @@ p a {
 
 .term-pg__column {
   --term-pg-x: clamp(1rem, 4vw, 2.5rem);
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
   max-width: calc(760px + 2 * var(--term-pg-x));
   margin: 0 auto;
   padding: 1.5rem var(--term-pg-x) 0;
@@ -4114,10 +4302,10 @@ p a {
   position: absolute;
   bottom: calc(100% + 8px);
   left: 0;
-  min-width: 260px;
+  min-width: 240px;
   background: #1e1e1e;
   border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 6px;
+  border-radius: 4px;
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
   padding: 0.4rem;
   z-index: 5;
@@ -4127,8 +4315,8 @@ p a {
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
-  padding: 0.5rem 0.65rem;
-  border-radius: 4px;
+  padding: 0.5rem 0.7rem;
+  border-radius: 3px;
   font-family: var(--font-mono);
   font-size: 0.875rem;
   color: #e7e7e7;
@@ -4141,14 +4329,9 @@ p a {
   outline: none;
 }
 
-.term-pg__plus-cmd .ps1 {
-  color: #8b8b8b;
-}
-
 .term-pg__plus-desc {
   font-size: 0.72rem;
   color: rgba(255, 255, 255, 0.45);
-  padding-left: 2.2em;
 }
 
 /* ── Sessions panel (VS Code side panel, reads like a file navigator) ── */
@@ -4199,10 +4382,10 @@ p a {
   align-items: center;
   gap: 0.55rem;
   margin: 0.2rem 0.6rem 0.75rem;
-  padding: 0.5rem 0.6rem;
-  border: 1px dashed rgba(255, 255, 255, 0.25);
+  padding: 0.5rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 4px;
-  background: none;
+  background: rgba(255, 255, 255, 0.03);
   color: #e7e7e7;
   font-family: inherit;
   font-size: 0.8125rem;
@@ -4218,7 +4401,7 @@ p a {
 }
 
 .term-hist__plus {
-  color: #23d18b;
+  color: var(--mono-blue);
   font-weight: 700;
 }
 
@@ -4244,8 +4427,7 @@ p a {
 .term-hist__empty {
   margin: 0.8rem 0.7rem;
   font-size: 0.8rem;
-  font-style: italic;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.45);
   white-space: nowrap;
 }
 
@@ -4502,7 +4684,6 @@ p a {
 .cs-next .workgrid__item {
   min-height: 0;
   height: clamp(20rem, 70vw, 24rem);
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 @media (min-width: 40em) {
@@ -4511,9 +4692,6 @@ p a {
   }
 }
 
-.cs-next .workgrid__item:focus-within {
-  outline-color: var(--mono-blue);
-}
 
 /* Four core skills — a plain definition grid in page language, not a
    recreation of the product's skill tiles. */
@@ -4538,8 +4716,9 @@ p a {
 }
 
 .lcs-skills dt {
-  font-size: 1rem;
+  font-size: 1.0625rem;
   font-weight: 600;
+  line-height: 1.3;
   color: #fff;
 }
 

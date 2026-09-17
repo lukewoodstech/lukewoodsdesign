@@ -18,10 +18,12 @@ type Props = {
  * case study title with its year, and a one-line summary. Sized as a fixed
  * slab under a flexible stage, so all four tiles line up across the grid.
  *
- * The title is a real <Link>, which is the only keyboard- and crawler-visible
- * route into the case studies — the tile itself is a click-only div. A
- * full-card <a> overlay would be simpler but it would swallow the mousemove
- * that drives the Awardco slider and the Hoth binary field.
+ * The title is a real <Link>, and its ::after (see .tile-footer__link in
+ * globals.css) stretches over the whole card, so the entire tile is that one
+ * link — keyboard, crawler, middle-click and cmd-click all agree on where it
+ * goes. The company mark sits above the stretched layer and stays its own
+ * outbound link. The "View case study →" row is the visible affordance for
+ * that; the card's hover/focus rules brighten it.
  */
 export default function TileFooter({
   slug,
@@ -57,12 +59,6 @@ export default function TileFooter({
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${company} — visit their site`}
-            /*
-             * The whole tile is a click-to-case-study div, so without this the
-             * mark would open the company's site *and* route to the case study
-             * behind it.
-             */
-            onClick={(e) => e.stopPropagation()}
           >
             {mark}
           </a>
@@ -86,6 +82,13 @@ export default function TileFooter({
       </h3>
 
       <p className="tile-footer__summary">{summary}</p>
+
+      {/* Visual affordance only — the title link already names where the
+          card goes, so this row stays out of the accessibility tree. */}
+      <span className="tile-footer__cta" aria-hidden="true">
+        View case study
+        <span className="tile-footer__cta-arrow">→</span>
+      </span>
     </div>
   )
 }

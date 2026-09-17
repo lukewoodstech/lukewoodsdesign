@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google'
+import { Geist, Geist_Mono } from 'next/font/google'
 import { ViewTransition } from 'react'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
@@ -9,24 +9,25 @@ import { LukeAiProvider } from '@/components/luke-ai/LukeAiProvider'
 import { SITE } from '@/lib/site'
 
 /*
- * Named --font-plex-* rather than --font-mono/--font-sans: Tailwind v4 defines
- * theme variables with those exact names, and the duplicate definitions left
- * the winning font up to stylesheet order. The @theme block in globals.css
- * maps Tailwind's tokens onto these.
+ * Geist Sans is the site's typeface; Geist Mono is reserved for the terminal
+ * surfaces (Luke AI, the Explorer nav, code) and small technical labels.
+ * Both are variable fonts, so one file per family covers every weight the
+ * stylesheet asks for (400–700). Named --font-geist-* rather than
+ * --font-mono/--font-sans: Tailwind v4 defines theme variables with those
+ * exact names, and the duplicate definitions left the winning font up to
+ * stylesheet order. The @theme block in globals.css maps Tailwind's tokens
+ * onto these. `display: swap` plus next/font's size-adjusted fallback keeps
+ * the swap from shifting layout.
  */
-const ibmPlexMono = IBM_Plex_Mono({
+const geistSans = Geist({
   subsets: ['latin'],
-  weight: ['300', '400', '500'],
-  style: ['normal', 'italic'],
-  variable: '--font-plex-mono',
+  variable: '--font-geist-sans',
   display: 'swap',
 })
 
-const ibmPlexSans = IBM_Plex_Sans({
+const geistMono = Geist_Mono({
   subsets: ['latin'],
-  weight: ['400', '500', '700'],
-  style: ['normal', 'italic'],
-  variable: '--font-plex-sans',
+  variable: '--font-geist-mono',
   display: 'swap',
 })
 
@@ -93,7 +94,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${ibmPlexMono.variable} ${ibmPlexSans.variable}`}
+      className={`${geistSans.variable} ${geistMono.variable}`}
       /* globals.css sets scroll-behavior: smooth; this tells Next so route
          transitions don't inherit the glide. */
       data-scroll-behavior="smooth"

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Footer from '@/components/Footer'
 import SiteNav from '@/components/SiteNav'
-import BeforeAfterTile from '@/components/BeforeAfterTile'
+import AwardcoMobileTile from '@/components/AwardcoMobileTile'
 import PatternTile from '@/components/PatternTile'
 import Reveal from '@/components/lucid/Reveal'
 import CompareStage from '@/components/lucid/CompareStage'
@@ -61,7 +61,7 @@ const SKILLS: [string, string][] = [
 
 export default function LucidCaseStudy() {
   return (
-    <div className="cs lcs min-h-screen bg-black text-white font-medium">
+    <div className="cs lcs min-h-screen bg-black text-white">
       <SiteNav
         width="article"
         contact={false}
@@ -72,7 +72,7 @@ export default function LucidCaseStudy() {
         {/* ── Hero ── */}
         <header className="pt-10 pb-12">
           <p className="cs-eyebrow mb-4">Lucid · Product Design Internship</p>
-          <h1 className="text-4xl md:text-6xl font-medium leading-tight tracking-tight text-white">
+          <h1 className="cs-title">
             {TITLE}
           </h1>
           <p className="cs-lede">
@@ -456,16 +456,7 @@ export default function LucidCaseStudy() {
         {/* ── Read next ── */}
         <Section eyebrow="More work" headline="Read next">
           <div className="cs-next">
-            <BeforeAfterTile
-              slug="awardco-login-flow-redesign"
-              href="/work/awardco-login-flow-redesign"
-              beforeSrc="/before.png"
-              afterSrc="/after.png"
-              beforeAlt="Awardco's original login screen, showing every authentication method at once"
-              afterAlt="The redesigned Awardco login screen, leading with single sign-on"
-              logoSrc="/logos/awardco.png"
-              companyHref="https://www.awardco.com"
-            />
+            <AwardcoMobileTile />
             <PatternTile />
           </div>
         </Section>

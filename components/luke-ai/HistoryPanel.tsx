@@ -1,14 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { Ps1 } from './TermChrome'
 import { relativeDay, type Conversation } from '@/lib/lukeAiStorage'
 
 /*
- * The history panel inside the maximized luke-ai window on /chat: a VS
- * Code-style side panel that reads like a file navigator — SESSIONS
- * header, `+ new session`, then past conversations as rows. Open by
- * default on large screens, collapsed below; the panel button in the
+ * The conversations panel inside the maximized Luke AI window on /chat:
+ * a header, `+ New conversation`, then past conversations as rows. Open
+ * by default on large screens, collapsed below; the panel button in the
  * window bar toggles it. Below 48em it overlays the transcript with a
  * backdrop instead of pushing it. When closed it is `inert`, so nothing
  * in it takes focus or is read out.
@@ -69,11 +67,11 @@ export default function HistoryPanel({
       <aside
         id="luke-ai-history"
         className={`term-hist${isOpen ? ' is-open' : ''}`}
-        aria-label="Sessions"
+        aria-label="Conversations"
         inert={!isOpen}
       >
         <div className="term-hist__head">
-          <span className="term-hist__title">sessions</span>
+          <span className="term-hist__title">conversations</span>
           <span className="term-hist__count" aria-hidden="true">
             {conversations.length}
           </span>
@@ -83,12 +81,12 @@ export default function HistoryPanel({
           <span className="term-hist__plus" aria-hidden="true">
             +
           </span>
-          new session
+          new conversation
         </button>
 
         <div className="term-hist__list">
           {conversations.length === 0 ? (
-            <p className="term-hist__empty">{'// no sessions yet'}</p>
+            <p className="term-hist__empty">no conversations yet</p>
           ) : (
             <ul className="term-hist__rows">
               {conversations.map((conv) => {
@@ -115,7 +113,7 @@ export default function HistoryPanel({
                       type="button"
                       className="term-hist__delete"
                       onClick={() => setPendingDeleteId(conv.id)}
-                      aria-label={`Delete session “${conv.title}”`}
+                      aria-label={`Delete conversation “${conv.title}”`}
                     >
                       <IconTrash />
                     </button>
@@ -146,11 +144,10 @@ export default function HistoryPanel({
             }}
           >
             <p id="term-hist-modal-title" className="term-hist__modal-title">
-              <Ps1 />
-              rm session
+              delete this conversation?
             </p>
             <p id="term-hist-modal-body" className="term-hist__modal-body">
-              “{pending.title}” — this permanently removes the conversation. continue? [y/n]
+              “{pending.title}” will be removed for good.
             </p>
             <div className="term-hist__modal-actions">
               <button
@@ -159,14 +156,14 @@ export default function HistoryPanel({
                 onClick={() => setPendingDeleteId(null)}
                 autoFocus
               >
-                n · cancel
+                cancel
               </button>
               <button
                 type="button"
                 className="term-hist__modal-delete"
                 onClick={confirmDelete}
               >
-                y · delete
+                delete
               </button>
             </div>
           </div>

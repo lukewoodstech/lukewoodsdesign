@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
 import {
   motion,
   useMotionValueEvent,
@@ -49,14 +48,22 @@ type CardSpec = {
 /* left/w in vw, top/h in vh — positions on the wide strip, one per
    WORK_TILES entry in order. The landing screen owns the first 100vw
    (Luke AI lives there), so the case studies start right past it. The
-   cards sit at staggered heights but square, not tilted. */
+   cards sit at staggered heights but square, not tilted.
+
+   h was 70/68/66/68 until 2026-09-16; the footer slab is a fixed height,
+   so trimming ~11vh takes about a fifth off each media area — the art had
+   dark margins to spare, and the next card now enters sooner. */
 const CARDS: readonly CardSpec[] = [
   /* top ≥ 12vh keeps the floating labels from crowding the top edge */
-  { left: 112, top: 12, w: 40, h: 70, drift: 1 },
-  { left: 159, top: 16, w: 38, h: 68, drift: -1 },
-  { left: 204, top: 11, w: 38, h: 66, drift: 1 },
-  { left: 249, top: 14, w: 38, h: 68, drift: -1 },
+  { left: 112, top: 16, w: 40, h: 61, drift: 1 },
+  { left: 159, top: 20, w: 38, h: 59, drift: -1 },
+  { left: 204, top: 15, w: 38, h: 58, drift: 1 },
+  { left: 249, top: 18, w: 38, h: 59, drift: -1 },
 ]
+
+/* A vh-only height goes lanky on a portrait tablet (826px tall at 328
+   wide on an iPad, mostly empty stage). Cap it relative to the width. */
+const MAX_ASPECT = 1.3
 
 /* About section: photos + the combined README (blurb + résumé), placed
    48vw past the last VISIBLE card so hiding a tile shortens the canvas.
@@ -74,11 +81,10 @@ const TRAVEL = STRIP_W - 100 // vw the strip translates over the full scroll
 const BG_FADE = [(ABOUT_PHOTOS_LEFT - 70) / TRAVEL, (ABOUT_PHOTOS_LEFT - 20) / TRAVEL]
 
 /*
- * The Explorer's three folders and where each one scrolls the canvas to.
- * The nav's open folder follows the visitor: whichever section sits under
- * the middle of the screen is the one whose caret is down, and inside work/
- * the card nearest the middle is the highlighted file — the way VS Code
- * reveals the open file in its tree.
+ * The nav's three sections and where each one scrolls the canvas to. The
+ * current section follows the visitor: whichever one sits under the middle
+ * of the screen is marked in the nav, so a sideways page still answers
+ * "where am I".
  */
 type Section = 'home' | 'work' | 'about'
 const FOLDERS: ReadonlyArray<{ id: Section; name: string }> = [
@@ -133,51 +139,8 @@ function useIsDesktop(): boolean | null {
 
 /* Scroll so the canvas has travelled `vw` viewport-widths — the 1:1 px
    mapping makes the conversion exact. */
-/* The nav's root "folder" is the site itself — derived, so a domain change follows. */
+/* The nav's root is the site itself — derived, so a domain change follows. */
 const SITE_HOST = new URL(SITE.url).host
-
-/*
- * Most rows in the tree move the canvas; a few leave it for another page
- * (the case studies, the résumé). Those show this arrow on hover and
- * focus so the difference is visible before the click. Decorative — the
- * link text already says where it goes.
- */
-const GoToPage = () => (
-  <svg
-    className="term-nav__goto"
-    width="12"
-    height="12"
-    viewBox="0 0 16 16"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.4"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M6 3.5h6.5V10M12.5 3.5 4 12" />
-  </svg>
-)
-
-/* VS Code's tree chevron: points right when closed, rotates down when open. */
-function Chevron({ open = false }: { open?: boolean }) {
-  return (
-    <svg
-      className={`term-nav__chevron${open ? ' is-open' : ''}`}
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M6 3.5 10.5 8 6 12.5" />
-    </svg>
-  )
-}
 
 function goToVw(vw: number) {
   window.scrollTo({ top: (vw / 100) * window.innerWidth, behavior: 'smooth' })
@@ -200,8 +163,13 @@ function CanvasCard({
   children: ReactNode
 }) {
   /* Small vertical drift at alternating rates — the parallax that makes the
-     cards read as pinned to a surface instead of cells in a row. */
-  const y = useTransform(progress, [0, 1], [`${card.drift * 3}vh`, `${card.drift * -3}vh`])
+     cards read as pinned to a surface instead of cells in a row. Rounded to
+     whole pixels: a fractional translate makes the compositor resample the
+     card, and its 1px border then blurs by a different amount on each edge
+     (the "thick bottom stroke" of 2026-09-16). ±3vh in px. */
+  const y = useTransform(progress, (v) =>
+    Math.round(((card.drift * 3 - v * card.drift * 6) / 100) * window.innerHeight),
+  )
 
   return (
     <motion.div
@@ -210,7 +178,7 @@ function CanvasCard({
         left: `${card.left}vw`,
         top: `${card.top}vh`,
         width: `${card.w}vw`,
-        height: `${card.h}vh`,
+        height: `min(${card.h}vh, ${card.w * MAX_ASPECT}vw)`,
         y,
       }}
     >
@@ -246,7 +214,6 @@ export default function CanvasHome() {
  * still wiring trackRef. In this component the track always renders.
  */
 function DesktopCanvas() {
-  const [navOpen, setNavOpen] = useState(true)
   const trackRef = useRef<HTMLDivElement>(null)
 
   const { scrollYProgress } = useScroll({
@@ -266,53 +233,17 @@ function DesktopCanvas() {
     mass: 0.2,
     restDelta: 0.00001,
   })
-  const x = useTransform(smooth, (v) => `${-v * TRAVEL}vw`)
+  /* Whole pixels, same reason as the card drift: the strip is a composited
+     layer, and a fractional translate blurs every card edge riding on it. */
+  const x = useTransform(smooth, (v) => Math.round(((-v * TRAVEL) / 100) * window.innerWidth))
 
   const [here, setHere] = useState<Location>({ section: 'home', card: null })
-  /*
-   * A caret the visitor toggled by hand, or a folder they clicked to glide
-   * to. It is dropped — not just ignored — the moment it stops applying,
-   * so it can never come back later: a hand toggle lasts while they stay
-   * in the section they toggled it from; a glide's folder stays open
-   * while the canvas is still travelling toward it, and clears on arrival
-   * or if they scroll back the other way.
-   */
-  const [override, setOverride] = useState<{
-    at: Section
-    open: Section | null
-    to?: Section
-  } | null>(null)
-  const openFolder = override ? override.open : here.section
-  const lastSection = useRef<Section>('home')
   useMotionValueEvent(smooth, 'change', (v) => {
     const next = locate(v * TRAVEL)
-    const prevSection = lastSection.current
-    lastSection.current = next.section
     setHere((prev) =>
       prev.section === next.section && prev.card === next.card ? prev : next,
     )
-    if (next.section === prevSection) return
-    setOverride((o) => {
-      if (!o) return o
-      if (!o.to) return null
-      if (next.section === o.to) return null
-      const rank = (id: Section) => FOLDERS.findIndex((f) => f.id === id)
-      const towards = Math.abs(rank(next.section) - rank(o.to)) < Math.abs(rank(prevSection) - rank(o.to))
-      return towards ? o : null
-    })
   })
-  /* Open a folder now (instant feedback) and glide the canvas there. */
-  const openSection = (id: Section) => {
-    setOverride({ at: here.section, open: id, to: id })
-    goToVw(SECTION_AT[id])
-  }
-  /* "Opening" luke-ai.tsx: back to the landing with the cursor in the prompt. */
-  const openLukeAi = () => {
-    goToVw(0)
-    document
-      .querySelector<HTMLTextAreaElement>('.canvas-intro__ai textarea')
-      ?.focus({ preventScroll: true })
-  }
   const bgX = useTransform(smooth, (v) => `${-v * TRAVEL * 0.35}vw`)
   /* The outline names drift slower than the canvas, so stray letters can
      linger into the about section — fade the whole depth layer out over
@@ -391,6 +322,34 @@ function DesktopCanvas() {
       style={{ height: `calc(100vh + ${TRAVEL}vw)` }}
     >
       <div className="canvas-viewport">
+        {/* ── Screen-fixed chrome, first in the DOM so Tab reaches it first:
+            the nav as a small file panel. The site is the root; home, work
+            and about hang under it as rows that glide the canvas, and the
+            section under the middle of the screen is the selected row.
+            Nothing folds, nothing drops down. ── */}
+        <nav className="canvas-nav" aria-label="Site">
+          <div className="term-nav">
+            <span className="term-nav__root">{SITE_HOST}</span>
+            <ul className="term-nav__list">
+              {FOLDERS.map(({ id, name }) => {
+                const current = here.section === id
+                return (
+                  <li key={id}>
+                    <button
+                      type="button"
+                      className={`term-nav__item${current ? ' is-current' : ''}`}
+                      aria-current={current ? 'location' : undefined}
+                      onClick={() => goToVw(SECTION_AT[id])}
+                    >
+                      {name}
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+        </nav>
+
         <motion.div className="canvas-bg" style={{ x: bgX, opacity: bgOpacity }} aria-hidden="true">
           <span className="canvas-bg__name" style={{ left: '78vw' }}>
             product designer
@@ -410,7 +369,7 @@ function DesktopCanvas() {
                 a case-study card. Expand hands the thread to /chat. */}
             <div className="canvas-intro__ai">
               <span className="canvas-card__label" aria-hidden="true">
-                luke-ai · ask it anything
+                luke ai · ask it anything
               </span>
               <LukeAiCard />
             </div>
@@ -475,129 +434,6 @@ function DesktopCanvas() {
           </section>
         </motion.div>
 
-        {/* ── Screen-fixed chrome: the nav as the VS Code Explorer ── */}
-        <nav className="canvas-nav" aria-label="Canvas navigation">
-          <div className="term-nav">
-            {/* Side-panel header, the way the Explorer view is titled */}
-            <div className="term-nav__head" aria-hidden="true">
-              <span className="term-nav__title">explorer</span>
-            </div>
-
-            {/* Root folder: the site. The caret folds the sections away;
-                the name itself is `cd ~`. */}
-            <div className="term-nav__row term-nav__row--root">
-              <button
-                type="button"
-                className="term-nav__toggle"
-                aria-expanded={navOpen}
-                aria-label={navOpen ? 'Collapse navigation' : 'Expand navigation'}
-                onClick={() => setNavOpen((v) => !v)}
-              >
-                <Chevron open={navOpen} />
-              </button>
-              <button type="button" className="term-nav__label" onClick={() => goToVw(0)}>
-                {SITE_HOST}
-              </button>
-            </div>
-
-            <ul className="term-nav__children" hidden={!navOpen}>
-              {FOLDERS.map(({ id, name }) => {
-                const open = openFolder === id
-                const current = here.section === id
-                const filesId = `canvas-nav-files-${id}`
-                return (
-                  <li key={id}>
-                    {/* Same shape as the root row: the caret toggles, the
-                        name navigates (and opens). */}
-                    <div className="term-nav__row">
-                      <button
-                        type="button"
-                        className="term-nav__toggle"
-                        aria-expanded={open}
-                        aria-controls={filesId}
-                        aria-label={`${open ? 'Collapse' : 'Expand'} ${name}`}
-                        onClick={() =>
-                          setOverride({ at: here.section, open: open ? null : id })
-                        }
-                      >
-                        <Chevron open={open} />
-                      </button>
-                      <button
-                        type="button"
-                        className="term-nav__item"
-                        aria-current={current ? 'location' : undefined}
-                        onClick={() => openSection(id)}
-                      >
-                        {name}
-                      </button>
-                    </div>
-
-                    {/* The folder's files. Every one opens something real:
-                        the prompt, a case study, the README, the résumé. */}
-                    <ul id={filesId} className="term-nav__files" hidden={!open}>
-                      {id === 'home' && (
-                        <li>
-                          <button
-                            type="button"
-                            className={`term-nav__file${current ? ' is-active' : ''}`}
-                            aria-current={current ? 'true' : undefined}
-                            onClick={openLukeAi}
-                          >
-                            luke-ai.tsx
-                          </button>
-                        </li>
-                      )}
-                      {id === 'work' &&
-                        WORK_TILES.map((item) => {
-                          const active = here.card === item.slug
-                          return (
-                            <li key={item.slug}>
-                              <Link
-                                href={item.href}
-                                className={`term-nav__file term-nav__file--route${active ? ' is-active' : ''}`}
-                                aria-current={active ? 'true' : undefined}
-                              >
-                                {item.file}
-                                <GoToPage />
-                              </Link>
-                            </li>
-                          )
-                        })}
-                      {id === 'about' && (
-                        <>
-                          <li>
-                            {/* The README is the canvas's last object, so
-                                the end of the track is where it's in view. */}
-                            <button
-                              type="button"
-                              className={`term-nav__file${current ? ' is-active' : ''}`}
-                              aria-current={current ? 'true' : undefined}
-                              onClick={() => goToVw(TRAVEL)}
-                            >
-                              README.md
-                            </button>
-                          </li>
-                          <li>
-                            <a
-                              className="term-nav__file term-nav__file--route"
-                              href={SITE.resume}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              resume.pdf
-                              <span className="sr-only"> (opens in a new tab)</span>
-                              <GoToPage />
-                            </a>
-                          </li>
-                        </>
-                      )}
-                    </ul>
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
-        </nav>
 
       </div>
     </div>

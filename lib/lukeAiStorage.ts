@@ -33,7 +33,40 @@ export const ACTIVE_KEY = 'luke-ai-active'
 export const HISTORY_OPEN_KEY = 'luke-ai-history-open'
 export const MAX_CONVERSATIONS = 50
 
-export const GREETING = 'luke-ai v1.0 — the portfolio you can interview.'
+/* The empty-state welcome, shared by the homepage window and /chat. Plain
+   and warm: who this is, what it is for, and one line inviting a question. */
+export const WELCOME = {
+  title: 'Luke AI',
+  body: 'Explore Luke’s shipped work, product decisions, technical experience, and résumé.',
+  note: 'Hiring for a specific role? Paste the job description.',
+} as const
+
+/*
+ * The four suggested questions, the same on the homepage window and on
+ * /chat so the maximized page reads as the same object with more room.
+ * Each one is a job a recruiter in a hurry actually has and the static
+ * pages cannot do: the compressed version, the best evidence, one
+ * decision under pressure, and the honest case for a call.
+ */
+export const SUGGESTIONS: ReadonlyArray<{ label: string; message: string }> = [
+  {
+    label: 'Give me Luke’s 30-second overview',
+    message: 'Give me Luke’s 30-second overview: who he is, what he’s shipped, and why it matters.',
+  },
+  {
+    label: 'Show me his strongest shipped work',
+    message: 'Show me Luke’s strongest shipped work and what each project changed.',
+  },
+  {
+    label: 'Walk me through a difficult product decision',
+    message:
+      'Walk me through a difficult product decision Luke made: the tradeoff, what he chose, and how it played out.',
+  },
+  {
+    label: 'Why should I interview Luke?',
+    message: 'Why should I interview Luke? Give me the honest case, with evidence.',
+  },
+]
 
 export function genId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2)
@@ -164,19 +197,24 @@ export function forApi(messages: Message[]) {
  */
 export type RouteAction = { label: string; href: string }
 
-const ROUTES: ReadonlyArray<{ test: RegExp; href: string }> = [
-  { test: /\blucid\b/i, href: '/work/lucid-ai' },
-  { test: /\bawardco\b/i, href: '/work/awardco-login-flow-redesign' },
+const ROUTES: ReadonlyArray<{ test: RegExp; href: string; label: string }> = [
+  { test: /\blucid\b/i, href: '/work/lucid-ai', label: 'read the Lucid case study' },
+  {
+    test: /\bawardco\b/i,
+    href: '/work/awardco-login-flow-redesign',
+    label: 'read the Awardco case study',
+  },
   /* "pattern" is an ordinary word too, so the company only counts
      capitalised or by its product names. */
-  { test: /\bPattern\b|\bcustom reports\b|\bPredict\b/, href: '/work/pattern-custom-reports' },
+  {
+    test: /\bPattern\b|\bcustom reports\b|\bPredict\b/,
+    href: '/work/pattern-custom-reports',
+    label: 'read the Pattern case study',
+  },
 ]
 
 export function routeActions(body: string): RouteAction[] {
-  return ROUTES.filter((r) => r.test.test(body)).map((r) => ({
-    label: `open ${r.href}`,
-    href: r.href,
-  }))
+  return ROUTES.filter((r) => r.test.test(body)).map((r) => ({ label: r.label, href: r.href }))
 }
 
 /* If the model skips the trailer, derive something relevant instead of
@@ -191,24 +229,24 @@ export function fallbackFollowups(body: string): string[] {
   return out.slice(0, 3)
 }
 
-/* The status line shown between the command and the first streamed word,
-   chosen from the question so it reads like a real lookup. Two entries:
-   the second one takes over if the model is slow to start. */
+/* The status line shown between the message and the first streamed word,
+   chosen from the question so it says what is actually being looked up.
+   Two entries: the second one takes over if the model is slow to start. */
 export function processingLabels(question: string): [string, string] {
   const q = question.toLowerCase()
   if (/\b(job|role|hiring|jd|requirements|position|description)\b/.test(q))
-    return ['matching requirements → evidence...', 'reading experience/*']
-  if (/\blucid\b/.test(q)) return ['reading work/lucid-ai/*', 'querying case studies...']
+    return ['matching the requirements to Luke’s experience…', 'reading the résumé…']
+  if (/\blucid\b/.test(q)) return ['reading the Lucid case study…', 'checking the details…']
   if (/\bawardco\b|\blogin\b|\bauth/.test(q))
-    return ['reading work/awardco-login-flow-redesign/*', 'querying case studies...']
+    return ['reading the Awardco case study…', 'checking the details…']
   if (/\bpattern\b|\breports?\b/.test(q))
-    return ['reading work/pattern-custom-reports/*', 'querying case studies...']
-  if (/\bhoth\b/.test(q)) return ['reading experience/hoth/*', 'matching relevant work...']
+    return ['reading the Pattern case study…', 'checking the details…']
+  if (/\bhoth\b/.test(q)) return ['reading about Hoth…', 'finding the relevant work…']
   if (/\b(site|built|shader|tile|slider|homepage|how was this)\b/.test(q))
-    return ['inspecting this site’s source...', 'matching relevant work...']
+    return ['looking at how this site is built…', 'finding the relevant work…']
   if (/\b(ship|shipped|technical|code|engineer)/.test(q))
-    return ['reading experience/*', 'matching relevant work...']
-  return ['searching portfolio...', 'matching relevant work...']
+    return ['reading through Luke’s experience…', 'finding the relevant work…']
+  return ['looking through the portfolio…', 'finding the relevant work…']
 }
 
 /* Markdown → something a screen reader can announce once. */

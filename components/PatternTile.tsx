@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import TileFooter from './TileFooter'
 import { useEnterToOpen } from '@/lib/useEnterToOpen'
 import { useReducedMotion } from '@/lib/useReducedMotion'
@@ -14,7 +13,6 @@ function fmt(n: number) {
 }
 
 export default function PatternTile() {
-  const router  = useRouter()
   const reducedMotion = useReducedMotion()
   const [hovered, setHovered]   = useState(false)
   const [t, setT]               = useState(0)
@@ -78,10 +76,8 @@ export default function PatternTile() {
     <div
       ref={tileRef}
       className="workgrid__item"
-      style={{ cursor: 'pointer' }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={() => router.push('/work/pattern-custom-reports')}
     >
       <div className="tile-stage">
         {/* Dark overlay — behind SVG, darkens the tile background on hover */}

@@ -14,13 +14,13 @@ export function Section({
   headline,
   children,
 }: {
-  eyebrow: string
+  eyebrow?: string
   headline?: string
   children: React.ReactNode
 }) {
   return (
     <Reveal as="section" className="mt-20">
-      <span className="cs-eyebrow">{eyebrow}</span>
+      {eyebrow && <span className="cs-eyebrow">{eyebrow}</span>}
       {headline && <h2 className="cs-headline">{headline}</h2>}
       {children}
     </Reveal>
@@ -53,7 +53,7 @@ export const Reframe = ({
 }) => (
   <Reveal className="mt-20">
     <blockquote className="border-l-2 border-[var(--accent)] pl-6 py-1">
-      <p className="text-2xl sm:text-3xl font-medium leading-snug tracking-tight text-white">
+      <p className="cs-quote">
         {quote}
       </p>
     </blockquote>
@@ -194,11 +194,11 @@ export function AskLukeAi({ prompts }: { prompts: string[] }) {
   return (
     <Reveal as="section" className="mt-20">
       <span className="cs-eyebrow">Go deeper</span>
-      <h2 className="cs-headline">The long version lives in luke-ai. Ask it.</h2>
+      <h2 className="cs-headline">The long version lives in Luke AI. Ask it.</h2>
       <div className="cs-ask">
         <p className="cs-ask__boot" aria-hidden="true">
           <span className="term-nav__arrow">➜</span>
-          <span className="term-nav__dir">~</span> luke-ai
+          <span className="term-nav__dir">~</span> luke ai
         </p>
         <ul className="cs-ask__list">
           {prompts.map((q) => (

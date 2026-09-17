@@ -9,6 +9,7 @@ export default function Cursor() {
   const cursorRef = useRef<HTMLDivElement>(null)
   const posRef = useRef({ x: -9999, y: 0 })
   const isLockedRef = useRef(false)
+  const lockedElRef = useRef<Element | null>(null)
   const isTouchLockedRef = useRef(false)
   const pathname = usePathname()
 
@@ -16,6 +17,7 @@ export default function Cursor() {
     const cursor = cursorRef.current
     if (!cursor) return
     isLockedRef.current = false
+    lockedElRef.current = null
     cursor.classList.remove('is-locked', 'cursor--text')
     cursor.style.width = CURSOR_SIZE + 'px'
     cursor.style.height = CURSOR_SIZE + 'px'
@@ -36,10 +38,17 @@ export default function Cursor() {
 
     const onMouseMove = ({ clientX: x, clientY: y }: MouseEvent) => {
       posRef.current = { x, y }
+      cursor.classList.remove('is-away')
       if (!isLockedRef.current && !isTouchLockedRef.current) {
         cursor.style.top = y + 'px'
         cursor.style.left = x + 'px'
       }
+    }
+
+    // The pointer left the window: hide the dot rather than leave it
+    // parked at its last position (a stray white dot in screenshots).
+    const onLeaveWindow = () => {
+      cursor.classList.add('is-away')
     }
 
     const onTouchStart = () => {
@@ -67,6 +76,7 @@ export default function Cursor() {
       el.addEventListener('mouseenter', () => {
         if (isTouchLockedRef.current) return
         isLockedRef.current = true
+        lockedElRef.current = el
         rect = el.getBoundingClientRect()
         const borderRadius = window.getComputedStyle(el).borderRadius
         cursor.classList.add('is-locked')
@@ -97,8 +107,9 @@ export default function Cursor() {
     }
 
     const BTN_SEL =
-      '.btn, .footer-link, .term-pg__send, .term-pg__plus, .ai-card__expand, .ai-card__tool, .ai-card__send, ' +
-      '.canvas-nav__btn, .canvas-outro__cta, .pub-card__publish, .resume-doc__dl, ' +
+      '.btn, .footer-link, .term-pg__plus, .ai-card__expand, .ai-card__tool, ' +
+      '.lai__chip, .lai__action, .lai-composer__send, .term-hist__new, .term-hist__item, ' +
+      '.term-nav__item, .canvas-outro__cta, .pub-card__publish, .resume-doc__dl, ' +
       '.lcs-seg__btn, .lcs-lightbox__close'
     const TEXT_SEL = 'p, h1, h2, h3, blockquote'
 
@@ -132,16 +143,27 @@ export default function Cursor() {
         mutation.addedNodes.forEach(node => {
           if (node.nodeType === Node.ELEMENT_NODE) bindEl(node as Element)
         })
+        // A button the cursor is locked to can leave the DOM without a
+        // mouseleave (a suggested question, once clicked, is replaced by
+        // the transcript). Let the cursor go, or it stays a ghost box.
+        mutation.removedNodes.forEach(node => {
+          const locked = lockedElRef.current
+          if (locked && node.nodeType === Node.ELEMENT_NODE && (node === locked || node.contains(locked))) {
+            resetCursor()
+          }
+        })
       }
     })
     observer.observe(document.body, { childList: true, subtree: true })
 
     document.addEventListener('mousemove', onMouseMove)
     document.addEventListener('touchstart', onTouchStart)
+    document.documentElement.addEventListener('mouseleave', onLeaveWindow)
 
     return () => {
       document.removeEventListener('mousemove', onMouseMove)
       document.removeEventListener('touchstart', onTouchStart)
+      document.documentElement.removeEventListener('mouseleave', onLeaveWindow)
       observer.disconnect()
     }
   }, [pathname, resetCursor])

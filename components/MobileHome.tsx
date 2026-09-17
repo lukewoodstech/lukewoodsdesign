@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import EmailLink from './EmailLink'
 import LukeAiCard from './luke-ai/LukeAiCard'
@@ -11,66 +10,33 @@ import { SITE } from '@/lib/site'
  * The mobile homepage: the desktop canvas with the glide removed, laid out as
  * a plain queenie.works-style vertical stack. Same dressing — dot grid,
  * highlight tagline, numbered work cards — but everything scrolls normally
- * under a fixed name + hamburger bar. Luke AI is the hero here too: it sits
- * directly under the lede, before any case study.
+ * under a fixed bar. Luke AI is the hero here too: it sits directly under
+ * the lede, before any case study.
  *
- * The hamburger opens a full-screen menu of oversized right-aligned links,
- * mirroring Queenie's mobile nav. It's the whole nav on this layout, so the
- * bar itself carries only the name.
+ * The bar is the whole nav: the name goes home, and the two section links
+ * sit right beside it. No menu to open — a plain nav, the same as desktop.
  */
 
-const MENU_LINKS = [
-  { label: 'home', href: '#top' },
-  { label: 'luke ai', href: '#luke-ai' },
+const NAV_LINKS = [
   { label: 'work', href: '#work' },
   { label: 'about', href: '#about' },
 ] as const
 
 export default function MobileHome() {
-  const [menuOpen, setMenuOpen] = useState(false)
-
-  /* The overlay is fixed; without this the page underneath keeps scrolling. */
-  useEffect(() => {
-    if (!menuOpen) return
-    const { overflow } = document.documentElement.style
-    document.documentElement.style.overflow = 'hidden'
-    return () => {
-      document.documentElement.style.overflow = overflow
-    }
-  }, [menuOpen])
-
   return (
     <div className="mhome" id="top">
       <header className="mhome-nav">
-        <a
-          className="mhome-nav__name"
-          href="#top"
-          onClick={() => setMenuOpen(false)}
-        >
+        <a className="mhome-nav__name" href="#top">
           {SITE.name}
         </a>
-        <button
-          type="button"
-          className={`mhome-nav__burger${menuOpen ? ' is-open' : ''}`}
-          aria-expanded={menuOpen}
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          onClick={() => setMenuOpen((v) => !v)}
-        >
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-        </button>
-      </header>
-
-      {menuOpen && (
-        <nav className="mhome-menu" aria-label="Primary">
-          {MENU_LINKS.map((link) => (
-            <a key={link.label} href={link.href} onClick={() => setMenuOpen(false)}>
+        <nav className="mhome-nav__links" aria-label="Site">
+          {NAV_LINKS.map((link) => (
+            <a key={link.label} href={link.href}>
               {link.label}
             </a>
           ))}
         </nav>
-      )}
+      </header>
 
       <div className="mhome__inner">
         {/* ── Hero: name, tagline, links, then the live Luke AI window ── */}
@@ -81,7 +47,7 @@ export default function MobileHome() {
               here; the card's expand button opens the full /chat page. */}
           <div className="mhome-work__item mhome-hero__ai" id="luke-ai">
             <span className="mhome-label" aria-hidden="true">
-              luke-ai · ask it anything
+              luke ai · ask it anything
             </span>
             <div className="mhome-card mhome-card--ai">
               <LukeAiCard />

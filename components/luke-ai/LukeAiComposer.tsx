@@ -1,15 +1,16 @@
 'use client'
 
 import { forwardRef, useEffect, useId, useImperativeHandle, useRef } from 'react'
-import { Ps1, IconArrowUp } from './TermChrome'
+import { IconArrowUp } from './TermChrome'
 
 /*
- * The prompt line, shared by both surfaces: a fixed `guest@portfolio ~ %`
- * that looks like part of the field but is not part of its value, a real
- * textarea the cursor lands in right after the prompt, and the send
- * control. Enter sends; Shift+Enter breaks a line; the field grows to a
- * few lines and then scrolls. `size` only changes scale — the card is
- * compact, the page gives it room as the main control.
+ * The message field, shared by both surfaces: one row, about a line tall
+ * when empty — any extra control (`before`, the + menu on /chat) at the
+ * left, the textarea in the middle, send at the right. Enter sends;
+ * Shift+Enter breaks a line; the field grows to a few lines and then
+ * scrolls, and the controls stay pinned to its bottom edge. `size` only
+ * changes scale — the card is compact, the page gives it room as the
+ * main control.
  */
 
 export type ComposerHandle = { focus: () => void }
@@ -58,15 +59,14 @@ const LukeAiComposer = forwardRef<ComposerHandle, Props>(function LukeAiComposer
         submit()
       }}
     >
-      {before}
       <div className="lai-composer__field">
-        <Ps1 />
+        {before && <div className="lai-composer__left">{before}</div>}
         <textarea
           ref={taRef}
           className="lai-composer__input"
           value={value}
           rows={1}
-          placeholder={placeholder ?? 'ask about luke’s work…'}
+          placeholder={placeholder ?? 'Ask about Luke’s work…'}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {

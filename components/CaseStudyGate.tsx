@@ -42,8 +42,8 @@ export default function CaseStudyGate({
       <h1
         className={
           variant === 'modal'
-            ? 'mt-3 text-2xl font-medium tracking-tight text-white'
-            : 'mt-4 text-4xl font-medium tracking-tight text-white'
+            ? 'cs-subhead mt-3'
+            : 'cs-title mt-4'
         }
       >
         {title}

@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import TileFooter from './TileFooter'
 import SearchMock from './lucid/SearchMock'
 import { useEnterToOpen } from '@/lib/useEnterToOpen'
@@ -13,13 +12,20 @@ import { useEnterToOpen } from '@/lib/useEnterToOpen'
  * SearchMock owns its own scroll-in trigger and reduced-motion handling.
  */
 
-// The mock's native layout box — it scales as one unit, never reflows.
-const PANEL_W = 820
+/*
+ * The mock's native layout box — it scales as one unit, never reflows.
+ * 700 wide, not the side panel's 820: the tile is width-bound on every
+ * screen, so a narrower native box lands at a larger scale (0.67 → 0.8 on
+ * a 1440px canvas) and the interface reads without zooming. Compact mode
+ * already truncates the result descriptions, so nothing is clipped.
+ */
+const PANEL_W = 700
 const PANEL_H = 400
-const MAX_SCALE = 0.7
+const MAX_SCALE = 0.85
+/* Breathing room between the panel and the stage edge, per side. */
+const STAGE_GUTTER = 8
 
 export default function LucidTile() {
-  const router = useRouter()
   const [hovered, setHovered] = useState(false)
   const stageRef = useRef<HTMLDivElement>(null)
   /*
@@ -37,7 +43,14 @@ export default function LucidTile() {
     const obs = new ResizeObserver(([entry]) => {
       const { width, height } = entry.contentRect
       setScale(
-        Math.max(0.25, Math.min(MAX_SCALE, (width - 24) / PANEL_W, (height - 24) / PANEL_H)),
+        Math.max(
+          0.25,
+          Math.min(
+            MAX_SCALE,
+            (width - STAGE_GUTTER * 2) / PANEL_W,
+            (height - STAGE_GUTTER * 2) / PANEL_H,
+          ),
+        ),
       )
     })
     obs.observe(el)
@@ -47,10 +60,8 @@ export default function LucidTile() {
   return (
     <div
       className="workgrid__item"
-      style={{ cursor: 'pointer' }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={() => router.push('/work/lucid-ai')}
     >
       <div className="tile-stage" ref={stageRef}>
         {/* Dark overlay — behind the panel, darkens the tile margins on hover */}

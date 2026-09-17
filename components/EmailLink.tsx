@@ -18,13 +18,13 @@ export default function EmailLink({
   copy = false,
 }: {
   className?: string
-  /** Link text; defaults to "email" ("copy email" with `copy`). */
+  /** Link text; defaults to "email" (the address itself with `copy`). */
   children?: React.ReactNode
   /**
-   * Copy-first presentation: "copy email" label with a copy icon, and the
-   * click copies without opening a mail client — the label is a promise,
-   * and launching Mail.app would break it. The mailto stays as the href so
-   * clipboard-less contexts still get a working link.
+   * Copy-first presentation: the address itself as the label, with a copy
+   * icon in front — the glyph says what the click does, so no "copy email"
+   * verb is needed. The click copies without opening a mail client. The
+   * mailto stays as the href so clipboard-less contexts still get a link.
    */
   copy?: boolean
 }) {
@@ -66,7 +66,7 @@ export default function EmailLink({
           <rect x="4.2" y="4.2" width="7.2" height="7.2" fill="none" stroke="currentColor" strokeWidth="1.2" />
         </svg>
       )}
-      {children ?? (copy ? 'copy email' : 'email')}
+      {children ?? (copy ? SITE.email : 'email')}
       {/* Positioned absolutely so the nav and footer never reflow */}
       <span className={`email-link__toast${copied ? ' is-visible' : ''}`} aria-hidden="true">
         copied

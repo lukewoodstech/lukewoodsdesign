@@ -32,6 +32,9 @@ export function useAutoScroll(
   useEffect(() => {
     const el = ref.current
     if (!el || !stuck.current) return
+    /* An empty transcript is the welcome: it should open at the top, not
+       jump to the last suggested question on a short phone card. */
+    if (Array.isArray(watch) && watch.length === 0) return
     el.scrollTop = el.scrollHeight
   }, [ref, watch, force])
 }

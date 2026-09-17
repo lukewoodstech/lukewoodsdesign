@@ -3,43 +3,28 @@
 import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useLukeAi } from './LukeAiProvider'
-import LukeAiThread, { type Suggestion } from './LukeAiThread'
+import LukeAiThread from './LukeAiThread'
 import LukeAiComposer, { type ComposerHandle } from './LukeAiComposer'
 import { useAutoScroll } from './useAutoScroll'
 import { TermTitle, IconPlus, IconMaximize } from './TermChrome'
+import { SUGGESTIONS } from '@/lib/lukeAiStorage'
 
 /*
  * The live Luke AI window that is the hero of the homepage (desktop landing
- * and the top of the mobile stack): the compact, playful entry point. It is
- * drawn as the VS Code terminal panel — a title, the zsh prompt — with two
- * controls, and one of them only once it has a job: `+` appears after a
- * conversation starts and resets to the zero state; maximize opens /chat.
+ * and the top of the mobile stack): the compact, friendly entry point. A
+ * titled window with a welcome, suggested questions, and a message field,
+ * plus two controls, one of them only once it has a job: `+` appears after
+ * a conversation starts and resets to the welcome; maximize opens /chat.
  *
  * There is no handoff to do on maximize: the conversation lives in
  * LukeAiProvider (mounted in the root layout), so /chat renders the same
  * thread — mid-stream, even — and coming back finds it here again.
  *
- * The chips are the pitch. Each one sends a prompt the system prompt is
- * built to answer well: the short version, the design + code + business
- * story, and the fit map (paste a job description, get requirement →
- * evidence, one line each) — the thing a static page cannot do.
+ * The suggested questions are the pitch (SUGGESTIONS in lib/lukeAiStorage,
+ * shared with /chat). Each one sends a prompt the system prompt is built
+ * to answer well; the note under them points at the thing a static page
+ * cannot do — paste a job description, get a fit map.
  */
-
-const SUGGESTIONS: ReadonlyArray<Suggestion> = [
-  {
-    label: 'give me the 30-second version',
-    message: 'give me the 30-second version',
-  },
-  {
-    label: 'where did code or business change a design call?',
-    message:
-      'Give me one concrete decision per project where knowing the code or the business changed what Luke designed.',
-  },
-  {
-    label: 'map him to a job description',
-    message: "I'm hiring. I'd like to paste a job description and get a fit map.",
-  },
-]
 
 export default function LukeAiCard() {
   const router = useRouter()
@@ -74,7 +59,7 @@ export default function LukeAiCard() {
                 setInput('')
                 setTimeout(() => composerRef.current?.focus(), 30)
               }}
-              title="New session"
+              title="New conversation"
               aria-label="Start a new conversation"
             >
               <IconPlus />
