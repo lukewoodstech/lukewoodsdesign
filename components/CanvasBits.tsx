@@ -96,6 +96,20 @@ export function AboutReadme() {
       <div className="readme-card__body">
         <h2>
           hi, i&apos;m luke <span aria-hidden="true">👋</span>
+          {/* The one outbound link in the header rule: same URL as the hero,
+              as a glyph so the title line stays the title line. */}
+          <a
+            className="readme-card__in"
+            href={SITE.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Connect with Luke on LinkedIn"
+            title="Connect with Luke on LinkedIn"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9.5 9h3.83v1.64h.05c.53-.96 1.84-1.97 3.79-1.97 4.05 0 4.8 2.53 4.8 5.82V21h-4v-5.02c0-1.2-.02-2.74-1.75-2.74-1.76 0-2.02 1.3-2.02 2.65V21h-4z" />
+            </svg>
+          </a>
         </h2>
         <div className="readme-card__badges" aria-hidden="true">
           <span className="readme-card__badge readme-card__badge--blue">design + code</span>
@@ -103,31 +117,29 @@ export function AboutReadme() {
           <span className="readme-card__badge readme-card__badge--green">business strategy</span>
         </div>
         <p>
-          Thanks for stopping by. I built this site to show how I think, what I&apos;ve worked
-          on, and how design, computer science, and business come together in my work.
+          Thanks for stopping by. I&rsquo;m a product designer and BYU student studying computer
+          science with an emphasis in HCI, along with business strategy. I built this site to
+          show how I think, what I&rsquo;ve shipped, and how those disciplines come together in
+          my work.
         </p>
         <p>
-          At BYU, I study computer science with an emphasis in HCI, along with business strategy.
-          I enjoy working across the entire product process and understanding how design,
-          technology, and business come together to create a great user experience and a
-          successful product.
+          I do my best work alongside other people, whether I&rsquo;m leading design workshops
+          through BYU&rsquo;s UX Design Association, building late into the night at a hackathon,
+          or exploring startup ideas through Sandbox, BYU&rsquo;s startup incubator.
         </p>
         <p>
-          I do my best work alongside other people, whether I&apos;m leading design workshops
-          through BYU&apos;s UX Design Association or building late into the night at whatever
-          local hackathon my friends and I can find. Right now, as part of Sandbox, BYU&apos;s
-          startup incubator, I&apos;m building software for real estate and hotel operations.
+          I start by listening. Understanding what people are trying to do, where they get stuck,
+          and what actually matters to them is the foundation of my work. The goal is simple:
+          solve the right problem and build something genuinely useful.
         </p>
-        <p>
-          My philosophy is simple: put people first, and results follow. Whether I&apos;m
-          researching at an internship, building at a hackathon, or starting a company, I begin
-          by connecting with people and understanding what&apos;s making their lives harder.
-        </p>
-        <p>
-          AI is an incredible tool, and I&apos;ve immersed myself in learning how to use it. But I
-          don&apos;t believe it can replace the human connection and understanding at the heart of
-          great design. The tools will keep changing, but my goal will stay the same: understand
-          people deeply and build things that are genuinely useful to them.
+        {/*
+         * The sign-off, not a contact banner: one sentence in the README's own
+         * voice with the address inline. Same EmailLink as the hero, so a click
+         * opens the mail client and copies the address either way.
+         */}
+        <p className="readme-cta">
+          Since you made it all the way to the end, clearly we should connect! Contact me at{' '}
+          <EmailLink className="readme-cta__mail">{SITE.email}</EmailLink>.
         </p>
       </div>
     </div>

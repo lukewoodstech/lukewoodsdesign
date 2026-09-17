@@ -301,7 +301,9 @@ p a {
 .term-hist__item:focus-visible,
 .term-hist__delete:focus-visible,
 .term-hist__modal-cancel:focus-visible,
-.term-hist__modal-delete:focus-visible {
+.term-hist__modal-delete:focus-visible,
+.readme-cta__mail:focus-visible,
+.readme-card__in:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
@@ -2407,6 +2409,9 @@ p a {
 }
 
 .readme-card__body h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   margin: 0 0 0.55rem;
   padding-bottom: 0.35rem;
   border-bottom: 1px solid #3d3d3d;
@@ -2414,6 +2419,36 @@ p a {
   font-weight: 600;
   letter-spacing: -0.01em;
   color: #fff;
+}
+
+/* The LinkedIn link in the title row: icon-only, so the box is a 1.75rem
+   tap target around a 1rem glyph — big enough for a thumb without reading
+   as a button. Muted until hover so it doesn't compete with the name. */
+.readme-card__in {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  color: #9d9d9d;
+  transition: color 0.2s ease;
+}
+
+.readme-card__in svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.readme-card__in:hover {
+  color: var(--mono-blue);
+}
+
+@media (hover: none) {
+  .readme-card__in {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
 }
 
 /* shields.io-style badge row under the heading */
@@ -2453,6 +2488,45 @@ p a {
 .readme-card__body p {
   margin: 0 0 0.7em;
 }
+
+/* ── README sign-off ──────────────────────────────────────────────
+   The closing invitation reads as the last line of the bio, not a CTA
+   banner: the README's own 1px rule for separation, body type, and the
+   blue reserved for the two things you can actually click. */
+.readme-card__body .readme-cta {
+  margin: 1rem 0 0;
+  padding-top: 0.85rem;
+  border-top: 1px solid #3d3d3d;
+  font-family: var(--font-sans), sans-serif;
+}
+
+/* Inline prose link, same recipe as Luke AI's prose: blue, underline at
+   40% until hover. `anywhere` lets the address break rather than push the
+   card into horizontal scroll on a narrow phone. */
+.readme-cta__mail {
+  color: var(--mono-blue);
+  text-decoration: underline;
+  text-decoration-color: rgba(0, 143, 255, 0.4);
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+  transition: text-decoration-color 0.15s ease;
+}
+
+.readme-cta__mail:hover {
+  text-decoration-color: var(--mono-blue);
+}
+
+/* The toast hangs off the address mid-paragraph; centering it on a link
+   that may have wrapped looks broken, so it sits at the left edge. */
+.readme-cta__mail .email-link__toast {
+  left: 0;
+  transform: translate(0, -4px);
+}
+
+.readme-cta__mail .email-link__toast.is-visible {
+  transform: translate(0, 0);
+}
+
 
 /* Short laptop screens (1280×800, 1366×768): keep the 16px bio on one
    screen by giving the card more width instead of less type. */
