@@ -1,10 +1,9 @@
-import CanvasHome from '@/components/CanvasHome'
+import Home from '@/components/Home'
 
 /*
- * The homepage is the horizontal canvas on desktop; CanvasHome itself
- * renders the classic vertical stack (SiteNav/About/WorkGrid/Footer)
- * below 48em and under reduced motion.
+ * The homepage: the hero sentence, then the case studies down the page.
+ * One vertical layout for every width — see components/Home.tsx.
  */
-export default function Home() {
-  return <CanvasHome />
+export default function HomePage() {
+  return <Home />
 }

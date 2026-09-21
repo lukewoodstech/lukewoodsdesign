@@ -32,6 +32,8 @@ const INK = '#282c33'
 // Descriptions verbatim from the design file; titles varied so the list
 // reads as five distinct documents (the file repeats one placeholder title,
 // and its sixth row is a literal "[Document summary.]" template slot).
+// The summary line is written to answer *this* query — the file's line
+// answered a different one ("the Q3 roadmap discussion was most likely...").
 const ROWS = [
   { title: 'Q3 FY27 Roadmap Planning',  desc: '- Kickoff board for the Q3 roadmap — themes, prioritized bets, and sticky-notes.' },
   { title: 'Q3 Initiatives Brainstorm', desc: '- Cross-team brainstorm mapping Q3 initiatives and their dependencies.' },
@@ -130,6 +132,7 @@ export default function SearchMock({
   width = 400,
   compact = false,
   scale = 1,
+  origin,
   startResolved = false,
   zeroState = false,
 }: {
@@ -141,6 +144,10 @@ export default function SearchMock({
   compact?: boolean
   /** Zoom the whole panel out to fit small stages (e.g. 0.72 on the tile) */
   scale?: number
+  /** Where the zoom pulls from. Default: the top on a full-height panel,
+      the centre otherwise. The home tile passes `bottom center` so the
+      panel's bottom edge lands where it's placed however far it shrinks. */
+  origin?: string
   /** First frame = resolved answer (the tile's resting state); the case
       study demo keeps the default and plays the sequence from the top */
   startResolved?: boolean
@@ -245,7 +252,7 @@ export default function SearchMock({
           ...(scaled
             ? {
                 transform: `scale(${scale})`,
-                transformOrigin: height === '100%' ? 'top center' : 'center',
+                transformOrigin: origin ?? (height === '100%' ? 'top center' : 'center'),
                 flexShrink: 0,
               }
             : {}),
@@ -312,8 +319,8 @@ export default function SearchMock({
               style={{ opacity: tv >= RESP ? respIn : prevOpacity }}
             >
               <p className="text-[14px] leading-[20px]">
-                The Q3 roadmap discussion was most likely on &ldquo;Q3 FY27 Roadmap
-                Planning.&rdquo; Related boards below.
+                Here are the product roadmaps you&rsquo;ve worked on recently &mdash; you were
+                last in &ldquo;Q3 FY27 Roadmap Planning.&rdquo;
               </p>
               {ROWS.map((r, i) => {
                 // Rows shown as the previous answer are already fully revealed.

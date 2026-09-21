@@ -107,8 +107,6 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
       return (
         <div className="cs min-h-screen bg-black text-white" style={accentStyle}>
           <SiteNav
-            width="article"
-            contact={false}
             next={next && { href: `/work/${next.slug}`, title: next.title }}
           />
           <div className="max-w-[860px] mx-auto px-8 pb-32 sitenav-offset">
@@ -140,8 +138,6 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
     <div className="cs min-h-screen bg-black text-white" style={accentStyle}>
 
       <SiteNav
-        width="article"
-        contact={false}
         next={next && { href: `/work/${next.slug}`, title: next.title }}
       />
 

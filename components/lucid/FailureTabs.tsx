@@ -5,8 +5,10 @@ import { useId, useState, type ReactNode } from 'react'
 /*
  * Segmented control flipping between the three failure states. Proper tabs
  * semantics: roving tabindex, arrow-key navigation, panels labelled by their
- * tab. Panels stay mounted (hidden attr) so flipping is instant and images
- * stay warm.
+ * tab. Panels stay mounted (hidden attr) so flipping is instant — but a
+ * `hidden` panel has no layout, so a lazily-loaded image inside one never
+ * loads at all and the tab flips to a blank frame. Captures in here pass
+ * ZoomShot's `eager` for that reason; don't drop it.
  */
 export default function FailureTabs({
   tabs,

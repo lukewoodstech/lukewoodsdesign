@@ -15,7 +15,7 @@ import {
 
 /*
  * The transcript, identical on the homepage card and /chat. Empty, it is a
- * welcome: the wordmark and one line up top, and the four suggested
+ * welcome: a headline and one line up top, and the four suggested
  * questions docked at the foot with a note, right over the message field,
  * so the questions and the field read as one control. Once a conversation
  * starts, the welcome gives way to the turns: the visitor's messages as
@@ -42,18 +42,19 @@ export default function LukeAiThread({ surface, suggestions }: Props) {
     <div className={`lai lai--${surface}${zero ? ' lai--zero' : ''}`}>
       {zero ? (
         <>
-          {/* The empty window: the wordmark and one line take the free
-              space up top; the questions and the note dock at the foot,
-              directly over the message field. */}
+          {/* The empty window: the headline and one line take the free
+              space up top, behind a terminal prompt; the questions dock
+              at the foot, directly over the message field. The line ends
+              in the same block cursor the status line and streaming
+              answers use — no typewriter, just the cursor. */}
           <div className="lai__welcome">
             <p className="lai__hello">
-              <span className="lai__star" aria-hidden="true">
-                ✱
+              <span className="lai__prompt" aria-hidden="true">
+                &gt;
               </span>{' '}
-              <span aria-hidden="true">{WELCOME.title}</span>
-              <span className="sr-only">Luke AI</span>
+              {WELCOME.title}
             </p>
-            <p className="lai__intro">{WELCOME.body}</p>
+            <p className="lai__intro lai__cursor">{WELCOME.body}</p>
           </div>
           <div className="lai__start">
             <ul className="lai__chips" aria-label="Suggested questions">
@@ -72,7 +73,6 @@ export default function LukeAiThread({ surface, suggestions }: Props) {
                 </li>
               ))}
             </ul>
-            <p className="lai__note">{WELCOME.note}</p>
           </div>
         </>
       ) : (

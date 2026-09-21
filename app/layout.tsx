@@ -1,11 +1,12 @@
 import type { Metadata, Viewport } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Geist, Geist_Mono, Instrument_Serif } from 'next/font/google'
 import { ViewTransition } from 'react'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
-import Cursor from '@/components/Cursor'
 import { LukeAiProvider } from '@/components/luke-ai/LukeAiProvider'
+import LukeAiDock from '@/components/luke-ai/LukeAiDock'
+import MagneticButtons from '@/components/MagneticButtons'
 import { SITE } from '@/lib/site'
 
 /*
@@ -28,6 +29,20 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   subsets: ['latin'],
   variable: '--font-geist-mono',
+  display: 'swap',
+})
+
+/*
+ * One display serif, for two surfaces: the hero sentence on the home page
+ * (HeroIntro) and the section headers on /about. It's the voice that
+ * says "a person wrote this" against the Geist system everywhere else —
+ * the same contrast the reference site gets from Garamond. Regular only;
+ * the headline never needs another weight.
+ */
+const heroSerif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-hero-serif',
   display: 'swap',
 })
 
@@ -94,13 +109,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable}`}
+      className={`${geistSans.variable} ${geistMono.variable} ${heroSerif.variable}`}
       /* globals.css sets scroll-behavior: smooth; this tells Next so route
          transitions don't inherit the glide. */
       data-scroll-behavior="smooth"
     >
       <body>
-        <Cursor />
+        <MagneticButtons />
         {/* Luke AI's one session for the whole site: the homepage terminal
             and /chat are two views of the same thread (see LukeAiProvider). */}
         <LukeAiProvider>
@@ -109,6 +124,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {children}
             </div>
           </ViewTransition>
+          {/* The dock is site-wide chrome, outside the ViewTransition: it
+              should stay put across a route change, not cross-fade with
+              the page under it. */}
+          <LukeAiDock />
         </LukeAiProvider>
         <Analytics />
         <SpeedInsights />

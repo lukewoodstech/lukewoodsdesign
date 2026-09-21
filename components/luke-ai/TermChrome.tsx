@@ -91,3 +91,11 @@ export const IconArrowUp = () => (
     <path d="M8 13V3m0 0L4 7m4-4 4 4" />
   </svg>
 )
+
+/* Window minimize — the dock's collapse control. A single rule, the way
+   every OS has drawn "put this away" for thirty years. */
+export const IconMinimize = () => (
+  <svg {...svgProps}>
+    <path d="M3 11h10" />
+  </svg>
+)

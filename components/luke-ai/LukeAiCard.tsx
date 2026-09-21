@@ -6,15 +6,16 @@ import { useLukeAi } from './LukeAiProvider'
 import LukeAiThread from './LukeAiThread'
 import LukeAiComposer, { type ComposerHandle } from './LukeAiComposer'
 import { useAutoScroll } from './useAutoScroll'
-import { TermTitle, IconPlus, IconMaximize } from './TermChrome'
+import { TermTitle, IconPlus, IconMaximize, IconMinimize } from './TermChrome'
 import { SUGGESTIONS } from '@/lib/lukeAiStorage'
 
 /*
- * The live Luke AI window that is the hero of the homepage (desktop landing
- * and the top of the mobile stack): the compact, friendly entry point. A
- * titled window with a welcome, suggested questions, and a message field,
- * plus two controls, one of them only once it has a job: `+` appears after
- * a conversation starts and resets to the welcome; maximize opens /chat.
+ * The live Luke AI window, rendered inside the site-wide dock (LukeAiDock,
+ * bottom-right on every page) and inside the mobile stack: the compact,
+ * friendly entry point. A titled window with a welcome, suggested questions,
+ * and a message field, plus controls that only appear once they have a job:
+ * `+` shows up after a conversation starts and resets to the welcome,
+ * maximize opens /chat, and minimize (dock only) puts the panel away.
  *
  * There is no handoff to do on maximize: the conversation lives in
  * LukeAiProvider (mounted in the root layout), so /chat renders the same
@@ -26,7 +27,7 @@ import { SUGGESTIONS } from '@/lib/lukeAiStorage'
  * cannot do — paste a job description, get a fit map.
  */
 
-export default function LukeAiCard() {
+export default function LukeAiCard({ onClose }: { onClose?: () => void } = {}) {
   const router = useRouter()
   const { messages, phase, busy, send, startNew } = useLukeAi()
   const [input, setInput] = useState('')
@@ -74,6 +75,20 @@ export default function LukeAiCard() {
           >
             <IconMaximize />
           </button>
+          {/* Only the dock passes this: the card is a panel there, and a
+              panel needs a way to go away. The conversation is untouched —
+              it lives in LukeAiProvider and is still here on reopen. */}
+          {onClose && (
+            <button
+              type="button"
+              className="ai-card__tool"
+              onClick={onClose}
+              title="Minimize"
+              aria-label="Minimize Luke AI"
+            >
+              <IconMinimize />
+            </button>
+          )}
         </div>
       </header>
 

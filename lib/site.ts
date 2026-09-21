@@ -9,7 +9,7 @@ export const SITE = {
   role: 'Product Designer',
   url: 'https://lukewoodsdesign.com',
   description:
-    'Product designer and one-person product team: I design it, build it, and own the outcome. Four internships of shipped work, and a portfolio you can interview.',
+    'Product designer combining research, systems thinking, and code to ship useful products across Lucid, Awardco, Pattern, and Hoth.',
   email: 'lukewoodstech@gmail.com',
   linkedin: 'https://www.linkedin.com/in/lukewoodstech',
   /*

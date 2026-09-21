@@ -18,6 +18,10 @@ import { useEnterToOpen } from '@/lib/useEnterToOpen'
  *
  * This replaced the before/after laptop slider, which was too small to read
  * at rest and needed a cursor to work at all.
+ *
+ * The stage behind them is Awardco blue (#256CFA, their mark's own colour)
+ * rather than the neutral grey — see .tile-stage--awardco. The phones
+ * already rose from the bottom edge, so the colour was the only change.
  */
 
 const HREF = '/work/awardco-login-flow-redesign'
@@ -47,8 +51,8 @@ export default function AwardcoMobileTile() {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div className="tile-stage">
-        {/* Dark overlay — behind the phones, darkens the tile margins on hover */}
+      <div className="tile-stage tile-stage--awardco">
+        {/* Dark overlay — behind the phones, darkens the blue on hover */}
         <div className="tile-scrim" style={{ opacity: hovered ? 1 : 0 }} />
 
         <div className="phone-trio" role="img" aria-label={LABEL}>

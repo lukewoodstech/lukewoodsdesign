@@ -22,8 +22,10 @@ type Props = {
  * globals.css) stretches over the whole card, so the entire tile is that one
  * link — keyboard, crawler, middle-click and cmd-click all agree on where it
  * goes. The company mark sits above the stretched layer and stays its own
- * outbound link. The "View case study →" row is the visible affordance for
- * that; the card's hover/focus rules brighten it.
+ * outbound link. The visible affordance for the link is the "open" badge in
+ * the card's top-right corner — it appears on hover and focus (and sits
+ * faintly at rest on touch screens, where there is no hover). It's under
+ * the stretched link, so it's a signal, not a second control.
  */
 export default function TileFooter({
   slug,
@@ -83,11 +85,13 @@ export default function TileFooter({
 
       <p className="tile-footer__summary">{summary}</p>
 
-      {/* Visual affordance only — the title link already names where the
-          card goes, so this row stays out of the accessibility tree. */}
-      <span className="tile-footer__cta" aria-hidden="true">
-        View case study
-        <span className="tile-footer__cta-arrow">→</span>
+      {/* The open badge. Positioned against the card (the footer is static
+          on purpose, see .tile-footer). Decorative: the title link already
+          names the destination. */}
+      <span className="tile-open" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M7 17 17 7 M7 7h10v10" />
+        </svg>
       </span>
     </div>
   )

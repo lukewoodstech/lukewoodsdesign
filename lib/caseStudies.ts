@@ -44,7 +44,7 @@ export const caseStudies: CaseStudy[] = [
     slug: 'lucid-ai',
     title: 'Bringing Lucid AI to the homepage',
     company: 'Lucid',
-    accent: '#34d399',
+    accent: '#f96b13',
     role: 'Product Design Intern',
     period: 'May – Aug 2026 · 12 weeks',
     team: 'Two scrum teams: search + AI',
@@ -157,7 +157,7 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         heading: 'Testing killed my favorite assumption',
-        body: "I tested with 20 colleagues who used Predict daily — 10 brand managers, 10 ad strategists. I'd assumed users wanted separate view and edit modes; watching managers edit graphs live with clients in the room killed that, and the shipped design uses one combined mode. To seed the new Templates feature, I ran a report-building competition with prizes — the winning reports became the shipped templates.",
+        body: "I tested the redesigned flows in 20 usability sessions — 10 brand managers, 10 advertising strategists. I'd assumed users wanted separate view and edit modes; watching managers edit graphs live with clients in the room killed that, and the shipped design uses one combined mode. To seed the new Templates feature, I ran a report-building competition with prizes — the winning reports became the shipped templates.",
       },
       {
         heading: 'Handoff & honest impact',

@@ -11,6 +11,8 @@
  * trip homepage → /chat → homepage — keeps the thread).
  */
 
+import { SAFE_FOLLOWUPS } from './lukeAiFacts'
+
 export type Role = 'user' | 'assistant'
 
 export type Message = {
@@ -33,12 +35,13 @@ export const ACTIVE_KEY = 'luke-ai-active'
 export const HISTORY_OPEN_KEY = 'luke-ai-history-open'
 export const MAX_CONVERSATIONS = 50
 
-/* The empty-state welcome, shared by the homepage window and /chat. Plain
-   and warm: who this is, what it is for, and one line inviting a question. */
+/* The empty-state welcome, shared by the homepage window and /chat. The
+   name is already in the section heading and the window title, so the
+   welcome says what the thing is for instead: a headline in the mono and
+   one line naming the three questions a recruiter actually has. */
 export const WELCOME = {
-  title: 'Luke AI',
-  body: 'Explore Luke’s shipped work, product decisions, technical experience, and résumé.',
-  note: 'Hiring for a specific role? Paste the job description.',
+  title: 'Get to the signal faster.',
+  body: 'Ask what Luke shipped, how he made decisions, and what changed because of his work.',
 } as const
 
 /*
@@ -142,17 +145,47 @@ export function makeTitle(text: string, max = 110) {
  */
 export const FOLLOWUP_MARK = '[[followups]]'
 
+/*
+ * The marker as the model actually writes it: the canonical form, but
+ * also `[[follow-ups]]`, `**[[followups]]**`, a single bracket, or the
+ * marker with the first follow-up on the same line. Anything looser than
+ * this leaked into answers as "see his work]]" chips.
+ */
+const MARK_RE = /\**\[{1,2}\s*follow[- ]?ups?\s*:?\s*\]{0,2}\**:?/i
+
+/* One follow-up line, stripped of every bit of list or bracket chrome the
+   model may have wrapped it in. */
+function cleanFollowup(line: string) {
+  return line
+    .replace(/^[\s\-–—•↳>*\d.)]+/, '')
+    .replace(/^[\[\]"'“”‘’*`]+/, '')
+    .replace(/[\[\]"'“”‘’*`]+$/, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+/*
+ * A route the model wrote as a bare bracket, `[/work/lucid-ai]`, would
+ * render as literal brackets; make it the link it meant to be.
+ */
+export function linkBareRoutes(body: string) {
+  return body.replace(/\[(\/work\/[a-z0-9-]+)\](?!\()/g, '[$1]($1)')
+}
+
 export function splitAnswer(raw: string, streaming = false) {
-  const at = raw.indexOf(FOLLOWUP_MARK)
-  if (at === -1) {
-    return { body: streaming ? hidePartialMark(raw) : raw.trimEnd(), followups: [] as string[] }
+  const m = MARK_RE.exec(raw)
+  if (!m) {
+    return {
+      body: linkBareRoutes(streaming ? hidePartialMark(raw) : raw.trimEnd()),
+      followups: [] as string[],
+    }
   }
-  const body = raw.slice(0, at).trimEnd()
+  const body = linkBareRoutes(raw.slice(0, m.index).trimEnd())
   const followups = raw
-    .slice(at + FOLLOWUP_MARK.length)
+    .slice(m.index + m[0].length)
     .split('\n')
-    .map((l) => l.replace(/^[\s\-–•↳>*]+/, '').trim())
-    .filter(Boolean)
+    .map(cleanFollowup)
+    .filter((l) => l.length > 3 && !/^\[*follow[- ]?ups?\]*$/i.test(l))
     .slice(0, 3)
   return { body, followups }
 }
@@ -164,7 +197,9 @@ function hidePartialMark(raw: string) {
   for (let n = Math.min(tail.length, FOLLOWUP_MARK.length - 1); n > 0; n--) {
     if (raw.endsWith(FOLLOWUP_MARK.slice(0, n))) return raw.slice(0, -n)
   }
-  return raw
+  /* A lone trailing bracket is the start of the marker more often than
+     it is prose. */
+  return raw.replace(/\s*\[+$/, '')
 }
 
 /*
@@ -207,7 +242,7 @@ const ROUTES: ReadonlyArray<{ test: RegExp; href: string; label: string }> = [
   /* "pattern" is an ordinary word too, so the company only counts
      capitalised or by its product names. */
   {
-    test: /\bPattern\b|\bcustom reports\b|\bPredict\b/,
+    test: /\bPattern\b|\b[Cc]ustom [Rr]eports\b|\bPredict\b/,
     href: '/work/pattern-custom-reports',
     label: 'read the Pattern case study',
   },
@@ -221,11 +256,13 @@ export function routeActions(body: string): RouteAction[] {
    showing nothing — still keyed to what the answer talked about. */
 export function fallbackFollowups(body: string): string[] {
   const out: string[] = []
-  if (/\bLucid\b/.test(body)) out.push('go deeper on Lucid')
-  if (/\bAwardco\b/i.test(body)) out.push('why choose the slower login flow?')
-  if (/\bPattern\b/.test(body)) out.push('what got cut at Pattern, and why?')
-  if (out.length < 2) out.push('how technical is Luke?')
-  if (out.length < 2) out.push('what did Luke actually ship?')
+  if (/\bLucid\b/.test(body)) out.push('What shipped at Lucid in 12 weeks?')
+  if (/\bAwardco\b/i.test(body)) out.push('What was validated before the Awardco handoff?')
+  if (/\bPattern\b/.test(body)) out.push('What tradeoff did Luke make at Pattern?')
+  for (const f of SAFE_FOLLOWUPS) {
+    if (out.length >= 2) break
+    if (!out.includes(f)) out.push(f)
+  }
   return out.slice(0, 3)
 }
 

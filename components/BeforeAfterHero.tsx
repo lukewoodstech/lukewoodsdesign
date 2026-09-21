@@ -16,6 +16,9 @@ type Props = {
   afterAlt: string
   /** Intrinsic aspect ratio of the two images, e.g. 2016 / 1270 */
   aspect: number
+  /** No ring, radius or shadow: for a slider that sits inside a device frame
+      or whose images already carry their own. */
+  frameless?: boolean
 }
 
 export default function BeforeAfterHero({
@@ -24,6 +27,7 @@ export default function BeforeAfterHero({
   beforeAlt,
   afterAlt,
   aspect,
+  frameless = false,
 }: Props) {
   const [pct, setPct] = useState(50)
   const ref = useRef<HTMLDivElement>(null)
@@ -37,7 +41,7 @@ export default function BeforeAfterHero({
   return (
     <div
       ref={ref}
-      className="relative w-full touch-pan-y select-none overflow-hidden rounded-lg border border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.45)]"
+      className={`relative w-full touch-pan-y select-none overflow-hidden ${frameless ? '' : 'rounded-lg border border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.45)]'}`}
       style={{ aspectRatio: aspect }}
       onPointerMove={onPointerMove}
       role="img"

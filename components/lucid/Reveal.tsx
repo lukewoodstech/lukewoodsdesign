@@ -12,11 +12,12 @@ export default function Reveal({
   children,
   className = '',
   as: Tag = 'div',
+  ...rest
 }: {
   children: ReactNode
   className?: string
   as?: 'div' | 'section' | 'figure'
-}) {
+} & Omit<React.HTMLAttributes<HTMLElement>, 'className' | 'children'>) {
   const ref = useRef<HTMLElement | null>(null)
   const [inView, setInView] = useState(false)
 
@@ -38,7 +39,7 @@ export default function Reveal({
 
   return (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    <Tag ref={ref as any} className={`lcs-reveal ${inView ? 'is-inview' : ''} ${className}`}>
+    <Tag ref={ref as any} className={`lcs-reveal ${inView ? 'is-inview' : ''} ${className}`} {...rest}>
       {children}
     </Tag>
   )

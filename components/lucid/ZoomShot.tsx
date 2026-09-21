@@ -69,6 +69,9 @@ export default function ZoomShot({
           loading={eager ? 'eager' : undefined}
           fetchPriority={eager ? 'high' : undefined}
           className="lcs-shot"
+          /* The stylesheet turns the page's height ceiling into a width
+             ceiling with this; see `.cs-canvas .lcs-shot`. */
+          style={{ '--shot-ar': String(width / height) } as React.CSSProperties}
         />
         <span className="lcs-zoom__hint" aria-hidden="true">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">

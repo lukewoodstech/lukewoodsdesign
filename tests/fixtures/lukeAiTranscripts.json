@@ -1,0 +1,125 @@
+{
+  "recordedAt": "2026-09-17T16:08:02.789Z",
+  "transcripts": [
+    {
+      "id": "overview",
+      "question": "Give me Luke’s 30-second overview: who he is, what he’s shipped, and why it matters.",
+      "surface": "card",
+      "raw": "Luke is a product designer who combines research, systems thinking, and technical prototyping to ship useful products, currently studying Computer Science with an HCI emphasis at BYU.\n\n- **[Lucid](/work/lucid-ai)**: Designed an AI assistant that went from a blank page to general availability in 12 weeks, narrowing 20+ prototyped capabilities down to four core skills.\n- **[Awardco](/work/awardco-login-flow-redesign)**: Redesigned login/authentication after telemetry showed password login succeeding only 34.6% of the time; usability testing showed a 78% reduction in decision time and a 4.5% increase in successful sign-ins. Handed off, not launched.\n- **[Pattern](/work/pattern-custom-reports)**: Turned a small ticket into a nine-week Custom Reports redesign, validated in usability testing and shipped by the team after his internship.\n\nMy read: across all three, he grounds design decisions in evidence rather than assumptions.\n\n[[followups]]\nWhat was validated before the Awardco handoff?\nWhat shipped at Lucid in 12 weeks?\nHow does Luke use code in the design process?",
+      "body": "Luke is a product designer who combines research, systems thinking, and technical prototyping to ship useful products, currently studying Computer Science with an HCI emphasis at BYU.\n\n- **[Lucid](/work/lucid-ai)**: Designed an AI assistant that went from a blank page to general availability in 12 weeks, narrowing 20+ prototyped capabilities down to four core skills.\n- **[Awardco](/work/awardco-login-flow-redesign)**: Redesigned login/authentication after telemetry showed password login succeeding only 34.6% of the time; usability testing showed a 78% reduction in decision time and a 4.5% increase in successful sign-ins. Handed off, not launched.\n- **[Pattern](/work/pattern-custom-reports)**: Turned a small ticket into a nine-week Custom Reports redesign, validated in usability testing and shipped by the team after his internship.\n\nMy read: across all three, he grounds design decisions in evidence rather than assumptions.",
+      "followups": [
+        "What was validated before the Awardco handoff?",
+        "What shipped at Lucid in 12 weeks?",
+        "How does Luke use code in the design process?"
+      ]
+    },
+    {
+      "id": "strongest",
+      "question": "Show me Luke’s strongest shipped work and what each project changed.",
+      "surface": "card",
+      "raw": "Luke's shipped work spans three internships, each changing a different part of the product experience.\n\n- **[Lucid](/work/lucid-ai)**: Shipped the Lucid AI assistant to general availability in 12 weeks, going from zero to four core skills (Find Docs, Summarize, Generate a New Board, Catch Up) after testing 20+ potential capabilities.\n\n- **[Pattern](/work/pattern-custom-reports)**: Redesigned the Custom Reports workflow, letting users compare up to five metrics per chart instead of two, edit filters after creation, and combine viewing and editing into one experience. Shipped by the Pattern team after his internship.\n\n- **Awardco**: The [login flow redesign](/work/awardco-login-flow-redesign) was validated in usability testing and handed off for implementation, not launched by Luke, so it isn't shipped work in the same sense as Lucid or Pattern.\n\nMy read: Lucid and Pattern show the clearest end-to-end shipped outcomes.\n\n[[followups]]\nWhat shipped at Lucid in 12 weeks?\nWhat did the Pattern team ship after Luke's internship?\nWhat was validated before the Awardco handoff?",
+      "body": "Luke's shipped work spans three internships, each changing a different part of the product experience.\n\n- **[Lucid](/work/lucid-ai)**: Shipped the Lucid AI assistant to general availability in 12 weeks, going from zero to four core skills (Find Docs, Summarize, Generate a New Board, Catch Up) after testing 20+ potential capabilities.\n\n- **[Pattern](/work/pattern-custom-reports)**: Redesigned the Custom Reports workflow, letting users compare up to five metrics per chart instead of two, edit filters after creation, and combine viewing and editing into one experience. Shipped by the Pattern team after his internship.\n\n- **Awardco**: The [login flow redesign](/work/awardco-login-flow-redesign) was validated in usability testing and handed off for implementation, not launched by Luke, so it isn't shipped work in the same sense as Lucid or Pattern.\n\nMy read: Lucid and Pattern show the clearest end-to-end shipped outcomes.",
+      "followups": [
+        "What shipped at Lucid in 12 weeks?",
+        "What did the Pattern team ship after Luke's internship?",
+        "What was validated before the Awardco handoff?"
+      ]
+    },
+    {
+      "id": "decision",
+      "question": "Walk me through a difficult product decision Luke made: the tradeoff, what he chose, and how it played out.",
+      "surface": "card",
+      "raw": "One clear example is from Awardco's login redesign.\n\n**The tradeoff:** Testing showed password-first login was fastest (4.6 seconds to decide, slightly higher confidence) versus SSO-first (5.9 seconds). But password login was the method failing nearly two out of three times in the real product.\n\n**What he chose:** Luke picked SSO-first anyway, reasoning that the fastest design wasn't the one most likely to help users actually sign in.\n\n**How it played out:** In before-and-after usability testing, the redesigned system produced a 25% faster login, a 4.5% increase in successful sign-ins, and a 78% reduction in login-method decision time. The design passed security review and was handed off for implementation after his internship, so there's no production data on it yet.\n\n[Awardco](/work/awardco-login-flow-redesign)\n\n[[followups]]\nWhy did Luke choose the slower login design at Awardco?\nWhat was validated before the Awardco handoff?\nWhat tradeoff did Luke make at Pattern?",
+      "body": "One clear example is from Awardco's login redesign.\n\n**The tradeoff:** Testing showed password-first login was fastest (4.6 seconds to decide, slightly higher confidence) versus SSO-first (5.9 seconds). But password login was the method failing nearly two out of three times in the real product.\n\n**What he chose:** Luke picked SSO-first anyway, reasoning that the fastest design wasn't the one most likely to help users actually sign in.\n\n**How it played out:** In before-and-after usability testing, the redesigned system produced a 25% faster login, a 4.5% increase in successful sign-ins, and a 78% reduction in login-method decision time. The design passed security review and was handed off for implementation after his internship, so there's no production data on it yet.\n\n[Awardco](/work/awardco-login-flow-redesign)",
+      "followups": [
+        "Why did Luke choose the slower login design at Awardco?",
+        "What was validated before the Awardco handoff?",
+        "What tradeoff did Luke make at Pattern?"
+      ]
+    },
+    {
+      "id": "why-interview",
+      "question": "Why should I interview Luke? Give me the honest case, with evidence.",
+      "surface": "card",
+      "raw": "Three internships show a consistent pattern: he finds the real problem behind a request, tests directions, and works through engineering constraints.\n\n- **[Lucid](/work/lucid-ai)**: Took the AI assistant from a blank page to general availability in 12 weeks, then designed an @mention fix after early release showed the assistant guessing wrong about collaborators.\n- **[Awardco](/work/awardco-login-flow-redesign)**: Login telemetry showed password login failing far more than SSO; usability testing showed the redesign produced a 25% faster login and a 4.5% increase in successful sign-ins.\n- **[Pattern](/work/pattern-custom-reports)**: Turned a one-to-two-day ticket into a nine-week redesign after research surfaced four recurring workflow problems; validated with 20 usability sessions.\n\nHonest gap: he's intern-level, graduating April 2028, and the work is enterprise B2B heavy.\n\n[[followups]]\nWhy did Luke choose the slower login design at Awardco?\nWhat did Luke hand off at Pattern?\nWhat shipped at Lucid in 12 weeks?",
+      "body": "Three internships show a consistent pattern: he finds the real problem behind a request, tests directions, and works through engineering constraints.\n\n- **[Lucid](/work/lucid-ai)**: Took the AI assistant from a blank page to general availability in 12 weeks, then designed an @mention fix after early release showed the assistant guessing wrong about collaborators.\n- **[Awardco](/work/awardco-login-flow-redesign)**: Login telemetry showed password login failing far more than SSO; usability testing showed the redesign produced a 25% faster login and a 4.5% increase in successful sign-ins.\n- **[Pattern](/work/pattern-custom-reports)**: Turned a one-to-two-day ticket into a nine-week redesign after research surfaced four recurring workflow problems; validated with 20 usability sessions.\n\nHonest gap: he's intern-level, graduating April 2028, and the work is enterprise B2B heavy.",
+      "followups": [
+        "Why did Luke choose the slower login design at Awardco?",
+        "What did Luke hand off at Pattern?",
+        "What shipped at Lucid in 12 weeks?"
+      ]
+    },
+    {
+      "id": "internship-count",
+      "question": "How many internships has Luke completed?",
+      "surface": "page",
+      "raw": "Luke has three featured product-design internships plus one earlier one whose case study isn't published yet.\n\n- **Lucid** (May–August 2026): Designed the Lucid AI assistant, shipped to general availability in 12 weeks. [/work/lucid-ai](/work/lucid-ai)\n- **Awardco** (October 2025–April 2026): Redesigned authentication flows, validated in usability testing and handed off for implementation. [/work/awardco-login-flow-redesign](/work/awardco-login-flow-redesign)\n- **Pattern** (January–October 2025): Redesigned the Custom Reports workflow, validated in usability testing and shipped by the team after his internship. [/work/pattern-custom-reports](/work/pattern-custom-reports)\n\nBefore those, Luke was a Product Design Intern at **Hoth** (December 2024–April 2025), an early-stage startup where he built the company's first design system and brand identity. That case study is unpublished, so it's kept separate from the three featured ones above.\n\n[[followups]]\nWhat did Luke build at Hoth?\nWhich project best demonstrates Luke's judgment?\nWhat shipped at Lucid in 12 weeks?",
+      "body": "Luke has three featured product-design internships plus one earlier one whose case study isn't published yet.\n\n- **Lucid** (May–August 2026): Designed the Lucid AI assistant, shipped to general availability in 12 weeks. [/work/lucid-ai](/work/lucid-ai)\n- **Awardco** (October 2025–April 2026): Redesigned authentication flows, validated in usability testing and handed off for implementation. [/work/awardco-login-flow-redesign](/work/awardco-login-flow-redesign)\n- **Pattern** (January–October 2025): Redesigned the Custom Reports workflow, validated in usability testing and shipped by the team after his internship. [/work/pattern-custom-reports](/work/pattern-custom-reports)\n\nBefore those, Luke was a Product Design Intern at **Hoth** (December 2024–April 2025), an early-stage startup where he built the company's first design system and brand identity. That case study is unpublished, so it's kept separate from the three featured ones above.",
+      "followups": [
+        "What did Luke build at Hoth?",
+        "Which project best demonstrates Luke's judgment?",
+        "What shipped at Lucid in 12 weeks?"
+      ]
+    },
+    {
+      "id": "awardco-failed-logins",
+      "question": "Did Luke reduce Awardco’s failed logins by 4.5%?",
+      "surface": "page",
+      "raw": "Not quite. The 4.5% figure is a different metric in a different direction: in before-and-after usability testing, the redesigned login system produced a 4.5% increase in successful sign-ins, not a reduction in failed logins.\n\nThe baseline problem was separate: a year of company-wide login telemetry showed 7.7 million failed login attempts (6.7 million from password login alone) out of 45.9 million total attempts, with just 34.6% success for password login. That data motivated the redesign but isn't something the redesign is shown to have changed in production.\n\nThe usability testing also showed a 25% faster login and a 78% reduction in login-method decision time (27 seconds to 5.9 seconds). All of these are test results, not production metrics — the redesign was validated in testing and handed off for implementation after Luke's internship, with no post-launch data available.\n\nMore detail is in [Awardco](/work/awardco-login-flow-redesign).\n\n[[followups]]\nWhat was validated before the Awardco handoff?\nWhy did Luke choose the slower login design at Awardco?\nWhat baseline problem motivated the Awardco redesign?",
+      "body": "Not quite. The 4.5% figure is a different metric in a different direction: in before-and-after usability testing, the redesigned login system produced a 4.5% increase in successful sign-ins, not a reduction in failed logins.\n\nThe baseline problem was separate: a year of company-wide login telemetry showed 7.7 million failed login attempts (6.7 million from password login alone) out of 45.9 million total attempts, with just 34.6% success for password login. That data motivated the redesign but isn't something the redesign is shown to have changed in production.\n\nThe usability testing also showed a 25% faster login and a 78% reduction in login-method decision time (27 seconds to 5.9 seconds). All of these are test results, not production metrics — the redesign was validated in testing and handed off for implementation after Luke's internship, with no post-launch data available.\n\nMore detail is in [Awardco](/work/awardco-login-flow-redesign).",
+      "followups": [
+        "What was validated before the Awardco handoff?",
+        "Why did Luke choose the slower login design at Awardco?",
+        "What baseline problem motivated the Awardco redesign?"
+      ]
+    },
+    {
+      "id": "awardco-after-launch",
+      "question": "What happened after Awardco launched?",
+      "surface": "page",
+      "raw": "Awardco hadn't launched — the redesign was validated in usability testing and then handed off for implementation after Luke's internship ended. The portfolio doesn't have any post-launch, production, or live data for it.\n\nWhat is verified:\n\n**Testing results:** In before-and-after usability testing, the redesigned system showed a 25% faster login, a 4.5% increase in successful sign-ins, and a 78% reduction in login-method decision time (27 seconds down to 5.9 seconds), with higher confidence and lower reported difficulty. [Awardco](/work/awardco-login-flow-redesign)\n\n**Handoff scope:** Completed designs for the SSO-first flow, the token-based approach that removes a second code entry, the mobile SMS verification flow, and the redesigned password-reset flow were all handed off for implementation, not launched by Luke.\n\n**Why it matters:** The evidence Luke had was usability testing, not production telemetry, so the case study is careful to describe outcomes as validated rather than shipped.\n\nThe available portfolio evidence doesn't specify what happened after that handoff.\n\n[[followups]]\nWhat was validated before the Awardco handoff?\nWhy did Luke choose the slower login design at Awardco?\nWhat did Luke hand off at Awardco?",
+      "body": "Awardco hadn't launched — the redesign was validated in usability testing and then handed off for implementation after Luke's internship ended. The portfolio doesn't have any post-launch, production, or live data for it.\n\nWhat is verified:\n\n**Testing results:** In before-and-after usability testing, the redesigned system showed a 25% faster login, a 4.5% increase in successful sign-ins, and a 78% reduction in login-method decision time (27 seconds down to 5.9 seconds), with higher confidence and lower reported difficulty. [Awardco](/work/awardco-login-flow-redesign)\n\n**Handoff scope:** Completed designs for the SSO-first flow, the token-based approach that removes a second code entry, the mobile SMS verification flow, and the redesigned password-reset flow were all handed off for implementation, not launched by Luke.\n\n**Why it matters:** The evidence Luke had was usability testing, not production telemetry, so the case study is careful to describe outcomes as validated rather than shipped.\n\nThe available portfolio evidence doesn't specify what happened after that handoff.",
+      "followups": [
+        "What was validated before the Awardco handoff?",
+        "Why did Luke choose the slower login design at Awardco?",
+        "What did Luke hand off at Awardco?"
+      ]
+    },
+    {
+      "id": "pattern-daily-users",
+      "question": "Did Pattern test with 20 daily users?",
+      "surface": "page",
+      "raw": "Not quite. Luke ran 20 usability sessions with 10 brand managers and 10 advertising strategists; the portfolio describes the participants by role, not by how often they used the product.\n\nThat testing showed brand managers editing charts while presenting to clients, which led Luke to remove the separate edit mode and combine viewing and editing into one experience — described as the most important change testing produced.\n\n**Why it matters**\n\nMy read, based on the [Pattern](/work/pattern-custom-reports) case study, is that Luke used role-specific behavior observed in testing (not usage frequency) to justify a core interaction change, rather than guessing at what \"power users\" might want.\n\n[/work/pattern-custom-reports](/work/pattern-custom-reports)\n\n[[followups]]\nWhat other problems did Pattern's research uncover before the redesign?\nWhat did Luke hand off at Pattern?\nWhat tradeoff did Luke make at Pattern?",
+      "body": "Not quite. Luke ran 20 usability sessions with 10 brand managers and 10 advertising strategists; the portfolio describes the participants by role, not by how often they used the product.\n\nThat testing showed brand managers editing charts while presenting to clients, which led Luke to remove the separate edit mode and combine viewing and editing into one experience — described as the most important change testing produced.\n\n**Why it matters**\n\nMy read, based on the [Pattern](/work/pattern-custom-reports) case study, is that Luke used role-specific behavior observed in testing (not usage frequency) to justify a core interaction change, rather than guessing at what \"power users\" might want.\n\n[/work/pattern-custom-reports](/work/pattern-custom-reports)",
+      "followups": [
+        "What other problems did Pattern's research uncover before the redesign?",
+        "What did Luke hand off at Pattern?",
+        "What tradeoff did Luke make at Pattern?"
+      ]
+    },
+    {
+      "id": "pattern-400-hours",
+      "question": "Did Custom Reports save 400 hours per week?",
+      "surface": "page",
+      "raw": "No — the portfolio doesn't verify any hours-saved figure for Custom Reports, at any number.\n\nWhat it does show: building one client-ready report previously took 30–60 minutes across Predict, Excel, and slides, as a baseline problem before the redesign. There's no measured time-saved outcome tied to that baseline.\n\nThe redesign was validated in usability testing and shipped by the Pattern team after Luke's internship, but no post-launch time, adoption, or productivity metric is documented in the case study.\n\n**Why it matters**\n\nMy read, based on the [Pattern](/work/pattern-custom-reports) case study, is that Luke's next step was proposed rather than measured: he wanted to check whether users returned to build a second report, since only about 15% of eligible users had returned in the feature's first year before the redesign.\n\n[[followups]]\nWhat baseline problems did Pattern's research uncover?\nWhat did Luke hand off at Pattern?\nWhat was the most important change testing produced at Pattern?",
+      "body": "No — the portfolio doesn't verify any hours-saved figure for Custom Reports, at any number.\n\nWhat it does show: building one client-ready report previously took 30–60 minutes across Predict, Excel, and slides, as a baseline problem before the redesign. There's no measured time-saved outcome tied to that baseline.\n\nThe redesign was validated in usability testing and shipped by the Pattern team after Luke's internship, but no post-launch time, adoption, or productivity metric is documented in the case study.\n\n**Why it matters**\n\nMy read, based on the [Pattern](/work/pattern-custom-reports) case study, is that Luke's next step was proposed rather than measured: he wanted to check whether users returned to build a second report, since only about 15% of eligible users had returned in the feature's first year before the redesign.",
+      "followups": [
+        "What baseline problems did Pattern's research uncover?",
+        "What did Luke hand off at Pattern?",
+        "What was the most important change testing produced at Pattern?"
+      ]
+    },
+    {
+      "id": "lucid-adoption",
+      "question": "What was Lucid AI’s adoption rate?",
+      "surface": "page",
+      "raw": "The available portfolio evidence doesn't specify that. Luke's internship ended shortly after the assistant's general-availability release, so the case study doesn't include long-term adoption, usage, or retention data.\n\nWhat the evidence does show is the shipping timeline and scope: the assistant went from a blank page to general availability in 12 weeks, reaching internal users on July 20 and all Lucid tiers on August 5. The four shipped skills were Find Docs, Summarize, Generate a New Board, and Catch Up, narrowed down from more than 20 prototyped capabilities tested with 12 external user sessions.\n\nBefore Luke left, he also designed and handed off an A/B test comparing the side-panel and full-page experiences, but no results from that test are available either.\n\nFor more on what shipped and what was tested, see [Lucid](/work/lucid-ai).\n\n[[followups]]\nWhat shipped at Lucid in 12 weeks?\nWhat would Luke do next at Lucid?\nHow does Luke use code in the design process?",
+      "body": "The available portfolio evidence doesn't specify that. Luke's internship ended shortly after the assistant's general-availability release, so the case study doesn't include long-term adoption, usage, or retention data.\n\nWhat the evidence does show is the shipping timeline and scope: the assistant went from a blank page to general availability in 12 weeks, reaching internal users on July 20 and all Lucid tiers on August 5. The four shipped skills were Find Docs, Summarize, Generate a New Board, and Catch Up, narrowed down from more than 20 prototyped capabilities tested with 12 external user sessions.\n\nBefore Luke left, he also designed and handed off an A/B test comparing the side-panel and full-page experiences, but no results from that test are available either.\n\nFor more on what shipped and what was tested, see [Lucid](/work/lucid-ai).",
+      "followups": [
+        "What shipped at Lucid in 12 weeks?",
+        "What would Luke do next at Lucid?",
+        "How does Luke use code in the design process?"
+      ]
+    }
+  ]
+}

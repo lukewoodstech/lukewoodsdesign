@@ -57,8 +57,10 @@ export default function CompareStage({
               alt={l.alt}
               width={l.width}
               height={l.height}
-              sizes="(min-width: 860px) 860px, 100vw"
+              sizes="(min-width: 60em) 80vw, 100vw"
               className="lcs-shot"
+              /* Feeds the page's figure height ceiling; see `.lcs-shot`. */
+              style={{ '--shot-ar': String(l.width / l.height) } as React.CSSProperties}
             />
           </div>
         ))}

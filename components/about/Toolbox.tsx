@@ -1,0 +1,250 @@
+'use client'
+
+import { useEffect, useRef } from 'react'
+import type { Tool } from '@/lib/about'
+
+/*
+ * The toolbox: the tools as app-icon tiles that drop into a tray with
+ * real gravity, pile up, and can be picked up and thrown.
+ *
+ * This is the page's one toy, and it earns its place because it proves
+ * the claim the code card makes two screens up: the site is built, not
+ * templated. Matter.js does the physics — rigid bodies, restitution,
+ * friction, sleeping — and is loaded on demand inside the effect so it
+ * costs nothing until this section is reached. The tiles are DOM, not a
+ * canvas: each body's position and angle are written to its tile's
+ * transform every frame, which keeps the icons crisp, themeable, and in
+ * the accessibility tree as a plain list of tool names.
+ *
+ * Timing: nothing falls until the tray is 30% on screen, so the drop is
+ * something you see happen. Dragging is a spring constraint from the
+ * pointer to the tile, the same way Matter's own MouseConstraint works,
+ * which is what makes a throw carry the pointer's velocity. Only the
+ * tiles are `touch-action: none`, so on a phone the page still scrolls
+ * over the tray unless a finger is on an icon.
+ *
+ * Reduced motion: the world is stepped to rest before first paint, so
+ * the tiles are simply there, settled, and still draggable.
+ */
+
+type M = typeof import('matter-js')
+
+const SIZE_DESKTOP = 76
+const SIZE_MOBILE = 58
+
+export default function Toolbox({ tools }: { tools: ReadonlyArray<Tool> }) {
+  const trayRef = useRef<HTMLUListElement>(null)
+
+  useEffect(() => {
+    const tray = trayRef.current
+    if (!tray) return
+    let cancelled = false
+    let cleanup = () => {}
+
+    const boot = async () => {
+      const mod = await import('matter-js')
+      const Matter: M = (mod as unknown as { default?: M }).default ?? (mod as unknown as M)
+      if (cancelled) return
+
+      const { Engine, Bodies, Body, Composite, Constraint, Sleeping, Vector } = Matter
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      const tiles = Array.from(tray.querySelectorAll<HTMLLIElement>('.tb__tile'))
+      const size = window.innerWidth < 600 ? SIZE_MOBILE : SIZE_DESKTOP
+      tray.style.setProperty('--tb-size', `${size}px`)
+
+      const engine = Engine.create({ enableSleeping: true })
+      engine.gravity.y = 1.15
+      const world = engine.world
+
+      let W = tray.clientWidth
+      let H = tray.clientHeight
+      const T = 200 // wall thickness
+      let walls: Matter.Body[] = []
+      const buildWalls = () => {
+        walls.forEach((w) => Composite.remove(world, w))
+        walls = [
+          Bodies.rectangle(W / 2, H + T / 2, W + T * 2, T, { isStatic: true }),
+          Bodies.rectangle(-T / 2, H / 2 - size * 6, T, H + size * 14, { isStatic: true }),
+          Bodies.rectangle(W + T / 2, H / 2 - size * 6, T, H + size * 14, { isStatic: true }),
+          /* a ceiling well above the tray, so a hard throw comes back */
+          Bodies.rectangle(W / 2, -size * 12 - T / 2, W + T * 2, T, { isStatic: true }),
+        ]
+        Composite.add(world, walls)
+      }
+      buildWalls()
+
+      /* Spawn above the tray, spread across it, each one a little later
+         and a little tilted — deterministic, so it looks the same twice. */
+      const bodies = tiles.map((_, i) => {
+        /* Only the middle 60% of the tray, so they land on each other
+           and pile instead of lining up along the floor. */
+        const span = W * 0.6
+        const left = (W - span) / 2
+        const cols = Math.max(3, Math.floor(span / (size * 1.5)))
+        const col = i % cols
+        const cell = span / cols
+        const x = left + cell * col + cell / 2 + ((i * 37) % 23) - 11
+        const y = -size * (1.2 + Math.floor(i / cols) * 1.4) - ((i * 53) % 40)
+        const b = Bodies.rectangle(x, y, size, size, {
+          chamfer: { radius: size * 0.22 },
+          restitution: 0.28,
+          friction: 0.55,
+          frictionAir: 0.012,
+          density: 0.0022,
+          angle: (((i * 41) % 30) - 15) * (Math.PI / 180),
+        })
+        return b
+      })
+      Composite.add(world, bodies)
+
+      const paint = () => {
+        for (let i = 0; i < bodies.length; i++) {
+          const b = bodies[i]
+          tiles[i].style.transform = `translate3d(${b.position.x - size / 2}px, ${b.position.y - size / 2}px, 0) rotate(${b.angle}rad)`
+        }
+      }
+
+      let raf = 0
+      let running = false
+      let held: Matter.Constraint | null = null
+      const tick = () => {
+        Engine.update(engine, 1000 / 60)
+        paint()
+        const awake = held || bodies.some((b) => !b.isSleeping)
+        if (awake) raf = requestAnimationFrame(tick)
+        else running = false
+      }
+      const wake = () => {
+        bodies.forEach((b) => Sleeping.set(b, false))
+        if (running) return
+        running = true
+        raf = requestAnimationFrame(tick)
+      }
+
+      /* ── Drop in when seen (or already at rest, for reduced motion) ── */
+      const start = () => {
+        tray.classList.add('is-live')
+        if (reduce) {
+          for (let i = 0; i < 240; i++) Engine.update(engine, 1000 / 60)
+          paint()
+          return
+        }
+        wake()
+      }
+      const io = new IntersectionObserver(
+        ([e]) => {
+          if (e.isIntersecting) {
+            start()
+            io.disconnect()
+          }
+        },
+        { threshold: 0.3 },
+      )
+      io.observe(tray)
+
+      /* ── Drag: a spring from the pointer to the grabbed tile ── */
+      const pos = (e: PointerEvent) => {
+        const r = tray.getBoundingClientRect()
+        return { x: e.clientX - r.left, y: e.clientY - r.top }
+      }
+      const onDown = (e: PointerEvent) => {
+        const el = (e.target as HTMLElement).closest<HTMLLIElement>('.tb__tile')
+        if (!el) return
+        const i = tiles.indexOf(el)
+        if (i < 0) return
+        e.preventDefault()
+        const b = bodies[i]
+        const p = pos(e)
+        Sleeping.set(b, false)
+        held = Constraint.create({
+          pointA: p,
+          bodyB: b,
+          pointB: Vector.sub(p, b.position),
+          stiffness: 0.18,
+          damping: 0.08,
+          length: 0.01,
+        })
+        Composite.add(world, held)
+        el.setPointerCapture(e.pointerId)
+        el.classList.add('is-held')
+        tiles.forEach((t) => (t.style.zIndex = ''))
+        el.style.zIndex = '2'
+        wake()
+      }
+      const onMove = (e: PointerEvent) => {
+        if (!held) return
+        held.pointA = pos(e)
+      }
+      const onUp = (e: PointerEvent) => {
+        if (!held) return
+        const el = (e.target as HTMLElement).closest<HTMLLIElement>('.tb__tile')
+        el?.classList.remove('is-held')
+        el?.releasePointerCapture(e.pointerId)
+        Composite.remove(world, held)
+        held = null
+      }
+      tray.addEventListener('pointerdown', onDown)
+      tray.addEventListener('pointermove', onMove)
+      tray.addEventListener('pointerup', onUp)
+      tray.addEventListener('pointercancel', onUp)
+
+      /* Resize: rebuild the walls and pull anything now outside back in. */
+      const ro = new ResizeObserver(() => {
+        const w = tray.clientWidth
+        const h = tray.clientHeight
+        if (Math.abs(w - W) < 2 && Math.abs(h - H) < 2) return
+        W = w
+        H = h
+        buildWalls()
+        bodies.forEach((b) => {
+          Body.setPosition(b, {
+            x: Math.min(Math.max(size / 2, b.position.x), W - size / 2),
+            y: Math.min(b.position.y, H - size / 2),
+          })
+        })
+        wake()
+      })
+      ro.observe(tray)
+
+      cleanup = () => {
+        cancelAnimationFrame(raf)
+        io.disconnect()
+        ro.disconnect()
+        tray.removeEventListener('pointerdown', onDown)
+        tray.removeEventListener('pointermove', onMove)
+        tray.removeEventListener('pointerup', onUp)
+        tray.removeEventListener('pointercancel', onUp)
+        Engine.clear(engine)
+      }
+    }
+
+    boot()
+    return () => {
+      cancelled = true
+      cleanup()
+    }
+  }, [tools])
+
+  return (
+    <div className="tb">
+      <span className="tb__ghost" aria-hidden="true">
+        My toolbox —
+      </span>
+      <span className="tb__hint" aria-hidden="true">
+        (toss them around)
+      </span>
+      <ul ref={trayRef} className="tb__tray" aria-label="Tools I work in">
+        {tools.map((t) => (
+          <li key={t.name} className="tb__tile" style={{ background: t.color }} title={t.name}>
+            <span
+              className="tb__glyph"
+              style={{ maskImage: `url(${t.icon})`, WebkitMaskImage: `url(${t.icon})` }}
+              aria-hidden="true"
+            />
+            <span className="visually-hidden">{t.name}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}

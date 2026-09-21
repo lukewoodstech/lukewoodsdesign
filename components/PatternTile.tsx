@@ -5,6 +5,20 @@ import TileFooter from './TileFooter'
 import { useEnterToOpen } from '@/lib/useEnterToOpen'
 import { useReducedMotion } from '@/lib/useReducedMotion'
 
+/*
+ * The Predict custom report, drawn live: the title types, the two metrics
+ * count up, then the series draw across the chart.
+ *
+ * The report is a real panel now — a solid dark surface on Pattern blue
+ * (see .tile-stage--pattern), hung from the stage's bottom edge instead of
+ * floating in the middle of a grey card. Two things make that work: the
+ * viewBox frames the card box exactly (16 8 328 224) so the SVG element and
+ * the drawn card are the same rectangle, and the card rect is drawn taller
+ * than the viewBox — its rounded bottom corners fall outside, leaving a
+ * clean straight cut where the panel meets the footer. Everything the
+ * report actually says, down to the legend, stays above that line.
+ */
+
 const TITLE = 'Organic + Paid + Insights'
 const ANIM_END = 6600
 
@@ -79,88 +93,92 @@ export default function PatternTile() {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div className="tile-stage">
-        {/* Dark overlay — behind SVG, darkens the tile background on hover */}
+      <div className="tile-stage tile-stage--pattern">
+        {/* Dark overlay — behind SVG, darkens the blue on hover */}
         <div className="tile-scrim" style={{ opacity: hovered ? 1 : 0 }} />
 
         {/* SVG — rendered on top of overlay, stays fully visible */}
         <div className="workgrid__item__content">
-          <svg
-            className="tile-svg"
-            viewBox="-25 -20 410 280"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-            style={{ opacity: isInView ? 1 : 0, transition: 'opacity 0.3s ease' }}
-          >
-            <rect x="16" y="8" width="328" height="224" rx="8"
-              fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
+          <div className="pattern-panel">
+            <svg
+              className="tile-svg"
+              viewBox="16 8 328 234"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              style={{ opacity: isInView ? 1 : 0, transition: 'opacity 0.3s ease' }}
+            >
+              {/* 10 units taller than the viewBox: the rounded bottom corners
+                  sit below the cut, so the panel meets the edge square. */}
+              <rect x="16" y="8" width="328" height="244" rx="8"
+                fill="#13151d" stroke="rgba(255,255,255,0.13)" strokeWidth="1" />
 
-            <text x="28" y="28" fontSize="9.5" fontWeight="600"
-              fill="rgba(255,255,255,0.85)" fontFamily="var(--font-mono)">
-              {typedTitle}
-              {showCursor && <tspan className="tile-cursor" fill="rgba(255,255,255,0.5)">|</tspan>}
-            </text>
-            <rect x="290" y="16" width="42" height="18" rx="4"
-              stroke="rgba(255,255,255,0.14)" strokeWidth="1" fill="rgba(255,255,255,0.04)" />
-            <text x="311" y="27.5" fontSize="7.5" textAnchor="middle"
-              fill="rgba(255,255,255,0.4)" fontFamily="var(--font-mono)">EDIT</text>
-            <line x1="16" y1="41" x2="344" y2="41" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+              <text x="28" y="28" fontSize="9.5" fontWeight="600"
+                fill="rgba(255,255,255,0.85)" fontFamily="var(--font-mono)">
+                {typedTitle}
+                {showCursor && <tspan className="tile-cursor" fill="rgba(255,255,255,0.5)">|</tspan>}
+              </text>
+              <rect x="290" y="16" width="42" height="18" rx="4"
+                stroke="rgba(255,255,255,0.14)" strokeWidth="1" fill="rgba(255,255,255,0.04)" />
+              <text x="311" y="27.5" fontSize="7.5" textAnchor="middle"
+                fill="rgba(255,255,255,0.4)" fontFamily="var(--font-mono)">EDIT</text>
+              <line x1="16" y1="41" x2="344" y2="41" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
 
-            <circle cx="28" cy="57" r="3.5" fill="#00b37d" />
-            <text x="38" y="61" fontSize="8"
-              fill="rgba(255,255,255,0.4)" fontFamily="var(--font-mono)">Ad Clicks</text>
-            <text x="28" y="81" fontSize="19" fontWeight="400"
-              fill="rgba(255,255,255,0.92)" fontFamily="var(--font-mono)">{clicksVal}</text>
-            <text x="28"  y="95" fontSize="7.5" fill="rgba(255,255,255,0.3)"  fontFamily="var(--font-mono)">3,742</text>
-            <text x="56"  y="95" fontSize="7.5" fill="var(--mono-red)"               fontFamily="var(--font-mono)">1.23% ▽</text>
+              <circle cx="28" cy="57" r="3.5" fill="#00b37d" />
+              <text x="38" y="61" fontSize="8"
+                fill="rgba(255,255,255,0.4)" fontFamily="var(--font-mono)">Ad Clicks</text>
+              <text x="28" y="81" fontSize="19" fontWeight="400"
+                fill="rgba(255,255,255,0.92)" fontFamily="var(--font-mono)">{clicksVal}</text>
+              <text x="28"  y="95" fontSize="7.5" fill="rgba(255,255,255,0.3)"  fontFamily="var(--font-mono)">3,742</text>
+              <text x="56"  y="95" fontSize="7.5" fill="var(--mono-red)"               fontFamily="var(--font-mono)">1.23% ▽</text>
 
-            <line x1="181" y1="48" x2="181" y2="104" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+              <line x1="181" y1="48" x2="181" y2="104" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
 
-            <circle cx="193" cy="57" r="3.5" fill="var(--mono-blue)" />
-            <text x="203" y="61" fontSize="8"
-              fill="rgba(255,255,255,0.4)" fontFamily="var(--font-mono)">ACOS</text>
-            <text x="193" y="81" fontSize="19" fontWeight="400"
-              fill="rgba(255,255,255,0.92)" fontFamily="var(--font-mono)">{acosVal}%</text>
-            <text x="193" y="95" fontSize="7.5" fill="rgba(255,255,255,0.3)"  fontFamily="var(--font-mono)">10.77</text>
-            <text x="220" y="95" fontSize="7.5" fill="var(--mono-red)"               fontFamily="var(--font-mono)">20.23% ▽</text>
+              <circle cx="193" cy="57" r="3.5" fill="var(--mono-blue)" />
+              <text x="203" y="61" fontSize="8"
+                fill="rgba(255,255,255,0.4)" fontFamily="var(--font-mono)">ACOS</text>
+              <text x="193" y="81" fontSize="19" fontWeight="400"
+                fill="rgba(255,255,255,0.92)" fontFamily="var(--font-mono)">{acosVal}%</text>
+              <text x="193" y="95" fontSize="7.5" fill="rgba(255,255,255,0.3)"  fontFamily="var(--font-mono)">10.77</text>
+              <text x="220" y="95" fontSize="7.5" fill="var(--mono-red)"               fontFamily="var(--font-mono)">20.23% ▽</text>
 
-            <line x1="16" y1="104" x2="344" y2="104" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+              <line x1="16" y1="104" x2="344" y2="104" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
 
-            <line x1="44" y1="128" x2="340" y2="128" stroke="rgba(255,255,255,0.03)" strokeWidth="0.75" />
-            <line x1="44" y1="152" x2="340" y2="152" stroke="rgba(255,255,255,0.03)" strokeWidth="0.75" />
-            <line x1="44" y1="176" x2="340" y2="176" stroke="rgba(255,255,255,0.03)" strokeWidth="0.75" />
-            <line x1="44" y1="200" x2="340" y2="200" stroke="rgba(255,255,255,0.03)" strokeWidth="0.75" />
-            <line x1="44" y1="203" x2="340" y2="203" stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
+              <line x1="44" y1="128" x2="340" y2="128" stroke="rgba(255,255,255,0.03)" strokeWidth="0.75" />
+              <line x1="44" y1="152" x2="340" y2="152" stroke="rgba(255,255,255,0.03)" strokeWidth="0.75" />
+              <line x1="44" y1="176" x2="340" y2="176" stroke="rgba(255,255,255,0.03)" strokeWidth="0.75" />
+              <line x1="44" y1="200" x2="340" y2="200" stroke="rgba(255,255,255,0.03)" strokeWidth="0.75" />
+              <line x1="44" y1="203" x2="340" y2="203" stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
 
-            <text x="44"  y="215" fontSize="7" textAnchor="middle"
-              fill="rgba(255,255,255,0.2)" fontFamily="var(--font-mono)">Jan 11</text>
-            <text x="192" y="215" fontSize="7" textAnchor="middle"
-              fill="rgba(255,255,255,0.2)" fontFamily="var(--font-mono)">Jan 25</text>
-            {/* End-anchored — centred on the last point would overhang the card edge at x=344 */}
-            <text x="340" y="215" fontSize="7" textAnchor="end"
-              fill="rgba(255,255,255,0.2)" fontFamily="var(--font-mono)">Feb 7</text>
+              <text x="44"  y="215" fontSize="7" textAnchor="middle"
+                fill="rgba(255,255,255,0.2)" fontFamily="var(--font-mono)">Jan 11</text>
+              <text x="192" y="215" fontSize="7" textAnchor="middle"
+                fill="rgba(255,255,255,0.2)" fontFamily="var(--font-mono)">Jan 25</text>
+              {/* End-anchored — centred on the last point would overhang the card edge at x=344 */}
+              <text x="340" y="215" fontSize="7" textAnchor="end"
+                fill="rgba(255,255,255,0.2)" fontFamily="var(--font-mono)">Feb 7</text>
 
-            <line x1="110" y1="227" x2="126" y2="227" stroke="#00b37d" strokeWidth="1.5" strokeLinecap="round" />
-            <text x="130" y="230" fontSize="7" fill="rgba(255,255,255,0.25)" fontFamily="var(--font-mono)">Ad Clicks</text>
-            <line x1="196" y1="227" x2="212" y2="227" stroke="var(--mono-blue)" strokeWidth="1.5" strokeLinecap="round" />
-            <text x="216" y="230" fontSize="7" fill="rgba(255,255,255,0.25)" fontFamily="var(--font-mono)">ACOS</text>
+              <line x1="110" y1="227" x2="126" y2="227" stroke="#00b37d" strokeWidth="1.5" strokeLinecap="round" />
+              <text x="130" y="230" fontSize="7" fill="rgba(255,255,255,0.25)" fontFamily="var(--font-mono)">Ad Clicks</text>
+              <line x1="196" y1="227" x2="212" y2="227" stroke="var(--mono-blue)" strokeWidth="1.5" strokeLinecap="round" />
+              <text x="216" y="230" fontSize="7" fill="rgba(255,255,255,0.25)" fontFamily="var(--font-mono)">ACOS</text>
 
-            <g style={{ opacity: linesAppear }}>
-              <path
-                d="M 44,146 L 81,154 L 118,169 L 155,177 L 192,161 L 229,192 L 266,177 L 303,130 L 340,115"
-                stroke="#00b37d" strokeWidth="1.75"
-                strokeLinecap="round" strokeLinejoin="round"
-                strokeDasharray="350" strokeDashoffset={350 * (1 - line1Prog)}
-              />
-              <path
-                d="M 44,152 L 81,146 L 118,161 L 155,152 L 192,140 L 229,155 L 266,130 L 303,140 L 340,124"
-                stroke="var(--mono-blue)" strokeWidth="1.75"
-                strokeLinecap="round" strokeLinejoin="round"
-                strokeDasharray="350" strokeDashoffset={350 * (1 - line2Prog)}
-              />
-            </g>
-          </svg>
+              <g style={{ opacity: linesAppear }}>
+                <path
+                  d="M 44,146 L 81,154 L 118,169 L 155,177 L 192,161 L 229,192 L 266,177 L 303,130 L 340,115"
+                  stroke="#00b37d" strokeWidth="1.75"
+                  strokeLinecap="round" strokeLinejoin="round"
+                  strokeDasharray="350" strokeDashoffset={350 * (1 - line1Prog)}
+                />
+                <path
+                  d="M 44,152 L 81,146 L 118,161 L 155,152 L 192,140 L 229,155 L 266,130 L 303,140 L 340,124"
+                  stroke="var(--mono-blue)" strokeWidth="1.75"
+                  strokeLinecap="round" strokeLinejoin="round"
+                  strokeDasharray="350" strokeDashoffset={350 * (1 - line2Prog)}
+                />
+              </g>
+            </svg>
+          </div>
         </div>
       </div>
 

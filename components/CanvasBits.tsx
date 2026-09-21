@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
-import Image from 'next/image'
 import { SITE } from '@/lib/site'
+import { WORK, type WorkItem } from '@/lib/work'
 import EmailLink from './EmailLink'
 import LucidTile from './LucidTile'
 import AwardcoMobileTile from './AwardcoMobileTile'
@@ -8,112 +8,28 @@ import PatternTile from './PatternTile'
 import HothTile from './HothTile'
 
 /*
- * Pieces of the canvas visual language shared by the desktop canvas homepage
- * (CanvasHome) and its mobile counterpart (MobileHome): Figma-style selection
- * handles, the business card rendered as a selected object, and the ordered
- * list of work tiles with their canvas labels.
+ * Pieces shared by the homepage (Home) and the about page: the ordered
+ * list of work tiles with their layer labels, the README card, and the
+ * Figma-style selection handles.
  */
 
 /*
- * Studies not ready to show. A slug here drops the tile from both home
- * layouts and the strip shortens to match; the route itself stays (Hoth's
- * is password-gated). Delete the slug from this set to bring it back.
+ * The work tiles: the shared metadata from lib/work plus each study's
+ * artwork. The data lives there so the fixed nav bar can name the studies
+ * without importing every tile component and its images.
  */
-export const HIDDEN_TILES: ReadonlySet<string> = new Set(['hoth'])
+const TILE_ART: Record<string, ReactNode> = {
+  'lucid-ai': <LucidTile />,
+  awardco: <AwardcoMobileTile />,
+  pattern: <PatternTile />,
+  hoth: <HothTile />,
+}
 
-/*
- * `file` is the tile's name in the Explorer nav's work/ folder and `href`
- * is where opening that file goes — the case study itself, so the nav's
- * children are real links, not decoration.
- */
-const ALL_TILES: ReadonlyArray<{
-  slug: string
-  label: string
-  /** Plain-words name for the explorer row: what a visitor scans for. */
-  title: string
-  file: string
-  href: string
-  tile: ReactNode
-}> = [
-  {
-    slug: 'lucid-ai',
-    label: '01 · lucid ai',
-    title: 'lucid ai search',
-    file: 'lucid-ai.tsx',
-    href: '/work/lucid-ai',
-    tile: <LucidTile />,
-  },
-  {
-    slug: 'awardco',
-    label: '02 · awardco',
-    title: 'awardco login',
-    file: 'awardco.tsx',
-    href: '/work/awardco-login-flow-redesign',
-    tile: <AwardcoMobileTile />,
-  },
-  {
-    slug: 'pattern',
-    label: '03 · pattern',
-    title: 'pattern custom reports',
-    file: 'pattern.tsx',
-    href: '/work/pattern-custom-reports',
-    tile: <PatternTile />,
-  },
-  {
-    slug: 'hoth',
-    label: '04 · hoth',
-    title: 'hoth',
-    file: 'hoth.tsx',
-    href: '/work/hoth',
-    tile: <HothTile />,
-  },
-]
+export const WORK_TILES: ReadonlyArray<WorkItem & { tile: ReactNode }> = WORK.map((item) => ({
+  ...item,
+  tile: TILE_ART[item.slug],
+}))
 
-export const WORK_TILES = ALL_TILES.filter((t) => !HIDDEN_TILES.has(t.slug))
-
-/*
- * The about photos, in canvas order: the desktop places them around the
- * README, the mobile stack deals them as a swipeable pile. One list so the
- * two never drift apart.
- */
-export const ABOUT_PHOTOS: ReadonlyArray<{
-  src: string
-  alt: string
-  caption: string
-  /* Intrinsic size, so the frame reserves the right box before the photo
-     lands — the snake shot is a hair off square. */
-  w: number
-  h: number
-}> = [
-  {
-    src: '/luke-woods.jpg',
-    alt: 'Luke Woods standing on a stone balcony in a light blue suit',
-    caption: 'me',
-    w: 1400,
-    h: 1400,
-  },
-  {
-    src: '/luke-fishing.jpg',
-    alt: 'Luke waist-deep in the Kenai River in Alaska, grinning and holding up a large salmon',
-    caption: 'fishing at kenai river, alaska',
-    w: 1400,
-    h: 1400,
-  },
-  {
-    src: '/luke-grand-canyon.jpg',
-    alt: 'Luke smiling in a selfie on a Grand Canyon trail, canyon ridges stretching out behind him',
-    caption: '26 miles at the grand canyon',
-    w: 1400,
-    h: 1400,
-  },
-  {
-    src: '/luke-snake.jpg',
-    alt: 'Luke holding a large white leucistic python coiled around his arms',
-    caption: 'woods exotics est. 2018',
-    w: 1400,
-    h: 1376,
-  },
-]
 
 /*
  * README.md in rendered markdown preview — the classic "about this
@@ -185,135 +101,5 @@ export function SelectionHandles() {
       <span className="sel-handle sel-handle--bl" aria-hidden="true" />
       <span className="sel-handle sel-handle--br" aria-hidden="true" />
     </>
-  )
-}
-
-/*
- * The hero tagline: a line of code inside the blue selection highlight.
- * Mono type with softened keyword/operator shades that still read on the
- * blue — the syntax structure does the "builder" work, the highlight and
- * handles keep it a canvas object.
- */
-export function CodeTagline() {
-  return (
-    <span className="canvas-intro__highlight canvas-intro__highlight--code">
-      <span className="ct-dim">const</span> luke <span className="ct-dim">=</span> design{' '}
-      <span className="ct-dim">+</span> code<span className="ct-dim">;</span>
-      <SelectionHandles />
-    </span>
-  )
-}
-
-/*
- * The line under the tagline, set as the comment on the declaration.
- * This is the story in one sentence: one person holding the design, the
- * build, and the outcome. Plain and positive — no hedge, no comparison;
- * the site around it is the evidence. (Earlier drafts qualified the
- * claim — "real enough to user-test" — and Luke cut them for sounding
- * weak.)
- */
-export function CredComment() {
-  return (
-    <p className="code-cred">
-      <span>{"// I'm a product designer who builds and owns the outcome."}</span>
-    </p>
-  )
-}
-
-/*
- * The landing lede, shared by the desktop canvas and the mobile stack:
- * name, the code tagline, the one-line story, and three plain links.
- * Everything here that looks clickable is clickable — the contact.ts
- * editor window this replaced carried real links inside decorative
- * window chrome, which read as a thing to click and mostly wasn't.
- */
-export function IntroLede() {
-  return (
-    <div className="intro-lede">
-      <h1 className="intro-name">luke woods</h1>
-      <p className="canvas-intro__highlight-wrap">
-        <CodeTagline />
-      </p>
-      <CredComment />
-      <nav className="intro-links" aria-label="Contact">
-        <a className="footer-link" href={SITE.linkedin} target="_blank" rel="noopener noreferrer">
-          linkedin
-        </a>
-        <a className="footer-link" href={SITE.resume} target="_blank" rel="noopener noreferrer">
-          résumé
-        </a>
-        <EmailLink className="footer-link" copy />
-      </nav>
-    </div>
-  )
-}
-
-/*
- * The contact finale as a Figma publish dialog: Luke as a component ready
- * to publish to the visitor's team library. Reads at two levels — designers
- * catch the bit, everyone else just sees a clear hire-me card with a big
- * blue button. The Publish button is the email CTA (EmailLink, so a click
- * copies the address even without a mail client). Shared by the desktop
- * canvas and MobileHome.
- */
-export function ContactFinale() {
-  return (
-    <div className="pub-card">
-      <div className="pub-card__bar">
-        publish component
-        <span className="pub-card__x" aria-hidden="true">
-          ×
-        </span>
-      </div>
-      <div className="pub-card__main">
-        <div className="pub-card__thumb" aria-hidden="true">
-          <Image src="/luke-woods.jpg" alt="" width={128} height={128} />
-        </div>
-        <div>
-          <h2 className="pub-card__name">
-            <span className="pub-card__compicon" aria-hidden="true">
-              ❖
-            </span>
-            luke woods
-          </h2>
-          <p className="pub-card__meta">product designer · v5.0 · ready to ship</p>
-        </div>
-      </div>
-      <ul className="pub-card__changes">
-        <li>
-          <span className="pub-card__plus" aria-hidden="true">
-            +
-          </span>
-          design — end-to-end flows shipped at four companies
-        </li>
-        <li>
-          <span className="pub-card__plus" aria-hidden="true">
-            +
-          </span>
-          code — working prototypes, this site included
-        </li>
-        <li>
-          <span className="pub-card__plus" aria-hidden="true">
-            +
-          </span>
-          research — interviews and usability tests at every stop
-        </li>
-      </ul>
-      <div className="pub-card__publishrow">
-        <EmailLink className="pub-card__publish">publish to your library</EmailLink>
-        <span className="pub-card__hint">opens an email to luke · copies the address</span>
-      </div>
-      <div className="pub-card__links">
-        <a className="footer-link" href={SITE.linkedin} target="_blank" rel="noopener noreferrer">
-          linkedin
-        </a>
-        <a className="footer-link" href={SITE.resume} target="_blank" rel="noopener noreferrer">
-          résumé
-        </a>
-        <a className="footer-link" href="/chat">
-          chat with luke ai
-        </a>
-      </div>
-    </div>
   )
 }

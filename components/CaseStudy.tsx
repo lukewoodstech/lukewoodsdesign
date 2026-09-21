@@ -7,7 +7,37 @@ import ZoomShot from '@/components/lucid/ZoomShot'
  * `.cs-*` classes in globals.css, and every accent color reads `--accent`,
  * which each page root sets (`.lcs`, `.pcs`; the default is the site blue).
  * A study should differ from its siblings in content and accent — nothing else.
+ *
+ * Layout is the 12-column canvas grid (`.cs-sec`). Children land on the spine
+ * — columns 1-6, the reading measure — unless they carry a `Place` class, and
+ * a figure that asks for a later column lands in the SAME row as the prose
+ * above it. That's plain grid auto-flow: the cursor sits at column 7 after the
+ * prose, and a figure starting at 7 still fits the row. So "text beside image"
+ * needs no wrapper, and "image on its own row" is just asking for a column to
+ * the left of the cursor.
  */
+
+/* Where a block sits on the section grid. Prose is deliberately absent —
+   body copy never moves off the spine, which is what keeps a page with
+   figures flying around it readable. */
+export type Place =
+  | 'right'
+  | 'left'
+  | 'wide'
+  | 'inset'
+  | 'bleed-right'
+  | 'bleed-left'
+
+const AT: Record<Place, string> = {
+  right: 'cs-at-right',
+  left: 'cs-at-left',
+  wide: 'cs-at-wide',
+  inset: 'cs-at-inset',
+  'bleed-right': 'cs-at-bleed-right',
+  'bleed-left': 'cs-at-bleed-left',
+}
+
+export const at = (place?: Place) => (place ? AT[place] : '')
 
 export function Section({
   eyebrow,
@@ -19,12 +49,74 @@ export function Section({
   children: React.ReactNode
 }) {
   return (
-    <Reveal as="section" className="mt-20">
-      {eyebrow && <span className="cs-eyebrow">{eyebrow}</span>}
-      {headline && <h2 className="cs-headline">{headline}</h2>}
+    <Reveal as="section" className="cs-sec">
+      {/* One grid item, not two: an eyebrow and its headline are a single
+          block of type and must not be split by the grid's row gap. */}
+      {(eyebrow || headline) && (
+        <header>
+          {eyebrow && <span className="cs-eyebrow">{eyebrow}</span>}
+          {headline && <h2 className="cs-headline">{headline}</h2>}
+        </header>
+      )}
       {children}
     </Reveal>
   )
+}
+
+/*
+ * A figure as a canvas object: a mono layer-name floating above it, a 1px
+ * ring and a deep shadow so it sits ON the dot grid rather than in it, and
+ * a caption underneath. Same two devices as the home page's canvas cards —
+ * this is most of what makes a study read as the same world as the canvas.
+ *
+ * `label` is the layer name, in the canvas's own voice ("03 · RESULTS").
+ * `place` is where it lands; omitted, it sits on the spine like prose.
+ * `bare` drops the frame for the interactive pieces that bring their own
+ * chrome — a tab strip or a segmented control boxed inside a screenshot
+ * frame reads as a screenshot of a control rather than a control.
+ */
+export function CanvasFig({
+  label,
+  caption,
+  place,
+  bare = false,
+  className = '',
+  children,
+}: {
+  label?: string
+  caption?: React.ReactNode
+  place?: Place
+  bare?: boolean
+  className?: string
+  children: React.ReactNode
+}) {
+  return (
+    <figure className={`cs-fig ${at(place)} ${className}`.trim()}>
+      {label && (
+        <span className="cs-fig__label" aria-hidden="true">
+          {label}
+        </span>
+      )}
+      {bare ? children : <div className="cs-fig__frame">{children}</div>}
+      {caption && <figcaption className="cs-cap">{caption}</figcaption>}
+    </figure>
+  )
+}
+
+/*
+ * A plain block placed on the grid — for the things that aren't figures but
+ * still need to leave the spine (the skills table, a tab strip, a timeline).
+ */
+export function Place({
+  place,
+  className = '',
+  children,
+}: {
+  place?: Place
+  className?: string
+  children: React.ReactNode
+}) {
+  return <div className={`${at(place)} ${className}`.trim()}>{children}</div>
 }
 
 export const Prose = ({
