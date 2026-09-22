@@ -1,13 +1,13 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { useLukeAi } from './LukeAiProvider'
 import LukeAiThread from './LukeAiThread'
 import LukeAiComposer, { type ComposerHandle } from './LukeAiComposer'
 import { useAutoScroll } from './useAutoScroll'
 import { TermTitle, IconPlus, IconMaximize, IconMinimize } from './TermChrome'
-import { SUGGESTIONS } from '@/lib/lukeAiStorage'
+import { suggestionsFor } from '@/lib/lukeAiSuggestions'
 
 /*
  * The live Luke AI window, rendered inside the site-wide dock (LukeAiDock,
@@ -22,13 +22,19 @@ import { SUGGESTIONS } from '@/lib/lukeAiStorage'
  * thread — mid-stream, even — and coming back finds it here again.
  *
  * The suggested questions are the pitch (SUGGESTIONS in lib/lukeAiStorage,
- * shared with /chat). Each one sends a prompt the system prompt is built
- * to answer well; the note under them points at the thing a static page
- * cannot do — paste a job description, get a fit map.
+ * chosen by route in lib/lukeAiSuggestions). Each one sends a prompt the
+ * system prompt is built to answer well, and each asks for something the
+ * page underneath cannot give — the call that didn't make the write-up,
+ * what got cut, what he'd change now. The note under them points at the
+ * other thing a static page cannot do: paste a job description, get a fit
+ * map.
  */
 
 export default function LukeAiCard({ onClose }: { onClose?: () => void } = {}) {
   const router = useRouter()
+  /* The dock opens next to whatever the visitor is reading, so the four
+     questions in the zero state are the four for that page. */
+  const suggestions = suggestionsFor(usePathname())
   const { messages, phase, busy, send, startNew } = useLukeAi()
   const [input, setInput] = useState('')
   const bodyRef = useRef<HTMLDivElement>(null)
@@ -93,7 +99,7 @@ export default function LukeAiCard({ onClose }: { onClose?: () => void } = {}) {
       </header>
 
       <div className="ai-card__body" ref={bodyRef}>
-        <LukeAiThread surface="card" suggestions={SUGGESTIONS} />
+        <LukeAiThread surface="card" suggestions={suggestions} />
       </div>
 
       <div className="ai-card__foot">
