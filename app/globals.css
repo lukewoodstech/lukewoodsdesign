@@ -317,7 +317,8 @@ p a {
 .term-hist__modal-cancel:focus-visible,
 .term-hist__modal-delete:focus-visible,
 .readme-cta__mail:focus-visible,
-.pstack__dot:focus-visible {
+.pstack__dot:focus-visible,
+.kwc__arrow:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
@@ -5749,67 +5750,71 @@ p a {
 
 /* ── 06 Kind words ───────────────────────────────────────── */
 
-/* Masonry, not a grid: a recommendation is however long it is, and two
-   balanced columns let each card end where its quote ends. A grid would
-   stretch every card in a row to the tallest, which is the empty-box
-   problem the carousel had. */
-.kw {
-  columns: 2;
-  column-gap: 1.25rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-/* Opaque, like the role cards above — the section's dot grid reads
-   straight through a translucent tile. No hover state: nothing here is
-   a link, and a glow that suggests otherwise is a control that lies. */
-.kw__card {
-  break-inside: avoid;
-  margin: 0 0 1.25rem;
-  padding: 1.5rem 1.6rem 1.4rem;
+/* One quote at a time in a single wide panel: tiles on the left with
+   the writer's face set into them, their words on the right. The panel
+   clips — the tile wall is drawn larger than the space it sits in and
+   runs off the top, bottom and left edges, which is what stops it
+   reading as a tidy little 3x4 table. */
+.kwc {
+  /* One place for the quote's type size, because the six-line floor
+     below is measured in it and `em` on the blockquote would measure
+     the inherited 16px instead. */
+  --kwc-size: clamp(1.2rem, 1.7vw, 1.6rem);
+  --kwc-leading: 1.32;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 21rem) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  overflow: hidden;
   border: 1px solid var(--card-ring);
   border-radius: var(--ab-tray-r);
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.015) 45%, transparent 75%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.012) 45%, transparent 75%),
     var(--mono-tile);
 }
 
-.kw__fig,
-.kw__quote {
-  margin: 0;
-}
-
-.kw__quote p {
-  margin: 0;
-  font-size: var(--reading-size);
-  line-height: var(--reading-leading);
-  color: rgba(255, 255, 255, 0.86);
-  text-wrap: pretty;
-}
-
-.kw__who {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  margin-top: 1.4rem;
-}
-
-.kw__face {
+.kwc__wall {
   position: relative;
-  flex: none;
+}
+
+.kwc__cols {
+  position: absolute;
+  top: -2.5rem;
+  right: 0;
+  bottom: -2.5rem;
+  left: -4.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.15rem;
+}
+
+.kwc__col {
+  display: grid;
+  grid-auto-rows: 1fr;
+  gap: 1.15rem;
+  transform: translateY(var(--kw-shift, 0));
+}
+
+/* The empty cells: barely there, one step up from the panel they sit
+   on. They are texture, not content. */
+.kwc__tile {
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.045);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.kwc__face {
+  position: relative;
   display: grid;
   place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 10px;
   overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid var(--card-ring);
   background: rgba(255, 255, 255, 0.06);
 }
 
 /* No headshot: initials on a wash of the two accents, kept quiet. */
-.kw__face--mono {
-  border: 1px solid var(--card-ring);
+.kwc__face--mono {
   background-image: linear-gradient(
     160deg,
     color-mix(in srgb, var(--mono-blue) 26%, transparent),
@@ -5817,36 +5822,138 @@ p a {
   );
 }
 
-.kw__img {
+.kwc__img {
   object-fit: cover;
+  animation: kwc-in 0.5s var(--ease-out-quint) both;
 }
 
-.kw__initials {
+.kwc__initials {
   font-family: var(--font-mono);
-  font-size: var(--label-micro);
+  font-size: var(--label-size);
   letter-spacing: 0.06em;
   color: rgba(255, 255, 255, 0.85);
 }
 
-.kw__id {
-  display: grid;
-  gap: 0.1rem;
-  min-width: 0;
+.kwc__panel {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: clamp(2rem, 4vw, 3.25rem) clamp(1.5rem, 4vw, 3.5rem) clamp(1.75rem, 3vw, 2.75rem) 0;
 }
 
-.kw__name {
-  font-size: 0.9375rem;
+.kwc__mark {
+  font-size: 3.5rem;
+  line-height: 0.72;
   font-weight: var(--display-weight);
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.22);
 }
 
-.kw__title {
-  font-family: var(--font-mono);
-  font-size: var(--label-micro);
-  /* 0.45 measured 4.49:1, a hair under. */
+/* Seven lines whether the quote fills them or not: the byline and the
+   arrows below have to stay where they are when it advances. The
+   quotes in lib/about.ts are cut to five to seven lines, so the most
+   air a short one can leave is two. */
+.kwc__quote {
+  /* Bottom-aligned inside that floor: a short quote keeps its distance
+     from the byline and leaves its slack up under the quote mark,
+     where it reads as air rather than as a hole. */
+  display: flex;
+  align-items: flex-end;
+  margin: 1.25rem 0 0;
+  min-height: calc(7 * var(--kwc-leading) * var(--kwc-size) * var(--kwc-line-scale, 1));
+}
+
+.kwc__quote p {
+  margin: 0;
+  max-width: 26em;
+  font-size: var(--kwc-size);
+  font-weight: var(--display-weight);
+  letter-spacing: -0.012em;
+  line-height: var(--kwc-leading);
+  color: rgba(255, 255, 255, 0.94);
+  text-wrap: pretty;
+  animation: kwc-in 0.5s var(--ease-out-quint) both;
+}
+
+.kwc__who {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  /* Long enough for the longest byline on one line — a second line
+     would push the arrows down for that one quote — and still short of
+     the Luke AI dock in the bottom-right corner of the section. */
+  max-width: 40em;
+  margin-top: 1.5rem;
+  font-size: var(--reading-meta);
+  animation: kwc-in 0.5s 0.05s var(--ease-out-quint) both;
+}
+
+.kwc__name {
+  font-weight: var(--display-weight);
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.kwc__org {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.kwc__dot,
+.kwc__role {
+  /* 0.62 measured over --mono-tile; 0.45 was a hair under AA. */
   color: rgba(255, 255, 255, 0.62);
 }
 
+/* The company mark, same file the experience timeline uses — a square
+   tile, so it gets the same dark ground and rounded corner there. */
+.kwc__logo {
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 4px;
+  object-fit: cover;
+  background: #15151a;
+}
+
+.kwc__nav {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1.6rem;
+}
+
+.kwc__arrow {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid var(--card-ring);
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.68);
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.kwc__arrow:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.38);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+@keyframes kwc-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 /* ── 07 Let's talk ───────────────────────────────────────────────── */
 
@@ -5960,14 +6067,54 @@ p a {
     grid-column: span 1;
   }
 
-  /* One column of cards — two at phone width would be two of nothing. */
-  .kw {
-    columns: 1;
+  /* Three columns of tiles on a phone is three columns of nothing, so
+     the wall goes and the face comes back as one tile over the quote. */
+  .kwc {
+    --kwc-size: 1.0625rem;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 1.6rem 1.5rem 1.5rem;
   }
 
-  .kw__card {
-    padding: 1.35rem 1.4rem 1.25rem;
+  .kwc__wall {
+    min-height: 0;
   }
+
+  .kwc__cols {
+    position: static;
+    display: block;
+  }
+
+  .kwc__col {
+    display: contents;
+  }
+
+  .kwc__tile {
+    display: none;
+  }
+
+  .kwc__face {
+    display: grid;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 10px;
+  }
+
+  .kwc__panel {
+    padding: 1.25rem 0 0;
+  }
+
+  .kwc__mark {
+    font-size: 2.75rem;
+  }
+
+  /* The lines are shorter here, but the type is smaller too, so seven
+     is still the count that holds every quote from about 480px up. */
+  .kwc__quote {
+    margin-top: 0.9rem;
+  }
+
+
 
   .talk {
     flex-direction: column;
@@ -5977,6 +6124,18 @@ p a {
 }
 
 @media (max-width: 48em) {
+  /* Two lines: the name, then who they are. The dot between them is
+     only a separator, and a separator at the start of a line is noise. */
+  .kwc__who {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  .kwc__dot {
+    display: none;
+  }
+
   .tl-card__head {
     grid-template-columns: 2.5rem minmax(0, 1fr);
   }
@@ -5993,6 +6152,14 @@ p a {
   }
 }
 
+/* Narrow phones only: the same words run an eighth line here, and the
+   floor has to cover the longest quote or the arrows move. */
+@media (max-width: 27em) {
+  .kwc__quote {
+    --kwc-line-scale: 1.15;
+  }
+}
+
 /* ── Reduced motion ──────────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
@@ -6005,8 +6172,18 @@ p a {
   .tl-card,
   .tl-node,
   .rr__card,
-  .talk__arrow {
+  .talk__arrow,
+  .kwc__arrow {
     transition: none;
+  }
+
+  /* The panel no longer advances on its own for this reader (see
+     components/about/Testimonials.tsx); the arrows still work, and the
+     quote they bring in simply appears. */
+  .kwc__img,
+  .kwc__quote p,
+  .kwc__who {
+    animation: none;
   }
 
   .tl-card {

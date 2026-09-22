@@ -162,18 +162,23 @@ export type Tool = {
   /** No glyph exists for this one, so the tile sets its name in type. */
   wordmark?: boolean
   /** Where Luke actually used it. Only tools with a sourceable story get
-      one, and only those tiles are interactive. `cta` overrides the link
-      label, which otherwise assumes the href is a case study. */
+      one. Every tile is interactive either way; one without provenance
+      just names itself. `cta` overrides the link label, which otherwise
+      assumes the href is a case study. */
   provenance?: { line: string; href?: string; cta?: string }
 }
 
 /* `provenance` is the one line that says where Luke actually used the
-   tool, and it is the whole point of the tray being interactive: a tile
-   with a real story is tappable and focusable, a tile without one is
-   just a tile. Nothing here may be invented — every line below traces to
-   a case study's own copy or to BACKGROUND.site in lib/lukeAiFacts.ts.
-   Tools with no sourceable story (Cursor, Framer, TypeScript, Python,
-   Git, Node) deliberately carry none rather than a generic sentence.
+   tool. Nothing here may be invented — every line below traces to a case
+   study's own copy or to BACKGROUND.site in lib/lukeAiFacts.ts. Tools
+   with no sourceable story (Cursor, Framer, TypeScript, Python, Git,
+   Node, Notion) deliberately carry none rather than a generic sentence.
+
+   They are still tappable, focusable and draggable: picking one up puts
+   its name on the plate and stops there. That used to be the difference
+   between an interactive tile and an inert one, which meant half the
+   tray answered a tap and half of it ignored you, with nothing on the
+   tile to say which was which.
 
    `wordmark: true` is for a tool with no Simple Icons glyph; the tile
    sets its name in type instead of masking an SVG. */
@@ -243,6 +248,19 @@ export const TOOLS: ReadonlyArray<Tool> = [
   },
   { name: 'Python', icon: '/tools/python.svg', color: '#3776ab' },
   { name: 'Git', icon: '/tools/git.svg', color: '#f05032' },
+  {
+    name: 'GitHub',
+    icon: '/tools/github.svg',
+    color: '#181717',
+    provenance: {
+      line: 'Awardco prototypes were iterated on a real branch with the frontend engineers, not handed over as mocks.',
+      href: '/work/awardco-login-flow-redesign',
+    },
+  },
+  /* No provenance: Notion is a tool Luke names, and no project on this
+     site points at it. The tile still says its own name when you pick
+     it up, which is all the truth layer supports. */
+  { name: 'Notion', icon: '/tools/notion.svg', color: '#000000' },
   { name: 'Node', icon: '/tools/nodedotjs.svg', color: '#3c873a' },
   { name: 'Cursor', icon: '/tools/cursor.svg', color: '#1a1a1a' },
 ]
@@ -427,22 +445,30 @@ export const REPTILE_ROOM: ReadonlyArray<RoomBlock> = [
    the end and joining the writer’s own paragraphs; if a cut would
    change what they meant, it’s the wrong cut.
 
-   Two of these are excerpts: Jiaqi’s and Julie’s run longer on
-   LinkedIn than the panel wants, so each stops at the last complete
-   sentence Luke supplied. Jeenu’s has one typo fixed — “wok” →
-   “work” — which is the whole list of changes made to anyone’s words.
+   The panel shows one quote at a time (see
+   components/about/Testimonials.tsx), which means it has to pick a
+   height, which means these have to be roughly the same length. Three
+   of them are therefore excerpts — Jiaqi’s, Julie’s and Joshua’s stop
+   at a complete sentence short of where LinkedIn ends — and everything
+   here runs five to seven lines in the panel, which is the seven the
+   panel reserves. If you add a longer one, cut it from the end rather
+   than letting the panel grow an eighth line for one quote and leave
+   it empty for the other five. Jeenu’s has one typo fixed — “wok” →
+   “work” — which is the whole list of changes made to anyone’s
+   words.
 
    To add another: `avatar` is a headshot at
    /about/quotes/<first-last>.jpg. The tile is square and object-fit
    cover, so a LinkedIn photo drops straight in; 600px is plenty, since
-   the panel never shows it wider than 15rem. No headshot is fine —
-   leave `avatar: null` and the carousel draws their initials instead.
-   Order here is the order they’re shown in.
+   the wall never shows it wider than about 8rem. No headshot is fine —
+   leave `avatar: null` and the wall draws their initials instead.
+   `logo` is the company mark in public/logos, the same file the
+   experience timeline uses; null just drops the mark from the byline.
+   Order here is the order they’re shown in, and the panel loops.
 
    `placeholder: true` still works and still draws the loud yellow tag;
-   nothing uses it now. One quote in this array means the carousel
-   renders no arrows and no counter, by design — see
-   components/about/Testimonials.tsx. */
+   nothing uses it now. One quote in this array means no arrows and no
+   auto-advance, by design — see components/about/Testimonials.tsx. */
 
 export type Quote = {
   id: string
@@ -452,6 +478,8 @@ export type Quote = {
   org: string
   /** Path under /public, e.g. '/about/quotes/dan-littlewood.jpg'. */
   avatar: string | null
+  /** Company mark under /public/logos, or null for no mark. */
+  logo?: string | null
   placeholder?: boolean
 }
 
@@ -459,20 +487,22 @@ export const QUOTES: ReadonlyArray<Quote> = [
   {
     id: 'jiaqi-zhuo',
     quote:
-      'I had the pleasure of managing Luke as a UX intern at Lucid this summer, where he worked on our doclist AI hub \u2014 a fast-moving product area that pushed him from day one. What stood out right away was his execution instinct. He\u2019s the kind of designer who digs in and builds \u2014 strong technical chops, not afraid to prototype at fidelity. Over the course of the internship, I watched him grow into a sharper design thinker: more comfortable sitting in the divergent space, presenting multiple directions with real tradeoffs, and bringing a clear point of view instead of just a solution.',
+      'I had the pleasure of managing Luke as a UX intern at Lucid this summer, where he worked on our doclist AI hub — a fast-moving product area that pushed him from day one. What stood out right away was his execution instinct.',
     name: 'Jiaqi Zhuo',
     title: 'Senior UX Designer',
     org: 'Lucid',
     avatar: '/about/quotes/jiaqi-zhuo.jpg',
+    logo: '/logos/lucid.png',
   },
   {
     id: 'julie-barnes-broadbent',
     quote:
-      'Luke was a pleasure to manage during his internship at Pattern. He consistently brought enthusiasm and curiosity to his work, readily taking on new projects and putting in the effort to learn whatever he needed to succeed. I especially appreciated that he wasn\u2019t afraid to reach out to others, ask questions, and learn from the people around him. Even when expectations were stressful, Luke maintained a positive attitude and a willingness to keep moving forward.',
+      'Luke was a pleasure to manage during his internship at Pattern. He consistently brought enthusiasm and curiosity to his work, readily taking on new projects and putting in the effort to learn whatever he needed to succeed.',
     name: 'Julie Barnes Broadbent',
     title: 'Senior UX Designer',
     org: 'Pattern',
     avatar: '/about/quotes/julie-barnes-broadbent.jpg',
+    logo: '/logos/pattern.png',
   },
   {
     id: 'anirudh-muthukumar',
@@ -482,6 +512,7 @@ export const QUOTES: ReadonlyArray<Quote> = [
     title: 'Senior Software Engineer',
     org: 'Lucid',
     avatar: '/about/quotes/anirudh-muthukumar.jpg',
+    logo: '/logos/lucid.png',
   },
   {
     id: 'jeenu-lee',
@@ -491,14 +522,16 @@ export const QUOTES: ReadonlyArray<Quote> = [
     title: 'Founder & CEO',
     org: 'Hoth',
     avatar: '/about/quotes/jeenu-lee.jpg',
+    logo: '/logos/hoth.png',
   },
   {
     id: 'joshua-perkey',
     quote:
-      'Talented, creative, a real go-getter. Luke is a pleasure to work with. He worked as a web developer and programmer on my team. Luke thrives on learning, quickly researching and finding solutions to problems, offering solutions, and enhancing the experience around him. A great asset to any team!',
+      'Talented, creative, a real go-getter. Luke is a pleasure to work with. He worked as a web developer and programmer on my team. Luke thrives on learning, quickly researching and finding solutions to problems, offering solutions, and enhancing the experience around him.',
     name: 'Joshua Perkey',
     title: 'Senior Communications Director',
     org: 'BYU College of Humanities',
     avatar: '/about/quotes/joshua-perkey.jpg',
+    logo: '/logos/byu.svg',
   },
 ]
