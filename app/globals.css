@@ -1975,82 +1975,50 @@ p a {
   font-weight: 600;
 }
 
-/* @mention mock — the design file's own components, rebuilt in page code
-   because the Figma frame lists real teammates and their work emails.
-   Sizes are the design file's: 480×32 input, 327px menu, 8px radius. */
-.lcs-mentionmock {
+/* @mention figure — the design file's own exported components, composed on
+   one white card in the order the interaction runs: type, pick, resolved.
+   Coordinates are the design file's own, in a 560×560 box: the 480×32
+   input at the top, the 327px menu hanging under the mention, and the two
+   resolved states below. The menu export is cropped to the component's own
+   327px bounds — Figma bleeds the canvas fill into the shadow margin, which
+   read as a stray beige block on the card. */
+.lcs-mentionfig {
   position: relative;
-  width: min(100%, 520px);
-  padding: 2rem 1.5rem 2.25rem;
+  width: 100%;
+  aspect-ratio: 560 / 580;
+  padding: 24px;
   border-radius: 10px;
   background: #fff;
 }
 
-.lcs-mentionmock__input {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  height: 32px;
-  padding: 0 8px;
-  border: 1px solid #ced4db;
-  border-radius: 4px;
-  background: #fff;
-  font-size: 14px;
-  line-height: 16px;
-  overflow: hidden;
-}
-
-/* The open menu overlays this second row, the way the real dropdown does;
-   closed, a shorter gap keeps the block from looking half empty. */
-.lcs-mentionmock__input--second { margin-top: 96px; }
-
-.lcs-mentionmock__caret {
-  display: inline-block;
-  width: 1px;
-  height: 14px;
-  margin-left: 1px;
-  background: #282c33;
-  vertical-align: -2px;
-  animation: lcs-caret 1s steps(2, jump-none) infinite;
-}
-
-@keyframes lcs-caret { 50% { opacity: 0; } }
-
-.lcs-mentionmock__menu {
+.lcs-mentionfig__stage {
   position: absolute;
-  left: calc(1.5rem + 110px);
-  top: calc(2rem + 36px);
-  z-index: 1;
-  width: 327px;
-  padding: 8px 0;
-  border-radius: 8px;
-  background: #fff;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-  transition: opacity 0.18s ease, transform 0.18s var(--ease-out-quint);
+  inset: 24px;
 }
 
-.lcs-mentionmock__menu--hidden {
-  opacity: 0;
-  transform: translateY(-4px);
-  pointer-events: none;
+.lcs-mentionfig img {
+  position: absolute;
+  height: auto;
 }
 
-.lcs-mentionmock__row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 16px 4px 8px;
+/* left / top / width as a percentage of the 560-wide design box */
+.lcs-mentionfig__typing { left: 0; top: 0; width: 85.7%; }
+/* Figma bleeds the canvas fill into this node's export, so the image is
+   clipped back to the menu card itself; the radius matches its 8px corner. */
+.lcs-mentionfig__menu {
+  /* The image is inset and oversized so that the VISIBLE card lands where
+     the design file puts the menu: x 171, y 37, 327 wide in the 560 box. */
+  left: 27.5%;
+  top: 3.7%;
+  width: 64.5%;
+  clip-path: inset(4.7% 4.7% 6% 4.7% round 3%);
 }
+.lcs-mentionfig__person { left: 0; top: 74.8%; width: 85.7%; }
+.lcs-mentionfig__team   { left: 0; top: 91%; width: 85.7%; }
 
 @media (max-width: 40em) {
-  .lcs-mentionmock { padding-inline: 1rem; }
-  .lcs-mentionmock__menu { left: 1rem; width: calc(100% - 2rem); }
-  .lcs-mentionmock__input { font-size: 12px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .lcs-mentionmock__caret { animation: none; }
-  .lcs-mentionmock__menu { transition: none; }
+  .lcs-mentionfig { padding: 12px; }
+  .lcs-mentionfig__stage { inset: 12px; }
 }
 
 /* Failure-state tab panels */
@@ -5108,7 +5076,8 @@ p a {
   font-family: var(--font-mono);
   font-size: var(--label-size);
   letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.35);
+  /* 0.35 measured 3.01:1 at 13px. */
+  color: rgba(255, 255, 255, 0.58);
 }
 
 .ab-credit a {
@@ -5164,7 +5133,9 @@ p a {
 /* The caption sits over the foot of every card, so a light tile needs a
    scrim of its own or white type on near-white is unreadable. */
 .story-card--morphmarket .story-card__cap {
-  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.72));
+  /* Was 0.72 and left the first line of white 15px text at 2.8:1. The
+     scrim now starts earlier and lands darker so both lines clear 4.5. */
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.55) 38%, rgba(0, 0, 0, 0.92));
 }
 
 /* Provo, from real OpenStreetMap tiles. The crop is centred on the city,
@@ -5196,7 +5167,7 @@ p a {
 /* A light photographic tile needs the same caption scrim as the
    MorphMarket one. */
 .story-card--map .story-card__cap {
-  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.78));
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.55) 38%, rgba(0, 0, 0, 0.92));
 }
 
 /* Phones and reduced motion: a plain grid. */
@@ -5232,18 +5203,23 @@ p a {
     order: -1;
   }
 
-  /* Staggered fade-up once the grid is on screen. */
-  .story.is-static .story-card {
-    opacity: 0;
-    transform: translateY(18px);
-    transition:
-      opacity 0.5s ease,
-      transform 0.6s var(--ease-out-quint);
-  }
+  /* Staggered fade-up once the grid is on screen. Guarded on
+     no-preference: with reduced motion there is no fade to stagger, and
+     a card parked at opacity 0 waiting for a class is just a hidden
+     card. */
+  @media (prefers-reduced-motion: no-preference) {
+    .story.is-static .story-card {
+      opacity: 0;
+      transform: translateY(18px);
+      transition:
+        opacity 0.5s ease,
+        transform 0.6s var(--ease-out-quint);
+    }
 
-  .story.is-static.is-in .story-card {
-    opacity: 1;
-    transform: none;
+    .story.is-static.is-in .story-card {
+      opacity: 1;
+      transform: none;
+    }
   }
 }
 
@@ -5392,8 +5368,14 @@ p a {
 }
 
 /* Keyboard: the stretched link's focus lights the same glow and badge. */
+/* These three cards are the only keyboard route into the case studies,
+   and the old indicator was a 1.5:1 border tint plus a glow, well under
+   the 3:1 WCAG 2.4.11 asks for. A real ring, offset so it reads against
+   both the card and the grid behind it. */
 .tl-card--link:has(.tl-card__go:focus-visible) {
-  border-color: rgba(255, 255, 255, 0.22);
+  outline: 2px solid var(--accent, #4c8dff);
+  outline-offset: 3px;
+  border-color: rgba(255, 255, 255, 0.5);
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.06),
     0 0 48px rgba(120, 170, 255, 0.18),
@@ -5506,7 +5488,8 @@ p a {
   font-family: var(--font-mono);
   font-size: var(--label-size);
   letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.4);
+  /* These are the employment dates, not decoration: 0.4 measured 3.76:1. */
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .tl__ongoing {
@@ -5580,7 +5563,8 @@ p a {
   font-size: var(--label-size);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.35);
+  /* The only instruction the toolbox gives; 0.35 measured 3.12:1. */
+  color: rgba(255, 255, 255, 0.58);
   pointer-events: none;
 }
 
@@ -5683,44 +5667,67 @@ p a {
   border-color: rgba(255, 255, 255, 0.5);
 }
 
-/* ── 06 Kind words ───────────────────────────────────────────────── */
+/* ── 06 Kind words ───────────────────────────────────────── */
 
+/* Masonry, not a grid: a recommendation is however long it is, and two
+   balanced columns let each card end where its quote ends. A grid would
+   stretch every card in a row to the tallest, which is the empty-box
+   problem the carousel had. */
 .kw {
-  display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  border: 1px solid var(--card-ring);
-  border-radius: var(--ab-tray-r);
-  background: rgba(255, 255, 255, 0.035);
-  overflow: hidden;
+  columns: 2;
+  column-gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-/* One portrait, sized like a photograph rather than bled to the panel
-   edge, so headshots of any crop sit the same. */
-.kw__portrait {
-  display: grid;
-  place-items: center;
-  padding: 2.5rem;
-  min-height: 24rem;
-  border-right: 1px solid var(--card-ring);
-  background: rgba(255, 255, 255, 0.02);
+/* Opaque, like the role cards above — the section's dot grid reads
+   straight through a translucent tile. No hover state: nothing here is
+   a link, and a glow that suggests otherwise is a control that lies. */
+.kw__card {
+  break-inside: avoid;
+  margin: 0 0 1.25rem;
+  padding: 1.5rem 1.6rem 1.4rem;
+  border: 1px solid var(--card-ring);
+  border-radius: var(--ab-tray-r);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.015) 45%, transparent 75%),
+    var(--mono-tile);
+}
+
+.kw__fig,
+.kw__quote {
+  margin: 0;
+}
+
+.kw__quote p {
+  margin: 0;
+  font-size: var(--reading-size);
+  line-height: var(--reading-leading);
+  color: rgba(255, 255, 255, 0.86);
+  text-wrap: pretty;
+}
+
+.kw__who {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1.4rem;
 }
 
 .kw__face {
   position: relative;
+  flex: none;
   display: grid;
   place-items: center;
-  width: 100%;
-  max-width: 15rem;
-  aspect-ratio: 4 / 5;
-  border-radius: 14px;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 10px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.05);
-  animation: kw-in 0.5s var(--ease-out-quint);
+  background: rgba(255, 255, 255, 0.06);
 }
 
-/* No headshot: initials on a wash of the two accents. Kept quiet —
-   at this size the full-strength gradient is a billboard, and the
-   quote is the thing being read. */
+/* No headshot: initials on a wash of the two accents, kept quiet. */
 .kw__face--mono {
   border: 1px solid var(--card-ring);
   background-image: linear-gradient(
@@ -5736,122 +5743,30 @@ p a {
 
 .kw__initials {
   font-family: var(--font-mono);
-  font-size: 2.25rem;
+  font-size: var(--label-micro);
   letter-spacing: 0.06em;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.85);
 }
 
-.kw__body {
-  position: relative;
-  padding: 3rem 3rem 2.5rem;
+.kw__id {
   display: grid;
-  align-content: center;
-  gap: 1.5rem;
-}
-
-.kw__mark {
-  font-family: var(--font-mono);
-  font-size: 3.5rem;
-  line-height: 0.6;
-  color: rgba(255, 255, 255, 0.28);
-}
-
-/* Every quote occupies the same grid cell, so the card is as tall as
-   the longest one and never resizes as you click through. */
-.kw__slides {
-  display: grid;
-}
-
-.kw__slide {
-  grid-area: 1 / 1;
-  /* The cell is as tall as the longest quote, so a short one sits in
-     the middle of it rather than hanging from the top. */
-  align-self: center;
-  margin: 0;
-  opacity: 0;
-  transform: translateY(8px);
-  pointer-events: none;
-  transition:
-    opacity 0.4s var(--ease-out-quint),
-    transform 0.4s var(--ease-out-quint);
-}
-
-.kw__slide.is-on {
-  opacity: 1;
-  transform: none;
-  pointer-events: auto;
-}
-
-.kw__quote {
-  margin: 0;
-}
-
-.kw__quote p {
-  margin: 0;
-  max-width: 34rem;
-  font-size: 1.375rem;
-  font-weight: 400;
-  line-height: 1.4;
-  letter-spacing: -0.01em;
-  color: #fff;
-  text-wrap: pretty;
-}
-
-.kw__who {
-  display: grid;
-  gap: 0.15rem;
-  margin-top: 1.25rem;
+  gap: 0.1rem;
+  min-width: 0;
 }
 
 .kw__name {
+  font-size: 0.9375rem;
   font-weight: var(--display-weight);
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .kw__title {
   font-family: var(--font-mono);
-  font-size: var(--label-size);
-  color: rgba(255, 255, 255, 0.45);
+  font-size: var(--label-micro);
+  /* 0.45 measured 4.49:1, a hair under. */
+  color: rgba(255, 255, 255, 0.62);
 }
 
-.kw__nav {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.kw__btn {
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: transparent;
-  color: #fff;
-  font-family: var(--font-mono);
-  font-size: 1rem;
-  cursor: pointer;
-  transition:
-    border-color 0.15s ease,
-    background 0.15s ease;
-}
-
-.kw__btn:hover,
-.kw__btn:focus-visible {
-  border-color: #fff;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.kw__count {
-  font-family: var(--font-mono);
-  font-size: var(--label-size);
-  letter-spacing: 0.1em;
-  color: rgba(255, 255, 255, 0.45);
-}
-
-@keyframes kw-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: none; }
-}
 
 /* ── 07 Let's talk ───────────────────────────────────────────────── */
 
@@ -5903,9 +5818,15 @@ p a {
   color: #fff;
 }
 
+/* The base toast centres itself with translate(-50%); pinning it left
+   without resetting that transform pushed it 46px off the left edge, so
+   it read as "OPIED" on a phone. `top` is also cleared because the base
+   rule still had one live alongside this `bottom`. */
 .talk .email-link__toast {
   left: 0;
+  top: auto;
   bottom: -1.5rem;
+  transform: translate(0, 0);
 }
 
 /* ── Phones ──────────────────────────────────────────────────────── */
@@ -5959,29 +5880,13 @@ p a {
     grid-column: span 1;
   }
 
+  /* One column of cards — two at phone width would be two of nothing. */
   .kw {
-    grid-template-columns: 1fr;
+    columns: 1;
   }
 
-  /* Stacked: the portrait becomes a band above the quote, so it shrinks
-     and the hairline moves from its right edge to its bottom. */
-  .kw__portrait {
-    min-height: 0;
-    padding: 2rem 1.5rem;
-    border-right: 0;
-    border-bottom: 1px solid var(--card-ring);
-  }
-
-  .kw__face {
-    max-width: 9rem;
-  }
-
-  .kw__body {
-    padding: 1.75rem 1.5rem 1.5rem;
-  }
-
-  .kw__quote p {
-    font-size: 1.125rem;
+  .kw__card {
+    padding: 1.35rem 1.4rem 1.25rem;
   }
 
   .talk {
@@ -6020,8 +5925,7 @@ p a {
   .tl-card,
   .tl-node,
   .rr__card,
-  .talk__arrow,
-  .kw__btn {
+  .talk__arrow {
     transition: none;
   }
 
@@ -6036,17 +5940,6 @@ p a {
   }
 
   .tl-item::before {
-    transform: none;
-  }
-
-  .kw__face {
-    animation: none;
-  }
-
-  /* The slide still has to appear and disappear — it just does it
-     without the fade or the lift. */
-  .kw__slide {
-    transition: none;
     transform: none;
   }
 
@@ -6428,38 +6321,88 @@ p a {
 
 /* ── The "hover me" tag ── */
 
-.hero-tip {
+/* ── The hint: pixel Luke leans in from the foot of the first screen ──
+   Scenery, never a control: nothing here takes a pointer. He sits at the
+   bottom-left so he never lands on the sentence, and slides out of frame
+   when he's done. */
+
+.hero-peek {
   position: absolute;
-  left: 0;
-  top: 0;
+  left: clamp(1rem, 5vw, 5rem);
+  bottom: 0;
   z-index: 2;
-  padding: 0.35em 0.8em;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(24%);
+  transition: opacity 0.35s ease, transform 0.5s var(--ease-out-quint);
+}
+
+.hero-peek.is-on {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 2 css px per sprite pixel: whole multiples only, or the pixels blur. */
+.hero-peek__face {
+  display: block;
+  width: 128px;
+  height: 112px;
+  /* Cropped at the bottom edge: he's leaning in, not floating. */
+  margin-bottom: -28px;
+}
+
+/* The speech bubble: terminal furniture, sharp corners, the site blue. */
+.hero-peek__say {
+  margin: 0 0 2.6rem;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid rgba(0, 143, 255, 0.55);
+  border-radius: 4px;
+  background: #101010;
   font-family: var(--font-mono);
   font-size: var(--label-size);
   letter-spacing: 0.02em;
   white-space: nowrap;
-  color: #fff;
-  background: #2f7cf6;
-  border-radius: 999px;
-  box-shadow: 0 0 14px rgba(47, 124, 246, 0.7);
-  transform-origin: 0 0;
-  opacity: 0;
-  filter: blur(5px);
-  scale: 0.75;
-  transition: opacity 0.25s ease, filter 0.25s ease, scale 0.25s var(--ease-out-quint);
-  pointer-events: none;
+  color: var(--mono-blue);
 }
 
-.hero-tip.is-on {
-  opacity: 1;
-  filter: blur(0);
-  scale: 1;
+.hero-peek__up {
+  margin-left: 0.35rem;
+  opacity: 0.8;
 }
 
-/* Nothing to hover with on a touch screen; the tap does the work. */
+/* A pointer hovers, a finger taps: only one of these is ever true. */
+.hero-peek__say-tap {
+  display: none;
+}
+
 @media (hover: none) {
-  .hero-tip {
+  .hero-peek__say-hover {
     display: none;
+  }
+
+  .hero-peek__say-tap {
+    display: inline;
+  }
+}
+
+/* No room beside the sentence on a phone: he tucks into the corner. */
+@media (max-width: 47.99em) {
+  .hero-peek {
+    left: 0.75rem;
+    gap: 0.35rem;
+  }
+
+  .hero-peek__face {
+    width: 96px;
+    height: 84px;
+    margin-bottom: -22px;
+  }
+
+  .hero-peek__say {
+    margin-bottom: 2rem;
   }
 }
 
@@ -6944,6 +6887,13 @@ p a {
    neighbours; a stat strip can ask for the smaller cut. */
 .cs-bigstats--sm .cs-bigstat__num { font-size: clamp(2.75rem, 6.5vw, 4.75rem); }
 
+/* Sized to fit its column rather than to match the numerals: at 390px a
+   167px track cannot hold "Nationwide" at 6.5vw. */
+.cs-bigstat--word .cs-bigstat__num,
+.cs-bigstats--sm .cs-bigstat--word .cs-bigstat__num {
+  font-size: clamp(1.5rem, 5vw, 2.75rem);
+}
+
 .cs-bigstat__cap {
   display: block;
   margin: 0.55rem auto 0;
@@ -7377,14 +7327,20 @@ p a {
 }
 
 /* The stem: from the label's centre down into the picture's gutter. */
+/* The run from the caption into the picture is ONE line: same 2px width,
+   same colour and same dark halo as the segments drawn over the image, and
+   it ends exactly where the stage begins. A 1px stem with no halo was the
+   tell that two different things were being drawn. */
 .cs-callouts__labels li::after {
   content: '';
   position: absolute;
   left: 50%;
   bottom: 0;
-  width: 1px;
+  width: 2px;
   height: 2rem;
+  margin-left: -1px;
   background: var(--co);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5);
   transform: scaleY(0);
   transform-origin: top center;
 }

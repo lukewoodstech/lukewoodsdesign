@@ -9,7 +9,6 @@ import {
   useState,
   type CSSProperties,
   type FocusEvent as ReactFocusEvent,
-  type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent,
   type RefObject,
 } from 'react'
@@ -18,6 +17,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { SITE } from '@/lib/site'
 import { STORY } from '@/lib/about'
 import { useReducedMotion } from '@/lib/useReducedMotion'
+import HeroPeek from '@/components/HeroPeek'
 
 /*
  * The hero intro (2026-09-21), after the opening of
@@ -58,10 +58,11 @@ import { useReducedMotion } from '@/lib/useReducedMotion'
  * that word for as long as it lasts, and the cycle carries on from there
  * afterwards. Under reduced motion nothing turns over on its own.
  *
- * A blue "hover me" tag trails the pointer over the hero until the
- * visitor has found a hot word, then stays away for the session. Touch
- * devices toggle a mode by tapping the word and never see the tag.
- * Keyboard focus on a word opens its mode too.
+ * Nothing marks the hot words, so pixel Luke (HeroPeek) leans in from
+ * the foot of the screen a few seconds in and says "hover me" — up to
+ * three times, and never again once a word has been opened. Touch
+ * devices toggle a mode by tapping the word, and he says "tap me"
+ * there. Keyboard focus on a word opens its mode too.
  *
  * The first screen of the homepage (Home), at every width.
  */
@@ -106,7 +107,7 @@ const WORD_COUNT = LINES.flat().length
 
 /* What assistive tech reads: the resting sentence, once. */
 const SENTENCE = `${SITE.name} is a creative & impact-driven ${TAILS.rest}`
-const TIP_SEEN_KEY = 'hero-tip-seen'
+export const TIP_SEEN_KEY = 'hero-tip-seen'
 
 /*
  * Where a decoration sits. `y` is a percentage of a box drawn around the
@@ -360,15 +361,11 @@ export default function HeroIntro() {
      sentence. */
   const [auto, setAuto] = useState<Mode>('impact')
   const state: State = mode ?? auto
-  const [tipOn, setTipOn] = useState(false)
-  const tipRef = useRef<HTMLSpanElement>(null)
+  /* Whether the hot words have been found this session. The ref is the
+     one the pointer handlers read; the state is what silences the peek,
+     and it only ever flips inside an event, never in an effect. */
   const seenRef = useRef(false)
-
-  useEffect(() => {
-    try {
-      seenRef.current = sessionStorage.getItem(TIP_SEEN_KEY) === '1'
-    } catch {}
-  }, [])
+  const [seen, setSeen] = useState(false)
 
   /* The cycle: paused while a word is hovered, and restarted from that
      word's role when the hover ends, so the ending never rolls away the
@@ -385,7 +382,7 @@ export default function HeroIntro() {
   const open = (m: Mode) => {
     setMode(m)
     setAuto(m)
-    setTipOn(false)
+    setSeen(true)
     if (!seenRef.current) {
       seenRef.current = true
       try {
@@ -425,21 +422,6 @@ export default function HeroIntro() {
     setMode(null)
   }
 
-  /* The tag rides the pointer, positioned by hand rather than through
-     state so a mousemove never re-renders the headline. */
-  const onMove = (e: ReactMouseEvent<HTMLDivElement>) => {
-    const tip = tipRef.current
-    if (!tip || seenRef.current || mode) return
-    const target = e.target as Element
-    if (target.closest('.hero-hot, .intro-links')) {
-      setTipOn(false)
-      return
-    }
-    const r = e.currentTarget.getBoundingClientRect()
-    tip.style.transform = `translate(${e.clientX - r.left + 18}px, ${e.clientY - r.top + 18}px)`
-    setTipOn(true)
-  }
-
   const entrance = (i: number) =>
     reducedMotion
       ? {}
@@ -456,8 +438,6 @@ export default function HeroIntro() {
   return (
     <div
       className={`hero-intro${mode ? ` is-open is-${mode}` : ''}`}
-      onMouseMove={onMove}
-      onMouseLeave={() => setTipOn(false)}
     >
       <div className="hero-intro__body">
       {/* ── The decorations, one group per mode, all mounted so a mode
@@ -561,9 +541,7 @@ export default function HeroIntro() {
         </motion.div>
       </div>
 
-      <span ref={tipRef} className={`hero-tip${tipOn ? ' is-on' : ''}`} aria-hidden="true">
-        hover me
-      </span>
+      <HeroPeek silenced={seen || mode !== null} />
     </div>
   )
 }

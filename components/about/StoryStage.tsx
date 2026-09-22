@@ -107,9 +107,13 @@ export default function StoryStage({
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const desktop = window.matchMedia(DESKTOP)
 
-    /* ── Phone / reduced motion: no scrub ── */
+    /* ── Phone / reduced motion: no scrub ──
+       `is-in` matters: under 60em the static deck starts at opacity 0 and
+       only the `.is-static.is-in` rule reveals it. Without it, a reduced
+       motion visitor on a narrow screen scrolled past 1774px of empty dot
+       grid where the entire deck, portrait included, should have been. */
     if (reduce) {
-      sec.classList.add('is-static', 'is-ready')
+      sec.classList.add('is-static', 'is-ready', 'is-in')
       return
     }
 
@@ -177,8 +181,12 @@ export default function StoryStage({
         const o = 1 - smooth(clamp01(p / INTRO_OUT))
         introEl.style.opacity = o.toFixed(3)
         introEl.style.transform = `translate3d(0, ${(-24 * (1 - o)).toFixed(2)}px, 0)`
-        /* Once it's invisible it must stop catching clicks over the deck. */
-        introEl.style.visibility = o < 0.01 ? 'hidden' : 'visible'
+        /* Once it's invisible it must stop catching clicks over the deck.
+           This used to set visibility:hidden, which also pulled the page's
+           only <h1> out of the accessibility tree the moment you scrolled
+           past the hero — a screen reader navigating by heading found no
+           h1 at all. pointer-events does the one job that was wanted. */
+        introEl.style.pointerEvents = o < 0.01 ? 'none' : ''
       }
       items.forEach((el, i) => {
         if (el === center) {
@@ -268,7 +276,7 @@ export default function StoryStage({
       if (introRef.current) {
         introRef.current.style.opacity = ''
         introRef.current.style.transform = ''
-        introRef.current.style.visibility = ''
+        introRef.current.style.pointerEvents = ''
       }
       grid.style.transform = ''
     }

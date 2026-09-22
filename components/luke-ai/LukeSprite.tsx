@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useSyncExternalStore } from 'react'
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import {
   ACTS,
   GLOW_RECT,
@@ -95,9 +95,13 @@ const subscribeReduce = (cb: () => void) => {
 export default function LukeSprite({
   variant,
   className,
+  act: only,
 }: {
   variant: Variant
   className?: string
+  /* Play one act on a loop instead of joining the shared performance —
+     the hero's hint needs him waving, not asleep on the job. */
+  act?: ActName
 }) {
   const reduce = useSyncExternalStore(
     subscribeReduce,
@@ -105,7 +109,17 @@ export default function LukeSprite({
     () => true,
   )
   const live = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
-  const frame = reduce ? STILL : live
+  const [solo, setSolo] = useState(0)
+
+  useEffect(() => {
+    if (reduce || !only) return
+    const id = window.setInterval(() => {
+      if (!document.hidden) setSolo((n) => n + 1)
+    }, TICK_MS)
+    return () => window.clearInterval(id)
+  }, [reduce, only])
+
+  const frame = reduce ? STILL : only ? ACTS[only].frame(solo % ACTS[only].len) : live
   const paths = useMemo(() => compose(frame), [frame])
 
   return (

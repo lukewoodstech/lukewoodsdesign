@@ -148,9 +148,10 @@ export default function AboutPage() {
       {/* ── 05 Kind words ── */}
       <section className="ab-sec" aria-labelledby="kind-words">
         <div className="ab-wide">
-          <h2 className="visually-hidden" id="kind-words">
-            Kind words
-          </h2>
+          {/* The heading is visible now. The section used to be a single
+              card with a huge quote mark on it, which was label enough;
+              a wall of five cards with nothing over it is just text. */}
+          <Title id="kind-words">Kind words</Title>
           <Testimonials quotes={QUOTES} />
         </div>
       </section>

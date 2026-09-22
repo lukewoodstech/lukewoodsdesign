@@ -75,8 +75,17 @@ export default function BigStats({
       className={`cs-bigstats ${small ? 'cs-bigstats--sm' : ''} ${inView ? 'is-inview' : ''}`}
       style={{ '--n': stats.length } as React.CSSProperties}
     >
+      {/* A long word value ("Nationwide") is one unbreakable run that
+          overflows its grid track at the numeral size and gets clipped on
+          a phone. Word values get their own, smaller scale. */}
       {stats.map((stat, i) => (
-        <div key={i} className="cs-bigstat" style={{ '--i': i } as React.CSSProperties}>
+        <div
+          key={i}
+          className={`cs-bigstat${
+            typeof stat.value === 'string' && stat.value.length > 6 ? ' cs-bigstat--word' : ''
+          }`}
+          style={{ '--i': i } as React.CSSProperties}
+        >
           <span className="cs-bigstat__num">
             <span aria-hidden="true">
               {typeof stat.value === 'number' ? counts[i] : stat.value}

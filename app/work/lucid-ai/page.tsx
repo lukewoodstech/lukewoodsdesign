@@ -10,7 +10,6 @@ import ShipTimeline from '@/components/lucid/ShipTimeline'
 import HeroMock from '@/components/cs/HeroMock'
 import FailureTabs from '@/components/lucid/FailureTabs'
 import ZoomShot from '@/components/lucid/ZoomShot'
-import MentionMock from '@/components/lucid/MentionMock'
 import BigStats from '@/components/cs/BigStats'
 import Journey from '@/components/cs/Journey'
 import Callouts from '@/components/cs/Callouts'
@@ -511,13 +510,46 @@ export default function LucidCaseStudy() {
             visual={
               <figure className="m-0">
                 <div className="cs-fig__frame">
-                  <MentionMock />
+                  <div className="lcs-mentionfig">
+                    <div className="lcs-mentionfig__stage">
+                      <Image
+                        className="lcs-mentionfig__typing"
+                        src={`${IMG}/mention/typing.png`}
+                        alt="The search bar mid-mention: Find the 1 on 1 board, then an at sign and the first letters of a name"
+                        width={1440}
+                        height={96}
+                        sizes="(min-width: 60em) 460px, 90vw"
+                      />
+                      <Image
+                        className="lcs-mentionfig__menu"
+                        src={`${IMG}/mention/menu.png`}
+                        alt="The collaborator menu under the mention: people with their handle and email, and teams below them"
+                        width={981}
+                        height={981}
+                        sizes="(min-width: 60em) 345px, 65vw"
+                      />
+                      <Image
+                        className="lcs-mentionfig__person"
+                        src={`${IMG}/mention/person.png`}
+                        alt="The same query with the person resolved into a chip inside the search bar"
+                        width={1440}
+                        height={96}
+                        sizes="(min-width: 60em) 460px, 90vw"
+                      />
+                      <Image
+                        className="lcs-mentionfig__team"
+                        src={`${IMG}/mention/team.png`}
+                        alt="The same query with a team resolved into a chip: Enterprise scrum"
+                        width={1440}
+                        height={96}
+                        sizes="(min-width: 60em) 460px, 90vw"
+                      />
+                    </div>
+                  </div>
                 </div>
                 <figcaption className="cs-cap">
                   Typing @ opens the collaborator list; choosing someone resolves them into a chip
-                  the search can act on. A team resolves the same way. Rebuilt in page code from
-                  the design file&rsquo;s own components, with invented people in place of the real
-                  directory.
+                  the search can act on. A team resolves the same way.
                 </figcaption>
               </figure>
             }
@@ -699,60 +731,6 @@ export default function LucidCaseStudy() {
             <ShipTimeline />
           </Col>
         </Band>
-
-        <Col>
-          <Block>
-            <H3 dim="every dead end hands the user a next step">Failure states</H3>
-            <p className="cs-prose mt-3">
-              Failure states shipped with the release rather than after it.
-            </p>
-            <div className="mt-6">
-              <FailureTabs
-                tabs={[
-                  {
-                    label: 'Out of scope',
-                    content: (
-                      <figure className="m-0">
-                        <ZoomShot
-                          src={`${IMG}/out-of-scope.png`}
-                          alt="Asked for something it cannot do, the assistant names its limit and offers to find product roadmaps or generate a feature flowchart as buttons, then shows three roadmap results"
-                          width={2400}
-                          height={1100}
-                          eager
-                          sizes="(min-width: 60em) 800px, 100vw"
-                        />
-                        <figcaption className="cs-cap">
-                          Asked for something outside its scope, the assistant names the limit and
-                          offers two things it can do. This capture predates the compact results
-                          component.
-                        </figcaption>
-                      </figure>
-                    ),
-                  },
-                  {
-                    label: 'Working',
-                    content: (
-                      <figure className="m-0 max-w-[420px]">
-                        <ZoomShot
-                          src={`${IMG}/working-state.png`}
-                          alt="The working state: a spinner labeled generating diagram, under a scanned canvas step, naming what the assistant is doing"
-                          width={810}
-                          height={1800}
-                          eager
-                          sizes="420px"
-                        />
-                        <figcaption className="cs-cap">
-                          The working state names each step. It reuses the editor
-                          assistant&rsquo;s pattern so the two assistants stay consistent.
-                        </figcaption>
-                      </figure>
-                    ),
-                  },
-                ]}
-              />
-            </div>
-          </Block>
-        </Col>
 
         {/* ══ Final designs band ══ */}
         <Band tone="accent" className="cs-final">

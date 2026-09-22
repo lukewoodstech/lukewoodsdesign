@@ -340,7 +340,7 @@ export const ACTS: Record<ActName, Act> = {
 
 /* ── Which act comes next ── */
 
-export type Variant = 'hero' | 'chip'
+export type Variant = 'hero' | 'chip' | 'peek'
 
 export const ACT_NAMES = Object.keys(ACTS) as ActName[]
 
