@@ -307,6 +307,15 @@ function FlipTail({ state, still }: { state: State; still: boolean }) {
         const ch = text[i]
         return (
           <span key={i} className="hero-flip__cell" style={{ '--i': i } as CSSProperties}>
+            {/* The cell's own width, in the resting phrase's letter. The
+                letters that show are absolutely positioned, so without
+                this the cell measures zero until the ruler has run and
+                the whole ending piles up on itself — which is what it
+                did in the server HTML, before hydration. The measured
+                width, when it arrives, is set inline and wins. */}
+            <span className="hero-flip__sizer" aria-hidden="true">
+              {TAILS.rest[i] ?? ''}
+            </span>
             <AnimatePresence initial={false}>
               {ch !== undefined && ch !== ' ' && (
                 /* Keyed by the letter: a letter that survives the change
@@ -426,14 +435,21 @@ export default function HeroIntro() {
     setMode(null)
   }
 
-  const entrance = (i: number) =>
-    reducedMotion
-      ? {}
-      : {
-          initial: { opacity: 0, filter: 'blur(10px)', y: 10 },
-          animate: { opacity: 1, filter: 'blur(0px)', y: 0 },
-          transition: { duration: 0.8, ease: [0.23, 1, 0.32, 1] as const, delay: 0.15 + i * 0.08 },
-        }
+  /*
+   * The arrival blur is a CSS animation, not a framer-motion one, and
+   * that is the whole point: a motion `initial` renders as inline
+   * opacity:0 in the server HTML, so the sentence stayed invisible
+   * until React had hydrated. On a phone with a cold cache that is
+   * seconds of blank hero, and if hydration never lands — slow network,
+   * low memory, a tab restored in the background — it never appears at
+   * all. Luke saw exactly that, most often in a private tab. CSS runs on
+   * first paint whether or not any JavaScript arrives, so the sentence
+   * now shows up on its own and the script only adds the hovers.
+   *
+   * `--wi` is the word's place in the stagger. It is not `--i`, which
+   * the split-flap cells inside the ending already use.
+   */
+  const entrance = (i: number) => ({ style: { '--wi': i } as CSSProperties })
 
   const on = (m: Mode) => (mode === m ? ' is-on' : '')
 
@@ -501,7 +517,7 @@ export default function HeroIntro() {
             return (
               <Fragment key={word.text}>
                 {i > 0 && ' '}
-                <motion.span
+                <span
                   className={`hero-word${word.dim ? ' hero-word--dim' : ''}`}
                   {...entrance(n)}
                 >
@@ -522,7 +538,7 @@ export default function HeroIntro() {
                   ) : (
                     word.text
                   )}
-                </motion.span>
+                </span>
               </Fragment>
             )
               })}
@@ -530,7 +546,7 @@ export default function HeroIntro() {
           ))}
         </h1>
 
-        <motion.div className="hero-intro__foot" {...entrance(WORD_COUNT + 1)}>
+        <div className="hero-intro__foot" {...entrance(WORD_COUNT + 1)}>
           {/* The rule and the description exist only while a word is
               hovered (.is-open). Every subline stays in the flow, stacked in
               one grid cell, so the foot never changes height. */}
@@ -542,7 +558,7 @@ export default function HeroIntro() {
               </p>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
 
       <HeroPeek silenced={seen || mode !== null} />

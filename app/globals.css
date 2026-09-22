@@ -6299,8 +6299,30 @@ p a {
   white-space: nowrap;
 }
 
+/*
+ * The arrival: each word blurs up in turn, in CSS rather than in
+ * framer-motion, so the sentence paints whether or not the JavaScript
+ * ever lands (see the note in HeroIntro.tsx). `--wi` is the word's place
+ * in the stagger; the ending's split-flap cells use `--i`, which is why
+ * this one has a name of its own.
+ */
 .hero-word {
   display: inline-block;
+  animation: hero-word-in 0.8s var(--ease-out-quint) both;
+  animation-delay: calc(0.15s + var(--wi, 0) * 0.08s);
+}
+
+@keyframes hero-word-in {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
 }
 
 /* "is a" and "&": set back so the name and the qualities carry it. */
@@ -6350,6 +6372,15 @@ p a {
   perspective: 420px;
   transition: width 0.5s var(--ease-out-quint);
   transition-delay: calc(var(--i) * 20ms);
+}
+
+/* Invisible, in the flow: it is the cell's width until the ruler has
+   measured one (see FlipTail). It may overflow a cell that has been
+   given a narrower measured width — it is hidden, and an inline-block
+   can't widen a parent with a width of its own. */
+.hero-flip__sizer {
+  display: inline-block;
+  visibility: hidden;
 }
 
 .hero-flip__letter {
@@ -6546,6 +6577,8 @@ p a {
   flex-direction: column;
   align-items: center;
   margin-top: 1.4rem;
+  animation: hero-word-in 0.8s var(--ease-out-quint) both;
+  animation-delay: calc(0.15s + var(--wi, 0) * 0.08s);
 }
 
 /* The rule and the description exist only while a word is hovered; the
@@ -6744,7 +6777,10 @@ p a {
   }
   .hero-photo__frame,
   .hero-icon svg,
-  .hero-chip {
+  .hero-chip,
+  /* The sentence is simply there, with no blur-up. */
+  .hero-word,
+  .hero-intro__foot {
     animation: none;
   }
 }
