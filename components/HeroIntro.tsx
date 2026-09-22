@@ -238,6 +238,12 @@ const MODES = Object.keys(SUBLINES) as Mode[]
    "product designer." once. */
 const CYCLE: readonly Mode[] = ['name', 'creative', 'impact']
 const CYCLE_MS = 4200
+/* Reduced motion, on a screen with no hover: the roles still change, but
+   slowly, and the CSS has already taken the blur, the roll and the drift
+   off them, so it is a change of content rather than a piece of motion.
+   Frozen would mean a phone reading Reduce Motion never sees two of the
+   three answers at all, since there is no hover to find them with. */
+const CALM_CYCLE_MS = 9000
 const CELLS = Math.max(...TAIL_KEYS.map((k) => TAILS[k].length))
 
 /*
@@ -388,13 +394,17 @@ export default function HeroIntro() {
      word's role when the hover ends, so the ending never rolls away the
      instant the pointer leaves. */
   useEffect(() => {
-    if (reducedMotion || mode) return
+    if (mode) return
+    /* With a pointer, reduced motion means the sentence rests: the
+       decorations are a hover away and nothing needs to move to reach
+       them. */
+    if (reducedMotion && !noHover) return
     const id = setInterval(() => {
       if (document.visibilityState === 'hidden') return
       setAuto((m) => CYCLE[(CYCLE.indexOf(m) + 1) % CYCLE.length])
-    }, CYCLE_MS)
+    }, reducedMotion ? CALM_CYCLE_MS : CYCLE_MS)
     return () => clearInterval(id)
-  }, [reducedMotion, mode])
+  }, [reducedMotion, noHover, mode])
 
   /*
    * The mode that is actually showing. With a pointer that is the
@@ -407,11 +417,14 @@ export default function HeroIntro() {
    * is told about. A tap still pins a word: that sets `mode`, which
    * takes over here and stops the cycle until it is tapped off.
    *
-   * Not under reduced motion — nothing there should start moving on its
-   * own — and not on the server, where `noHover` is false until the
-   * script says otherwise, so the markup matches on first paint.
+   * Reduced motion doesn't switch this off, it slows it down: see
+   * CALM_CYCLE_MS. Nothing animates there — the decorations appear in
+   * place — but a phone with Reduce Motion on would otherwise never see
+   * two of the three answers, because it has no hover to find them
+   * with. On the server `noHover` is false until the script says
+   * otherwise, so the markup matches on first paint.
    */
-  const shown: Mode | null = mode ?? (noHover && !reducedMotion ? auto : null)
+  const shown: Mode | null = mode ?? (noHover ? auto : null)
 
   const open = (m: Mode) => {
     setMode(m)

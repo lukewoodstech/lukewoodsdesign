@@ -28,11 +28,34 @@ import {
  * ends. 8fps on purpose: stepped, like the games the style comes from.
  *
  * The clock stops when nothing is rendering him and when the tab is in
- * the background, and never starts under reduced motion.
+ * the background, and stands down under reduced motion — where a second,
+ * much quieter clock takes over: he blinks every few seconds and does
+ * nothing else. Frozen was the old behaviour and it was wrong. iOS
+ * Reduce Motion is a setting people leave on for battery and comfort,
+ * and it turned the one character on the site into a photograph of
+ * itself. A blink is two rows of pixels changing inside a 60px square,
+ * with nothing travelling across the screen: it is the smallest thing
+ * that reads as alive, and it is what "reduced" should mean here rather
+ * than "none".
  */
 
 const TICK_MS = 125
 const REDUCE = '(prefers-reduced-motion: reduce)'
+/* The calm clock: a blink this often, and nothing in between. */
+const BLINK_MIN_MS = 3200
+const BLINK_MAX_MS = 7400
+const BLINK_MS = 140
+
+/* Read once and kept current, so the 8fps clock can stand down without
+   asking matchMedia eighty times a second. */
+let reduced = false
+if (typeof window !== 'undefined') {
+  const mq = window.matchMedia(REDUCE)
+  reduced = mq.matches
+  mq.addEventListener('change', (e) => {
+    reduced = e.matches
+  })
+}
 
 /* ── the shared performance ── */
 
@@ -49,6 +72,8 @@ const idleLength = () => IDLE_MIN + Math.floor(Math.random() * (IDLE_MAX - IDLE_
 
 const advance = () => {
   if (typeof document !== 'undefined' && document.hidden) return
+  /* The calm clock has him under reduced motion. */
+  if (reduced) return
   t += 1
   if (t >= len) {
     t = 0
@@ -79,10 +104,54 @@ const subscribe = (cb: () => void) => {
 }
 
 const getSnapshot = () => snapshot
-/* One frozen frame, returned by identity: a fresh object here would make
-   useSyncExternalStore loop forever. */
+
+/* One frozen frame, returned by identity: a fresh object from a
+   getSnapshot would make useSyncExternalStore loop forever. */
 const STILL: Frame = {}
 const getServerSnapshot = () => STILL
+
+/* ── the calm performance: a blink, every few seconds ── */
+
+const calmListeners = new Set<() => void>()
+let calmTimer = 0
+let calmSnapshot: Frame = STILL
+
+const calmNotify = () => {
+  for (const l of calmListeners) l()
+}
+
+const blink = () => {
+  if (typeof document !== 'undefined' && document.hidden) {
+    calmSchedule()
+    return
+  }
+  calmSnapshot = { eyes: 'closed' }
+  calmNotify()
+  calmTimer = window.setTimeout(() => {
+    calmSnapshot = STILL
+    calmNotify()
+    calmSchedule()
+  }, BLINK_MS)
+}
+
+function calmSchedule() {
+  calmTimer = window.setTimeout(blink, BLINK_MIN_MS + Math.random() * (BLINK_MAX_MS - BLINK_MIN_MS))
+}
+
+const subscribeCalm = (cb: () => void) => {
+  calmListeners.add(cb)
+  if (calmListeners.size === 1) calmSchedule()
+  return () => {
+    calmListeners.delete(cb)
+    if (calmListeners.size === 0) {
+      window.clearTimeout(calmTimer)
+      calmTimer = 0
+      calmSnapshot = STILL
+    }
+  }
+}
+
+const getCalmSnapshot = () => calmSnapshot
 
 /* ── reduced motion ── */
 
@@ -109,6 +178,7 @@ export default function LukeSprite({
     () => true,
   )
   const live = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
+  const calm = useSyncExternalStore(subscribeCalm, getCalmSnapshot, getServerSnapshot)
   const [solo, setSolo] = useState(0)
 
   useEffect(() => {
@@ -119,7 +189,7 @@ export default function LukeSprite({
     return () => window.clearInterval(id)
   }, [reduce, only])
 
-  const frame = reduce ? STILL : only ? ACTS[only].frame(solo % ACTS[only].len) : live
+  const frame = reduce ? calm : only ? ACTS[only].frame(solo % ACTS[only].len) : live
   const paths = useMemo(() => compose(frame), [frame])
 
   return (
