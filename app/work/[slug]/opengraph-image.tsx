@@ -17,14 +17,12 @@ export default async function Image({ params }: { params: Promise<{ slug: string
   const cs = getCaseStudy(slug)
 
   /*
-   * The eyebrow renders as the card's prompt line ("> ~ cd lucid"), so unlike
-   * the old uppercase label it can repeat a company the title already names —
-   * a command doesn't read as a duplicate heading.
+   * A study swaps the home page's sentence for its own title, and takes the
+   * eyebrow slot for the company in its own accent — which is the one thing
+   * the title can't always be counted on to say.
    */
-  const eyebrow = cs?.company ?? SITE.role
-
   return new ImageResponse(
-    <OgCard title={cs?.title ?? SITE.name} eyebrow={eyebrow} accent={cs?.accent} />,
+    <OgCard title={cs?.title ?? SITE.name} eyebrow={cs?.company} accent={cs?.accent} />,
     { ...size, fonts: await ogFonts() },
   )
 }

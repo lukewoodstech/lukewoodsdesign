@@ -4939,9 +4939,14 @@ p a {
 }
 
 /* Until the client has taken over, the deck is stacked: only the
-   portrait shows. Reduced motion and phones override below. */
-.story:not(.is-ready) .story-card:not(.is-center) {
-  opacity: 0;
+   portrait shows. Desktop only: that stack is the first frame of the
+   scrub and the scrub is the only thing that undoes it, so it needs the
+   script. A phone deals no deck, and hiding fourteen cards there leaves
+   a hole for as long as hydration takes. */
+@media (min-width: 60em) {
+  .story:not(.is-ready) .story-card:not(.is-center) {
+    opacity: 0;
+  }
 }
 
 .story-card__art {
@@ -5189,8 +5194,29 @@ p a {
 }
 
 @media (max-width: 60em) {
+  /* The plain grid is the phone layout, full stop, not a state the
+     script switches into. It used to arrive only with `.is-static` from
+     StoryStage's effect, so the first paint on a phone was the desktop
+     stage: a 240vh section, a sticky 100vh box with overflow:hidden,
+     and a 1774px two-up grid centred inside it and clipped top and
+     bottom, with the absolutely positioned heading sitting under the
+     portrait. Locally hydration is instant and it never showed; on a
+     real phone it was the whole first screen. `.is-static` still comes,
+     and still says the same thing. */
   .story {
     --card-w: calc((100vw - 2.5rem - var(--card-gap)) / 2);
+    height: auto;
+    padding-block: 1rem 2rem;
+  }
+
+  .story__stage {
+    position: static;
+    height: auto;
+    overflow: visible;
+  }
+
+  .story__intro {
+    position: static;
   }
 
   .story__grid {

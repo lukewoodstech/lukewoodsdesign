@@ -45,8 +45,6 @@ type M = typeof import('matter-js')
 
 const SIZE_DESKTOP = 76
 const SIZE_MOBILE = 58
-/* Farther than this between press and release and it was a throw. */
-const TAP_SLOP = 6
 
 export default function Toolbox({ tools }: { tools: ReadonlyArray<Tool> }) {
   const trayRef = useRef<HTMLUListElement>(null)
@@ -56,7 +54,7 @@ export default function Toolbox({ tools }: { tools: ReadonlyArray<Tool> }) {
   const selectRef = useRef<(i: number) => void>(() => {})
   useEffect(() => {
     selectRef.current = (i: number) => {
-      if (tools[i]?.provenance) setActive(i)
+      if (tools[i]) setActive(i)
     }
   }, [tools])
 
@@ -137,7 +135,6 @@ export default function Toolbox({ tools }: { tools: ReadonlyArray<Tool> }) {
       let raf = 0
       let running = false
       let held: Matter.Constraint | null = null
-      let downAt: { x: number; y: number; i: number } | null = null
       const tick = () => {
         Engine.update(engine, 1000 / 60)
         paint()
@@ -196,7 +193,11 @@ export default function Toolbox({ tools }: { tools: ReadonlyArray<Tool> }) {
           length: 0.01,
         })
         Composite.add(world, held)
-        downAt = { x: e.clientX, y: e.clientY, i: tiles.indexOf(el) }
+        /* On press, not on release under a slop threshold. Picking a
+           tile up is the gesture that asks what it is, and a throw asked
+           just as much as a tap did — under the old rule a throw told
+           you nothing, because it had travelled too far to count. */
+        selectRef.current(i)
         el.setPointerCapture(e.pointerId)
         el.classList.add('is-held')
         tiles.forEach((t) => (t.style.zIndex = ''))
@@ -209,13 +210,6 @@ export default function Toolbox({ tools }: { tools: ReadonlyArray<Tool> }) {
       }
       const onUp = (e: PointerEvent) => {
         if (!held) return
-        /* Under the slop it was a tap, so show that tool's plate. */
-        if (downAt) {
-          const dx = e.clientX - downAt.x
-          const dy = e.clientY - downAt.y
-          if (Math.hypot(dx, dy) < TAP_SLOP && downAt.i >= 0) selectRef.current(downAt.i)
-        }
-        downAt = null
         const el = (e.target as HTMLElement).closest<HTMLLIElement>('.tb__tile')
         el?.classList.remove('is-held')
         el?.releasePointerCapture(e.pointerId)
@@ -287,30 +281,25 @@ export default function Toolbox({ tools }: { tools: ReadonlyArray<Tool> }) {
           )
           return (
             <li key={t.name} className="tb__tile" style={{ background: t.color }}>
-              {t.provenance ? (
-                /* Focusable, so the story is reachable without a pointer.
-                   The click is a keyboard activation only; pointer taps
-                   come through the slop check above. */
-                <button
-                  type="button"
-                  className="tb__btn"
-                  aria-pressed={active === i}
-                  onFocus={() => setActive(i)}
-                  onClick={(e) => {
-                    if (e.detail === 0) setActive(i)
-                  }}
-                >
-                  {art}
-                  <span className="visually-hidden">
-                    {t.name}. {t.provenance.line}
-                  </span>
-                </button>
-              ) : (
-                <>
-                  {art}
-                  <span className="visually-hidden">{t.name}</span>
-                </>
-              )}
+              {/* Every tile, story or not. Focusable so the plate is
+                  reachable without a pointer; the click handler is for
+                  keyboard activation only, since pointer presses are
+                  already handled on pointerdown above. */}
+              <button
+                type="button"
+                className="tb__btn"
+                aria-pressed={active === i}
+                onFocus={() => setActive(i)}
+                onClick={(e) => {
+                  if (e.detail === 0) setActive(i)
+                }}
+              >
+                {art}
+                <span className="visually-hidden">
+                  {t.name}
+                  {t.provenance ? `. ${t.provenance.line}` : ''}
+                </span>
+              </button>
             </li>
           )
         })}
@@ -319,11 +308,16 @@ export default function Toolbox({ tools }: { tools: ReadonlyArray<Tool> }) {
       {/* The plate. Reserved whether or not anything is selected, so
           picking a tile never shifts the tray underneath your finger. */}
       <p className="tb__plate" aria-live="polite">
-        {active !== null && tools[active].provenance ? (
+        {active !== null ? (
+          /* The name always. A tool with nowhere on this site to point
+             at stops there rather than reaching for a sentence, but it
+             still answers being picked up. */
           <>
             <span className="tb__plate-name">{tools[active].name}</span>
-            <span className="tb__plate-line">{tools[active].provenance!.line}</span>
-            {tools[active].provenance!.href && (
+            {tools[active].provenance && (
+              <span className="tb__plate-line">{tools[active].provenance!.line}</span>
+            )}
+            {tools[active].provenance?.href && (
               <Link className="tb__plate-link" href={tools[active].provenance!.href!}>
                 {tools[active].provenance!.cta ?? 'See it in the work'}
                 <span aria-hidden="true"> &rarr;</span>

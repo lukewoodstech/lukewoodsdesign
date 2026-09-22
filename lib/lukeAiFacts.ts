@@ -728,8 +728,12 @@ export const BACKGROUND = {
      Pendo and ClickUp are in the Pattern case study's own Tools row (and
      Pendo is the evidence that reframed that project), and Luke AI on
      this site streams from Claude, which BACKGROUND.site already says. */
+  /* Notion added 2026-09-22 on Luke's say-so. Unlike the three above it
+     is not in any published copy, so it is a tool he names and nothing
+     more: the toolbox tile carries no provenance line, because there is
+     no project here it can point at. */
   tools:
-    'Figma, Framer, Cursor, Pendo, ClickUp, Claude, VS Code with Copilot, Brightspot CMS, React and Tailwind, Next.js, Vercel, HTML/CSS, JavaScript/TypeScript, Python, C++, Node/Express, MongoDB, AWS EC2, Git/GitHub.',
+    'Figma, Framer, Cursor, Notion, Pendo, ClickUp, Claude, VS Code with Copilot, Brightspot CMS, React and Tailwind, Next.js, Vercel, HTML/CSS, JavaScript/TypeScript, Python, C++, Node/Express, MongoDB, AWS EC2, Git/GitHub.',
   goals:
     'Product design roles at strong product teams, with long-term interest in building or leading digital products, especially in AI, productivity, and enterprise tools.',
   interests: 'Startups, AI tools, basketball, fitness, hackathons, and unusual pets (reptiles and tarantulas).',

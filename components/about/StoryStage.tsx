@@ -305,16 +305,26 @@ export default function StoryStage({
         window.addEventListener('resize', onResize)
       } else {
         sec.classList.add('is-static')
-        io = new IntersectionObserver(
-          ([e]) => {
-            if (e.isIntersecting) {
-              sec.classList.add('is-in')
-              io?.disconnect()
-            }
-          },
-          { threshold: 0.15 },
-        )
-        io.observe(grid)
+        /* Already on screen: reveal in the same frame as `is-static`,
+           before an observer callback could get a paint in between.
+           The stagger's starting opacity:0 lands with that class, so
+           deferring to the observer made the deck blink out and fade
+           back in on a phone, where the grid is in view at load. */
+        const r = grid.getBoundingClientRect()
+        if (r.top < window.innerHeight && r.bottom > 0) {
+          sec.classList.add('is-in')
+        } else {
+          io = new IntersectionObserver(
+            ([e]) => {
+              if (e.isIntersecting) {
+                sec.classList.add('is-in')
+                io?.disconnect()
+              }
+            },
+            { threshold: 0.15 },
+          )
+          io.observe(grid)
+        }
       }
       sec.classList.add('is-ready')
     }

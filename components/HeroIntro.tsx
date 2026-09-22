@@ -14,7 +14,7 @@ import {
 } from 'react'
 import Image from 'next/image'
 import { AnimatePresence, motion } from 'framer-motion'
-import { SITE } from '@/lib/site'
+import { SITE, INTRO } from '@/lib/site'
 import { STORY } from '@/lib/about'
 import { useReducedMotion } from '@/lib/useReducedMotion'
 import HeroPeek from '@/components/HeroPeek'
@@ -72,10 +72,10 @@ type State = Mode | 'rest'
 
 /* The endings, one per state. `impact` keeps the resting ending on purpose. */
 const TAILS: Record<State, string> = {
-  rest: 'product designer.',
+  rest: INTRO.tail,
   name: 'designer who codes.',
   creative: 'problem solver.',
-  impact: 'product designer.',
+  impact: INTRO.tail,
 }
 
 /* The line under the rule, one per mode. There is no resting line: the
@@ -100,7 +100,11 @@ type Word = { text: string; dim?: boolean; hot?: Mode; tail?: true }
  */
 const LINES: readonly (readonly Word[])[] = [
   [{ text: SITE.name, hot: 'name' }, { text: 'is a', dim: true }],
-  [{ text: 'creative', hot: 'creative' }, { text: '&', dim: true }, { text: 'impact-driven', hot: 'impact' }],
+  [
+    { text: INTRO.adjectives[0], hot: 'creative' },
+    { text: '&', dim: true },
+    { text: INTRO.adjectives[1], hot: 'impact' },
+  ],
   [{ text: TAILS.rest, tail: true }],
 ]
 const WORD_COUNT = LINES.flat().length
