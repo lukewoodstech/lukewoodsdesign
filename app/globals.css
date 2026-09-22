@@ -6083,15 +6083,6 @@ p a {
     height: 24rem;
   }
 
-  /* On phones every shot goes full width and keeps its own aspect —
-     spans would put a 4-column portrait at a third of a narrow screen. */
-  .rr__row {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .rr__card {
-    grid-column: span 1;
-  }
 
   /* Three columns of tiles on a phone is three columns of nothing, so
      the wall goes and the face comes back as one tile over the quote. */
@@ -6150,6 +6141,28 @@ p a {
 }
 
 @media (max-width: 48em) {
+  /* Two up, not one. The desktop spans would put a 4-column portrait at
+     a third of a phone's width, but one shot per row made this section
+     six thousand pixels of scrolling — half the page — for thirteen
+     photographs. Each shot keeps its own aspect, so a landscape stays a
+     landscape; they just read as a contact sheet. Above this width the
+     12-column grid still fits three across and is left alone. */
+  .rr__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    align-items: start;
+  }
+
+  .rr__card {
+    grid-column: span 1;
+  }
+
+  /* Except the 4:3 scenes: at half a phone's width they are 170px
+     across, and the caption ends up covering the photograph. */
+  .rr__card--wide {
+    grid-column: span 2;
+  }
+
   /* Two lines: the name, then who they are. The dot between them is
      only a separator, and a separator at the start of a line is noise. */
   .kwc__who {

@@ -19,6 +19,11 @@ import type { RoomBlock } from '@/lib/about'
  *
  * Hover lifts the card. That's the only interaction, because looking at
  * the photo is the point.
+ *
+ * On a phone the row is two columns, not one: thirteen full-width shots
+ * made this section half the page in scroll. The wide ones (span 6, the
+ * 4:3 scenes) keep the full width there — at half a phone's width a
+ * landscape is 170px across and its caption covers the picture.
  */
 export default function ReptileRoom({ blocks }: { blocks: ReadonlyArray<RoomBlock> }) {
   return (
@@ -30,7 +35,7 @@ export default function ReptileRoom({ blocks }: { blocks: ReadonlyArray<RoomBloc
             {block.shots.map((shot) => (
               <li
                 key={shot.src}
-                className="story-card rr__card"
+                className={`story-card rr__card${shot.span >= 6 ? ' rr__card--wide' : ''}`}
                 style={
                   {
                     '--rr-span': shot.span,
