@@ -77,6 +77,15 @@ export type Role = {
   /** The badge in the card's corner. */
   year: string
   summary: string
+  /*
+   * The phone's version of `summary`: one line, cut from the same
+   * facts, because a full card on a 393px screen ran to six lines of
+   * body text and five of those cards made the section a third of the
+   * page. Every clause here appears in `summary` above — this is a
+   * compression, not a second claim. (Written 2026-09-22; Luke's to
+   * rewrite, like all the copy.)
+   */
+  short: string
   href?: string
   logo?: string
   mark?: string
@@ -91,6 +100,7 @@ export const ROLES: ReadonlyArray<Role> = [
     year: '2026',
     summary:
       'Designed the Lucid AI assistant on the homepage: find a document by what you remember, summarize it, catch up, or generate a new board. Blank page to general availability in twelve weeks, across every tier.',
+    short: 'The AI assistant on Lucid\u2019s homepage. Blank page to general availability in twelve weeks.',
     href: '/work/lucid-ai',
     logo: '/logos/lucid.png',
   },
@@ -101,6 +111,7 @@ export const ROLES: ReadonlyArray<Role> = [
     year: '2025',
     summary:
       'Redesigned fragmented authentication (login, MFA, SSO, password recovery, mobile verification) into one guided system, and wrote the AI-prototyping guide the design team now uses.',
+    short: 'Login, MFA, SSO and recovery, redesigned into one guided system.',
     href: '/work/awardco-login-flow-redesign',
     logo: '/logos/awardco.png',
   },
@@ -111,6 +122,7 @@ export const ROLES: ReadonlyArray<Role> = [
     year: '2025',
     summary:
       'Redesigned the Custom Reports workflow inside the Predict platform over a nine-week project, after discovery interviews turned a duplicate-widget ticket into a reporting problem.',
+    short: 'Rebuilt the Custom Reports workflow in Predict, after discovery reframed the ticket.',
     href: '/work/pattern-custom-reports',
     logo: '/logos/pattern.png',
   },
@@ -121,6 +133,7 @@ export const ROLES: ReadonlyArray<Role> = [
     year: '2024',
     summary:
       'Product design at an early-stage encrypted work platform, formerly Mention. The case study is written but password-protected while it clears review.',
+    short: 'Product design at an early-stage encrypted work platform, formerly Mention.',
     logo: '/logos/hoth.png',
   },
   {
@@ -132,6 +145,7 @@ export const ROLES: ReadonlyArray<Role> = [
     year: '2024',
     summary:
       'Designed and shipped updates to 10+ websites in the Brightspot CMS, running 20+ client meetings to get there. My first real lesson in designing for stakeholders who all want different things.',
+    short: 'Updates to 10+ websites in the Brightspot CMS, and the 20+ client meetings to get there.',
     /* The block Y on BYU navy, drawn as an SVG tile so it sits in the
        same 48px square as the company logos instead of a bare letter. */
     logo: '/logos/byu.svg',

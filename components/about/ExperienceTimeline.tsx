@@ -149,7 +149,11 @@ export default function ExperienceTimeline({
                 </span>
                 <span className="tl-card__year">{r.year}</span>
               </header>
+              {/* Two summaries, one shown: CSS picks by width, and the
+                  hidden one is `display: none`, so it is out of the
+                  accessibility tree rather than read twice. */}
               <p className="tl-card__summary">{r.summary}</p>
+              <p className="tl-card__summary tl-card__summary--short">{r.short}</p>
               <p className="tl-card__period">{r.period}</p>
               {/* The open badge, same as the work tiles: the only thing
                   that says "this opens", instead of a line of link text.

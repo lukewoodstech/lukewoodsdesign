@@ -5501,6 +5501,11 @@ p a {
   color: rgba(255, 255, 255, 0.8);
 }
 
+/* The short one only exists on a phone; see the 48em block. */
+.tl-card__summary--short {
+  display: none;
+}
+
 .tl-card__summary {
   margin: 1.1rem 0 0;
   font-size: var(--reading-size);
@@ -6141,26 +6146,46 @@ p a {
 }
 
 @media (max-width: 48em) {
-  /* Two up, not one. The desktop spans would put a 4-column portrait at
-     a third of a phone's width, but one shot per row made this section
-     six thousand pixels of scrolling — half the page — for thirteen
-     photographs. Each shot keeps its own aspect, so a landscape stays a
-     landscape; they just read as a contact sheet. Above this width the
-     12-column grid still fits three across and is left alone. */
+  /* A contact sheet: two columns, every tile the same square, no holes.
+     One shot per row made this section six thousand pixels of scrolling
+     on a phone — half the page — for thirteen photographs. Keeping each
+     shot's own aspect fixed that but left the grid ragged: portraits
+     and landscapes in the same column, and a lone tile beside a gap
+     wherever a block held an odd number. Above this width the
+     12-column grid still fits three across, still uncropped, and is
+     left alone — this is the phone's layout, not the design's. */
   .rr__row {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem;
-    align-items: start;
+    gap: 0.6rem;
   }
 
-  .rr__card {
-    grid-column: span 1;
-  }
-
-  /* Except the 4:3 scenes: at half a phone's width they are 170px
-     across, and the caption ends up covering the photograph. */
+  .rr__card,
   .rr__card--wide {
+    grid-column: span 1;
+    aspect-ratio: 1 / 1;
+  }
+
+  /* An odd number of shots leaves the last one beside a hole. It takes
+     the whole row instead, in a letterbox rather than a square, so it
+     fills the space without becoming a 350px block. */
+  .rr__card:last-child:nth-child(odd) {
     grid-column: span 2;
+    aspect-ratio: 16 / 10;
+  }
+
+  /* Squaring a photo crops it, and faces sit above centre far more
+     often than below it, so the crop keeps the top. A shot that needs
+     something else still sets --card-focus in lib/about.ts. */
+  .rr__card .story-card__art img {
+    object-position: var(--card-focus, 50% 38%);
+  }
+
+  /* A caption on a 170px tile: the gradient was tall enough to cover
+     most of the picture it was describing. */
+  .rr__card .story-card__cap {
+    padding: 1.6rem 0.65rem 0.6rem;
+    font-size: 0.8125rem;
+    line-height: 1.25;
   }
 
   /* Two lines: the name, then who they are. The dot between them is
@@ -6175,19 +6200,55 @@ p a {
     display: none;
   }
 
-  .tl-card__head {
-    grid-template-columns: 2.5rem minmax(0, 1fr);
+  /* The phone card, tightened. It was 413px tall for five roles — a
+     third of the section — with the year badge wrapped onto a line of
+     its own under the company, a six-line summary, and desktop padding
+     around both. */
+  .tl-card {
+    padding: 1.1rem 1.2rem 1rem;
   }
 
+  .tl-card__head {
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  /* The badge said 2025 directly above a line reading "January –
+     October 2025". One of them had to go, and the one that wrapped is
+     the one that was repeating itself. */
   .tl-card__year {
-    grid-column: 2;
-    justify-self: start;
-    margin-top: 0.25rem;
+    display: none;
   }
 
   .tl-card__logo {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 9px;
+  }
+
+  .tl-card__role {
+    font-size: 1.0625rem;
+  }
+
+  .tl-card__co {
+    font-size: var(--label-size);
+  }
+
+  .tl-card__summary {
+    display: none;
+  }
+
+  .tl-card__summary--short {
+    display: block;
+    margin-top: 0.7rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+
+  .tl-card__period {
+    margin-top: 0.6rem;
+    font-size: var(--label-micro);
   }
 }
 
