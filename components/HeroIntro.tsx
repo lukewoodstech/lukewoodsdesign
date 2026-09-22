@@ -17,6 +17,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { SITE, INTRO } from '@/lib/site'
 import { STORY } from '@/lib/about'
 import { useReducedMotion } from '@/lib/useReducedMotion'
+import { useMediaQuery } from '@/lib/useMediaQuery'
 import HeroPeek from '@/components/HeroPeek'
 
 /*
@@ -368,6 +369,9 @@ const edgeClass = (s: Spot) => (s.edge ? ` is-${s.edge}` : '')
 
 export default function HeroIntro() {
   const reducedMotion = useReducedMotion()
+  /* No pointer to hover with: the sentence opens its own modes rather
+     than waiting to be found. See `shown` below. */
+  const noHover = useMediaQuery('(hover: none)')
   const [mode, setMode] = useState<Mode | null>(null)
   /* Which role the ending shows while nothing is hovered. Starts on
      `impact` — the resting ending — so the first paint is the plain
@@ -391,6 +395,23 @@ export default function HeroIntro() {
     }, CYCLE_MS)
     return () => clearInterval(id)
   }, [reducedMotion, mode])
+
+  /*
+   * The mode that is actually showing. With a pointer that is the
+   * hovered word and nothing otherwise — the sentence stands alone at
+   * rest, which is the whole design. A phone has no hover, so there is
+   * no way to find the words and nothing ever opens; there the cycle
+   * that was already turning the ending over drives the decorations and
+   * the subline too, and the hero demonstrates itself every few seconds
+   * instead of hiding three quarters of itself behind a gesture nobody
+   * is told about. A tap still pins a word: that sets `mode`, which
+   * takes over here and stops the cycle until it is tapped off.
+   *
+   * Not under reduced motion — nothing there should start moving on its
+   * own — and not on the server, where `noHover` is false until the
+   * script says otherwise, so the markup matches on first paint.
+   */
+  const shown: Mode | null = mode ?? (noHover && !reducedMotion ? auto : null)
 
   const open = (m: Mode) => {
     setMode(m)
@@ -451,13 +472,13 @@ export default function HeroIntro() {
    */
   const entrance = (i: number) => ({ style: { '--wi': i } as CSSProperties })
 
-  const on = (m: Mode) => (mode === m ? ' is-on' : '')
+  const on = (m: Mode) => (shown === m ? ' is-on' : '')
 
   let wordIndex = 0
 
   return (
     <div
-      className={`hero-intro${mode ? ` is-open is-${mode}` : ''}`}
+      className={`hero-intro${shown ? ` is-open is-${shown}` : ''}`}
     >
       <div className="hero-intro__body">
       {/* ── The decorations, one group per mode, all mounted so a mode
@@ -526,7 +547,7 @@ export default function HeroIntro() {
                   ) : word.hot ? (
                     <button
                       type="button"
-                      className={`hero-hot${mode === word.hot ? ' is-lit' : ''}`}
+                      className={`hero-hot${shown === word.hot ? ' is-lit' : ''}`}
                       onPointerEnter={onPointerEnter(word.hot)}
                       onPointerLeave={onPointerLeave}
                       onPointerDown={onPointerDown(word.hot)}
@@ -553,7 +574,7 @@ export default function HeroIntro() {
           <span className="hero-rule" aria-hidden="true" />
           <div className="hero-subs">
             {MODES.map((k) => (
-              <p key={k} className={`hero-sub${mode === k ? ' is-on' : ''}`} aria-hidden={mode !== k}>
+              <p key={k} className={`hero-sub${shown === k ? ' is-on' : ''}`} aria-hidden={shown !== k}>
                 {SUBLINES[k]}
               </p>
             ))}
@@ -561,7 +582,10 @@ export default function HeroIntro() {
         </div>
       </div>
 
-      <HeroPeek silenced={seen || mode !== null} />
+      {/* Pixel Luke only asks you to find the words where finding them
+          is the point. On a phone the sentence is already showing what
+          they do, so `shown` silences him without a rule of his own. */}
+      <HeroPeek silenced={seen || shown !== null} />
     </div>
   )
 }

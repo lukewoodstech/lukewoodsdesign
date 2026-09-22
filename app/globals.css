@@ -6777,6 +6777,39 @@ p a {
   }
 }
 
+/* ── The stat chips, where they don't fit dealt out ──
+   A chip carries a number, a label and where it was measured, so it is
+   242px wide at best and most of a phone wide at worst; on the spot
+   positions two of them land on top of each other, the second covering
+   the first's source line. Below 48em, and on any hoverless screen under
+   64em — where the sentence now opens its own modes, so these show
+   without being asked for — the group stacks in the band over the
+   headline instead. Two chips, the same two the phone shows: four in a
+   column is a wall of white. The group is all that changes; each chip
+   keeps its scale-and-blur entrance, which rides on `scale`, not on
+   `translate`. */
+
+@media (max-width: 47.99em), (hover: none) and (max-width: 63.99em) {
+  .home-hero .hero-deco--chips {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    /* Directly above the headline, however tall the stack turns out. */
+    inset: auto 0 100%;
+    padding-bottom: 0.7rem;
+  }
+
+  .home-hero .hero-deco--chips > * {
+    position: static;
+    translate: none;
+  }
+
+  .home-hero .hero-deco--chips > *:not([style*='--mx']) {
+    display: none;
+  }
+}
+
 /* The site-wide reduced-motion rule only covers the view transitions,
    so the hero opts out on its own: decorations appear in place, the
    glow and the subline swap instantly, the letters just change. */
