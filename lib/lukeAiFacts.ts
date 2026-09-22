@@ -723,8 +723,13 @@ export const BACKGROUND = {
   ],
   skills:
     'Product design, UX research, interaction design, UI design, design systems, enterprise UX, data-heavy workflow design, information architecture, prototyping (Figma and code), usability testing, stakeholder interviews, competitive analysis, metrics-oriented design, product thinking.',
+  /* Pendo, ClickUp and Claude added 2026-09-22. All three were already
+     load-bearing in published copy and were missing from this list:
+     Pendo and ClickUp are in the Pattern case study's own Tools row (and
+     Pendo is the evidence that reframed that project), and Luke AI on
+     this site streams from Claude, which BACKGROUND.site already says. */
   tools:
-    'Figma, Framer, Cursor, VS Code with Copilot, Brightspot CMS, React and Tailwind, Next.js, Vercel, HTML/CSS, JavaScript/TypeScript, Python, C++, Node/Express, MongoDB, AWS EC2, Git/GitHub.',
+    'Figma, Framer, Cursor, Pendo, ClickUp, Claude, VS Code with Copilot, Brightspot CMS, React and Tailwind, Next.js, Vercel, HTML/CSS, JavaScript/TypeScript, Python, C++, Node/Express, MongoDB, AWS EC2, Git/GitHub.',
   goals:
     'Product design roles at strong product teams, with long-term interest in building or leading digital products, especially in AI, productivity, and enterprise tools.',
   interests: 'Startups, AI tools, basketball, fitness, hackathons, and unusual pets (reptiles and tarantulas).',

@@ -121,7 +121,7 @@ export default function LucidCaseStudy() {
                 { label: 'Role', value: 'Product Design Intern', icon: 'user' },
                 { label: 'Team', value: 'Two scrum teams, Search and AI', icon: 'users' },
                 { label: 'Timeline', value: 'May to August 2026', icon: 'clock' },
-                { label: 'Tools', value: 'Figma, Lucid', icon: 'tool' },
+                { label: 'Tools', value: 'Figma, Lucid, Claude Code', icon: 'tool' },
                 {
                   label: 'Released',
                   value: 'General availability, August 5, every Lucid tier',

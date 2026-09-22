@@ -154,16 +154,88 @@ export const ONGOING: ReadonlyArray<Ongoing> = [
    public/tools, painted white through a CSS mask; `color` is the tile's
    ground. */
 
-export type Tool = { name: string; icon: string; color: string }
+export type Tool = {
+  name: string
+  /** Simple Icons glyph, masked white. `null` for a wordmark tile. */
+  icon: string | null
+  color: string
+  /** No glyph exists for this one, so the tile sets its name in type. */
+  wordmark?: boolean
+  /** Where Luke actually used it. Only tools with a sourceable story get
+      one, and only those tiles are interactive. */
+  provenance?: { line: string; href?: string }
+}
 
+/* `provenance` is the one line that says where Luke actually used the
+   tool, and it is the whole point of the tray being interactive: a tile
+   with a real story is tappable and focusable, a tile without one is
+   just a tile. Nothing here may be invented — every line below traces to
+   a case study's own copy or to BACKGROUND.site in lib/lukeAiFacts.ts.
+   Tools with no sourceable story (Cursor, Framer, TypeScript, Python,
+   Git, Node) deliberately carry none rather than a generic sentence.
+
+   `wordmark: true` is for a tool with no Simple Icons glyph; the tile
+   sets its name in type instead of masking an SVG. */
 export const TOOLS: ReadonlyArray<Tool> = [
-  { name: 'Figma', icon: '/tools/figma.svg', color: '#a259ff' },
-  { name: 'React', icon: '/tools/react.svg', color: '#149eca' },
-  { name: 'Next.js', icon: '/tools/nextdotjs.svg', color: '#111111' },
+  {
+    name: 'Figma',
+    icon: '/tools/figma.svg',
+    color: '#a259ff',
+    /* Named in the Tools row of all three case studies, so it points at
+       no single one. */
+    provenance: { line: 'Where every project on this site started. Lucid, Awardco and Pattern.' },
+  },
+  {
+    name: 'Pendo',
+    icon: null,
+    wordmark: true,
+    color: '#2a2333',
+    provenance: {
+      line: 'High trial, poor retention. That told me Pattern had a usability problem, not a demand problem.',
+      href: '/work/pattern-custom-reports',
+    },
+  },
+  {
+    name: 'ClickUp',
+    icon: '/tools/clickup.svg',
+    color: '#7b68ee',
+    provenance: {
+      line: 'The whole Pattern project started as one ticket: let users duplicate a widget.',
+      href: '/work/pattern-custom-reports',
+    },
+  },
+  {
+    name: 'Claude',
+    icon: '/tools/claude.svg',
+    color: '#d97757',
+    provenance: { line: 'Luke AI on this site streams from Claude. Your conversation stays in your browser.', href: '/chat' },
+  },
+  {
+    name: 'React',
+    icon: '/tools/react.svg',
+    color: '#149eca',
+    provenance: { line: 'This site is hand-built in it, not assembled in a site builder.' },
+  },
+  {
+    name: 'Next.js',
+    icon: '/tools/nextdotjs.svg',
+    color: '#111111',
+    provenance: { line: 'Every page here, including the route Luke AI answers from.' },
+  },
   { name: 'TypeScript', icon: '/tools/typescript.svg', color: '#3178c6' },
-  { name: 'Tailwind', icon: '/tools/tailwindcss.svg', color: '#0ea5e9' },
+  {
+    name: 'Tailwind',
+    icon: '/tools/tailwindcss.svg',
+    color: '#0ea5e9',
+    provenance: { line: 'The styling layer under this whole site.' },
+  },
   { name: 'Framer', icon: '/tools/framer.svg', color: '#0055ff' },
-  { name: 'Vercel', icon: '/tools/vercel.svg', color: '#000000' },
+  {
+    name: 'Vercel',
+    icon: '/tools/vercel.svg',
+    color: '#000000',
+    provenance: { line: 'Where this site is deployed.' },
+  },
   { name: 'Python', icon: '/tools/python.svg', color: '#3776ab' },
   { name: 'Git', icon: '/tools/git.svg', color: '#f05032' },
   { name: 'Node', icon: '/tools/nodedotjs.svg', color: '#3c873a' },
