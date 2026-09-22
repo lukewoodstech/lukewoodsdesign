@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import SearchMock from '@/components/lucid/SearchMock'
 
 /*
- * The live Find Docs mock behind the hero laptop's glass. The mock lays
+ * The live Find docs mock behind the hero laptop's glass. The mock lays
  * itself out for a desktop-width panel, so on a phone-width screen the
  * zero state's heading and prompt tiles would clip. Measure the screen and
  * zoom the whole panel out to fit — the same trick the home tile uses —

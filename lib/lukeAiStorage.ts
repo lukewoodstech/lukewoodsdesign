@@ -40,8 +40,8 @@ export const MAX_CONVERSATIONS = 50
    welcome says what the thing is for instead: a headline in the mono and
    one line naming the three questions a recruiter actually has. */
 export const WELCOME = {
-  title: 'Get to the signal faster.',
-  body: 'Ask what Luke shipped, how he made decisions, and what changed because of his work.',
+  title: 'Hi, I’m Luke!',
+  body: 'Ask me about my work: what I shipped, the calls I made and why, or whether I’d be a fit for your team. This is an AI version of me, answering from my portfolio.',
 } as const
 
 /*
@@ -53,21 +53,21 @@ export const WELCOME = {
  */
 export const SUGGESTIONS: ReadonlyArray<{ label: string; message: string }> = [
   {
-    label: 'Give me Luke’s 30-second overview',
-    message: 'Give me Luke’s 30-second overview: who he is, what he’s shipped, and why it matters.',
+    label: 'Give me the 30-second version',
+    message: 'Give me the 30-second version: who you are, what you’ve shipped, and why it matters.',
   },
   {
-    label: 'Show me his strongest shipped work',
-    message: 'Show me Luke’s strongest shipped work and what each project changed.',
+    label: 'What work are you proudest of?',
+    message: 'What work are you proudest of, and what changed because of it?',
   },
   {
-    label: 'Walk me through a difficult product decision',
+    label: 'Tell me about a hard call you made',
     message:
-      'Walk me through a difficult product decision Luke made: the tradeoff, what he chose, and how it played out.',
+      'Tell me about a hard product decision you made: the tradeoff, what you chose, and how it played out.',
   },
   {
-    label: 'Why should I interview Luke?',
-    message: 'Why should I interview Luke? Give me the honest case, with evidence.',
+    label: 'Why should I interview you?',
+    message: 'Why should I interview you? Make the honest case, with evidence.',
   },
 ]
 
@@ -258,7 +258,7 @@ export function fallbackFollowups(body: string): string[] {
   const out: string[] = []
   if (/\bLucid\b/.test(body)) out.push('What shipped at Lucid in 12 weeks?')
   if (/\bAwardco\b/i.test(body)) out.push('What was validated before the Awardco handoff?')
-  if (/\bPattern\b/.test(body)) out.push('What tradeoff did Luke make at Pattern?')
+  if (/\bPattern\b/.test(body)) out.push('What tradeoff did you make at Pattern?')
   for (const f of SAFE_FOLLOWUPS) {
     if (out.length >= 2) break
     if (!out.includes(f)) out.push(f)
@@ -272,7 +272,7 @@ export function fallbackFollowups(body: string): string[] {
 export function processingLabels(question: string): [string, string] {
   const q = question.toLowerCase()
   if (/\b(job|role|hiring|jd|requirements|position|description)\b/.test(q))
-    return ['matching the requirements to Luke’s experience…', 'reading the résumé…']
+    return ['matching the requirements to my experience…', 'reading my résumé…']
   if (/\blucid\b/.test(q)) return ['reading the Lucid case study…', 'checking the details…']
   if (/\bawardco\b|\blogin\b|\bauth/.test(q))
     return ['reading the Awardco case study…', 'checking the details…']
@@ -282,7 +282,7 @@ export function processingLabels(question: string): [string, string] {
   if (/\b(site|built|shader|tile|slider|homepage|how was this)\b/.test(q))
     return ['looking at how this site is built…', 'finding the relevant work…']
   if (/\b(ship|shipped|technical|code|engineer)/.test(q))
-    return ['reading through Luke’s experience…', 'finding the relevant work…']
+    return ['reading through my experience…', 'finding the relevant work…']
   return ['looking through the portfolio…', 'finding the relevant work…']
 }
 

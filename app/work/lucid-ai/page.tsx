@@ -8,12 +8,11 @@ import Reveal from '@/components/lucid/Reveal'
 import CompareStage from '@/components/lucid/CompareStage'
 import ShipTimeline from '@/components/lucid/ShipTimeline'
 import HeroMock from '@/components/cs/HeroMock'
-import BoardGenClip from '@/components/lucid/BoardGenClip'
 import FailureTabs from '@/components/lucid/FailureTabs'
 import ZoomShot from '@/components/lucid/ZoomShot'
+import MentionMock from '@/components/lucid/MentionMock'
 import BigStats from '@/components/cs/BigStats'
 import Journey from '@/components/cs/Journey'
-import JourneyChart from '@/components/cs/JourneyChart'
 import Callouts from '@/components/cs/Callouts'
 import Laptop from '@/components/cs/Laptop'
 import {
@@ -53,8 +52,9 @@ import { SITE } from '@/lib/site'
  * adoption numbers (the internship ended shortly after GA), no interview
  * count, no invented user quotes — the note cards in Act 01 are labelled
  * illustrative. Captures from the design file predate the release and
- * carry the skill's earlier label, "Build a diagram"; captions say so
- * rather than the artifacts being altered.
+ * The diagram skill's user-facing name is "Build a diagram" (per Luke,
+ * 2026-09-22); "generate diagram tool" is the internal name and must not
+ * appear on the page.
  */
 
 const TITLE = 'Bringing Lucid AI to the homepage'
@@ -82,11 +82,11 @@ const IMG = '/case-studies/lucid'
 const MOCK = `${IMG}/mock`
 
 /* Names as shipped. Descriptions are the design file's own one-liners. */
-const SKILLS: { name: string; desc: string; icon?: string }[] = [
-  { name: 'Find Docs', desc: 'Locate a doc by topic, person, or what is inside it.', icon: `${MOCK}/intelligent-search-24.svg` },
+const SKILLS: { name: string; desc: string; icon: string }[] = [
+  { name: 'Find docs', desc: 'Locate a doc by topic, person, or what is inside it.', icon: `${MOCK}/intelligent-search-24.svg` },
   { name: 'Summarize', desc: 'Get the gist of a doc or a group of them.', icon: `${MOCK}/summarize-24.svg` },
-  { name: 'Generate a New Board', desc: 'Create flowcharts and visual layouts from a text prompt.', icon: `${MOCK}/diagram-shapes-24.svg` },
-  { name: 'Catch Up', desc: 'See what changed recently or what you missed.' },
+  { name: 'Build a diagram', desc: 'Create flowcharts and visual layouts from a text prompt.', icon: `${MOCK}/diagram-shapes-24.svg` },
+  { name: 'Catch up', desc: 'See what changed recently or what you missed.', icon: `${MOCK}/clock-24.svg` },
 ]
 
 export default function LucidCaseStudy() {
@@ -141,7 +141,7 @@ export default function LucidCaseStudy() {
           </header>
         </Col>
 
-        {/* ══ Hero band: the live Find Docs loop, behind a laptop's glass ══ */}
+        {/* ══ Hero band: the live Find docs loop, behind a laptop's glass ══ */}
         <Band tone="accent" crop className="cs-hero-band">
           <Laptop>
             {/* Opens on the design file's zero state — a designed frame at
@@ -167,7 +167,7 @@ export default function LucidCaseStudy() {
             <BigStats
               stats={[
                 { value: 12, caption: <>weeks from a blank page to <strong>general availability</strong></> },
-                { value: 4, caption: <><strong>core skills</strong> shipped, from 20+ prototyped</> },
+                { value: 4, caption: <><strong>core skills</strong> shipped: find, summarize, build, catch up</> },
                 { value: 20, suffix: '+', caption: <>capabilities prototyped and tested before the cut</> },
                 { value: 'All', caption: <>Lucid tiers at release, <strong>free through enterprise</strong></> },
               ]}
@@ -203,15 +203,10 @@ export default function LucidCaseStudy() {
 
           <Notes
             label="What people could remember instead of a title. Illustrative, not quotes."
-            stickers={[
-              { src: `${MOCK}/lucidchart-doc.svg` },
-              { src: `${MOCK}/lucidspark-doc.svg` },
-              { text: '@' },
-            ]}
             notes={[
-              'the board with the pricing tiers on it',
-              'the flowchart a teammate shared in May',
-              'the retro notes from the last offsite',
+              'the pricing one with the big comparison table, finance made it I think',
+              'our onboarding flowchart, the one with all the red decision diamonds',
+              'the offsite retro from spring, three columns of sticky notes',
             ]}
           />
         </Col>
@@ -272,34 +267,6 @@ export default function LucidCaseStudy() {
             />
           </Block>
 
-          <Block>
-            <H3 dim="one document, four dead ends">The old search</H3>
-            <JourneyChart
-              label="How finding a document went before Lucid AI: remembering, searching, scrolling, giving up"
-              stages={[
-                {
-                  title: 'Remembering',
-                  text: 'Knows what the document was about, or who worked on it, but not what it was called.',
-                  y: 9,
-                },
-                {
-                  title: 'Searching',
-                  text: 'Types a guess at the title. Search matches keywords in titles and nothing else.',
-                  y: 15,
-                },
-                {
-                  title: 'Scrolling',
-                  text: 'Falls back to the recent documents list, or to advanced filters many found confusing.',
-                  y: 24,
-                },
-                {
-                  title: 'Giving up',
-                  text: 'Years of history across several teams. The scroll never ends and the document stays lost.',
-                  y: 34,
-                },
-              ]}
-            />
-          </Block>
         </Col>
 
         {/* ══ Act 02 · Define ══ */}
@@ -319,60 +286,68 @@ export default function LucidCaseStudy() {
           <Block>
             <H3 dim="the homepage before Lucid AI">The starting point</H3>
             <Callouts
-              src={`${IMG}/before-old-search.png`}
-              alt="The old Lucid homepage, annotated: a search bar that only matches keywords in titles, nothing beside it, and a long grid of recent documents"
+              src={`${IMG}/home-before.png`}
+              alt="The old Lucid homepage, annotated: a search bar that only matches keywords in titles, empty space beside it, and a long grid of recent documents"
               width={2880}
               height={1800}
               items={[
                 {
                   label: 'Title keywords only',
                   text: <>Search matched keywords in <strong>document titles</strong> and nothing else.</>,
-                  x: 17,
-                  y: 1.5,
-                  w: 34,
-                  h: 5,
+                  x: 16.8,
+                  y: 1.4,
+                  w: 33.8,
+                  h: 4.4,
+                  gy: 1,
+                  ax: 33.7,
+                  ay: 1.4,
                 },
                 {
                   label: 'Nothing here yet',
                   text: <>Lucid AI existed <strong>only inside the editor</strong>. The homepage had no natural-language entry point.</>,
-                  x: 52.5,
-                  y: 1,
-                  w: 26,
-                  h: 6,
+                  x: 50.9,
+                  y: 1.4,
+                  w: 5,
+                  h: 4.4,
+                  gy: 1,
+                  ax: 53.4,
+                  ay: 1.4,
                 },
                 {
                   label: 'Scroll to find',
                   text: <>Without the title, the fallback was <strong>recent documents</strong>, which run for pages.</>,
-                  x: 20,
-                  y: 61,
-                  w: 78,
+                  x: 20.3,
+                  y: 61.5,
+                  w: 76.3,
                   h: 38,
-                  gy: 55,
+                  gy: 61.5,
+                  ax: 83.3,
+                  ay: 61.5,
                 },
               ]}
             />
           </Block>
 
           <Block>
-            <H3 dim="the same homepage, with the assistant docked">Before and after</H3>
+            <H3 dim="one new entry point, beside search">Before and after</H3>
             <div className="mt-6">
               <CompareStage
-                ariaLabel="Before and after: the title-based search versus the Lucid AI assistant on the homepage"
+                ariaLabel="Before and after: the old homepage versus the same homepage with the Lucid AI entry point beside search"
                 layers={[
                   {
-                    src: `${IMG}/before-old-search.png`,
-                    alt: 'The old Lucid homepage: a search bar that only matches keywords against document titles, with no AI entry point',
+                    src: `${IMG}/home-before.png`,
+                    alt: 'The old Lucid homepage: a search bar that only matches keywords against document titles, with nothing beside it',
                     label: 'Before',
                     caption: 'The old homepage. Search matched keywords in titles and nothing else.',
                     width: 2880,
                     height: 1800,
                   },
                   {
-                    src: `${IMG}/side-panel-zero.png`,
-                    alt: 'The Lucid AI side panel docked beside the homepage document list, offering skill tiles above the chat input',
+                    src: `${IMG}/home-entry.png`,
+                    alt: 'The same homepage with one addition: a Lucid AI sparkle button beside the search bar',
                     label: 'After',
                     caption:
-                      'Lucid AI on the homepage. Describe the document by collaborator, timeframe, or content while the page stays usable. Design-file capture: the third tile here carries the earlier label for Generate a New Board.',
+                      'One addition to the homepage: the Lucid AI entry point beside search, in the spot that was empty. Everything else stays where people expect it.',
                     width: 2880,
                     height: 1800,
                   },
@@ -397,7 +372,7 @@ export default function LucidCaseStudy() {
               <p>
                 That expanded the scope of the project. We rapidly prototyped and tested{' '}
                 <strong>more than 20 potential capabilities</strong> before narrowing the experience
-                to four core skills: Find Docs, Summarize, Generate a New Board, and Catch Up.
+                to four core skills: Find docs, Summarize, Build a diagram, and Catch up.
               </p>
             </div>
           </Act>
@@ -431,12 +406,8 @@ export default function LucidCaseStudy() {
                 <div key={s.name}>
                   <dt>
                     <MonoLabel>
-                      {s.icon ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={s.icon} alt="" />
-                      ) : (
-                        <Ico name="clock" />
-                      )}
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={s.icon} alt="" />
                       {s.name}
                     </MonoLabel>
                   </dt>
@@ -454,22 +425,22 @@ export default function LucidCaseStudy() {
               <figure className="m-0">
                 <div className="cs-fig__frame">
                   <ZoomShot
-                    src={`${IMG}/find-docs-flow.png`}
-                    alt="The Find Docs skill explaining it can search by collaborators, timeframe, canvas content, and connected project views, with quick view chips"
-                    width={2400}
-                    height={1600}
+                    src={`${IMG}/skill-find.png`}
+                    alt="The Find docs skill in the panel: it explains it can search by collaborators, timeframe, canvas content, and connected project views, with three quick-view chips under the text"
+                    width={1760}
+                    height={1312}
                     sizes="(min-width: 60em) 800px, 100vw"
                   />
                 </div>
                 <figcaption className="cs-cap">
-                  Find Docs takes a description instead of a title: who worked on it, roughly when,
+                  Find docs takes a description instead of a title: who worked on it, roughly when,
                   or what is written on the canvas.
                 </figcaption>
               </figure>
             }
           >
             <p>
-              Find Docs is the skill the whole project started from. Instead of a keyword that has
+              Find docs is the skill the whole project started from. Instead of a keyword that has
               to match the title, it accepts <strong>whatever the person remembers</strong>: a
               collaborator, a timeframe, or the content written on the canvas.
             </p>
@@ -493,15 +464,20 @@ export default function LucidCaseStudy() {
                     y: 25.5,
                     w: 65,
                     h: 30.5,
+                    gy: 41,
+                    ax: 16.5,
+                    ay: 41,
                   },
                   {
                     label: 'AI summary',
                     text: <>One line on <strong>what is inside</strong>, so the title is not the only clue.</>,
                     x: 38,
                     y: 26.5,
-                    w: 45.5,
+                    w: 45,
                     h: 4.8,
-                    gy: 23,
+                    gy: 20,
+                    ax: 83,
+                    ay: 29,
                   },
                   {
                     label: 'Next step',
@@ -511,7 +487,7 @@ export default function LucidCaseStudy() {
                     w: 40,
                     h: 4.5,
                     gy: 57.7,
-                    ax: 56.5,
+                    ax: 57,
                     ay: 57.7,
                   },
                 ]}
@@ -533,17 +509,17 @@ export default function LucidCaseStudy() {
             task="The assistant guessed wrong when people named a collaborator"
             solution="An @mention that resolves the person before the search runs"
             visual={
-              <div>
-                <p className="lcs-mention" aria-label="Example query using a resolved mention chip">
-                  <span>Boards</span>
-                  <span className="lcs-mention__chip">@Sam T.</span>
-                  <span>and I worked on in May</span>
-                </p>
-                <p className="cs-cap">
-                  The @mention resolves the person before the search runs, so the assistant never
-                  has to guess which Sam you meant.
-                </p>
-              </div>
+              <figure className="m-0">
+                <div className="cs-fig__frame">
+                  <MentionMock />
+                </div>
+                <figcaption className="cs-cap">
+                  Typing @ opens the collaborator list; choosing someone resolves them into a chip
+                  the search can act on. A team resolves the same way. Rebuilt in page code from
+                  the design file&rsquo;s own components, with invented people in place of the real
+                  directory.
+                </figcaption>
+              </figure>
             }
           >
             <p>
@@ -554,36 +530,145 @@ export default function LucidCaseStudy() {
               a document. This removed ambiguity and gave users more control over the
               assistant&rsquo;s response.
             </p>
+            <p>
+              The mention tool shipped in <strong>both surfaces</strong>: the assistant panel and
+              the keyword search bar.
+            </p>
           </Pair>
 
           <Block>
-            <H3 dim="summarize, and generate a new board">Beyond search</H3>
-            <div className="mt-6 grid gap-6 sm:grid-cols-2">
-              <figure className="m-0">
-                <div className="cs-fig__frame">
-                  <ZoomShot
-                    src={`${IMG}/summarize-flow.png`}
-                    alt="The Summarize skill explaining project syncs, catch-up reports, thematic reviews, and single file deep dives, with cross-file prompt chips"
-                    width={2400}
-                    height={1600}
-                    sizes="(min-width: 60em) 390px, 100vw"
-                  />
-                </div>
-                <figcaption className="cs-cap">
-                  Summarize: one document or a group of them. In this capture, catch-up reports
-                  still sit under Summarize. Catch Up shipped as its own skill.
-                </figcaption>
-              </figure>
-              <figure className="m-0">
-                <div className="cs-fig__frame">
-                  <BoardGenClip />
-                </div>
-                <figcaption className="cs-cap">
-                  Generate a New Board, captured live from the product: the board assembles in its
-                  own tab while the panel reports progress.
-                </figcaption>
-              </figure>
+            <H3 dim="the other half of search">What I owned across both surfaces</H3>
+            <div className="cs-prose mt-3">
+              <p>
+                Search kept its keyword bar. Past four words, it also returns an{' '}
+                <strong>AI answer</strong> above the results, so a sentence gets an answer and a
+                keyword still gets a list.
+              </p>
+              <p>
+                <strong>My manager owned the design of that AI answer section, and I contributed
+                to it.</strong> Across both surfaces I owned the mention tool, the document search
+                results, and the interaction that opened the chat from inside the answer and led
+                into the full Lucid AI experience.
+              </p>
             </div>
+            <Callouts
+              src={`${IMG}/search-ai-answer.png`}
+              alt="The search results page, annotated: a resolved mention chip inside the keyword query, an AI answer listing documents with one-line summaries above the results table, and a chat input under the answer that continues into Lucid AI"
+              width={2880}
+              height={1800}
+              items={[
+                {
+                  label: 'Mention, in search',
+                  text: <>The same resolver as the panel, <strong>inside the keyword bar</strong>.</>,
+                  x: 26.5,
+                  y: 2,
+                  w: 6.5,
+                  h: 2.8,
+                  gy: 1,
+                  /* The pin lands on the chip's left corner, not its middle,
+                     so the resolved name stays readable under it. */
+                  ax: 26.5,
+                  ay: 2,
+                },
+                {
+                  label: 'Document results',
+                  text: <>One line per document, so a title is <strong>never the only clue</strong>.</>,
+                  x: 19,
+                  y: 17,
+                  w: 77.5,
+                  h: 21,
+                  gy: 12,
+                  ax: 50,
+                  ay: 17,
+                },
+                {
+                  label: 'Into the chat',
+                  text: <>Typing here <strong>opens the full assistant</strong>, carrying the answer with it.</>,
+                  x: 19,
+                  y: 42.5,
+                  w: 78,
+                  h: 10,
+                  gy: 40,
+                  ax: 83.3,
+                  ay: 42.5,
+                },
+              ]}
+            />
+          </Block>
+
+          <Block>
+            <H3 dim="the same panel, two more skills">Beyond search</H3>
+            <p className="cs-prose mt-3">
+              Summarize and Catch up answer in the same panel as Find docs. Each one opens by
+              saying <strong>what it can do</strong> and offering a prompt to start from.
+            </p>
+            <div className="mt-6">
+              <FailureTabs
+                tabs={[
+                  {
+                    label: 'Summarize',
+                    content: (
+                      <figure className="m-0">
+                        <ZoomShot
+                          src={`${IMG}/skill-summarize.png`}
+                          alt="The Summarize skill in the panel, explaining project syncs, catch-up reports, thematic reviews, and single file deep dives, with three cross-file prompt chips"
+                          width={1760}
+                          height={1312}
+                          eager
+                          sizes="(min-width: 60em) 800px, 100vw"
+                        />
+                        <figcaption className="cs-cap">
+                          Summarize: one document, or a group of them across teams and timeframes.
+                        </figcaption>
+                      </figure>
+                    ),
+                  },
+                  {
+                    label: 'Catch up',
+                    content: (
+                      <figure className="m-0">
+                        <ZoomShot
+                          src={`${IMG}/skill-catchup.png`}
+                          alt="The Catch up skill in the panel, offering key updates, decisions made, open questions, and next steps, with three timeframe chips"
+                          width={1760}
+                          height={1312}
+                          eager
+                          sizes="(min-width: 60em) 800px, 100vw"
+                        />
+                        <figcaption className="cs-cap">
+                          Catch up: what changed since you were last here, and what still needs a
+                          decision.
+                        </figcaption>
+                      </figure>
+                    ),
+                  },
+                ]}
+              />
+            </div>
+          </Block>
+
+          <Block>
+            <H3 dim="the one skill that leaves the panel">Build a diagram</H3>
+            <p className="cs-prose mt-3">
+              Build a diagram runs as a conversation. The assistant asks what kind of diagram, takes
+              a prompt, and <strong>assembles the board in its own tab</strong> while the panel
+              reports progress.
+            </p>
+            <figure className="m-0 mt-6">
+              <div className="cs-fig__frame">
+                <ZoomShot
+                  src={`${IMG}/skill-diagram.png`}
+                  alt="Build a diagram in progress: the homepage on the left, and in the panel a diagram-type chooser, a chosen flowchart, an example prompt, and a generating diagram status under a scanned canvas step"
+                  width={2880}
+                  height={1800}
+                  sizes="(min-width: 60em) 800px, 100vw"
+                />
+              </div>
+              <figcaption className="cs-cap">
+                Diagram type first, then the prompt. The status line names each step so the wait is
+                never silent.
+              </figcaption>
+            </figure>
           </Block>
         </Col>
 
@@ -675,18 +760,18 @@ export default function LucidCaseStudy() {
             Final designs
           </p>
           <div className="cs-final__stage" style={{ paddingInline: 'var(--cs-pad)' }}>
-            <Laptop style={{ '--r': '-5deg', '--y': '6%' } as React.CSSProperties}>
+            <Laptop style={{ '--r': '-2deg', '--y': '0' } as React.CSSProperties}>
               <Image
-                src={`${IMG}/side-panel-zero.png`}
-                alt="Lucid AI docked as a side panel beside the homepage document list"
+                src={`${IMG}/panel-side.png`}
+                alt="Lucid AI docked as a side panel beside the homepage document list, offering Find docs, Summarize, Build a diagram, and Catch up"
                 fill
                 sizes="(min-width: 40em) 50vw, 100vw"
               />
             </Laptop>
-            <Laptop style={{ '--r': '4deg', '--y': '-4%' } as React.CSSProperties}>
+            <Laptop style={{ '--r': '2deg', '--y': '0' } as React.CSSProperties}>
               <Image
-                src={`${IMG}/full-page-zero.png`}
-                alt="Lucid AI expanded to a full page over the homepage"
+                src={`${IMG}/panel-full.png`}
+                alt="Lucid AI expanded to a full page over the homepage, asking what are you looking for today above the four skills"
                 fill
                 sizes="(min-width: 40em) 50vw, 100vw"
               />
@@ -710,15 +795,16 @@ export default function LucidCaseStudy() {
                 ariaLabel="The shipped expand interaction: side panel versus full page"
                 layers={[
                   {
-                    src: `${IMG}/side-panel-zero.png`,
-                    alt: 'Lucid AI docked as a side panel beside the homepage document list',
+                    src: `${IMG}/panel-side.png`,
+                    alt: 'Lucid AI docked as a side panel beside the homepage document list, offering the four skills',
                     label: 'Side panel',
-                    caption: 'Docked: ask without leaving your documents.',
+                    caption:
+                      'Docked: ask without leaving your documents. Every skill is one tap from the panel.',
                     width: 2880,
                     height: 1800,
                   },
                   {
-                    src: `${IMG}/full-page-zero.png`,
+                    src: `${IMG}/panel-full.png`,
                     alt: 'Lucid AI expanded to a full page over the homepage',
                     label: 'Full page',
                     caption: 'Expanded: room for longer conversations. One click back to the panel.',
@@ -758,7 +844,7 @@ export default function LucidCaseStudy() {
               items={[
                 'The side panel and full-page experiences',
                 'The results component',
-                'Four core skills: Find Docs, Summarize, Generate a New Board, Catch Up',
+                'Four core skills: Find docs, Summarize, Build a diagram, Catch up',
                 'Failure states, shipped with the release',
                 'An A/B test comparing the two layouts and the capabilities within them',
                 'Designs for memory controls and chat history',

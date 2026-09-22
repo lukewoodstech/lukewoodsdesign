@@ -66,7 +66,7 @@ const LukeAiComposer = forwardRef<ComposerHandle, Props>(function LukeAiComposer
           className="lai-composer__input"
           value={value}
           rows={1}
-          placeholder={placeholder ?? 'Ask about Luke’s work…'}
+          placeholder={placeholder ?? 'Ask me about my work…'}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {

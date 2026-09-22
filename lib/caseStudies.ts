@@ -51,7 +51,7 @@ export const caseStudies: CaseStudy[] = [
     summary: 'An AI assistant that finds, summarizes, and creates work from the Lucid homepage.',
     headline: [
       'General availability on every tier in 12 weeks',
-      'Four core skills: Find Docs, Summarize, Generate a New Board, Catch Up',
+      'Four core skills: Find docs, Summarize, Build a diagram, Catch up',
     ],
     tagline:
       'An AI assistant that helps users find, understand, and create work from the Lucid homepage.',

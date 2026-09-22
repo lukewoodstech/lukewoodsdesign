@@ -10,7 +10,6 @@ import CompareStage from '@/components/lucid/CompareStage'
 import ZoomShot from '@/components/lucid/ZoomShot'
 import BigStats from '@/components/cs/BigStats'
 import Journey from '@/components/cs/Journey'
-import JourneyChart from '@/components/cs/JourneyChart'
 import Callouts from '@/components/cs/Callouts'
 import Laptop from '@/components/cs/Laptop'
 import {
@@ -366,34 +365,6 @@ export default function PatternCaseStudy() {
             />
           </Block>
 
-          <Block>
-            <H3 dim="one report, four dead ends">The old workflow</H3>
-            <JourneyChart
-              label="How reporting went before the redesign: starting, configuring, presenting, leaving"
-              stages={[
-                {
-                  title: 'Starting',
-                  text: 'Creates a first report. Roughly 60% of eligible users got this far.',
-                  y: 9,
-                },
-                {
-                  title: 'Configuring',
-                  text: 'Hits the two-metric cap and filters that cannot change after creation.',
-                  y: 16,
-                },
-                {
-                  title: 'Presenting',
-                  text: 'Needs to tweak a chart mid-call and has to leave for a separate edit mode.',
-                  y: 25,
-                },
-                {
-                  title: 'Leaving',
-                  text: 'Rebuilds the report in Excel and slides. About 15% came back.',
-                  y: 34,
-                },
-              ]}
-            />
-          </Block>
         </Col>
 
         {/* ══ Act 02 · Scope ══ */}

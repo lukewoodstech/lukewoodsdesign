@@ -42,16 +42,25 @@ import type { StoryCard as Card } from '@/lib/about'
  * caption and the corner radius are counter-scaled so they stay their
  * designed size the whole way down instead of being magnified with it.
  *
+ * The page's heading rides along inside the pinned stage (`intro`).
+ * It used to sit in a normal block above this section, which meant that
+ * by the time the portrait was at full size the heading had scrolled
+ * away and the hero was a lone card in an empty black field — it read
+ * as smaller than it measured. Sharing the first screen with the
+ * heading is what makes it read as a hero. It fades and lifts over the
+ * first third of the deal, so the deck gets the screen to itself once
+ * the cards are actually moving.
+ *
  * Phones get the grid two-up with a staggered fade-in instead — a 5×3
  * deal has nowhere to go on a 390px screen — and reduced motion gets the
  * finished grid, still, everywhere.
  */
 
 const DESKTOP = '(min-width: 60em)'
-/* Ease-out for things that should arrive gently (lift, the portrait
-   settling); a smoothstep for the cards' travel so they leave the deck
-   without a jolt and land without one. */
-const easeOut = (t: number) => 1 - Math.pow(1 - t, 4)
+/* A smoothstep for everything that moves: the cards' travel so they
+   leave the deck without a jolt and land without one, the heading's
+   fade, and the deck's drop back to centre. (An ease-out lived here for
+   the old upward lift, which the intro-clearing drop replaced.) */
 const smooth = (t: number) => t * t * (3 - 2 * t)
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v))
 /* Fraction of the remaining distance the drawn progress closes per frame
@@ -59,17 +68,34 @@ const clamp01 = (v: number) => Math.min(1, Math.max(0, v))
 const FOLLOW = 0.16
 /* The deal is complete at this much of the scrub; the rest is rest. */
 const DEAL_END = 0.94
-/* How tall the portrait stands before the deal, as a fraction of the
-   viewport, and the scale that can't be exceeded getting there. */
-const HERO_VH = 0.6
+/* How tall the portrait stands before the deal, and the scale that
+   can't be exceeded getting there. It's a fraction of the space left
+   under the heading, not of the viewport: sized against the viewport it
+   overflowed the bottom of the stage on a laptop, because the heading
+   had already taken half the screen. Measuring what's actually free
+   makes it fill a 27" and still fit a 13". */
+const HERO_FILL = 0.92
 const HERO_MAX = 3.4
 /* Must match --ab-card-r; the centre card's radius is divided by its
    scale so the hero's corners aren't magnified. */
 const CARD_RADIUS = 16
+/* The heading is gone by this much of the deal, before the cards that
+   travel furthest arrive. */
+const INTRO_OUT = 0.32
+/* Breathing room between the heading and the top of the hero. */
+const INTRO_GAP = 56
 
-export default function StoryStage({ cards }: { cards: ReadonlyArray<Card> }) {
+export default function StoryStage({
+  cards,
+  intro,
+}: {
+  cards: ReadonlyArray<Card>
+  /* The page heading, rendered inside the pinned stage. */
+  intro?: React.ReactNode
+}) {
   const secRef = useRef<HTMLElement>(null)
   const gridRef = useRef<HTMLUListElement>(null)
+  const introRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const sec = secRef.current
@@ -90,6 +116,10 @@ export default function StoryStage({ cards }: { cards: ReadonlyArray<Card> }) {
     const cap = center?.querySelector<HTMLElement>('.story-card__cap') ?? null
     let geo: { dx: number; dy: number; delay: number }[] = []
     let hero = 1
+    /* How far the deck starts pushed down so the hero clears the
+       heading. Eases to 0, which is where the finished grid belongs:
+       centred in the whole stage, not in what the heading left over. */
+    let push = 0
     let raf = 0
     let mode: 'scrub' | 'stagger' | null = null
     let io: IntersectionObserver | null = null
@@ -113,9 +143,23 @@ export default function StoryStage({ cards }: { cards: ReadonlyArray<Card> }) {
         return { dx, dy, delay: d }
       })
       geo.forEach((g) => (g.delay = (g.delay / max) * 0.45))
-      /* Hero size from the card's own resting height, so the portrait is
-         the same share of the screen on a laptop and a 27". */
-      hero = Math.min(HERO_MAX, Math.max(1, (HERO_VH * window.innerHeight) / c.height))
+      /* Hero size from the card's own resting height against the space
+         the heading leaves free. The intro only ever fades — it keeps
+         its height — so this measurement stays true for the whole
+         scrub and the card never reflows under itself. */
+      const stageEl = sec.querySelector<HTMLElement>('.story__stage')
+      const stageH = stageEl?.clientHeight ?? window.innerHeight
+      const introH = introRef.current?.offsetHeight ?? 0
+      /* The gap counts twice: once above the card, and once below it so
+         the hero doesn't sit flush on the bottom edge of the stage. */
+      const free = Math.max(1, stageH - introH - INTRO_GAP * 2)
+      hero = Math.min(HERO_MAX, Math.max(1, (HERO_FILL * free) / c.height))
+      /* The intro is positioned over the stage, so the grid stays centred
+         in the full height and the finished 5x3 always fits. At the
+         start the deck is pushed down by exactly the distance that puts
+         the hero's top just under the heading. */
+      const heroH = c.height * hero
+      push = introH ? Math.max(0, introH + INTRO_GAP - (stageH - heroH) / 2) : 0
     }
 
     const apply = (raw: number) => {
@@ -123,8 +167,19 @@ export default function StoryStage({ cards }: { cards: ReadonlyArray<Card> }) {
       const p = clamp01(raw / DEAL_END)
       /* A small lift only — the hero is tall enough now that the old
          18vh would have pushed its top off the stage. */
-      const lift = -0.05 * window.innerHeight * (1 - easeOut(clamp01(p / 0.4)))
-      grid.style.transform = `translate3d(0, ${lift.toFixed(2)}px, 0)`
+      /* Down at the start to clear the heading, back to centre by the
+         time the deck is dealt. Runs on its own slower curve than the
+         heading's fade so the deck doesn't lurch up as the words go. */
+      const drop = push * (1 - smooth(clamp01(p / 0.75)))
+      grid.style.transform = `translate3d(0, ${drop.toFixed(2)}px, 0)`
+      const introEl = introRef.current
+      if (introEl) {
+        const o = 1 - smooth(clamp01(p / INTRO_OUT))
+        introEl.style.opacity = o.toFixed(3)
+        introEl.style.transform = `translate3d(0, ${(-24 * (1 - o)).toFixed(2)}px, 0)`
+        /* Once it's invisible it must stop catching clicks over the deck. */
+        introEl.style.visibility = o < 0.01 ? 'hidden' : 'visible'
+      }
       items.forEach((el, i) => {
         if (el === center) {
           /* Shrinks across most of the deal, not the first quarter of
@@ -210,6 +265,11 @@ export default function StoryStage({ cards }: { cards: ReadonlyArray<Card> }) {
         cap.style.width = ''
         cap.style.transform = ''
       }
+      if (introRef.current) {
+        introRef.current.style.opacity = ''
+        introRef.current.style.transform = ''
+        introRef.current.style.visibility = ''
+      }
       grid.style.transform = ''
     }
 
@@ -267,6 +327,11 @@ export default function StoryStage({ cards }: { cards: ReadonlyArray<Card> }) {
   return (
     <section ref={secRef} className="story" aria-label="A few things about me">
       <div className="story__stage">
+        {intro && (
+          <div ref={introRef} className="story__intro">
+            {intro}
+          </div>
+        )}
         <ul ref={gridRef} className="story__grid">
           {cards.map((c, i) => (
             <StoryCard

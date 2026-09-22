@@ -178,7 +178,7 @@ async function run(base: Message[], text: string, surface: Surface) {
     phase: 'processing',
     status: labels[0],
     hasError: false,
-    announce: 'Luke AI is searching the portfolio',
+    announce: 'Luke AI is looking through the portfolio',
   })
   const labelTimer = setTimeout(() => {
     if (state.phase === 'processing') set({ status: labels[1] })

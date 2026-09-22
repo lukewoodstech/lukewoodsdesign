@@ -97,7 +97,7 @@ test('claims: Lucid stays within the documented evidence', () => {
   assert.match(w, /12 weeks/)
   assert.match(w, /every Lucid tier/)
   assert.match(w, /12 external user sessions/)
-  assert.match(w, /Find Docs, Summarize, Generate a New Board, and Catch Up/)
+  assert.match(w, /Find docs, Summarize, Build a diagram, and Catch up/)
   assert.match(w, /does not have long-term adoption data/)
   const lucid = CLAIMS.filter((c) => c.company === 'Lucid').map((c) => c.wording).join('\n')
   assert.doesNotMatch(lucid, /\d+\s?%/, 'no percentages exist for Lucid')
@@ -142,7 +142,7 @@ test('prompt: carries every required accuracy rule', () => {
     'Never combine metrics from different projects',
     'Never invent post-launch results',
     'Never guess',
-    'The available portfolio evidence doesn’t specify that.',
+    'That one isn’t in my portfolio, so I won’t guess at it.',
     'Prefer a smaller number of defensible claims',
     'Link a claim to its case study',
     'three product-design internships',
@@ -186,9 +186,13 @@ test('suggestions and follow-ups: no post-launch or adoption prompts', () => {
   for (const f of SAFE_FOLLOWUPS) assert.doesNotMatch(f, risky)
   for (const f of fallbackFollowups('Lucid Awardco Pattern')) assert.doesNotMatch(f, risky)
   assert.ok(SAFE_FOLLOWUPS.includes('What was validated before the Awardco handoff?'))
-  assert.ok(SAFE_FOLLOWUPS.includes('Which project best demonstrates Luke’s judgment?'))
-  assert.ok(SAFE_FOLLOWUPS.includes('How does Luke use code in the design process?'))
-  assert.ok(SAFE_FOLLOWUPS.includes('What tradeoff did Luke make at Pattern?'))
+  assert.ok(SAFE_FOLLOWUPS.includes('Which project best shows your judgment?'))
+  assert.ok(SAFE_FOLLOWUPS.includes('How do you use code in your design process?'))
+  assert.ok(SAFE_FOLLOWUPS.includes('What tradeoff did you make at Pattern?'))
+
+  /* The follow-ups are the visitor's next message, so they speak TO Luke:
+     "you", never "Luke" or "he". */
+  for (const f of SAFE_FOLLOWUPS) assert.doesNotMatch(f, /\bLuke\b|\bhe\b|\bhis\b/i)
 })
 
 test('suggestions, welcome, and follow-ups carry no prohibited phrasing', () => {

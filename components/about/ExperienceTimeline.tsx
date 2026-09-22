@@ -137,7 +137,7 @@ export default function ExperienceTimeline({
                       <Link
                         href={r.href}
                         className="tl-card__go"
-                        aria-label={`${r.role} at ${r.company} — read the case study`}
+                        aria-label={`${r.role} at ${r.company}: read the case study`}
                       >
                         {r.role}
                       </Link>

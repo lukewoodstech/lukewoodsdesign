@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { usePathname } from 'next/navigation'
 import LukeAiCard from './LukeAiCard'
+import LukeSprite from './LukeSprite'
 import { useLukeAi } from './LukeAiProvider'
 
 /*
@@ -116,10 +117,10 @@ export default function LukeAiDock() {
           onClick={() => setOpen(true)}
           aria-label="Open Luke AI"
         >
-          <span className="ai-dock__star" aria-hidden="true">
-            ✱
+          <span className="ai-dock__name" aria-hidden="true">
+            luke.ai
           </span>
-          ask luke-ai
+          <LukeSprite variant="chip" className="ai-dock__face" />
           {/* Honest state, not a notification badge: it only shows when
               there really is a conversation waiting behind the chip. */}
           {messages.length > 0 && <span className="ai-dock__resume">resume</span>}

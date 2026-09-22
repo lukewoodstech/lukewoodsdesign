@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { AiTag } from './TermChrome'
+import LukeSprite from './LukeSprite'
 import LukeAiMarkdown from './LukeAiMarkdown'
 import { useLukeAi } from './LukeAiProvider'
 import {
@@ -44,17 +45,17 @@ export default function LukeAiThread({ surface, suggestions }: Props) {
         <>
           {/* The empty window: the headline and one line take the free
               space up top, behind a terminal prompt; the questions dock
-              at the foot, directly over the message field. The line ends
-              in the same block cursor the status line and streaming
-              answers use — no typewriter, just the cursor. */}
+              at the foot, directly over the message field. Luke's face
+              opens it — a greeting, not a cursor waiting to be fed. */}
           <div className="lai__welcome">
+            <LukeSprite variant="hero" className="lai__hero" />
             <p className="lai__hello">
               <span className="lai__prompt" aria-hidden="true">
                 &gt;
               </span>{' '}
               {WELCOME.title}
             </p>
-            <p className="lai__intro lai__cursor">{WELCOME.body}</p>
+            <p className="lai__intro">{WELCOME.body}</p>
           </div>
           <div className="lai__start">
             <ul className="lai__chips" aria-label="Suggested questions">

@@ -10,9 +10,9 @@ import Reveal from '@/components/lucid/Reveal'
  * a non-scaling stroke; the stems under the labels are CSS.
  *
  * Route: from the label's column centre straight down to `gy`, across to
- * `ax`, then down (or up) to `ay`. Defaults land on the box's top-centre.
- * On phones the lines go away and the boxes get numbered instead, so the
- * figure reads as a list plus a picture rather than a tangle.
+ * `ax`, then down (or up) to `ay`, where a numbered pin sits on the image.
+ * Hovering a label dims the other callouts so one pairing reads at a time.
+ * On phones the lines go away and the pins carry the pairing alone.
  */
 export type Callout = {
   label: string
@@ -62,41 +62,49 @@ export default function Callouts({
       </ol>
       <div className="cs-callouts__stage">
         <Image src={src} alt="" width={width} height={height} sizes={sizes} />
-        <svg className="cs-callouts__svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          {items.map((c, i) => {
-            const lx = ((i + 0.5) / n) * 100
-            const ax = c.ax ?? c.x + c.w / 2
-            const ay = c.ay ?? c.y
-            const gy = Math.min(Math.max(c.gy ?? c.y - 6, 1), ay)
-            return (
-              <path
-                key={c.label}
-                d={`M${lx} 0 V${gy} H${ax} V${ay}`}
-                pathLength={1}
-                style={{ '--co': COLORS[i % COLORS.length], '--i': i } as React.CSSProperties}
+        {/* The leader lines as three positioned segments each: down from the
+            label's column, across the gutter, down to the pin. HTML rather
+            than SVG because a non-uniformly scaled SVG path ignores
+            pathLength in Chromium, which turned every line into dashes. */}
+        {items.map((c, i) => {
+          const lx = ((i + 0.5) / n) * 100
+          const ax = c.ax ?? c.x + c.w / 2
+          const ay = c.ay ?? c.y
+          const gy = Math.min(Math.max(c.gy ?? c.y - 6, 1), ay)
+          const vars = { '--co': COLORS[i % COLORS.length], '--i': i } as React.CSSProperties
+          return (
+            <span key={c.label} data-i={i} style={vars} aria-hidden="true">
+              <span className="cs-callouts__seg cs-callouts__seg--v" style={{ left: `${lx}%`, top: 0, height: `${gy}%` }} />
+              <span
+                className="cs-callouts__seg cs-callouts__seg--h"
+                style={{ left: `${Math.min(lx, ax)}%`, top: `${gy}%`, width: `${Math.abs(ax - lx)}%` }}
               />
-            )
-          })}
-        </svg>
-        {items.map((c, i) => (
-          <span
-            key={c.label}
-            className="cs-callouts__box"
-            style={
-              {
-                left: `${c.x}%`,
-                top: `${c.y}%`,
-                width: `${c.w}%`,
-                height: `${c.h}%`,
-                '--co': COLORS[i % COLORS.length],
-                '--i': i,
-              } as React.CSSProperties
-            }
-            aria-hidden="true"
-          >
-            <i>{i + 1}</i>
-          </span>
-        ))}
+              <span
+                className="cs-callouts__seg cs-callouts__seg--v"
+                style={{ left: `${ax}%`, top: `${Math.min(gy, ay)}%`, height: `${Math.abs(ay - gy)}%` }}
+              />
+            </span>
+          )
+        })}
+        {items.map((c, i) => {
+          const ax = c.ax ?? c.x + c.w / 2
+          const ay = c.ay ?? c.y
+          const vars = { '--co': COLORS[i % COLORS.length], '--i': i } as React.CSSProperties
+          return (
+            <span key={c.label} data-i={i} style={vars} aria-hidden="true">
+              <span
+                className="cs-callouts__box"
+                style={{ left: `${c.x}%`, top: `${c.y}%`, width: `${c.w}%`, height: `${c.h}%` }}
+              />
+              {/* The numbered pin where the line lands: the same number as
+                  the label, in the same colour, so the pairing reads even
+                  where the line crosses busy content. */}
+              <span className="cs-callouts__pin" style={{ left: `${ax}%`, top: `${ay}%` }}>
+                {i + 1}
+              </span>
+            </span>
+          )
+        })}
       </div>
     </Reveal>
   )

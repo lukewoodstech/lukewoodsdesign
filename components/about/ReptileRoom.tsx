@@ -1,41 +1,64 @@
 import Image from 'next/image'
-import type { Critter } from '@/lib/about'
+import type { RoomBlock } from '@/lib/about'
 
 /*
- * The reptile room: six enclosures in the same frame as the story cards,
- * each with a name and a species pinned to its foot. Hover lifts the
- * card; that's the whole interaction, because looking at a photo of a
- * snake is the point.
+ * The reptile room as a photo essay rather than a pet register.
  *
- * Every card is a placeholder until Luke swaps the data in lib/about.ts;
- * the PLACEHOLDER tag renders from the flag, not from a class, so it
- * can't be left on by accident once the flag is deleted.
+ * The first version (2026-09-21) was six cards reading "Name / Species /
+ * enclosure 01", all flagged PLACEHOLDER, waiting on portraits of six
+ * specific animals. The photos that arrived (2026-09-22) were scenes
+ * instead — the room, the enclosures he built, the rodent racks, and
+ * child after child being handed a snake — so the section became the
+ * thing the photos were actually of.
+ *
+ * Layout is a 12-column grid per block; each shot carries its own span
+ * and aspect ratio from lib/about.ts, and blocks group shots of one
+ * ratio so a row's heights agree. No card is cropped square, because a
+ * landscape photo squeezed into a portrait frame cuts the person out of
+ * the picture — which in this section is the whole subject.
+ *
+ * Hover lifts the card. That's the only interaction, because looking at
+ * the photo is the point.
  */
-export default function ReptileRoom({ critters }: { critters: ReadonlyArray<Critter> }) {
+export default function ReptileRoom({ blocks }: { blocks: ReadonlyArray<RoomBlock> }) {
   return (
-    <ul className="rr" aria-label="The reptile room">
-      {critters.map((c, i) => (
-        <li key={c.id} className="story-card rr__card">
-          <div className="story-card__art">
-            {c.photo ? (
-              <Image src={c.photo} alt={`${c.name}, a ${c.species}`} fill sizes="(max-width: 60em) 46vw, 300px" />
-            ) : (
-              <span className="story-card__slot">enclosure · {String(i + 1).padStart(2, '0')}</span>
-            )}
-          </div>
-          <p className="story-card__cap">
-            <span className="rr__name">
-              {c.name}
-              {c.placeholder && (
-                <span className="ph-tag" aria-label="placeholder">
-                  placeholder
-                </span>
-              )}
-            </span>
-            <span className="rr__species">{c.species}</span>
-          </p>
-        </li>
+    <div className="rr">
+      {blocks.map((block) => (
+        <section key={block.id} className="rr__block">
+          {block.lede && <p className="rr__lede">{block.lede}</p>}
+          <ul className="rr__row">
+            {block.shots.map((shot) => (
+              <li
+                key={shot.src}
+                className="story-card rr__card"
+                style={
+                  {
+                    '--rr-span': shot.span,
+                    '--rr-ratio': shot.ratio,
+                    ...(shot.focus ? { '--card-focus': shot.focus } : {}),
+                  } as React.CSSProperties
+                }
+              >
+                <div className="story-card__art">
+                  <Image
+                    src={shot.src}
+                    alt={shot.alt}
+                    fill
+                    sizes={
+                      shot.span === 12
+                        ? '(max-width: 60em) 92vw, 1100px'
+                        : shot.span === 6
+                          ? '(max-width: 60em) 92vw, 550px'
+                          : '(max-width: 60em) 92vw, 370px'
+                    }
+                  />
+                </div>
+                <p className="story-card__cap">{shot.caption}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
       ))}
-    </ul>
+    </div>
   )
 }

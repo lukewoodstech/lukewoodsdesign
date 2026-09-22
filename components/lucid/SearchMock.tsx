@@ -47,6 +47,7 @@ const PROMPTS = [
   { icon: 'intelligent-search-24.svg', title: 'Find docs',       desc: 'Locate files by person, timeframe, or canvas text' },
   { icon: 'summarize-24.svg',          title: 'Summarize',       desc: 'Get the gist of a doc or a group of them' },
   { icon: 'diagram-shapes-24.svg',     title: 'Build a diagram', desc: 'Create flowcharts and visual layouts from a text prompt.' },
+  { icon: 'clock-24.svg',              title: 'Catch up',        desc: 'Summarize your recent workspace changes' },
 ] as const
 
 // Timeline (ms)

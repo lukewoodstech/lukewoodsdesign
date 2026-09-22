@@ -195,10 +195,11 @@ export function Act({
 
 /* ── Note cards with stickers ───────────────────────────────────── */
 
+/* Two up, one below between them: no card sits on another's text. */
 const NOTE_POS: { left?: string; right?: string; top: string; r: string }[] = [
-  { left: '5%', top: '78px', r: '-6deg' },
-  { left: 'calc(50% - 125px)', top: '22px', r: '4deg' },
-  { right: '5%', top: '118px', r: '-2deg' },
+  { left: '0', top: '0', r: '-3deg' },
+  { right: '0', top: '64px', r: '2.5deg' },
+  { left: 'calc(50% - 190px)', top: '262px', r: '-1deg' },
 ]
 
 export type Sticker = { src?: string; text?: string }
@@ -224,11 +225,14 @@ export function Notes({
     <Reveal className="cs-block">
       <p className="cs-cap cs-cap--mono">{label}</p>
       <div className="cs-notes" role="list">
-        <svg className="cs-notes__svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M6 12 C 10 18, 12 20, 15 30" />
-          <path d="M94 15 C 90 20, 84 22, 80 30" />
-          <path d="M17 82 C 22 76, 26 72, 30 62" />
-        </svg>
+        {/* The dashed connectors only exist to tie stickers to cards. */}
+        {stickers.length > 0 && (
+          <svg className="cs-notes__svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M6 12 C 10 18, 12 20, 15 30" />
+            <path d="M94 15 C 90 20, 84 22, 80 30" />
+            <path d="M17 82 C 22 76, 26 72, 30 62" />
+          </svg>
+        )}
         {notes.map((n, i) => {
           const p = NOTE_POS[i % NOTE_POS.length]
           return (
@@ -437,9 +441,10 @@ const PATHS: Record<IcoName, ReactNode> = {
   check: <path d="M5 12.5l4.5 4.5L19 7.5" />,
   rocket: (
     <>
-      <path d="M5 15l4 4c2-1 3-2 4-3 5-5 6-9 6-13-4 0-8 1-13 6-1 1-2 2-3 4z" />
-      <path d="M5 15l-2 4 3 1M15 5l4 4M4.5 19.5L3 21" />
-      <circle cx="14" cy="10" r="1.5" />
+      <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
+      <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
+      <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+      <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
     </>
   ),
   arrow: <path d="M4 12h15M13 6l6 6-6 6" />,

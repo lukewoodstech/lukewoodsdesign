@@ -164,7 +164,7 @@ export const CLAIMS: readonly Claim[] = [
     project: 'Lucid AI on the homepage',
     claim: 'Four core skills',
     wording:
-      'The four final skills were Find Docs, Summarize, Generate a New Board, and Catch Up.',
+      'The four final skills were Find docs, Summarize, Build a diagram, and Catch up.',
     status: 'shipped',
     scope: 'project',
     source: '/work/lucid-ai',
@@ -684,21 +684,21 @@ export const NOT_IN_PORTFOLIO: readonly string[] = [
   'Salary, scholarship amounts, or anything personal.',
 ]
 
-export const UNAVAILABLE_LINE = 'The available portfolio evidence doesn’t specify that.'
+export const UNAVAILABLE_LINE = 'That one isn’t in my portfolio, so I won’t guess at it.'
 
 /* ── Follow-ups the assistant may offer ── */
 
 export const SAFE_FOLLOWUPS: readonly string[] = [
   'What was validated before the Awardco handoff?',
-  'Which project best demonstrates Luke’s judgment?',
-  'How does Luke use code in the design process?',
-  'What tradeoff did Luke make at Pattern?',
-  'Why did Luke choose the slower login design at Awardco?',
-  'What did Luke hand off at Pattern?',
+  'Which project best shows your judgment?',
+  'How do you use code in your design process?',
+  'What tradeoff did you make at Pattern?',
+  'Why did you choose the slower login design at Awardco?',
+  'What did you hand off at Pattern?',
   'What shipped at Lucid in 12 weeks?',
-  'What would Luke do next at Lucid?',
-  'How technical is Luke?',
-  'What did Luke learn from testing at Pattern?',
+  'What would you do next at Lucid?',
+  'How technical are you?',
+  'What did you learn from testing at Pattern?',
 ]
 
 /* ── Background beyond the case studies (résumé-level, no metrics) ── */
@@ -728,6 +728,29 @@ export const BACKGROUND = {
   goals:
     'Product design roles at strong product teams, with long-term interest in building or leading digital products, especially in AI, productivity, and enterprise tools.',
   interests: 'Startups, AI tools, basketball, fitness, hackathons, and unusual pets (reptiles and tarantulas).',
+  /* The life outside the work, added 2026-09-22 when Luke sent the photos
+     for the /about story. Everything here is his own account of it or is
+     plainly visible in a photo he supplied — the reptile room section and
+     the story deck quote these lines, so nothing may be embellished. The
+     optometric-technician line deliberately names no employer and no
+     dates, because Luke has not given them. */
+  personal: [
+    /* The $30,000 is SALES, confirmed by Luke on 2026-09-22 when asked
+       revenue-or-profit directly. It is never profit, earnings, or
+       take-home, and never a monthly figure — see PROHIBITED_PATTERNS. */
+    'Ran a reptile-breeding business through high school: bred snakes and lizards and sold them nationally on MorphMarket, at about $30,000 a year in sales.',
+    'About 100 animals at the peak, in a dedicated reptile room at home.',
+    'Built the enclosures himself out of wood and glass rather than buying them.',
+    'Bred his own mice and rats on racks he built, to feed the collection and cut the business’s largest running cost.',
+    'Did his own basic veterinary work, including ultrasounds on gravid females to check a clutch before it was due.',
+    'Taught reptile handling to whoever would listen: family, friends, and his mother’s elementary class, in person and over Zoom during remote school.',
+    'His first business as a kid, before the reptiles, was walking neighbours’ dogs.',
+    'Built a bike and skate ramp in the family backyard.',
+    'Lives in Provo, Utah, where BYU is.',
+    'Utah Jazz fan.',
+    'Worked as an optometric technician, running pre-exam testing on patients.',
+    'Two cats: Obi, black, and Mocha, calico.',
+  ],
   gaps: [
     'Intern-level experience; graduating April 2028.',
     'Enterprise B2B heavy, consumer light.',
@@ -754,6 +777,18 @@ export const PROHIBITED_PATTERNS: readonly ProhibitedPattern[] = [
     reason: 'Retired positioning.',
   },
   { pattern: /visual[- ]brand\s+depth/i, reason: 'Unsupported critique presented as fact.' },
+  {
+    pattern: /\b30[,.]?000\b[^.\n]{0,40}\b(profit|earnings?|earned|income|take-home|net|margin)\b/i,
+    reason: 'The reptile business figure is about $30,000 a year in SALES, never profit or earnings.',
+  },
+  {
+    pattern: /\b(profit|earnings?|earned|income|take-home|net|margin)\b[^.\n]{0,40}\b(of|about|around)?\s*\$?30[,.]?000\b/i,
+    reason: 'The reptile business figure is about $30,000 a year in SALES, never profit or earnings.',
+  },
+  {
+    pattern: /\$?30[,.]?000\b[^.\n]{0,20}\b(a|per|each)\s+month\b/i,
+    reason: 'The reptile business figure is annual, not monthly.',
+  },
   {
     pattern: /\bdaily\s+users?\b/i,
     reason: 'Pattern tested with 20 usability participants, not daily users.',

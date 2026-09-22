@@ -71,7 +71,7 @@ export const QUALIFIER_RULES: readonly QualifierRule[] = [
   },
   {
     trigger: /\bcustom\s+reports\b[^.\n]{0,80}\b(shipped|launched|released)\b|\b(shipped|launched|released)\b[^.\n]{0,80}\bcustom\s+reports\b/i,
-    requires: [/\bafter\s+(his|luke['’]?s|the|my)\s+(pattern\s+)?internship\b|\bafter\s+(he|luke)\s+left\b|\bafter\s+(the\s+)?handoff\b|\bpost-internship\b/i],
+    requires: [/\bafter\s+(his|luke['’]?s|the|my)\s+(pattern\s+)?internship\b|\bafter\s+(he|luke|i)\s+left\b|\bafter\s+(the\s+)?handoff\b|\bpost-internship\b/i],
     reason: 'Pattern: Custom Reports shipped after the internship.',
   },
 ]

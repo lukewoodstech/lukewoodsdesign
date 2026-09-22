@@ -5,9 +5,10 @@ import StoryStage from '@/components/about/StoryStage'
 import ExperienceTimeline from '@/components/about/ExperienceTimeline'
 import Toolbox from '@/components/about/Toolbox'
 import ReptileRoom from '@/components/about/ReptileRoom'
+import BigStats from '@/components/cs/BigStats'
 import Testimonials from '@/components/about/Testimonials'
 import LetsTalk from '@/components/about/LetsTalk'
-import { STORY, ROLES, ONGOING, TOOLS, CRITTERS, QUOTES } from '@/lib/about'
+import { STORY, ROLES, ONGOING, TOOLS, REPTILE_ROOM, REPTILE_STATS, QUOTES } from '@/lib/about'
 import { SITE } from '@/lib/site'
 
 /*
@@ -31,12 +32,17 @@ import { SITE } from '@/lib/site'
  * was the essay growing back — the claim belongs to the work pages, and
  * the rail already carries you to them.
  *
- * Two of them ship as scaffolding on purpose. The reptile room and the
- * quotes render from lib/about.ts with `placeholder: true`, which draws
- * a visible PLACEHOLDER tag — the truth layer says "reptiles and
- * tarantulas" and nothing more, and a made-up quote with a real name on
- * it is the one thing this site can never publish. Photos not yet shot
- * render as dashed slots in the canvas's own voice.
+ * The quotes were scaffolding until 2026-09-22 — three `placeholder:
+ * true` blocks under a loud yellow tag, because a made-up quote with a
+ * real name on it is the one thing this site can never publish. They
+ * are now five real LinkedIn recommendations with their writers’
+ * headshots, quoted verbatim in lib/about.ts. The reptile section was
+ * scaffolding too until 2026-09-22, when Luke sent the photos and then
+ * the story behind them: it was a business he ran through high school,
+ * not a shelf of pets, so it became section 04 with real numbers over
+ * it. Three story cards are still dashed slots — Lucid, Awardco,
+ * Pattern — waiting on work imagery, and a dashed slot is the canvas
+ * saying so out loud.
  *
  * Everything else is traceable: the rail mirrors ENGAGEMENTS and
  * BACKGROUND in lib/lukeAiFacts.ts, the toolbox is BACKGROUND.tools. Nothing here asserts a fact that isn't
@@ -49,7 +55,7 @@ import { SITE } from '@/lib/site'
 
 const TITLE = 'My story'
 const DESCRIPTION =
-  'Luke Woods — a product designer who finds the real problem behind the assigned one. BYU computer science and HCI, three internships, and the work that came out of them.'
+  'Luke Woods, a product designer who finds the real problem behind the assigned one. BYU computer science and HCI, three internships, and the work that came out of them.'
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -81,20 +87,24 @@ export default function AboutPage() {
     <main className="cs cs-surface about-pg min-h-screen text-white">
       <SiteNav />
 
-      {/* ── 01 Nice to meet you ── */}
-      <header className="ab-hero sitenav-offset">
-        <p className="cs-eyebrow">Luke Woods · Product Designer</p>
-        <h1 className="ab-hero__title">Nice to meet you.</h1>
-        <p className="ab-hero__lede">
-          I&rsquo;m Luke, a product designer who can also read the pull request. Every
-          project I&rsquo;ve shipped started as something small — a ticket, a complaint, a
-          vague ask — and the part I&rsquo;m good at is what comes next: finding the real
-          problem underneath, proving it&rsquo;s worth solving, and building the thing.
-        </p>
-      </header>
-
-      {/* The deck deals out from the portrait as you scroll. */}
-      <StoryStage cards={STORY} />
+      {/* ── 01 Nice to meet you ──
+          The heading lives inside the pinned stage rather than in a
+          block above it, so it shares the first screen with the
+          full-size portrait and then fades as the deck deals out. */}
+      <StoryStage
+        cards={STORY}
+        intro={
+          <header className="ab-hero sitenav-offset">
+            <h1 className="ab-hero__title">Nice to meet you.</h1>
+            <p className="ab-hero__lede">
+              I&rsquo;m Luke, a product designer who can also read the pull request. Every
+              project I&rsquo;ve shipped started as something small: a ticket, a complaint, a
+              vague ask. The part I&rsquo;m good at is what comes next, finding the real
+              problem underneath, proving it&rsquo;s worth solving, and building the thing.
+            </p>
+          </header>
+        }
+      />
 
       {/* ── 02 My experience ── */}
       <section className="ab-sec ab-sec--grid" aria-labelledby="experience">
@@ -114,15 +124,24 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── 04 The reptile room ── */}
+      {/* ── 04 The reptile business ──
+          Not a hobby section. Luke ran this as a company through high
+          school, and the numbers are the reason it's on a design
+          portfolio at all: he found a market, built the production
+          line, engineered out his largest cost, and shipped nationally,
+          before he had ever heard the word "product". */}
       <section className="ab-sec" aria-labelledby="reptiles">
         <div className="ab-wide">
-          <Title id="reptiles">The reptile room</Title>
+          <Title id="reptiles">The reptile business</Title>
           <p className="ab-sec__lede">
-            Everyone has a thing. Mine is cold-blooded, mostly nocturnal, and takes up more
-            of my apartment than I&rsquo;d admit in an interview.
+            Everyone has a thing. Mine was a company. Through high school I bred snakes and
+            lizards in a room at my parents&rsquo; house and sold them across the country on
+            MorphMarket. That meant learning genetics, veterinary basics, photography,
+            listings, pricing, live shipping and customer service, because there was nobody
+            else to do any of it.
           </p>
-          <ReptileRoom critters={CRITTERS} />
+          <BigStats stats={[...REPTILE_STATS]} small />
+          <ReptileRoom blocks={REPTILE_ROOM} />
         </div>
       </section>
 
@@ -145,6 +164,17 @@ export default function AboutPage() {
           <LetsTalk />
         </div>
       </section>
+
+      {/* The Provo tile is real OpenStreetMap data, and their licence
+          asks for credit where the map is shown. One quiet line on the
+          one page that uses it, rather than in the global footer. */}
+      <p className="ab-credit">
+        Map data &copy;{' '}
+        <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">
+          OpenStreetMap
+        </a>{' '}
+        contributors
+      </p>
 
       <Footer width="article" />
     </main>

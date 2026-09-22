@@ -9,7 +9,6 @@ import Reveal from '@/components/lucid/Reveal'
 import CompareStage from '@/components/lucid/CompareStage'
 import BigStats from '@/components/cs/BigStats'
 import Journey from '@/components/cs/Journey'
-import JourneyChart from '@/components/cs/JourneyChart'
 import Callouts from '@/components/cs/Callouts'
 import Laptop from '@/components/cs/Laptop'
 import {
@@ -220,7 +219,6 @@ export default function AwardcoCaseStudy() {
 
           <Notes
             label="Three situations from the research. Restated, not quotes."
-            stickers={[{ text: 'SSO' }, { text: '•••' }, { text: '@' }]}
             notes={[
               'Entered a code on the universal page, reached the company page, and was asked to authenticate again',
               'Chose password login without realizing the company used Google or Microsoft SSO',
@@ -325,34 +323,6 @@ export default function AwardcoCaseStudy() {
             />
           </Block>
 
-          <Block>
-            <H3 dim="one sign-in, four dead ends">The old login</H3>
-            <JourneyChart
-              label="How signing in went before the redesign: arriving, guessing, repeating, filing a ticket"
-              stages={[
-                {
-                  title: 'Arriving',
-                  text: 'Sees SSO, password, and a login code all at once, with nothing to say which one is theirs.',
-                  y: 9,
-                },
-                {
-                  title: 'Guessing',
-                  text: 'Picks the option they recognize. Two out of three password attempts fail.',
-                  y: 16,
-                },
-                {
-                  title: 'Repeating',
-                  text: 'Enters a code on the universal page, then is asked for another on the company page.',
-                  y: 25,
-                },
-                {
-                  title: 'Filing a ticket',
-                  text: 'Gives up and writes to support. Login help was the top support topic.',
-                  y: 34,
-                },
-              ]}
-            />
-          </Block>
         </Col>
 
         {/* ══ Act 02 · Test ══ */}
