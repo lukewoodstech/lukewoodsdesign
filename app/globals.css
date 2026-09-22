@@ -5568,6 +5568,86 @@ p a {
   pointer-events: none;
 }
 
+/* A tile with a story is a button filling its tile; one without keeps
+   the plain glyph. The button carries the focus ring, because the tile
+   itself is a physics body being transformed every frame. */
+.tb__btn {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: inherit;
+  border-radius: inherit;
+}
+
+.tb__btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+/* Pendo has no Simple Icons glyph, so its tile sets the name instead. */
+.tb__word {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #fff;
+}
+
+/* The plate under the tray. Its height is reserved so that selecting a
+   tile never reflows the tray you are touching. */
+.tb__plate {
+  display: grid;
+  gap: 0.35rem;
+  min-height: 5.5rem;
+  margin: 1.5rem auto 0;
+  max-width: 34rem;
+  padding-inline: 1rem;
+  text-align: center;
+}
+
+.tb__plate-name {
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.tb__plate-line {
+  font-size: var(--reading-size);
+  line-height: 1.5;
+  color: #fff;
+  text-wrap: pretty;
+}
+
+.tb__plate-link,
+.tb__plate-empty {
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  letter-spacing: 0.04em;
+}
+
+.tb__plate-link {
+  justify-self: center;
+  color: var(--accent, #4c8dff);
+  text-decoration: none;
+}
+
+.tb__plate-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.tb__plate-empty {
+  color: rgba(255, 255, 255, 0.58);
+}
+
 .tb__tray {
   --tb-size: 76px;
   position: relative;
@@ -7427,11 +7507,19 @@ p a {
   filter: brightness(0.35);
 }
 
-.cs-callouts:has(.cs-callouts__labels li:nth-child(1):hover) [data-i='0'],
-.cs-callouts:has(.cs-callouts__labels li:nth-child(2):hover) [data-i='1'],
-.cs-callouts:has(.cs-callouts__labels li:nth-child(3):hover) [data-i='2'],
-.cs-callouts:has(.cs-callouts__labels li:nth-child(4):hover) [data-i='3'],
-.cs-callouts__labels li:hover {
+/* The hovered pair — caption AND its line — stays lit. Both halves use the
+   same nth-child selector so they carry the same weight; an earlier version
+   lit the line with a heavy :has() chain but the caption with a bare
+   `li:hover`, which the dimming rule outranked, so the caption you were
+   pointing at was the one that went dark. */
+.cs-callouts:has(.cs-callouts__labels li:nth-child(1):hover) .cs-callouts__labels li:nth-child(1),
+.cs-callouts:has(.cs-callouts__labels li:nth-child(1):hover) .cs-callouts__stage [data-i='0'],
+.cs-callouts:has(.cs-callouts__labels li:nth-child(2):hover) .cs-callouts__labels li:nth-child(2),
+.cs-callouts:has(.cs-callouts__labels li:nth-child(2):hover) .cs-callouts__stage [data-i='1'],
+.cs-callouts:has(.cs-callouts__labels li:nth-child(3):hover) .cs-callouts__labels li:nth-child(3),
+.cs-callouts:has(.cs-callouts__labels li:nth-child(3):hover) .cs-callouts__stage [data-i='2'],
+.cs-callouts:has(.cs-callouts__labels li:nth-child(4):hover) .cs-callouts__labels li:nth-child(4),
+.cs-callouts:has(.cs-callouts__labels li:nth-child(4):hover) .cs-callouts__stage [data-i='3'] {
   filter: none;
 }
 

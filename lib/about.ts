@@ -162,8 +162,9 @@ export type Tool = {
   /** No glyph exists for this one, so the tile sets its name in type. */
   wordmark?: boolean
   /** Where Luke actually used it. Only tools with a sourceable story get
-      one, and only those tiles are interactive. */
-  provenance?: { line: string; href?: string }
+      one, and only those tiles are interactive. `cta` overrides the link
+      label, which otherwise assumes the href is a case study. */
+  provenance?: { line: string; href?: string; cta?: string }
 }
 
 /* `provenance` is the one line that says where Luke actually used the
@@ -208,7 +209,11 @@ export const TOOLS: ReadonlyArray<Tool> = [
     name: 'Claude',
     icon: '/tools/claude.svg',
     color: '#d97757',
-    provenance: { line: 'Luke AI on this site streams from Claude. Your conversation stays in your browser.', href: '/chat' },
+    provenance: {
+      line: 'Luke AI on this site streams from Claude. Your conversation stays in your browser.',
+      href: '/chat',
+      cta: 'Ask Luke AI something',
+    },
   },
   {
     name: 'React',

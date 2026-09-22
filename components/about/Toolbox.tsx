@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import Link from 'next/link'
+import { useEffect, useRef, useState } from 'react'
 import type { Tool } from '@/lib/about'
 
 /*
@@ -25,15 +26,39 @@ import type { Tool } from '@/lib/about'
  *
  * Reduced motion: the world is stepped to rest before first paint, so
  * the tiles are simply there, settled, and still draggable.
+ *
+ * A tile with a `provenance` line is also a button: tapping or focusing
+ * it writes that line into the plate under the tray, with a link to the
+ * case study where the tool did the work. That is what turns the toy
+ * into something load-bearing, and it is why the tray was previously
+ * unusable without a mouse: the only label was a `title` tooltip, which
+ * no keyboard and no touchscreen can reach. Tools with no sourceable
+ * story stay inert on purpose rather than carry an invented sentence.
+ *
+ * Tap and drag share one pointer stream, so a tap is defined here as a
+ * press that travelled under TAP_SLOP. Relying on the button's own click
+ * event does not work: the tile takes pointer capture on press, which
+ * retargets the click.
  */
 
 type M = typeof import('matter-js')
 
 const SIZE_DESKTOP = 76
 const SIZE_MOBILE = 58
+/* Farther than this between press and release and it was a throw. */
+const TAP_SLOP = 6
 
 export default function Toolbox({ tools }: { tools: ReadonlyArray<Tool> }) {
   const trayRef = useRef<HTMLUListElement>(null)
+  const [active, setActive] = useState<number | null>(null)
+  /* The effect closes over its own scope, so taps reach React through a
+     ref that every render keeps current. */
+  const selectRef = useRef<(i: number) => void>(() => {})
+  useEffect(() => {
+    selectRef.current = (i: number) => {
+      if (tools[i]?.provenance) setActive(i)
+    }
+  }, [tools])
 
   useEffect(() => {
     const tray = trayRef.current
@@ -59,13 +84,18 @@ export default function Toolbox({ tools }: { tools: ReadonlyArray<Tool> }) {
       let W = tray.clientWidth
       let H = tray.clientHeight
       const T = 200 // wall thickness
+      /* A square resting at 45° is size*√2 across, so its corner reaches
+         size*(√2-1)/2 beyond the side the body is touching. Walls built
+         flush with the tray let a tilted tile hang out and get sliced by
+         `overflow: hidden`; inset by the overhang and it cannot. */
+      const OVERHANG = (size * (Math.SQRT2 - 1)) / 2
       let walls: Matter.Body[] = []
       const buildWalls = () => {
         walls.forEach((w) => Composite.remove(world, w))
         walls = [
-          Bodies.rectangle(W / 2, H + T / 2, W + T * 2, T, { isStatic: true }),
-          Bodies.rectangle(-T / 2, H / 2 - size * 6, T, H + size * 14, { isStatic: true }),
-          Bodies.rectangle(W + T / 2, H / 2 - size * 6, T, H + size * 14, { isStatic: true }),
+          Bodies.rectangle(W / 2, H + T / 2 - OVERHANG, W + T * 2, T, { isStatic: true }),
+          Bodies.rectangle(-T / 2 + OVERHANG, H / 2 - size * 6, T, H + size * 14, { isStatic: true }),
+          Bodies.rectangle(W + T / 2 - OVERHANG, H / 2 - size * 6, T, H + size * 14, { isStatic: true }),
           /* a ceiling well above the tray, so a hard throw comes back */
           Bodies.rectangle(W / 2, -size * 12 - T / 2, W + T * 2, T, { isStatic: true }),
         ]
@@ -107,6 +137,7 @@ export default function Toolbox({ tools }: { tools: ReadonlyArray<Tool> }) {
       let raf = 0
       let running = false
       let held: Matter.Constraint | null = null
+      let downAt: { x: number; y: number; i: number } | null = null
       const tick = () => {
         Engine.update(engine, 1000 / 60)
         paint()
@@ -165,6 +196,7 @@ export default function Toolbox({ tools }: { tools: ReadonlyArray<Tool> }) {
           length: 0.01,
         })
         Composite.add(world, held)
+        downAt = { x: e.clientX, y: e.clientY, i: tiles.indexOf(el) }
         el.setPointerCapture(e.pointerId)
         el.classList.add('is-held')
         tiles.forEach((t) => (t.style.zIndex = ''))
@@ -177,6 +209,13 @@ export default function Toolbox({ tools }: { tools: ReadonlyArray<Tool> }) {
       }
       const onUp = (e: PointerEvent) => {
         if (!held) return
+        /* Under the slop it was a tap, so show that tool's plate. */
+        if (downAt) {
+          const dx = e.clientX - downAt.x
+          const dy = e.clientY - downAt.y
+          if (Math.hypot(dx, dy) < TAP_SLOP && downAt.i >= 0) selectRef.current(downAt.i)
+        }
+        downAt = null
         const el = (e.target as HTMLElement).closest<HTMLLIElement>('.tb__tile')
         el?.classList.remove('is-held')
         el?.releasePointerCapture(e.pointerId)
@@ -234,17 +273,67 @@ export default function Toolbox({ tools }: { tools: ReadonlyArray<Tool> }) {
         (toss them around)
       </span>
       <ul ref={trayRef} className="tb__tray" aria-label="Tools I work in">
-        {tools.map((t) => (
-          <li key={t.name} className="tb__tile" style={{ background: t.color }} title={t.name}>
+        {tools.map((t, i) => {
+          const art = t.wordmark ? (
+            <span className="tb__word" aria-hidden="true">
+              {t.name}
+            </span>
+          ) : (
             <span
               className="tb__glyph"
               style={{ maskImage: `url(${t.icon})`, WebkitMaskImage: `url(${t.icon})` }}
               aria-hidden="true"
             />
-            <span className="visually-hidden">{t.name}</span>
-          </li>
-        ))}
+          )
+          return (
+            <li key={t.name} className="tb__tile" style={{ background: t.color }}>
+              {t.provenance ? (
+                /* Focusable, so the story is reachable without a pointer.
+                   The click is a keyboard activation only; pointer taps
+                   come through the slop check above. */
+                <button
+                  type="button"
+                  className="tb__btn"
+                  aria-pressed={active === i}
+                  onFocus={() => setActive(i)}
+                  onClick={(e) => {
+                    if (e.detail === 0) setActive(i)
+                  }}
+                >
+                  {art}
+                  <span className="visually-hidden">
+                    {t.name}. {t.provenance.line}
+                  </span>
+                </button>
+              ) : (
+                <>
+                  {art}
+                  <span className="visually-hidden">{t.name}</span>
+                </>
+              )}
+            </li>
+          )
+        })}
       </ul>
+
+      {/* The plate. Reserved whether or not anything is selected, so
+          picking a tile never shifts the tray underneath your finger. */}
+      <p className="tb__plate" aria-live="polite">
+        {active !== null && tools[active].provenance ? (
+          <>
+            <span className="tb__plate-name">{tools[active].name}</span>
+            <span className="tb__plate-line">{tools[active].provenance!.line}</span>
+            {tools[active].provenance!.href && (
+              <Link className="tb__plate-link" href={tools[active].provenance!.href!}>
+                {tools[active].provenance!.cta ?? 'See it in the work'}
+                <span aria-hidden="true"> &rarr;</span>
+              </Link>
+            )}
+          </>
+        ) : (
+          <span className="tb__plate-empty">Pick one up. Some of them have a story.</span>
+        )}
+      </p>
     </div>
   )
 }
