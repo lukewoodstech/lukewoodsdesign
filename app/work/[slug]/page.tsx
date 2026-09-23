@@ -9,19 +9,18 @@ import Footer from '@/components/Footer'
 import SiteNav from '@/components/SiteNav'
 import ZoomShot from '@/components/lucid/ZoomShot'
 import { Section, Prose, Bullets, FactStrip } from '@/components/CaseStudy'
-import { getCaseStudy, caseStudies, real, isPlaceholder, shortTeam } from '@/lib/caseStudies'
+import {
+  getCaseStudy,
+  caseStudies,
+  real,
+  isPlaceholder,
+  shortTeam,
+  BESPOKE_SLUGS,
+} from '@/lib/caseStudies'
 import type { Figure } from '@/lib/caseStudies'
 import { PROTECTED_SLUGS, UNLOCK_COOKIE } from '@/lib/gate'
 import { SITE } from '@/lib/site'
 import { unlockCaseStudy } from './actions'
-
-// Studies with bespoke pages under app/work/<slug> — the static routes win,
-// so don't also generate them from this template.
-const BESPOKE_SLUGS = new Set([
-  'lucid-ai',
-  'awardco-login-flow-redesign',
-  'pattern-custom-reports',
-])
 
 export function generateStaticParams() {
   // Protected slugs render dynamically: their page reads the unlock cookie,

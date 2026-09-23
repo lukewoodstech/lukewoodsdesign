@@ -1,6 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { buildRequest } from '@/lib/lukeAiRequest'
 import { audit } from '@/lib/lukeAiGuard'
+import { isSameOrigin, checkMessages, clientKey, rateLimit } from '@/lib/chatGuard'
 import type { Surface } from '@/lib/lukeAiStorage'
 
 /*
@@ -9,18 +10,53 @@ import type { Surface } from '@/lib/lukeAiStorage'
  * nothing factual lives in this file. After an answer finishes streaming
  * it is run through the same guardrail checks the tests use, and a hit is
  * logged so drift shows up in server logs.
+ *
+ * The gauntlet before any of that — same origin, under the rate limit, a
+ * well-formed conversation within its ceilings — lives in lib/chatGuard, so
+ * the policy is testable without a key and this file stays about streaming.
+ * Order matters: the cheapest rejections come first, and nothing touches the
+ * Anthropic client until every check has passed.
  */
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 })
 
+const json = (status: number, error: string, headers?: HeadersInit) =>
+  new Response(JSON.stringify({ error }), {
+    status,
+    headers: { 'Content-Type': 'application/json', ...headers },
+  })
+
 export async function POST(request: Request) {
-  const body = await request.json()
-  const messages: Anthropic.MessageParam[] = Array.isArray(body?.messages)
-    ? body.messages
-    : []
-  const surface: Surface = body?.surface === 'card' ? 'card' : 'page'
+  /* A request from anywhere but this site's own pages. */
+  if (!isSameOrigin(request)) return json(403, 'Forbidden.')
+
+  const { limited, retryAfter } = rateLimit(clientKey(request))
+  if (limited) {
+    return json(429, 'Too many messages. Give it a minute.', {
+      'Retry-After': String(retryAfter),
+    })
+  }
+
+  /* Malformed JSON used to throw here and surface as an unhandled 500. */
+  let body: unknown
+  try {
+    body = await request.json()
+  } catch {
+    return json(400, 'Expected JSON.')
+  }
+
+  const { messages: raw, surface: rawSurface } = (body ?? {}) as {
+    messages?: unknown
+    surface?: unknown
+  }
+
+  const checked = checkMessages(raw)
+  if (!checked.ok) return json(checked.status, checked.error)
+
+  const messages = checked.messages
+  const surface: Surface = rawSurface === 'card' ? 'card' : 'page'
 
   const stream = client.messages.stream(buildRequest(messages, surface))
 

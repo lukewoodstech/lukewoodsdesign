@@ -358,3 +358,18 @@ export function shortTeam(team?: string): string | undefined {
   if (members.length <= 1) return value
   return `${members[0]} +${members.length - 1}`
 }
+
+/*
+ * Studies with a bespoke page and OG card under app/work/<slug>. Those static
+ * segments shadow the app/work/[slug] template, so the template must not also
+ * generate them — once for the page, once for the preview image.
+ *
+ * Kept here rather than in either route because both need it and neither owns
+ * it: app/work/[slug]/page.tsx skips these when prerendering, and
+ * app/work/[slug]/opengraph-image.tsx skips them for the same reason.
+ */
+export const BESPOKE_SLUGS: ReadonlySet<string> = new Set([
+  'lucid-ai',
+  'awardco-login-flow-redesign',
+  'pattern-custom-reports',
+])

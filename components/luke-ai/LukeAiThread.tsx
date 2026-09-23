@@ -34,7 +34,7 @@ type Props = {
 }
 
 export default function LukeAiThread({ surface, suggestions }: Props) {
-  const { messages, phase, status, hasError, send, retry } = useLukeAi()
+  const { messages, phase, status, hasError, errorKind, send, retry } = useLukeAi()
   const zero = messages.length === 0
   const lastIndex = messages.length - 1
   const streaming = phase === 'streaming'
@@ -153,11 +153,19 @@ export default function LukeAiThread({ surface, suggestions }: Props) {
       )}
 
       {hasError && (
+        /* A refused burst is not a failure, and "try again" is the one thing
+           that makes it worse, so it gets its own line and no retry button. */
         <p className="lai__error" role="alert">
-          that one didn’t go through.{' '}
-          <button type="button" onClick={() => retry(surface)}>
-            try again
-          </button>
+          {errorKind === 'rate-limit' ? (
+            'that was a lot of questions at once. give it a minute.'
+          ) : (
+            <>
+              that one didn’t go through.{' '}
+              <button type="button" onClick={() => retry(surface)}>
+                try again
+              </button>
+            </>
+          )}
         </p>
       )}
     </div>

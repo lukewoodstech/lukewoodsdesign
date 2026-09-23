@@ -33,6 +33,8 @@ import {
 
 export type Phase = 'idle' | 'processing' | 'streaming'
 
+export type ErrorKind = 'generic' | 'rate-limit'
+
 export type LukeAiState = {
   hydrated: boolean
   conversations: Conversation[]
@@ -41,6 +43,13 @@ export type LukeAiState = {
   phase: Phase
   status: string
   hasError: boolean
+  /*
+   * Why the last send failed, so the thread can say something useful.
+   * 'rate-limit' is the server refusing a burst (429 from lib/chatGuard);
+   * telling someone to "try again" there is the one instruction that makes
+   * it worse, so the copy and the retry button both change.
+   */
+  errorKind: ErrorKind
   /* what the polite live region should say next */
   announce: string
   /* /chat sessions panel; null until the browser has been asked */
@@ -55,6 +64,7 @@ const SERVER: LukeAiState = {
   phase: 'idle',
   status: '',
   hasError: false,
+  errorKind: 'generic',
   announce: '',
   historyOpen: false,
 }
@@ -178,6 +188,7 @@ async function run(base: Message[], text: string, surface: Surface) {
     phase: 'processing',
     status: labels[0],
     hasError: false,
+    errorKind: 'generic',
     announce: 'Luke AI is looking through the portfolio',
   })
   const labelTimer = setTimeout(() => {
@@ -201,6 +212,12 @@ async function run(base: Message[], text: string, surface: Surface) {
       body: JSON.stringify({ messages: forApi(withUser), surface }),
       signal: controller.signal,
     })
+    /* The server refusing a burst, not a failure. Flagged before the throw
+       so the catch below can tell the two apart. */
+    if (res.status === 429) {
+      set({ errorKind: 'rate-limit' })
+      throw new Error('rate limited')
+    }
     if (!res.ok || !res.body) throw new Error('stream failed')
 
     const reader = res.body.getReader()
@@ -232,7 +249,12 @@ async function run(base: Message[], text: string, surface: Surface) {
     } else {
       upsert(id, withUser)
       if (state.currentId === id) set({ messages: withUser, hasError: true })
-      set({ announce: 'Luke AI could not answer. Try again.' })
+      set({
+        announce:
+          state.errorKind === 'rate-limit'
+            ? 'Luke AI is taking a short break. Try again in a minute.'
+            : 'Luke AI could not answer. Try again.',
+      })
     }
   } finally {
     clearTimeout(labelTimer)
@@ -261,7 +283,7 @@ export function retry(surface: Surface) {
 
 export function startNew() {
   stop()
-  set({ hasError: false })
+  set({ hasError: false, errorKind: 'generic' })
   open('', [])
 }
 
@@ -269,7 +291,7 @@ export function select(id: string) {
   const conv = state.conversations.find((c) => c.id === id)
   if (!conv || id === state.currentId) return
   stop()
-  set({ hasError: false })
+  set({ hasError: false, errorKind: 'generic' })
   open(conv.id, conv.messages)
 }
 
@@ -277,7 +299,7 @@ export function remove(id: string) {
   commitConversations(state.conversations.filter((c) => c.id !== id))
   if (state.currentId === id) {
     stop()
-    set({ hasError: false })
+    set({ hasError: false, errorKind: 'generic' })
     open('', [])
   }
 }

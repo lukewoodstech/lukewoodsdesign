@@ -22,6 +22,7 @@ export function useLukeAi() {
     busy: s.phase !== 'idle',
     status: s.status,
     hasError: s.hasError,
+    errorKind: s.errorKind,
     historyOpen: s.historyOpen,
     send: store.send,
     retry: store.retry,

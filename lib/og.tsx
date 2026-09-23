@@ -1,5 +1,7 @@
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { ImageResponse } from 'next/og'
+import { getCaseStudy } from './caseStudies'
 import { SITE } from './site'
 
 export const OG_SIZE = { width: 1200, height: 630 }
@@ -153,5 +155,39 @@ export function OgCard({
         </div>
       </div>
     </div>
+  )
+}
+
+/*
+ * A case study's link-preview card, rendered from its slug.
+ *
+ * This helper exists because of route shadowing. A metadata file convention
+ * is resolved per route *segment*, so app/work/[slug]/opengraph-image.tsx
+ * only attaches an image to pages rendered by app/work/[slug]/page.tsx. The
+ * three written studies have their own segments (app/work/lucid-ai and
+ * friends) which shadow that template, and until 2026-09-22 those segments
+ * had no opengraph-image of their own.
+ *
+ * The images were being generated the whole time — /work/lucid-ai/
+ * opengraph-image returned a perfectly good PNG — but nothing in the page's
+ * <head> pointed at one. Every case study shipped
+ * `twitter:card: summary_large_image` with no image behind it, which renders
+ * as a bare grey link on LinkedIn, Slack and iMessage: the exact surfaces
+ * these pages get shared on.
+ *
+ * Each bespoke segment now has a one-line opengraph-image.tsx that calls
+ * this, so all four routes draw the same card from the same data.
+ */
+export async function caseStudyOgImage(slug: string) {
+  const cs = getCaseStudy(slug)
+
+  /*
+   * A study swaps the home page's sentence for its own title, and takes the
+   * eyebrow slot for the company in its own accent — which is the one thing
+   * the title can't always be counted on to say.
+   */
+  return new ImageResponse(
+    <OgCard title={cs?.title ?? SITE.name} eyebrow={cs?.company} accent={cs?.accent} />,
+    { ...OG_SIZE, fonts: await ogFonts() },
   )
 }

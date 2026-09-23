@@ -107,7 +107,10 @@ export default function SiteNav({
               className={`${LINK} sitebar__next`}
               aria-label={`Next case study: ${next.title}`}
             >
-              next
+              {/* The word is a span so a phone can drop it and keep the
+                  arrow: the link's aria-label names the destination either
+                  way, so nothing is lost but the width. */}
+              <span className="sitebar__next-word">next</span>
               <span className="sitebar__next-arrow" aria-hidden="true">
                 →
               </span>

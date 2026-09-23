@@ -4180,19 +4180,51 @@ p a {
 
 /* On a phone the study names go: the cards are right there on the page,
    and on a case study the name, about and `next` are what a reader needs.
-   The grid keeps its three tracks, so the sides stay put. */
+   The grid keeps its three tracks, so the sides stay put.
+ *
+ * Everything else here is about making the row actually fit. Until
+ * 2026-09-22 it did not: on a case study at 390px the bar measured 404px
+ * and `next →` hung off the right edge, and it was no narrower at 360 or
+ * 320, because a bare `1fr` track is `minmax(auto, 1fr)` and its `auto`
+ * minimum is the content — and every link in the bar is `white-space:
+ * nowrap`. So the row simply overflowed, by more the smaller the phone.
+ *
+ * `minmax(0, 1fr)` lets the tracks shrink. The separator goes, `next`
+ * keeps its arrow and drops its word, and the type steps down a notch.
+ * Nothing is removed: every destination the desktop bar offers is still
+ * in the phone bar, and the arrow still announces itself through the
+ * link's aria-label. */
 @media (max-width: 44em) {
   .sitebar__section--work {
     display: none;
   }
 
   .sitebar__inner {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     gap: 0.4rem;
     padding-inline: 0.5rem;
   }
 
   .sitebar__link {
     padding-inline: 0.45rem;
+    font-size: 0.9rem;
+  }
+
+  /* The rule between the name and "my story" is the first thing to go:
+     the gap alone separates them at this size. */
+  .sitebar__bar {
+    display: none;
+  }
+
+  .sitebar__next-word {
+    display: none;
+  }
+
+  /* Without its word the arrow is the whole control, so it gets the gap
+     back as padding and stays a comfortable target. */
+  .sitebar__next {
+    gap: 0;
+    padding-inline: 0.55rem;
   }
 }
 

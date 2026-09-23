@@ -57,6 +57,12 @@ const TITLE = 'My story'
 const DESCRIPTION =
   'Luke Woods, a product designer who finds the real problem behind the assigned one. BYU computer science and HCI, three internships, and the work that came out of them.'
 
+/*
+ * The `twitter` block is spelled out rather than left to inherit. Without it
+ * the page took the root layout's card — "Luke Woods · Product Designer" and
+ * the site blurb — while its og:title said "My story", so the two halves of
+ * the same preview disagreed depending on which one a platform read.
+ */
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
@@ -65,6 +71,11 @@ export const metadata: Metadata = {
     title: `${TITLE} · ${SITE.name}`,
     description: DESCRIPTION,
     url: '/about',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${TITLE} · ${SITE.name}`,
+    description: DESCRIPTION,
   },
 }
 
