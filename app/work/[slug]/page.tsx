@@ -144,7 +144,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
         next={next && { href: `/work/${next.slug}`, title: next.title }}
       />
 
-      <div className="max-w-[860px] mx-auto px-8 pb-32 sitenav-offset">
+      <main id="main" className="max-w-[860px] mx-auto px-8 pb-32 sitenav-offset">
 
         <header className="pt-10 pb-12">
           <p className="cs-eyebrow mb-4">{cs.company}</p>
@@ -247,7 +247,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
           )}
         </nav>
 
-      </div>
+      </main>
 
       <Footer width="article" />
 

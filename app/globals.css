@@ -371,6 +371,40 @@ p a {
   border: 0;
 }
 
+/* The skip link: off-screen until it takes focus, then the first thing on
+   the page, in the bar's own mono so it reads as chrome rather than as a
+   browser artifact. It is the first element in <header>, so Tab from the
+   address bar lands on it. */
+.skip-link {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 200;
+  padding: 0.55rem 0.85rem;
+  transform: translateY(-200%);
+  background: var(--mono-blue);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: lowercase;
+  text-decoration: none;
+  color: #fff;
+  transition: transform 0.15s ease;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skip-link {
+    transition: none;
+  }
+}
+
 /* ─── Section base ─── */
 .section {
   max-width: 1280px;
@@ -7742,7 +7776,10 @@ p a {
 .cs-pair__cell--task .cs-mono-label { color: var(--c2); }
 .cs-pair__cell--sol .cs-mono-label { color: var(--c3); }
 
-.cs-pair__cell h4 {
+/* h3 or h4 depending on where the pair sits in the outline (see Pair in
+   components/cs/Story.tsx). It looks identical either way: the level is
+   the document's structure, not a size. */
+.cs-pair__cell :is(h3, h4) {
   margin: 0;
   font-size: 1.125rem;
   font-weight: 600;

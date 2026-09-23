@@ -61,32 +61,34 @@ export default function Home() {
     <div className="home" id="top">
       <SiteNav home={{ onHome: goHome }} />
 
-      <section className="home-hero" aria-label="Introduction">
-        <HeroIntro />
-      </section>
+      <main id="main">
+        <section className="home-hero" aria-label="Introduction">
+          <HeroIntro />
+        </section>
 
-      <section className="home-work" id="work" aria-labelledby="home-work-heading">
-        <h2 id="home-work-heading" className="home-work__heading">
-          selected work <span aria-hidden="true">—</span>
-        </h2>
+        <section className="home-work" id="work" aria-labelledby="home-work-heading">
+          <h2 id="home-work-heading" className="home-work__heading">
+            selected work <span aria-hidden="true">—</span>
+          </h2>
 
-        {WORK_TILES.map((item, i) => (
-          <article
-            key={item.slug}
-            className={`home-work__item home-work__item--${i % 2 ? 'right' : 'left'}`}
-          >
-            {/* Layer-name tag above each card — design-tool chrome, so it
-                keeps the mono. */}
-            <span className="home-work__label" aria-hidden="true">
-              {item.label}
-            </span>
-            <div className="home-card">{item.tile}</div>
-          </article>
-        ))}
+          {WORK_TILES.map((item, i) => (
+            <article
+              key={item.slug}
+              className={`home-work__item home-work__item--${i % 2 ? 'right' : 'left'}`}
+            >
+              {/* Layer-name tag above each card — design-tool chrome, so it
+                  keeps the mono. */}
+              <span className="home-work__label" aria-hidden="true">
+                {item.label}
+              </span>
+              <div className="home-card">{item.tile}</div>
+            </article>
+          ))}
 
-      </section>
+        </section>
 
-      <HomeClose />
+        <HomeClose />
+      </main>
 
       <Footer />
     </div>

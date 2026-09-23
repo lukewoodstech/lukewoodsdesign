@@ -95,7 +95,7 @@ export default function LucidCaseStudy() {
         next={{ href: '/work/awardco-login-flow-redesign', title: 'Reducing Authentication Friction' }}
       />
 
-      <div className="sitenav-offset pb-24">
+      <main id="main" className="sitenav-offset pb-24">
         {/* ══ Title block ══ */}
         <Col>
           <header className="pt-10">
@@ -901,7 +901,7 @@ export default function LucidCaseStudy() {
             </div>
           </Block>
         </Col>
-      </div>
+      </main>
 
       <Footer width="article" />
     </div>

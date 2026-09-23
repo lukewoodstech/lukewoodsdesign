@@ -95,100 +95,106 @@ function Title({ children, id }: { children: React.ReactNode; id?: string }) {
 
 export default function AboutPage() {
   return (
-    <main className="cs cs-surface about-pg min-h-screen text-white">
+    <div className="cs cs-surface about-pg min-h-screen text-white">
       <SiteNav />
 
-      {/* ── 01 Nice to meet you ──
-          The heading lives inside the pinned stage rather than in a
-          block above it, so it shares the first screen with the
-          full-size portrait and then fades as the deck deals out. */}
-      <StoryStage
-        cards={STORY}
-        intro={
-          <header className="ab-hero sitenav-offset">
-            <h1 className="ab-hero__title">Nice to meet you.</h1>
-            <p className="ab-hero__lede">
-              I&rsquo;m Luke, a product designer who can also read the pull request. Every
-              project I&rsquo;ve shipped started as something small: a ticket, a complaint, a
-              vague ask. The part I&rsquo;m good at is what comes next, finding the real
-              problem underneath, proving it&rsquo;s worth solving, and building the thing.
+      {/* The landmark holds the story, not the chrome: SiteNav sits outside
+          it so "skip to content" actually skips the nav. */}
+      <main id="main">
+
+        {/* ── 01 Nice to meet you ──
+            The heading lives inside the pinned stage rather than in a
+            block above it, so it shares the first screen with the
+            full-size portrait and then fades as the deck deals out. */}
+        <StoryStage
+          cards={STORY}
+          intro={
+            <header className="ab-hero sitenav-offset">
+              <h1 className="ab-hero__title">Nice to meet you.</h1>
+              <p className="ab-hero__lede">
+                I&rsquo;m Luke, a product designer who can also read the pull request. Every
+                project I&rsquo;ve shipped started as something small: a ticket, a complaint, a
+                vague ask. The part I&rsquo;m good at is what comes next, finding the real
+                problem underneath, proving it&rsquo;s worth solving, and building the thing.
+              </p>
+            </header>
+          }
+        />
+
+        {/* ── 02 My experience ── */}
+        <section className="ab-sec ab-sec--grid" aria-labelledby="experience">
+          <div className="ab-wide">
+            <Title id="experience">My experience</Title>
+            <ExperienceTimeline roles={ROLES} ongoing={ONGOING} />
+          </div>
+        </section>
+
+        {/* ── 03 My toolbox ── */}
+        <section className="ab-sec" aria-labelledby="toolbox">
+          <div className="ab-wide">
+            <h2 className="visually-hidden" id="toolbox">
+              My toolbox
+            </h2>
+            <Toolbox tools={TOOLS} />
+          </div>
+        </section>
+
+        {/* ── 04 The reptile business ──
+            Not a hobby section. Luke ran this as a company through high
+            school, and the numbers are the reason it's on a design
+            portfolio at all: he found a market, built the production
+            line, engineered out his largest cost, and shipped nationally,
+            before he had ever heard the word "product". */}
+        <section className="ab-sec" aria-labelledby="reptiles">
+          <div className="ab-wide">
+            <Title id="reptiles">The reptile business</Title>
+            <p className="ab-sec__lede">
+              Everyone has a thing. Mine was a company. Through high school I bred snakes and
+              lizards in a room at my parents&rsquo; house and sold them across the country on
+              MorphMarket. That meant learning genetics, veterinary basics, photography,
+              listings, pricing, live shipping and customer service, because there was nobody
+              else to do any of it.
             </p>
-          </header>
-        }
-      />
+            <BigStats stats={[...REPTILE_STATS]} small />
+            <ReptileRoom blocks={REPTILE_ROOM} />
+          </div>
+        </section>
 
-      {/* ── 02 My experience ── */}
-      <section className="ab-sec ab-sec--grid" aria-labelledby="experience">
-        <div className="ab-wide">
-          <Title id="experience">My experience</Title>
-          <ExperienceTimeline roles={ROLES} ongoing={ONGOING} />
-        </div>
-      </section>
+        {/* ── 05 Kind words ── */}
+        <section className="ab-sec" aria-labelledby="kind-words">
+          <div className="ab-wide">
+            {/* The heading is visible now. The section used to be a single
+                card with a huge quote mark on it, which was label enough;
+                a wall of five cards with nothing over it is just text. */}
+            <Title id="kind-words">Kind words</Title>
+            <Testimonials quotes={QUOTES} />
+          </div>
+        </section>
 
-      {/* ── 03 My toolbox ── */}
-      <section className="ab-sec" aria-labelledby="toolbox">
-        <div className="ab-wide">
-          <h2 className="visually-hidden" id="toolbox">
-            My toolbox
-          </h2>
-          <Toolbox tools={TOOLS} />
-        </div>
-      </section>
+        {/* ── 06 Let's talk ── */}
+        <section className="ab-sec ab-sec--talk" aria-labelledby="talk">
+          <div className="ab-wide">
+            <h2 className="visually-hidden" id="talk">
+              Get in touch
+            </h2>
+            <LetsTalk />
+          </div>
+        </section>
 
-      {/* ── 04 The reptile business ──
-          Not a hobby section. Luke ran this as a company through high
-          school, and the numbers are the reason it's on a design
-          portfolio at all: he found a market, built the production
-          line, engineered out his largest cost, and shipped nationally,
-          before he had ever heard the word "product". */}
-      <section className="ab-sec" aria-labelledby="reptiles">
-        <div className="ab-wide">
-          <Title id="reptiles">The reptile business</Title>
-          <p className="ab-sec__lede">
-            Everyone has a thing. Mine was a company. Through high school I bred snakes and
-            lizards in a room at my parents&rsquo; house and sold them across the country on
-            MorphMarket. That meant learning genetics, veterinary basics, photography,
-            listings, pricing, live shipping and customer service, because there was nobody
-            else to do any of it.
-          </p>
-          <BigStats stats={[...REPTILE_STATS]} small />
-          <ReptileRoom blocks={REPTILE_ROOM} />
-        </div>
-      </section>
+        {/* The Provo tile is real OpenStreetMap data, and their licence
+            asks for credit where the map is shown. One quiet line on the
+            one page that uses it, rather than in the global footer. */}
+        <p className="ab-credit">
+          Map data &copy;{' '}
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">
+            OpenStreetMap
+          </a>{' '}
+          contributors
+        </p>
 
-      {/* ── 05 Kind words ── */}
-      <section className="ab-sec" aria-labelledby="kind-words">
-        <div className="ab-wide">
-          {/* The heading is visible now. The section used to be a single
-              card with a huge quote mark on it, which was label enough;
-              a wall of five cards with nothing over it is just text. */}
-          <Title id="kind-words">Kind words</Title>
-          <Testimonials quotes={QUOTES} />
-        </div>
-      </section>
-
-      {/* ── 06 Let's talk ── */}
-      <section className="ab-sec ab-sec--talk" aria-labelledby="talk">
-        <div className="ab-wide">
-          <h2 className="visually-hidden" id="talk">
-            Get in touch
-          </h2>
-          <LetsTalk />
-        </div>
-      </section>
-
-      {/* The Provo tile is real OpenStreetMap data, and their licence
-          asks for credit where the map is shown. One quiet line on the
-          one page that uses it, rather than in the global footer. */}
-      <p className="ab-credit">
-        Map data &copy;{' '}
-        <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">
-          OpenStreetMap
-        </a>{' '}
-        contributors
-      </p>
+      </main>
 
       <Footer width="article" />
-    </main>
+    </div>
   )
 }

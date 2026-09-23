@@ -54,6 +54,17 @@ export default function SiteNav({
 
   return (
     <header className="sitebar">
+      {/*
+       * The first thing in the tab order on every page, and invisible until
+       * it has focus. Without it a keyboard or screen-reader visitor tabbed
+       * through the whole bar — name, story, three studies, résumé, next —
+       * before reaching the article, on every page, every time.
+       *
+       * Every page that renders this nav has a <main id="main">.
+       */}
+      <a href="#main" className="skip-link">
+        skip to content
+      </a>
       <div className="sitebar__inner">
         {/* ── Left: who this is, and the one page that says more ── */}
         <div className="sitebar__lead">

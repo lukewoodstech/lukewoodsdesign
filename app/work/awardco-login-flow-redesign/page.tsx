@@ -88,7 +88,7 @@ export default function AwardcoCaseStudy() {
         next={{ href: '/work/pattern-custom-reports', title: 'Custom Reports in Predict' }}
       />
 
-      <div className="sitenav-offset pb-24">
+      <main id="main" className="sitenav-offset pb-24">
         {/* ══ Title block ══ */}
         <Col>
           <header className="pt-10">
@@ -407,6 +407,7 @@ export default function AwardcoCaseStudy() {
           </Act>
 
           <Pair
+            level={3}
             num="01"
             task="Users authenticated twice, once at universal login and again on the company page"
             solution="The first login code becomes a secure token that persists to the company page"
@@ -448,6 +449,7 @@ export default function AwardcoCaseStudy() {
           </Pair>
 
           <Pair
+            level={3}
             num="02"
             task="Deskless workers got codes in inboxes they could not open from their phones"
             solution="SMS verification, and only the methods the company supports"
@@ -515,6 +517,7 @@ export default function AwardcoCaseStudy() {
           </Act>
 
           <Pair
+            level={3}
             num="03"
             task="Reset was a disconnected page with a blind password field and no visible requirements"
             solution="Inline validation, live password matching, show-password, and the same visual system"
@@ -697,7 +700,7 @@ export default function AwardcoCaseStudy() {
             </div>
           </Block>
         </Col>
-      </div>
+      </main>
 
       <Footer width="article" />
     </div>

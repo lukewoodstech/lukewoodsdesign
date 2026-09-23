@@ -310,26 +310,39 @@ export function Pair({
   solution,
   children,
   visual,
+  level = 4,
 }: {
   num: string
   task: ReactNode
   solution: ReactNode
   children: ReactNode
   visual: ReactNode
+  /*
+   * Where this pair sits in the page's outline.
+   *
+   * A pair under an H3 that groups several of them ("Four core skills" on
+   * Lucid) is one level below that group, so 4 is right and is the default.
+   * A pair sitting straight under an Act is one level below an h2, so it
+   * needs 3 — and on Awardco and Pattern, where pairs are an act's only
+   * structure, a hard-coded 4 put an h4 directly after an h2 and left a
+   * hole in the outline that assistive tech reads as a missing section.
+   */
+  level?: 3 | 4
 }) {
+  const H: 'h3' | 'h4' = level === 3 ? 'h3' : 'h4'
   return (
     <Reveal as="section" className="cs-pair">
       <div className="cs-pair__row">
         <div className="cs-pair__cell cs-pair__cell--task">
           <MonoLabel>Task</MonoLabel>
-          <h4>{task}</h4>
+          <H>{task}</H>
         </div>
         <div className="cs-pair__arrow" aria-hidden="true">
           <Ico name="arrow" />
         </div>
         <div className="cs-pair__cell cs-pair__cell--sol">
           <MonoLabel>Solution</MonoLabel>
-          <h4>{solution}</h4>
+          <H>{solution}</H>
         </div>
       </div>
       <div className="cs-prose">{children}</div>

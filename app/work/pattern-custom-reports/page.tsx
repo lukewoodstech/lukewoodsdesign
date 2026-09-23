@@ -87,7 +87,7 @@ export default function PatternCaseStudy() {
       {/* No `next` while the Hoth study is hidden (HIDDEN_WORK in lib/work). */}
       <SiteNav />
 
-      <div className="sitenav-offset pb-24">
+      <main id="main" className="sitenav-offset pb-24">
         {/* ══ Title block ══ */}
         <Col>
           <header className="pt-10">
@@ -386,6 +386,7 @@ export default function PatternCaseStudy() {
           </Act>
 
           <Pair
+            level={3}
             num="01"
             task="Advanced users wanted a free canvas to drag charts and layer dimensions"
             solution="A structured report with list-based reordering, and the canvas on the roadmap"
@@ -441,6 +442,7 @@ export default function PatternCaseStudy() {
           </Act>
 
           <Pair
+            level={3}
             num="02"
             task="A first report could be silently limited by scope and filters nobody explained"
             solution="A guided creation flow that explains scope and filters before they bite"
@@ -470,6 +472,7 @@ export default function PatternCaseStudy() {
           </Pair>
 
           <Pair
+            level={3}
             num="03"
             task="Charts stopped at two metrics, so comparison happened in Excel"
             solution="Up to five metrics on one chart, with notes that travel with it"
@@ -747,7 +750,7 @@ export default function PatternCaseStudy() {
             </div>
           </Block>
         </Col>
-      </div>
+      </main>
 
       <Footer width="article" />
     </div>
