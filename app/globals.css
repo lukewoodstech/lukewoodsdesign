@@ -316,7 +316,6 @@ p a {
 .term-hist__delete:focus-visible,
 .term-hist__modal-cancel:focus-visible,
 .term-hist__modal-delete:focus-visible,
-.readme-cta__mail:focus-visible,
 .pstack__dot:focus-visible,
 .kwc__arrow:focus-visible {
   outline: 2px solid var(--accent);
@@ -2125,136 +2124,12 @@ p a {
   }
 }
 
-/* ── code-card: a VS Code editor window (README, the finale) ─────── */
-
-.code-card {
-  position: relative;
-  background: #1e1e1e;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
-}
-
-/* macOS title bar: traffic lights + window title */
-.code-card__bar {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 0.6rem 0.9rem;
-  background: #323233;
-}
-
-.code-card__dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
-.code-card__dot--r {
-  background: #ff5f57;
-}
-
-.code-card__dot--y {
-  background: #febc2e;
-}
-
-.code-card__dot--g {
-  background: #28c840;
-}
-
-.code-card__file {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: var(--font-mono);
-  font-size: var(--label-micro);
-  letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.55);
-  white-space: nowrap;
-}
-
-/* Tab strip: one open tab, active-tab bg matches the editor */
-.code-card__tabs {
-  display: flex;
-  background: #252526;
-}
-
-.code-card__tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  background: #1e1e1e;
-  border-right: 1px solid #191919;
-  border-top: 1px solid #0078d4;
-  padding: 0.4rem 0.8rem;
-  font-family: var(--font-mono);
-  font-size: var(--label-micro);
-  color: #e7e7e7;
-}
-
-
-.code-card__tabclose {
-  margin-left: 0.3rem;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: var(--label-size);
-  line-height: 1;
-}
 
 /* Body: CSS-counter line numbers in the gutter */
-.code-card__body {
-  margin: 0;
-  padding: 0.9rem 1rem 1rem 0.4rem;
-  counter-reset: cc-line;
-  font-family: var(--font-mono);
-  font-size: clamp(0.72rem, 0.85vw, 0.85rem);
-  line-height: 1.75;
-  white-space: nowrap;
-}
 
-.code-card__body li {
-  counter-increment: cc-line;
-}
-
-.code-card__body li::before {
-  content: counter(cc-line);
-  display: inline-block;
-  width: 1.6em;
-  margin-right: 1em;
-  text-align: right;
-  color: #6e7681;
-  user-select: none;
-}
 
 /* Selection handles on the mobile work cards. */
-.sel-handle {
-  position: absolute;
-  width: 9px;
-  height: 9px;
-  background: #fff;
-  border: 1px solid var(--mono-blue);
-}
 
-.sel-handle--tl {
-  top: var(--sel-off);
-  left: var(--sel-off);
-}
-
-.sel-handle--tr {
-  top: var(--sel-off);
-  right: var(--sel-off);
-}
-
-.sel-handle--bl {
-  bottom: var(--sel-off);
-  left: var(--sel-off);
-}
-
-.sel-handle--br {
-  bottom: var(--sel-off);
-  right: var(--sel-off);
-}
 
 /* ── Work cards on the homepage ─────────────────────────────────── */
 
@@ -2285,140 +2160,25 @@ p a {
    same 16px as the other reading surfaces. The card grew a little wider
    and starts a little higher to keep the whole thing on one screen; the
    editor chrome around it keeps its 11–13px mono. */
-.readme-card__body {
-  padding: 1rem 1.4rem 1.1rem;
-  font-family: var(--font-sans), sans-serif;
-  font-size: 1rem;
-  line-height: 1.55;
-  color: #cccccc;
-}
 
-.readme-card__body h2 {
-  margin: 0 0 0.55rem;
-  padding-bottom: 0.35rem;
-  border-bottom: 1px solid #3d3d3d;
-  font-size: 1.35rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: #fff;
-}
 
 /* shields.io-style badge row under the heading */
-.readme-card__badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin: 0 0 0.8rem;
-}
+
 
 /* Site-palette badge pills (same recipe as the tile tag pills) — no
    foreign brand hexes. */
-.readme-card__badge {
-  font-family: var(--font-mono);
-  font-size: var(--label-micro);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  border-radius: 999px;
-  padding: 0.18rem 0.6rem;
-  color: var(--badge-c);
-  border: 1px solid color-mix(in srgb, var(--badge-c) 55%, transparent);
-  background: color-mix(in srgb, var(--badge-c) 14%, transparent);
-}
 
-.readme-card__badge--blue {
-  --badge-c: var(--mono-blue);
-}
-
-.readme-card__badge--purple {
-  --badge-c: var(--mono-pink);
-}
-
-.readme-card__badge--green {
-  --badge-c: var(--mono-green);
-}
-
-.readme-card__body p {
-  margin: 0 0 0.7em;
-}
 
 /* ── README sign-off ──────────────────────────────────────────────
    The closing invitation reads as the last line of the bio, not a CTA
    banner: the README's own 1px rule for separation, body type, and the
    blue reserved for the two things you can actually click. */
-.readme-card__body .readme-cta {
-  margin: 1rem 0 0;
-  padding-top: 0.85rem;
-  border-top: 1px solid #3d3d3d;
-  font-family: var(--font-sans), sans-serif;
-}
+
 
 /* Inline prose link, same recipe as Luke AI's prose: blue, underline at
    40% until hover. `anywhere` lets the address break rather than push the
    card into horizontal scroll on a narrow phone. */
-.readme-cta__mail {
-  color: var(--mono-blue);
-  text-decoration: underline;
-  text-decoration-color: rgba(0, 143, 255, 0.4);
-  text-underline-offset: 3px;
-  overflow-wrap: anywhere;
-  transition: text-decoration-color 0.15s ease;
-}
 
-.readme-cta__mail:hover {
-  text-decoration-color: var(--mono-blue);
-}
-
-/* The toast hangs off the address mid-paragraph; centering it on a link
-   that may have wrapped looks broken, so it sits at the left edge. */
-.readme-cta__mail .email-link__toast {
-  left: 0;
-  transform: translate(0, -4px);
-}
-
-.readme-cta__mail .email-link__toast.is-visible {
-  transform: translate(0, 0);
-}
-
-
-/* Short laptop screens (1280×800, 1366×768): keep the 16px bio on one
-   screen by giving the card more width instead of less type. */
-@media (min-width: 48em) and (max-height: 860px) {
-  .readme-card__body {
-    padding-bottom: 0.9rem;
-    line-height: 1.5;
-  }
-
-  .readme-card__body p {
-    margin-bottom: 0.6em;
-  }
-}
-
-/* GitHub-style blockquote for the design-philosophy line */
-.readme-card__body blockquote {
-  margin: 0;
-  padding: 0.1rem 0 0.1rem 0.9rem;
-  border-left: 3px solid #3d444d;
-  color: #9d9d9d;
-}
-
-/* Ruled section headings for the résumé half of the README */
-.readme-card__body h3 {
-  margin: 1rem 0 0.45rem;
-  padding-bottom: 0.3rem;
-  border-bottom: 1px solid #3d3d3d;
-  font-size: var(--reading-meta);
-  font-weight: 600;
-  color: #fff;
-}
-
-/* ── README tab chrome ───────────────────────────────────────────── */
-
-.code-card__mdicon {
-  color: #519aba;
-  font-size: var(--label-micro);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-}
 
 /* ── Outro: designed contact finale ─────────────────────────────── */
 
@@ -6185,7 +5945,6 @@ p a {
   }
 
 
-
   .talk {
     flex-direction: column;
     align-items: flex-start;
@@ -8237,3 +7996,77 @@ p a {
    entered the viewport, so it never loaded. Landscape captures never hit
    the height ceiling in an 800px column anyway. */
 .cs-story .lcs-stage { width: 100%; }
+
+/* ── .home-close: the end of the homepage ───────────────────────────
+   The page used to stop at the third card and leave a screen of black
+   between it and a small centred footer. This is the ending: the same
+   mono label the work grid uses, one line, and the "Let's talk" close
+   /about already ends with.
+
+   It shares the work grid's measurements — same max-width, same side
+   padding — so the label lines up with "selected work" and the cards
+   above it rather than starting its own column. */
+
+.home-close {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: clamp(4rem, 12vh, 8rem) clamp(1rem, 5vw, 3rem) 0;
+}
+
+.home-close__heading {
+  display: block;
+  margin: 0 0 1.25rem 0.2rem;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: var(--label-weight);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.home-close__heading span {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* One line, at reading size rather than display size: the serif "Let's
+   talk" underneath is the headline, and two display sizes stacked would
+   fight. Held to a measure so it breaks where a sentence should. */
+.home-close__line {
+  max-width: 34ch;
+  margin: 0 0 clamp(2rem, 5vh, 3.5rem) 0.2rem;
+  font-size: var(--reading-lede);
+  line-height: var(--reading-lede-lh);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* The two destinations the footer doesn't carry. Mono and small on
+   purpose: the email above is the thing to do here, and these are the
+   ways round it. */
+.home-close__more {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+  margin: 1.75rem 0 0;
+}
+
+@media (max-width: 40em) {
+  .home-close__line {
+    max-width: none;
+  }
+}
+
+/* The dock is fixed to the bottom-right corner on every page, and on a
+   phone it is 114px wide against a 390px screen. At the foot of the page
+   that put it straight over the footer's email address — the site's
+   primary contact link, half of it untappable, on the one screen someone
+   reaches after deciding they want to get in touch.
+
+   The footer buys itself the chip's height in clear space, so the last
+   thing on the page always lands above the dock rather than under it.
+   Only on phones: above 36em the dock sits in a margin the content never
+   reaches. */
+@media (max-width: 36em) {
+  .footer__inner {
+    padding-bottom: 10rem;
+  }
+}

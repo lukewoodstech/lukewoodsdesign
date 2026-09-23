@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import Footer from './Footer'
 import SiteNav from './SiteNav'
 import HeroIntro from './HeroIntro'
+import HomeClose from './HomeClose'
 import { WORK_TILES } from './CanvasBits'
 
 /*
@@ -84,6 +85,8 @@ export default function Home() {
         ))}
 
       </section>
+
+      <HomeClose />
 
       <Footer />
     </div>
