@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { useEffect, useState, useSyncExternalStore } from 'react'
 import { usePathname } from 'next/navigation'
 import LukeAiCard from './LukeAiCard'
 import LukeSprite from './LukeSprite'
@@ -21,24 +21,16 @@ import { useLukeAi } from './LukeAiProvider'
  * lives in LukeAiProvider, so collapsing is genuinely just putting the
  * window away, and maximize still hands the same thread to /chat.
  *
- * The peek: on a first visit it opens itself once so the chip isn't a
- * mystery, then puts itself away again. It waits PEEK_IN_MS first so it
- * isn't competing with the page for attention while that's still landing,
- * and it leaves itself open if the visitor has started using it. It skips
- * the whole performance if a conversation already exists — someone coming
- * back mid-thread doesn't need an introduction. sessionStorage, not
- * localStorage: a genuinely new visit should get the introduction.
- *
- * It never peeks on a phone. The panel is nearly the full screen at that
- * width, so an uninvited one isn't a peek — it's an interstitial over the
- * work someone came to see.
+ * It opens when it is opened, and not before. Until 2026-09-22 it
+ * peeked: on a first visit it opened itself a second in, sat there for
+ * six, and put itself away. Luke, landing on the deployed site: there is
+ * a lot going on. He was right — a hero assembling itself, pixel Luke
+ * leaning in to say hover me, and a chat window dealing itself open in
+ * the corner, all inside the first two seconds, is three things asking
+ * for the same attention. The chip is legible on its own, and the one
+ * hint the first screen gets is the one attached to the thing it is
+ * about.
  */
-
-const PEEK_KEY = 'luke-ai-dock-peeked'
-const PEEK_IN_MS = 1200
-const PEEK_MS = 6000
-/* Same 48em line the rest of the site draws between canvas and stack. */
-const PEEK_MIN_WIDTH = '(min-width: 48em)'
 
 /* /chat IS this conversation, maximized. A dock on top of it would be the
    same window twice. */
@@ -53,11 +45,11 @@ export default function LukeAiDock() {
   const pathname = usePathname()
   const { messages } = useLukeAi()
   const [open, setOpen] = useState(false)
-  const panelRef = useRef<HTMLDivElement>(null)
 
-  /* Nothing renders on the server: whether the dock has peeked this
-     session is a sessionStorage question, and a server-rendered chip
-     would flash into a panel (or the reverse) on hydration. */
+  /* Nothing renders on the server. The chip carries a resume badge when
+     a stored conversation is waiting, and that lives in the visitor's
+     browser — a server-rendered dock would paint the wrong one and
+     correct itself on hydration. */
   const isClient = useSyncExternalStore(
     noopSubscribe,
     () => true,
@@ -65,32 +57,6 @@ export default function LukeAiDock() {
   )
 
   const hidden = HIDE_ON.some((p) => pathname === p || pathname.startsWith(`${p}/`))
-
-  useEffect(() => {
-    if (!isClient || hidden) return
-    if (!window.matchMedia(PEEK_MIN_WIDTH).matches) return
-    let peeked = true
-    try {
-      peeked = sessionStorage.getItem(PEEK_KEY) === '1'
-    } catch {}
-    if (peeked || messages.length > 0) return
-    try {
-      sessionStorage.setItem(PEEK_KEY, '1')
-    } catch {}
-    const openTimer = setTimeout(() => setOpen(true), PEEK_IN_MS)
-    const closeTimer = setTimeout(() => {
-      /* Don't yank the panel out from under someone who is using it. */
-      if (panelRef.current?.contains(document.activeElement)) return
-      setOpen(false)
-    }, PEEK_IN_MS + PEEK_MS)
-    return () => {
-      clearTimeout(openTimer)
-      clearTimeout(closeTimer)
-    }
-    /* Deliberately mount-only: this must fire once per session, not on
-       every message or route change. */
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isClient, hidden])
 
   /* Escape closes it, the way any panel should. */
   useEffect(() => {
@@ -107,7 +73,7 @@ export default function LukeAiDock() {
   return (
     <div className={`ai-dock${open ? ' is-open' : ''}`}>
       {open ? (
-        <div className="ai-dock__panel" ref={panelRef}>
+        <div className="ai-dock__panel">
           <LukeAiCard onClose={() => setOpen(false)} />
         </div>
       ) : (

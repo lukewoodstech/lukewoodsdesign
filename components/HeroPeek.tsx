@@ -11,7 +11,8 @@ import { TIP_SEEN_KEY } from '@/components/HeroIntro'
  * The three hot words in the headline are the only hover targets on the
  * page and nothing marks them, which is the point — but a visitor who
  * never moves the pointer over them never learns they exist. So he shows
- * up a few seconds in, twice more if the words still haven't been found,
+ * up as the sentence lands, twice more if the words still haven't been
+ * found,
  * and then leaves it alone. Once a word has been opened — hovered,
  * tapped, or focused with a keyboard — he stays gone for the session:
  * a hint that keeps arriving after you've understood it is nagging.
@@ -20,8 +21,17 @@ import { TIP_SEEN_KEY } from '@/components/HeroIntro'
  * nothing happens if you click him. The thing to act on is the word.
  */
 
-/* In: a few seconds after arrival. Out: long enough to read twice. */
-const FIRST_MS = 5000
+/*
+ * In: as soon as the sentence has landed. It used to be five seconds,
+ * which meant the one thing on the page that explains the page arrived
+ * after most people had already started scrolling. 900ms is the last
+ * word of the headline finishing its blur-up — soon enough to read as
+ * part of the arrival, late enough not to be one more thing moving
+ * while the sentence is still assembling itself.
+ *
+ * Out: long enough to read twice.
+ */
+const FIRST_MS = 900
 const SHOW_MS = 5200
 const GAP_MS = 16000
 const TIMES = 3
