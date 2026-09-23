@@ -8052,63 +8052,6 @@ p a {
    the height ceiling in an 800px column anyway. */
 .cs-story .lcs-stage { width: 100%; }
 
-/* ── .home-close: the end of the homepage ───────────────────────────
-   The page used to stop at the third card and leave a screen of black
-   between it and a small centred footer. This is the ending: the same
-   mono label the work grid uses, one line, and the "Let's talk" close
-   /about already ends with.
-
-   It shares the work grid's measurements — same max-width, same side
-   padding — so the label lines up with "selected work" and the cards
-   above it rather than starting its own column. */
-
-.home-close {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: clamp(4rem, 12vh, 8rem) clamp(1rem, 5vw, 3rem) 0;
-}
-
-.home-close__heading {
-  display: block;
-  margin: 0 0 1.25rem 0.2rem;
-  font-family: var(--font-mono);
-  font-size: 1rem;
-  font-weight: var(--label-weight);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
-}
-
-.home-close__heading span {
-  color: rgba(255, 255, 255, 0.25);
-}
-
-/* One line, at reading size rather than display size: the serif "Let's
-   talk" underneath is the headline, and two display sizes stacked would
-   fight. Held to a measure so it breaks where a sentence should. */
-.home-close__line {
-  max-width: 34ch;
-  margin: 0 0 clamp(2rem, 5vh, 3.5rem) 0.2rem;
-  font-size: var(--reading-lede);
-  line-height: var(--reading-lede-lh);
-  color: rgba(255, 255, 255, 0.72);
-}
-
-/* The two destinations the footer doesn't carry. Mono and small on
-   purpose: the email above is the thing to do here, and these are the
-   ways round it. */
-.home-close__more {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem 1.25rem;
-  margin: 1.75rem 0 0;
-}
-
-@media (max-width: 40em) {
-  .home-close__line {
-    max-width: none;
-  }
-}
 
 /* The dock is fixed to the bottom-right corner on every page, and on a
    phone it is 114px wide against a 390px screen. At the foot of the page
