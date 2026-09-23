@@ -42,8 +42,8 @@ import { SITE } from '@/lib/site'
  * Story edition (2026-09-21): the five-act structure on the shared
  * `components/cs` primitives, same as Lucid. Copy is Luke's (rewrite of
  * 2026-09-16), re-cut into acts with key phrases bolded; no facts added.
- * Numbers come from the 2026-08-24 interview record in case-studies/awardco/
- * (notes.md is the single source of truth):
+ * Numbers come from the 2026-08-24 interview record, which is kept out
+ * of this repo (see .gitignore) and is the single source of truth:
  * - Canonical metrics only: 45.9M attempts / 1 year, 7.7M failures (6.7M
  *   from password), password 34.6% vs SSO 98%, 9,275 support cases / 90 days.
  * - 25% faster login, +4.5% sign-ins, and 27s → 5.9s are BEFORE/AFTER

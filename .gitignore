@@ -44,3 +44,10 @@ next-env.d.ts
 
 # extracted screen-recording frames — contain confidential Lucid content, never commit
 tmp-frames/
+
+# Case-study source material: interview records, rewrite skeletons, deck
+# exports. Working documents, not portfolio artifacts — they carry raw
+# figures that the published pages deliberately mask (Lucid's are under
+# compliance limits) and employers' internal telemetry. Kept locally,
+# never in a repo that can go public.
+case-studies/

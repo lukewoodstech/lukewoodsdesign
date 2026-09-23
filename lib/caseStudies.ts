@@ -75,8 +75,8 @@ export const caseStudies: CaseStudy[] = [
      * app/work/pattern-custom-reports/page.tsx — this entry feeds the
      * home-grid tile, the prev/next chain, and the chat zero-state.
      *
-     * Sourced from the 2026-08 interview record in case-studies/pattern/
-     * (notes.md "FINAL BUILD DECISIONS" is binding):
+     * Sourced from the 2026-08 interview record, which is kept out of
+     * this repo (see .gitignore). Its build decisions are binding:
      * - Canonical numbers only: Pendo baseline ~60% trial / ~15% retention
      *   (vs ~28–35% benchmarks), 30–60 min manual reporting, 50+ interviews,
      *   20-user testing, 9-week project.

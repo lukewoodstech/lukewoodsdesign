@@ -43,8 +43,8 @@ import { SITE } from '@/lib/site'
  * Story edition (2026-09-21): the five-act structure on the shared
  * `components/cs` primitives. Copy is Luke's (rewrite of 2026-09-16),
  * re-cut into acts with key phrases bolded; no facts added. Sourced from
- * the 2026-08 interview record in case-studies/pattern/ (notes.md "FINAL
- * BUILD DECISIONS" is binding):
+ * the 2026-08 interview record, which is kept out of this repo (see
+ * .gitignore); its build decisions are binding:
  * - Canonical numbers only: Pendo ~60% trial / ~15% return, 50+ discovery
  *   interviews across the internship, 20 usability sessions, 2 → 5 metrics,
  *   9 weeks. No "400+ hours per week", no adoption / retention / revenue /
