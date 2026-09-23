@@ -5986,7 +5986,12 @@ p a {
   }
 }
 
-@media (max-width: 48em) {
+/* 47.99em, not 48em: the site's phone/desktop line is `min-width: 48em`,
+   and at exactly 768px a `max-width: 48em` query matches too — so both
+   sides of the breakpoint applied at once and the winner was whichever
+   came last in the file. Every other max-width rule in this stylesheet
+   already stops at 47.99em; this one was the odd one out. */
+@media (max-width: 47.99em) {
   /* A contact sheet: two columns, every tile the same square, no holes.
      One shot per row made this section six thousand pixels of scrolling
      on a phone — half the page — for thirteen photographs. Keeping each
