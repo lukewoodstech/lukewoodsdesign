@@ -312,10 +312,27 @@ function FlipTail({ state, still }: { state: State; still: boolean }) {
                 this the cell measures zero until the ruler has run and
                 the whole ending piles up on itself — which is what it
                 did in the server HTML, before hydration. The measured
-                width, when it arrives, is set inline and wins. */}
-            <span className="hero-flip__sizer" aria-hidden="true">
-              {TAILS.rest[i] ?? ''}
-            </span>
+                width, when it arrives, is set inline and wins.
+
+                The letter rides in a data attribute and is drawn by
+                `content: attr(data-ch)`, not as a text node. It lays out
+                exactly the same, but generated content is not part of
+                `textContent`, and this span is inside the <h1>: as real
+                text, every cell's sizer letter interleaved with the
+                visible one and the heading read
+                "pprroodduucctt ddeessiiggnneerr..". Assistive tech was
+                always fine (the h1 carries an aria-label), but crawlers
+                and link-preview scrapers read the text node. */}
+            <span className="hero-flip__sizer" aria-hidden="true" data-ch={TAILS.rest[i] ?? ''} />
+            {/* The word gap, as a real space. `.hero-flip__letter` is
+                absolutely positioned, so this costs no layout at all —
+                but without it the ending ran together as
+                "productdesigner." in the heading's text. */}
+            {ch === ' ' && (
+              <span className="hero-flip__letter" aria-hidden="true">
+                {' '}
+              </span>
+            )}
             <AnimatePresence initial={false}>
               {ch !== undefined && ch !== ' ' && (
                 /* Keyed by the letter: a letter that survives the change
@@ -335,11 +352,16 @@ function FlipTail({ state, still }: { state: State; still: boolean }) {
           </span>
         )
       })}
+      {/* The measuring ruler. Same trick as the sizer, and for the same
+          reason: it holds every ending at once, so as real text it put
+          three more copies of the phrase inside the <h1>. Each letter is
+          drawn by `content: attr(data-ch)`, which still lays out and
+          still measures, and contributes nothing to `textContent`. */}
       <span className="hero-flip__ruler" ref={rulerRef} aria-hidden="true">
         {TAIL_KEYS.map((k) => (
           <span key={k} data-tail={k}>
             {Array.from(TAILS[k], (ch, i) => (
-              <span key={i}>{ch}</span>
+              <span key={i} data-ch={ch} />
             ))}
           </span>
         ))}
@@ -522,7 +544,11 @@ export default function HeroIntro() {
 
         <h1 className="hero-line" aria-label={SENTENCE}>
           {LINES.map((line, l) => (
-            <span key={l} className={`hero-l${l === LINES.length - 1 ? ' hero-l--tail' : ''}`}>
+            /* `.hero-l` is display:block so the space never renders; it is
+               there so the heading's text doesn't read "is acreative". */
+            <Fragment key={l}>
+              {l > 0 && ' '}
+            <span className={`hero-l${l === LINES.length - 1 ? ' hero-l--tail' : ''}`}>
               {line.map((word, i) => {
             const n = wordIndex++
             /* The space lives between the spans, not inside them: leading
@@ -556,6 +582,7 @@ export default function HeroIntro() {
             )
               })}
             </span>
+            </Fragment>
           ))}
         </h1>
 

@@ -6293,9 +6293,18 @@ p a {
    measured one (see FlipTail). It may overflow a cell that has been
    given a narrower measured width — it is hidden, and an inline-block
    can't widen a parent with a width of its own. */
+/* The letter is drawn from the data attribute rather than being a text
+   node, so it sizes the cell without landing in the <h1>'s text. See the
+   sizer in components/HeroIntro.tsx. `white-space: pre` so a space still
+   measures as a space. */
 .hero-flip__sizer {
   display: inline-block;
   visibility: hidden;
+  white-space: pre;
+}
+
+.hero-flip__sizer::before {
+  content: attr(data-ch);
 }
 
 .hero-flip__letter {
@@ -6318,6 +6327,10 @@ p a {
 
 .hero-flip__ruler span {
   display: inline-block;
+}
+
+.hero-flip__ruler span[data-ch]::before {
+  content: attr(data-ch);
 }
 
 /* ── The decorations ──
