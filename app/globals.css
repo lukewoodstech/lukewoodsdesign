@@ -5182,6 +5182,22 @@ p a {
   padding-block: 1rem 2rem;
 }
 
+/* In the pinned stage the heading is furniture on a screen it shares
+   with the deck, so it hugs the top on purpose. Standing at the top of
+   a scrolling page it is a page header, and it needs the room a page
+   header gets: the lede was sitting directly on the first row of
+   photographs, with nothing between the sentence and the pictures. */
+.story.is-static .story__intro .ab-hero {
+  /* .sitenav-offset's 4rem clears the fixed bar; this is the breathing
+     room on top of it, so it adds rather than replaces. */
+  padding-top: calc(4rem + 1.25rem);
+  padding-bottom: 2.75rem;
+}
+
+.story.is-static .story__intro .ab-hero__lede {
+  margin-top: 1.25rem;
+}
+
 .story.is-static .story__stage {
   position: static;
   height: auto;

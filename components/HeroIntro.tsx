@@ -17,7 +17,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { SITE, INTRO } from '@/lib/site'
 import { STORY } from '@/lib/about'
 import { useReducedMotion } from '@/lib/useReducedMotion'
-import { useMediaQuery } from '@/lib/useMediaQuery'
 import HeroPeek from '@/components/HeroPeek'
 
 /*
@@ -238,12 +237,6 @@ const MODES = Object.keys(SUBLINES) as Mode[]
    "product designer." once. */
 const CYCLE: readonly Mode[] = ['name', 'creative', 'impact']
 const CYCLE_MS = 4200
-/* Reduced motion, on a screen with no hover: the roles still change, but
-   slowly, and the CSS has already taken the blur, the roll and the drift
-   off them, so it is a change of content rather than a piece of motion.
-   Frozen would mean a phone reading Reduce Motion never sees two of the
-   three answers at all, since there is no hover to find them with. */
-const CALM_CYCLE_MS = 9000
 const CELLS = Math.max(...TAIL_KEYS.map((k) => TAILS[k].length))
 
 /*
@@ -375,9 +368,6 @@ const edgeClass = (s: Spot) => (s.edge ? ` is-${s.edge}` : '')
 
 export default function HeroIntro() {
   const reducedMotion = useReducedMotion()
-  /* No pointer to hover with: the sentence opens its own modes rather
-     than waiting to be found. See `shown` below. */
-  const noHover = useMediaQuery('(hover: none)')
   const [mode, setMode] = useState<Mode | null>(null)
   /* Which role the ending shows while nothing is hovered. Starts on
      `impact` — the resting ending — so the first paint is the plain
@@ -394,37 +384,26 @@ export default function HeroIntro() {
      word's role when the hover ends, so the ending never rolls away the
      instant the pointer leaves. */
   useEffect(() => {
-    if (mode) return
-    /* With a pointer, reduced motion means the sentence rests: the
-       decorations are a hover away and nothing needs to move to reach
-       them. */
-    if (reducedMotion && !noHover) return
+    if (reducedMotion || mode) return
     const id = setInterval(() => {
       if (document.visibilityState === 'hidden') return
       setAuto((m) => CYCLE[(CYCLE.indexOf(m) + 1) % CYCLE.length])
-    }, reducedMotion ? CALM_CYCLE_MS : CYCLE_MS)
+    }, CYCLE_MS)
     return () => clearInterval(id)
-  }, [reducedMotion, noHover, mode])
+  }, [reducedMotion, mode])
 
   /*
-   * The mode that is actually showing. With a pointer that is the
-   * hovered word and nothing otherwise — the sentence stands alone at
-   * rest, which is the whole design. A phone has no hover, so there is
-   * no way to find the words and nothing ever opens; there the cycle
-   * that was already turning the ending over drives the decorations and
-   * the subline too, and the hero demonstrates itself every few seconds
-   * instead of hiding three quarters of itself behind a gesture nobody
-   * is told about. A tap still pins a word: that sets `mode`, which
-   * takes over here and stops the cycle until it is tapped off.
+   * The mode that is showing: the word under the pointer, the word that
+   * was tapped, or nothing.
    *
-   * Reduced motion doesn't switch this off, it slows it down: see
-   * CALM_CYCLE_MS. Nothing animates there — the decorations appear in
-   * place — but a phone with Reduce Motion on would otherwise never see
-   * two of the three answers, because it has no hover to find them
-   * with. On the server `noHover` is false until the script says
-   * otherwise, so the markup matches on first paint.
+   * For a few hours on 2026-09-22 a hoverless screen opened its own
+   * modes on the cycle, on the reasoning that a phone otherwise never
+   * finds the words. Luke's call on seeing it: the clean sentence is
+   * better and the decorations stay behind the tap. Pixel Luke is the
+   * one who says they are there — that is his whole job — so the
+   * sentence rests at every width, as designed.
    */
-  const shown: Mode | null = mode ?? (noHover ? auto : null)
+  const shown: Mode | null = mode
 
   const open = (m: Mode) => {
     setMode(m)
