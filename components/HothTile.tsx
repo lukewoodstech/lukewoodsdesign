@@ -34,7 +34,16 @@ export default function HothTile() {
   const router = useRouter()
   const reducedMotion = useReducedMotion()
   const [hovered, setHovered]     = useState(false)
-  const [glitching, setGlitching] = useState(false)
+  const [glitchOn, setGlitchOn] = useState(false)
+
+  /*
+   * Reduced motion means the wordmark never glitches. Derived rather than
+   * forced into state from an effect: an effect whose only job is
+   * setState(false) on mount renders twice and trips
+   * react-hooks/set-state-in-effect, and the burst loop below simply never
+   * starts under the preference, so nothing would ever set it back.
+   */
+  const glitching = !reducedMotion && glitchOn
   const tileRef    = useRef<HTMLDivElement>(null)
   const stageRef   = useRef<HTMLDivElement>(null)
   const canvasRef  = useRef<HTMLCanvasElement>(null)
@@ -134,15 +143,16 @@ export default function HothTile() {
   // reads as encrypted at rest, sparser when idle and more frequent under
   // the cursor (cadence reads hoveredRef so hovering doesn't reset the loop)
   useEffect(() => {
-    if (reducedMotion) { setGlitching(false); return }
+    // Nothing to schedule: `glitching` is already false above.
+    if (reducedMotion) return
     let alive = true
     let timer: ReturnType<typeof setTimeout>
     const burst = () => {
       if (!alive) return
-      setGlitching(true)
+      setGlitchOn(true)
       timer = setTimeout(() => {
         if (!alive) return
-        setGlitching(false)
+        setGlitchOn(false)
         const lull = hoveredRef.current
           ? 700 + Math.random() * 1600
           : 2200 + Math.random() * 2800

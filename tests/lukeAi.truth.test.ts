@@ -27,6 +27,7 @@ import {
 } from '../lib/lukeAiStorage'
 import { SITE } from '../lib/site'
 import { caseStudies } from '../lib/caseStudies'
+import { ALL_WORK, HIDDEN_WORK } from '../lib/work'
 
 const ROOT = join(__dirname, '..')
 const read = (p: string) => readFileSync(join(ROOT, p), 'utf8')
@@ -270,8 +271,20 @@ test('routeActions: point at the right case studies', () => {
 test('site description is the grounded line and the layout uses it', () => {
   assert.equal(
     SITE.description,
-    'Product designer combining research, systems thinking, and code to ship useful products across Lucid, Awardco, Pattern, and Hoth.',
+    'Product designer combining research, systems thinking, and code to ship useful products across Lucid, Awardco, and Pattern.',
   )
+  /* The description may only name work a visitor can actually open. Hoth is
+     hidden and gated, so naming it here pointed the site's widest-reaching
+     sentence at a locked door. Put it back with the study, not before. */
+  for (const slug of HIDDEN_WORK) {
+    const company = ALL_WORK.find((w) => w.slug === slug)?.nav
+    if (!company) continue
+    assert.doesNotMatch(
+      SITE.description,
+      new RegExp(company, 'i'),
+      `SITE.description names ${company}, which is hidden from the site`,
+    )
+  }
   const layout = read('app/layout.tsx')
   assert.match(layout, /description: SITE\.description/)
   assert.match(layout, /openGraph:[\s\S]*description: SITE\.description/)

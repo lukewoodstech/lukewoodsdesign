@@ -122,9 +122,13 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
     }
   }
 
-  const problemPoints = cs.problemPoints.filter((p) => !isPlaceholder(p))
-  const processSteps = cs.process.filter((s) => !isPlaceholder(s.heading))
-  const outcomes = cs.outcomes.filter((o) => !isPlaceholder(o))
+  /* The narrative fields are optional: a study with a bespoke page carries
+     none of them, and an unwritten one has none yet. Every section below is
+     already conditional on having something to show, so absent and
+     still-placeholder collapse to the same empty list. */
+  const problemPoints = (cs.problemPoints ?? []).filter((p) => !isPlaceholder(p))
+  const processSteps = (cs.process ?? []).filter((s) => !isPlaceholder(s.heading))
+  const outcomes = (cs.outcomes ?? []).filter((o) => !isPlaceholder(o))
   const facts = (
     [
       ['Role', real(cs.role)],

@@ -29,8 +29,17 @@ function fmt(n: number) {
 export default function PatternTile() {
   const reducedMotion = useReducedMotion()
   const [hovered, setHovered]   = useState(false)
-  const [t, setT]               = useState(0)
+  const [elapsed, setElapsed]   = useState(0)
   const [isInView, setIsInView] = useState(false)
+
+  /*
+   * Reduced motion lands on the finished frame rather than playing to it.
+   * Derived here instead of pushed into state from an effect: an effect
+   * that calls setState on mount renders twice and trips
+   * react-hooks/set-state-in-effect, and there is nothing to store anyway
+   * — the answer is a function of the preference.
+   */
+  const t = reducedMotion ? ANIM_END : elapsed
   const tileRef  = useRef<HTMLDivElement>(null)
   const startRef = useRef<number | null>(null)
   const rafRef   = useRef<number>(0)
@@ -47,7 +56,7 @@ export default function PatternTile() {
           setIsInView(true)
         } else {
           setIsInView(false)
-          setT(0)
+          setElapsed(0)
           startRef.current = null
         }
       },
@@ -59,14 +68,13 @@ export default function PatternTile() {
 
   // Play once; freeze at ANIM_END
   useEffect(() => {
-    if (!isInView) return
-    // Reduced motion: jump straight to the finished frame, skip the loop.
-    if (reducedMotion) { setT(ANIM_END); return }
+    // Reduced motion has nothing to play: `t` is already ANIM_END above.
+    if (!isInView || reducedMotion) return
     const frame = (ts: number) => {
       if (!startRef.current) startRef.current = ts
-      const elapsed = ts - startRef.current
-      if (elapsed >= ANIM_END) { setT(ANIM_END); return }
-      setT(elapsed)
+      const since = ts - startRef.current
+      if (since >= ANIM_END) { setElapsed(ANIM_END); return }
+      setElapsed(since)
       rafRef.current = requestAnimationFrame(frame)
     }
     rafRef.current = requestAnimationFrame(frame)

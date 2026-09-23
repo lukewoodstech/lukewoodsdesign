@@ -17,17 +17,29 @@ export type CaseStudy = {
   accent: string
   role: string
   period: string
-  team: string
+  team?: string
   /** One line for the work-grid tile. Kept here so tile copy can't drift from the case study. */
   summary: string
   /** 2–3 short metrics for the at-a-glance row. Omit until the study has real numbers. */
   headline?: string[]
-  tagline: string
-  overview: string
-  problemIntro: string
-  problemPoints: string[]
-  process: ProcessStep[]
-  outcomes: string[]
+  /*
+   * The article, for studies the generic /work/[slug] template renders.
+   *
+   * All optional, because most studies don't use them: the three written
+   * ones have bespoke pages under app/work/<slug> and take only the tile
+   * and prev/next fields from here, and an unwritten one has no article
+   * yet by definition. They were required until 2026-09-22, which meant
+   * every entry had to carry a full set of bracketed stand-ins to satisfy
+   * the type — forty of them across Lucid and Hoth, unreachable but one
+   * routing change away from rendering "[Step 1 — e.g. Discovery &
+   * research]" to a visitor. Absent says the same thing and can't leak.
+   */
+  tagline?: string
+  overview?: string
+  problemIntro?: string
+  problemPoints?: string[]
+  process?: ProcessStep[]
+  outcomes?: string[]
   heroSrc?: string
   heroCaption?: string
   problemFigure?: Figure
@@ -55,43 +67,6 @@ export const caseStudies: CaseStudy[] = [
     ],
     tagline:
       'An AI assistant that helps users find, understand, and create work from the Lucid homepage.',
-    overview:
-      '[2–4 sentences: the situation, what you did end-to-end, and the headline result. This paragraph sits directly under the hero image.]',
-    problemIntro:
-      '[1 short paragraph: what was broken or missing before this work, and why it hurt users or the business.]',
-    problemPoints: [
-      '[Pain point 1 — specific and concrete]',
-      '[Pain point 2]',
-      '[Pain point 3]',
-    ],
-    process: [
-      {
-        heading: '[Step 1 — e.g. Discovery & research]',
-        body: '[What you did, who you talked to, what you learned that changed the direction.]',
-      },
-      {
-        heading: '[Step 2 — e.g. Defining scope]',
-        body: '[The key decision or trade-off you made and the reasoning behind it.]',
-      },
-      {
-        heading: '[Step 3 — e.g. Design & prototyping]',
-        body: '[How you explored options, what you tested, what you landed on.]',
-      },
-      {
-        heading: '[Step 4 — e.g. Testing & handoff]',
-        body: '[How you validated the work and got it shipped.]',
-      },
-    ],
-    outcomes: [
-      '[Outcome 1 — measurable if possible]',
-      '[Outcome 2]',
-      '[Outcome 3]',
-    ],
-    problemFigure: { caption: '[Figure — research or problem evidence]', height: 'h-64' },
-    processFigures: [
-      { caption: '[Figure — explorations or prototypes]' },
-      { caption: '[Figure — final design]', height: 'h-[500px]' },
-    ],
     nextSlug: 'awardco-login-flow-redesign',
   },
   {
@@ -199,46 +174,7 @@ export const caseStudies: CaseStudy[] = [
     accent: '#008fff',
     role: 'Product Design Intern',
     period: 'Dec 2024 – Apr 2025',
-    team: '[Team — e.g. Solo project]',
     summary: 'Brand identity and landing page for an encrypted work platform.',
-    tagline: '[One-sentence tagline: what was the project and why does it matter?]',
-    overview:
-      '[2–4 sentences: the situation, what you did end-to-end, and the headline result. This paragraph sits directly under the hero image.]',
-    problemIntro:
-      '[1 short paragraph: what was broken or missing before this work, and why it hurt users or the business.]',
-    problemPoints: [
-      '[Pain point 1 — specific and concrete]',
-      '[Pain point 2]',
-      '[Pain point 3]',
-    ],
-    process: [
-      {
-        heading: '[Step 1 — e.g. Discovery & research]',
-        body: '[What you did, who you talked to, what you learned that changed the direction.]',
-      },
-      {
-        heading: '[Step 2 — e.g. Defining scope]',
-        body: '[The key decision or trade-off you made and the reasoning behind it.]',
-      },
-      {
-        heading: '[Step 3 — e.g. Design & prototyping]',
-        body: '[How you explored options, what you tested, what you landed on.]',
-      },
-      {
-        heading: '[Step 4 — e.g. Testing & handoff]',
-        body: '[How you validated the work and got it shipped.]',
-      },
-    ],
-    outcomes: [
-      '[Outcome 1 — measurable if possible]',
-      '[Outcome 2]',
-      '[Outcome 3]',
-    ],
-    problemFigure: { caption: '[Figure — research or problem evidence]', height: 'h-64' },
-    processFigures: [
-      { caption: '[Figure — explorations or prototypes]' },
-      { caption: '[Figure — final design]', height: 'h-[500px]' },
-    ],
     nextSlug: 'lucid-ai',
   },
   {
