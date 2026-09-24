@@ -4079,16 +4079,6 @@ p a {
   height: 84px;
 }
 
-/* Not a notification badge: it only renders when a conversation really is
-   waiting behind the chip, and it says what it does. */
-.ai-dock__resume {
-  padding: 0.1rem 0.35rem;
-  border: 1px solid rgba(0, 143, 255, 0.5);
-  border-radius: 3px;
-  font-size: var(--label-micro);
-  color: var(--mono-blue);
-}
-
 /* The panel. Height is capped against the viewport so the window never
    runs under the fixed bar on a short screen. */
 .ai-dock__panel {
