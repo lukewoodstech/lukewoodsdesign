@@ -7892,12 +7892,19 @@ p a {
 
 .cs-final__stage > *:hover { transform: rotate(0deg) translateY(var(--y, 0)) scale(1.02); }
 
-/* A pair of phones standing in for one laptop on the final-designs band. */
+/* A pair of phones standing in for one laptop on the final-designs band.
+   Awardco only, and it stands the study's own Iphone frames here, so the
+   width lands on .acs-iphone rather than .cs-phone. Cross-axis start, so a
+   rounding difference between the two can never stretch one off its
+   aspect ratio. */
 .cs-phones {
   display: flex;
+  align-items: flex-start;
   justify-content: center;
   gap: 6%;
 }
+
+.cs-phones .acs-iphone { width: 42%; }
 
 .cs-phone {
   width: 42%;
@@ -7937,6 +7944,10 @@ p a {
   .cs-final__stage { grid-template-columns: 1fr; gap: 1.5rem; }
   .cs-final__stage > * { --r: 0deg; --y: 0; }
   .cs-phone-pair { gap: 1rem; }
+  /* Awardco only. The Macbook's base is 112% of the lid and hangs 6% past
+     it either side; the two-column layout has room for that, the single
+     column does not, and .cs-final clips what escapes. */
+  .cs-final__stage .acs-macbook { width: 86%; margin-inline: auto; }
 }
 
 /* ── Learnings / reflections ──────────────────────────────────── */
@@ -8057,4 +8068,364 @@ p a {
   .footer__inner {
     padding-bottom: 10rem;
   }
+}
+
+/* ── Awardco: final-designs hero (phone + laptop) ────────────────── */
+.acs-hero { margin: 0; }
+
+.acs-hero__stage {
+  display: grid;
+  /* The phone is a peer, not an inset: roughly a third of the laptop's
+     width, both centred on the same line. */
+  grid-template-columns: minmax(0, 0.3fr) minmax(0, 1fr);
+  gap: clamp(1rem, 3vw, 2.5rem);
+  align-items: center;
+  width: min(100%, 1240px);
+  margin-inline: auto;
+}
+
+.acs-hero__phone { justify-self: end; width: 100%; }
+.acs-hero__cap { text-align: center; margin-top: 1.25rem; }
+
+@media (max-width: 40em) {
+  .acs-hero__stage { grid-template-columns: minmax(0, 0.36fr) minmax(0, 1fr); gap: 0.75rem; }
+}
+
+/* ── Awardco: the login flow as its own screens ──────────────────── */
+.acs-flow {
+  --flow-gap: clamp(0.75rem, 1.6vw, 1.5rem);
+  /* Breaks out of the 800px prose column: six screens need the room, and
+     both strips must share a track width to be comparable. */
+  --flow-w: min(1240px, calc(100vw - 2 * var(--cs-pad)));
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
+  grid-template-rows: auto auto auto;
+  gap: var(--flow-gap);
+  width: var(--flow-w);
+  margin: 1.75rem 0 0;
+  margin-inline: calc((100% - var(--flow-w)) / 2);
+  padding: 0;
+}
+
+/* Subgrid keeps the screens on one line and the notes on another, however
+   many lines each title wraps to, with no reserved empty space. */
+.acs-flow__step {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  margin: 0;
+  min-width: 0;
+}
+
+.acs-flow__head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  margin-bottom: 0.6rem;
+}
+
+.acs-flow__num {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--label-micro, 0.6875rem);
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+.acs-flow__title {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #fff;
+  text-wrap: balance;
+}
+
+.acs-flow__shot { position: relative; }
+
+/* The chip names what the step costs the user, so it sits on the screen.
+   Kept small: at six across, a screen is only ~180px wide. */
+.acs-flow__flag {
+  position: absolute;
+  left: 0.35rem;
+  bottom: 0.35rem;
+  padding: 0.12rem 0.38rem;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  background: rgba(10, 10, 14, 0.85);
+  color: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--card-ring);
+  pointer-events: none;
+}
+
+.acs-flow--problem .acs-flow__flag {
+  color: #ffd27a;
+  border-color: rgba(255, 210, 122, 0.5);
+}
+
+.acs-flow__note {
+  margin-top: 0.6rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* The connector sits in the gap, centred on the screen beside it. */
+.acs-flow__link {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  width: var(--flow-gap);
+  height: 1px;
+  background: var(--card-ring);
+}
+
+/* The carry chip is wider than the gap it sits in, so its step has to paint
+   above the following one or the chip is clipped by that screen. */
+.acs-flow__step:has(.acs-flow__link--carry) { z-index: 2; }
+
+.acs-flow__link--carry {
+  background: var(--accent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.acs-flow__carry {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  padding: 0.14rem 0.45rem;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: var(--accent);
+  background: rgba(10, 10, 14, 0.9);
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+/* Six screens do not survive being sixthed on a phone. Scroll instead, so
+   the flow still reads left to right at a legible size. */
+@media (max-width: 60em) {
+  .acs-flow {
+    grid-template-columns: none;
+    /* Must clear the three explicit rows too, or auto-flow:column fills
+       them downward and the strip becomes columns of three. */
+    grid-template-rows: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(62%, 1fr);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 0.75rem;
+    overscroll-behavior-x: contain;
+  }
+  .acs-flow__step { grid-row: auto; grid-template-rows: none; scroll-snap-align: start; }
+  .acs-flow__carry { display: none; }
+}
+
+/* The hero band holds a phone, a laptop and a caption, so unlike
+   .cs-hero-band it does not crop its content at the bottom edge. */
+.acs-hero-band {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding: clamp(2rem, 5vw, 4rem) var(--cs-pad);
+}
+
+/* The password branch: one screen, narrower than the prose is wide. */
+.acs-branch {
+  margin: 1.5rem auto;
+  width: min(100%, 720px);
+}
+
+/* ── Awardco device frames ───────────────────────────────────────
+   Scoped to this study on purpose: components/cs/Laptop and .cs-phone
+   are shared with Lucid and Pattern, so the hardware detail lives here
+   instead of changing those pages. Everything sizes from the frame's own
+   width via container queries, so one component covers hero scale and a
+   small comparison row. */
+
+/* iPhone 15 Pro: 71.6 x 147.6mm body around a 393 x 852pt screen. */
+.acs-iphone {
+  container-type: inline-size;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 433 / 892;
+  padding: 2.3%;
+  border-radius: 15.5% / 7.5%;
+  /* Brushed titanium: light on the top-left edge, dark through the middle. */
+  background: linear-gradient(145deg, #7b7d83 0%, #2b2c30 22%, #54565c 52%, #232428 78%, #6a6c72 100%);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.55),
+    0 2px 3px rgba(255, 255, 255, 0.14) inset,
+    0 30px 60px rgba(0, 0, 0, 0.45);
+}
+
+.acs-iphone__screen {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 13.4% / 6.5%;
+  background: #000;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.9);
+}
+
+.acs-iphone__screen img { object-fit: cover; object-position: top center; }
+
+/* Dynamic Island: 125 x 36pt, sitting 11pt below the top of the screen. */
+.acs-iphone__island {
+  position: absolute;
+  top: 1.3%;
+  left: 50%;
+  translate: -50% 0;
+  width: 31.8%;
+  height: 4.2%;
+  border-radius: 999px;
+  background: #000;
+  z-index: 2;
+}
+
+.acs-iphone__btn {
+  position: absolute;
+  width: 1.1cqw;
+  border-radius: 1cqw;
+  background: linear-gradient(90deg, #3a3b3f, #6e7076);
+}
+
+/* Left edge: action button, then the volume pair. */
+.acs-iphone__btn--action   { left: -0.9cqw; top: 16%;   height: 5.2%; }
+.acs-iphone__btn--vol-up   { left: -0.9cqw; top: 25.5%; height: 8%; }
+.acs-iphone__btn--vol-down { left: -0.9cqw; top: 35.5%; height: 8%; }
+/* Right edge: side button, set lower than the volume keys. */
+.acs-iphone__btn--power {
+  right: -0.9cqw;
+  top: 28%;
+  height: 12%;
+  background: linear-gradient(270deg, #3a3b3f, #6e7076);
+}
+
+/* MacBook Pro: aluminium rim, black bezel with a slightly deeper chin, the
+   camera notch cut into the top of the picture, and a tapered base. */
+.acs-macbook {
+  container-type: inline-size;
+  position: relative;
+  width: 100%;
+}
+
+.acs-macbook__lid {
+  position: relative;
+  padding: 0.45%;
+  border-radius: 1.4cqw 1.4cqw 0.3cqw 0.3cqw;
+  background: linear-gradient(180deg, #6d6f75 0%, #3a3b40 5%, #26272b 100%);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.55),
+    0 40px 80px rgba(0, 0, 0, 0.5);
+}
+
+.acs-macbook__bezel {
+  padding: 1.45% 1.05% 1.85%;
+  border-radius: 1.1cqw 1.1cqw 0.2cqw 0.2cqw;
+  background: #08080a;
+}
+
+.acs-macbook__screen {
+  position: relative;
+  aspect-ratio: var(--screen-ar, 16 / 10);
+  overflow: hidden;
+  border-radius: 0.2cqw;
+  background: #000;
+}
+
+.acs-macbook__screen > * { width: 100%; height: 100%; }
+.acs-macbook__screen img { object-fit: cover; object-position: top center; }
+
+/* The notch is a cutout in the picture, so it matches the bezel exactly. */
+.acs-macbook__notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  translate: -50% 0;
+  width: 12.5%;
+  height: 3%;
+  background: #08080a;
+  border-radius: 0 0 0.5cqw 0.5cqw;
+  z-index: 2;
+}
+
+/* The base: the closed underside seen edge-on, wider than the lid and
+   tapering very slightly toward the desk. */
+.acs-macbook__base {
+  position: relative;
+  width: 112%;
+  margin-inline: -6%;
+  height: 1.7cqw;
+  background: linear-gradient(180deg, #74767c 0%, #3d3e43 20%, #232428 68%, #141518 100%);
+  border-radius: 0 0 0.9cqw 0.9cqw;
+  clip-path: polygon(0 0, 100% 0, 99% 100%, 1% 100%);
+  box-shadow: 0 26px 44px rgba(0, 0, 0, 0.55);
+}
+
+/* The thumb lip cut into the front edge. */
+.acs-macbook__lip {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  translate: -50% 0;
+  width: 12%;
+  height: 52%;
+  border-radius: 0 0 0.7cqw 0.7cqw;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0));
+}
+
+/* ── Awardco: the brand-colour constraint ────────────────────────
+   Three full pages side by side. Breaks out of the prose column the same
+   way .acs-flow does, because the comparison is the point and 250px each
+   would not carry it. */
+.acs-brands {
+  --brands-w: min(1240px, calc(100vw - 2 * var(--cs-pad)));
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: auto auto auto;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  width: var(--brands-w);
+  margin: 1.75rem 0 0;
+  margin-inline: calc((100% - var(--brands-w)) / 2);
+  padding: 0;
+}
+
+.acs-brands__item {
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  margin: 0;
+  min-width: 0;
+}
+
+.acs-brands__name {
+  margin: 0 0 0.6rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.acs-brands__note {
+  margin-top: 0.7rem;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* Same breakpoint as .acs-flow: below this, three tinted pages side by side
+   squeeze the notes to about 30 characters a line. */
+@media (max-width: 60em) {
+  .acs-brands { grid-template-columns: 1fr; grid-template-rows: none; }
+  .acs-brands__item { grid-row: auto; grid-template-rows: none; }
 }

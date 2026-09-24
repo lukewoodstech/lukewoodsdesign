@@ -2,15 +2,17 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Footer from '@/components/Footer'
 import SiteNav from '@/components/SiteNav'
-import BeforeAfterHero from '@/components/BeforeAfterHero'
 import LucidTile from '@/components/LucidTile'
 import PatternTile from '@/components/PatternTile'
 import Reveal from '@/components/lucid/Reveal'
 import CompareStage from '@/components/lucid/CompareStage'
+import ZoomShot from '@/components/lucid/ZoomShot'
+import FinalHero from '@/components/awardco/FinalHero'
+import FlowStrip, { type FlowStep } from '@/components/awardco/FlowStrip'
+import { Iphone, Macbook } from '@/components/awardco/Devices'
 import BigStats from '@/components/cs/BigStats'
 import Journey from '@/components/cs/Journey'
 import Callouts from '@/components/cs/Callouts'
-import Laptop from '@/components/cs/Laptop'
 import {
   Act,
   Band,
@@ -51,11 +53,43 @@ import { SITE } from '@/lib/site'
  *   strip says so in its own caption.
  * - Implementation happened after the internship — the page says "handed
  *   off", not "live".
- * - Deliberately not rendered (assets stay in the repo): the dynamic-branding
- *   trio, old-login/old-mobile screens, company-login-authed, iteration and
- *   final-unified-auth slides, sms-web, new-reset-mobile, team quotes.
+ * - Deliberately not rendered (assets stay in the repo): company-login-authed,
+ *   iteration and final-unified-auth slides, sms-web, new-reset-mobile,
+ *   team quotes.
  * - The "what people ran into" note cards restate three situations from
  *   Luke's own paragraphs; they are not quotes and are labelled as such.
+ *
+ * Visuals edition (2026-09-23): the hero and the flow comparison now run on
+ * frames pulled straight from the design file (Cleaner Login Flow, file key
+ * j2WD4MhXQlW7l7t2cNyC9y) instead of exported deck slides.
+ * - The hero is FinalHero: the finished mobile and desktop side by side,
+ *   static, Awardco branding only (phone 1102:32286, desktop 1102:37132).
+ *   It replaces the before/after slider, which opened the study on the old
+ *   design rather than the new one. Devices are drawn in CSS by
+ *   components/awardco/Devices, not composited into the PNGs, so the same
+ *   capture can appear framed here and bare in the brand row.
+ * - Act 03 carries the brand-colour constraint: Awardco 1102:37132,
+ *   Cinemark 1102:37155, Accenture 1102:37182. Desktop only, because the
+ *   customer's tint covers the whole page and the file has no Accenture
+ *   mobile with an Okta button to pair honestly against its desktop. The
+ *   mobile brand row varies colour only (all three say Google); the
+ *   provider variants are a separate, all-Cinemark row (1135:17177 Okta,
+ *   1135:17219 Microsoft, 1135:17264 Generic).
+ * - All of the above live on the file's SECOND page, "🎨 Company Login
+ *   Page" (1102:28152) — get_metadata with no nodeId only lists the first
+ *   page, "🛑 READY FOR DEV 🛑", so the high-fidelity work is easy to miss.
+ *   The earlier 924:21185 "ACO CLP" is a different, older frame with no
+ *   background fill, which is why its export looked washed out.
+ * - Act 03's before/after toggle is replaced by two FlowStrips built from
+ *   the design file's own "Current Flow - Problem" (1063:11643) and
+ *   "Proposed Flow" (1063:11666 / 1063:11746) sections. Both strips share
+ *   four screen files; the after flow is the before flow minus two screens.
+ * - NEW CLAIMS, from reading those sections rather than from the interview
+ *   record — verify before publishing: the old flow is six screens with two
+ *   code entries and two trips to the inbox (the deck slide said four steps),
+ *   and the universal-login half is unchanged by the redesign.
+ * - public/before.png and public/after.png are no longer used here; the
+ *   generic /work/[slug] template still reads them.
  */
 
 const TITLE = 'Reducing Authentication Friction'
@@ -80,6 +114,131 @@ export const metadata: Metadata = {
 }
 
 const IMG = '/work/awardco'
+const FLOW = `${IMG}/flow`
+
+/*
+ * The two flows, screen by screen, exported from the design file's own
+ * "Current Flow" and "Proposed Flow" sections. The first three screens and
+ * the last are byte-identical between them: the redesign changes what
+ * happens after domain selection, not the universal login, so both strips
+ * point at the same four files and the difference is the two screens the
+ * after flow no longer needs.
+ */
+const SHOT = { width: 1440, height: 1024 }
+
+const BEFORE_FLOW: FlowStep[] = [
+  {
+    ...SHOT,
+    src: `${FLOW}/universal.png`,
+    alt: 'The universal login page: an Awardco logo, one Work Email field, and Continue With Email',
+    title: 'Universal login',
+    note: 'One field, asking for the work email.',
+  },
+  {
+    ...SHOT,
+    src: `${FLOW}/code.png`,
+    alt: 'The identification code screen: six digit boxes filled with 345900, and a note that a code was emailed',
+    title: 'Identification code',
+    note: 'Leave the product, open the inbox, come back with six digits.',
+    flag: 'Code 1',
+  },
+  {
+    ...SHOT,
+    src: `${FLOW}/domain.png`,
+    alt: 'Domain selection: Welcome Back, with a list of the workspaces that email belongs to',
+    title: 'Domain selection',
+    note: 'Pick the workspace. So far, so reasonable.',
+  },
+  {
+    ...SHOT,
+    src: `${FLOW}/before-company.png`,
+    alt: "The company login page: the tenant's logo, a Sign in with SSO button, and an empty email field",
+    title: 'Company login page',
+    note: 'The company page does not know who you are. It asks for the email again.',
+    flag: 'Asks again',
+  },
+  {
+    ...SHOT,
+    src: `${FLOW}/before-code-again.png`,
+    alt: 'Check your email: a second six-box code entry on the company login page, filled with C125DA',
+    title: 'A second code',
+    note: 'Back to the inbox for a different six digits.',
+    flag: 'Code 2',
+  },
+  {
+    ...SHOT,
+    src: `${FLOW}/app.png`,
+    alt: 'The Awardco home page after signing in, with recognition programs and a points balance',
+    title: 'In the app',
+    note: 'Two codes and two trips to the inbox after the first field.',
+  },
+]
+
+const AFTER_FLOW: FlowStep[] = [
+  {
+    ...SHOT,
+    src: `${FLOW}/universal.png`,
+    alt: 'The same universal login page, unchanged by the redesign',
+    title: 'Universal login',
+    note: 'Unchanged. The same single field.',
+  },
+  {
+    ...SHOT,
+    src: `${FLOW}/code.png`,
+    alt: 'The same identification code screen, now the only code the user enters',
+    title: 'Identification code',
+    note: 'The same six digits, entered once.',
+    flag: 'Code 1',
+  },
+  {
+    ...SHOT,
+    src: `${FLOW}/domain.png`,
+    alt: 'The same domain selection screen, with the authentication now carried forward as a token',
+    title: 'Domain selection',
+    note: 'Pick the workspace, carrying the authentication along.',
+    carry: 'secure token',
+  },
+  {
+    ...SHOT,
+    src: `${FLOW}/app.png`,
+    alt: 'The same Awardco home page, reached without a second authentication',
+    title: 'In the app',
+    note: 'The company page has nothing left to ask.',
+  },
+]
+
+/*
+ * The brand-colour constraint, Act 03. Desktop frames only: the customer's
+ * tint covers the whole page, which a phone would show less of, and the
+ * design file has no Accenture mobile with an Okta button to pair honestly
+ * against its desktop.
+ *
+ * The Cinemark and Accenture notes are Luke's reasoning, written up here:
+ * red is genuinely hard to use as a primary action, and Accenture held the
+ * tightest brand standards of the customers he worked against. Phrased
+ * around the brand system rather than the client, since both are real
+ * companies named on a public page.
+ */
+const BRANDS: { name: string; src: string; alt: string; note: string }[] = [
+  {
+    name: 'Awardco',
+    src: `${IMG}/hero/desk-awardco.png`,
+    alt: 'The login page in Awardco branding: a pale blue page, a white card, and a blue Continue button',
+    note: 'The easy case. Awardco blue reads as a safe primary action anywhere on the page.',
+  },
+  {
+    name: 'Cinemark',
+    src: `${IMG}/hero/desk-cinemark.png`,
+    alt: 'The same login page in Cinemark branding: a pale red page, a white card, and a red Continue button',
+    note: 'The hard case. A saturated red carries error and destructive meaning in almost every interface, so the layout has to make Continue read as the safe next step on its own.',
+  },
+  {
+    name: 'Accenture',
+    src: `${IMG}/hero/desk-accenture.png`,
+    alt: 'The same login page in Accenture branding: a pale purple page, a white card, and a purple Continue button',
+    note: 'The strict case. Accenture held the tightest brand standards of any customer I designed against, so the page had to be right with no latitude.',
+  },
+]
 
 export default function AwardcoCaseStudy() {
   return (
@@ -136,16 +295,23 @@ export default function AwardcoCaseStudy() {
           </header>
         </Col>
 
-        {/* ══ Hero band: the tile's slider, live. The captures carry their own
-            laptop, so no frame around them. ══ */}
-        <Band tone="accent" crop className="cs-hero-band">
-          <BeforeAfterHero
-            beforeSrc="/before.png"
-            afterSrc="/after.png"
-            beforeAlt="Awardco's original login screen, showing every authentication method at once"
-            afterAlt="The redesigned Awardco login screen, leading with single sign-on"
-            aspect={2016 / 1270}
-            frameless
+        {/* ══ Hero band: the finished thing, mobile first, Awardco's own
+            branding and nothing else. It used to cycle three customer brands,
+            which buried the point; the brand-colour range now has its own
+            section in Act 03. Frames are bare captures in CSS-drawn devices
+            (components/awardco/Devices), so the hardware is real-looking
+            without shipping a device mockup PNG. ══ */}
+        <Band className="acs-hero-band">
+          <FinalHero
+            phone={{
+              src: `${IMG}/hero/phone-awardco.png`,
+              alt: 'The redesigned Awardco mobile sign-in: the Awardco logo, a Sign in with Google button, one email field, and a Continue button',
+            }}
+            desktop={{
+              src: `${IMG}/hero/desk-awardco.png`,
+              alt: 'The redesigned Awardco company login page: a pale blue page behind a white card with the Awardco logo, a Sign in with Google button, one email field, and Continue',
+            }}
+            caption="The redesigned sign-in, on mobile and desktop"
           />
         </Band>
 
@@ -406,51 +572,67 @@ export default function AwardcoCaseStudy() {
             </div>
           </Act>
 
-          <Pair
-            level={3}
-            num="01"
-            task="Users authenticated twice, once at universal login and again on the company page"
-            solution="The first login code becomes a secure token that persists to the company page"
-            visual={
-              <CompareStage
-                ariaLabel="Before and after: the old double-authentication flow versus the new token-based flow"
-                layers={[
-                  {
-                    src: `${IMG}/flow-before.png`,
-                    alt: 'The old four-step flow: a universal login code, domain selection, the company login page, then a second login code',
-                    label: 'Before',
-                    caption:
-                      'Four steps, two codes. Universal login only identified the user, so the company page asked them to authenticate all over again.',
-                    width: 1448,
-                    height: 814,
-                  },
-                  {
-                    src: `${IMG}/flow-after.png`,
-                    alt: 'The new three-step flow: a universal login code, domain selection, then straight into the app, with the code persisting as a secure token',
-                    label: 'After',
-                    caption:
-                      'The first authentication now carries into the company login flow, eliminating the second code entry.',
-                    width: 1448,
-                    height: 814,
-                  },
-                ]}
-              />
-            }
-          >
-            <p>
-              If the company only requires a login code, the user is already authenticated.
-              If it also requires a password, their email is already populated and they only
-              complete the remaining step. I mapped the system as{' '}
-              <strong>states and transitions</strong>, then worked through the proposal with
-              engineering, architecture, and security. It passed review without material
-              changes. Engineering owned the implementation details, while I owned the concept
-              and end-to-end experience.
+          {/* The two flows, screen by screen. Shown one after the other rather
+              than behind a toggle: the argument is that the second strip is
+              the first with two screens removed, and a toggle hides exactly
+              that. */}
+          <Block>
+            <H3 dim="six screens, two codes, two trips to the inbox">The flow users had</H3>
+            <FlowStrip
+              tone="problem"
+              label="The Awardco login flow before the redesign, screen by screen"
+              steps={BEFORE_FLOW}
+              tracks={BEFORE_FLOW.length}
+            />
+          </Block>
+
+          <Block>
+            <H3 dim="four screens, one code">The flow I proposed</H3>
+            <FlowStrip
+              label="The Awardco login flow after the redesign, screen by screen"
+              steps={AFTER_FLOW}
+              tracks={BEFORE_FLOW.length}
+            />
+            <p className="cs-cap">
+              The same three screens the old flow opened with, and then straight into the
+              app. The company login page and the second code are gone, because the first
+              authentication now travels with the user.
             </p>
-          </Pair>
+          </Block>
+
+          <Block>
+            <div className="cs-prose">
+              <p>
+                If the company only requires a login code, the user is already authenticated.
+                If it also requires a password, <strong>their email is already populated</strong>{' '}
+                and they only complete the remaining step.
+              </p>
+            </div>
+            <figure className="acs-branch">
+              <ZoomShot
+                src={`${FLOW}/after-password-branch.png`}
+                alt="The redesigned company login page for a company that also requires a password: the email is already filled in as luke.woods@awardco.com, and only the password field is left"
+                width={1440}
+                height={1024}
+                sizes="(min-width: 60em) 60vw, 100vw"
+              />
+              <figcaption className="cs-cap">
+                The password branch. One field, not a fresh login.
+              </figcaption>
+            </figure>
+            <div className="cs-prose">
+              <p>
+                I mapped the system as <strong>states and transitions</strong>, then worked
+                through the proposal with engineering, architecture, and security. It passed
+                review without material changes. Engineering owned the implementation details,
+                while I owned the concept and end-to-end experience.
+              </p>
+            </div>
+          </Block>
 
           <Pair
             level={3}
-            num="02"
+            num="01"
             task="Deskless workers got codes in inboxes they could not open from their phones"
             solution="SMS verification, and only the methods the company supports"
             visual={
@@ -500,6 +682,38 @@ export default function AwardcoCaseStudy() {
               know which authentication method their company supported.
             </p>
           </Pair>
+
+          {/* The brand-colour constraint. Desktop frames only: the whole page
+              takes the customer's tint, so a phone would show less of the
+              thing being compared, and the file has no Accenture mobile with
+              an Okta button to pair honestly against its desktop. */}
+          <Block>
+            <H3 dim="the constraint every screen had to survive">One layout, any brand</H3>
+            <div className="cs-prose mt-3">
+              <p>
+                Awardco&rsquo;s login pages are white-labelled. Every customer&rsquo;s page
+                carries their logo, their button colour, and their link colour, so{' '}
+                <strong>one layout had to hold up in all of them</strong>. I designed against
+                the two hardest cases I could find rather than against Awardco&rsquo;s own
+                comfortable blue.
+              </p>
+            </div>
+            <ol className="acs-brands">
+              {BRANDS.map((b) => (
+                <li className="acs-brands__item" key={b.src}>
+                  <h4 className="acs-brands__name">{b.name}</h4>
+                  <ZoomShot
+                    src={b.src}
+                    alt={b.alt}
+                    width={2880}
+                    height={1600}
+                    sizes="(min-width: 60em) 30vw, 80vw"
+                  />
+                  <p className="acs-brands__note">{b.note}</p>
+                </li>
+              ))}
+            </ol>
+          </Block>
         </Col>
 
         {/* ══ Act 04 · Prototype ══ */}
@@ -518,7 +732,7 @@ export default function AwardcoCaseStudy() {
 
           <Pair
             level={3}
-            num="03"
+            num="02"
             task="Reset was a disconnected page with a blind password field and no visible requirements"
             solution="Inline validation, live password matching, show-password, and the same visual system"
             visual={
@@ -560,8 +774,11 @@ export default function AwardcoCaseStudy() {
           <p className="cs-final__word" aria-hidden="true">
             Final designs
           </p>
+          {/* The same Macbook and Iphone the hero opens on, not the plain
+              rectangles the other studies use: the band closes the page on
+              the hardware it started with. */}
           <div className="cs-final__stage" style={{ paddingInline: 'var(--cs-pad)' }}>
-            <Laptop
+            <Macbook
               ratio={2880 / 2048}
               style={{ '--r': '-5deg', '--y': '6%' } as React.CSSProperties}
             >
@@ -571,28 +788,24 @@ export default function AwardcoCaseStudy() {
                 fill
                 sizes="(min-width: 40em) 50vw, 100vw"
               />
-            </Laptop>
+            </Macbook>
             <div className="cs-phones" style={{ '--r': '4deg', '--y': '-4%' } as React.CSSProperties}>
-              <div className="cs-phone">
-                <div className="cs-phone__screen">
-                  <Image
-                    src={`${IMG}/figma/new-mobile.png`}
-                    alt="The redesigned mobile sign-in"
-                    fill
-                    sizes="(min-width: 40em) 20vw, 40vw"
-                  />
-                </div>
-              </div>
-              <div className="cs-phone">
-                <div className="cs-phone__screen">
-                  <Image
-                    src={`${IMG}/figma/sms-mobile.png`}
-                    alt="The mobile verification chooser"
-                    fill
-                    sizes="(min-width: 40em) 20vw, 40vw"
-                  />
-                </div>
-              </div>
+              <Iphone>
+                <Image
+                  src={`${IMG}/figma/new-mobile.png`}
+                  alt="The redesigned mobile sign-in"
+                  fill
+                  sizes="(min-width: 40em) 20vw, 40vw"
+                />
+              </Iphone>
+              <Iphone>
+                <Image
+                  src={`${IMG}/figma/sms-mobile.png`}
+                  alt="The mobile verification chooser"
+                  fill
+                  sizes="(min-width: 40em) 20vw, 40vw"
+                />
+              </Iphone>
             </div>
           </div>
         </Band>
