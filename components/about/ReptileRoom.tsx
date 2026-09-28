@@ -30,7 +30,20 @@ export default function ReptileRoom({ blocks }: { blocks: ReadonlyArray<RoomBloc
     <div className="rr">
       {blocks.map((block) => (
         <section key={block.id} className="rr__block">
-          {block.lede && <p className="rr__lede">{block.lede}</p>}
+          {block.chapter && (
+            <header className="rr__chapter">
+              {block.chapter.label && <p className="rr__chapter-label">{block.chapter.label}</p>}
+              <h3 className="rr__chapter-title">{block.chapter.title}</h3>
+              {block.chapter.body && <p className="rr__chapter-body">{block.chapter.body}</p>}
+              {block.chapter.facts && (
+                <ul className="rr__facts">
+                  {block.chapter.facts.map((f) => (
+                    <li key={f}>{f}</li>
+                  ))}
+                </ul>
+              )}
+            </header>
+          )}
           <ul className="rr__row">
             {block.shots.map((shot) => (
               <li

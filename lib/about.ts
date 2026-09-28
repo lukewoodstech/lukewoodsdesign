@@ -328,10 +328,21 @@ export type RoomShot = {
   focus?: string
 }
 
+/* A chapter break inside the room: the section's own hierarchy at a
+   smaller scale (mono label, serif line, centred lede, mono facts), so
+   a story beat between two rows of photographs reads as designed rather
+   than as a paragraph dropped above a picture. */
+export type RoomChapter = {
+  label?: string
+  title: string
+  body?: string
+  /** Short mono facts under the lede, e.g. '18 eggs'. */
+  facts?: ReadonlyArray<string>
+}
+
 export type RoomBlock = {
   id: string
-  /** A line that introduces the shots below it, where they need one. */
-  lede?: string
+  chapter?: RoomChapter
   shots: ReadonlyArray<RoomShot>
 }
 
@@ -371,8 +382,13 @@ export const REPTILE_ROOM: ReadonlyArray<RoomBlock> = [
      BACKGROUND.personal in lib/lukeAiFacts.ts. */
   {
     id: 'eggs',
-    lede:
-      'Big Bertha, my 15-foot reticulated python, laid 18 eggs while I was in high school. Each baby was worth real money, around $10,000 across the clutch, so I built an incubator from scratch: a drinks fridge, fans and sensors to hold heat and humidity, and alerts so I would know the moment anything drifted. A missed reading was not a bug ticket. It was a dead animal. I have designed around the failure modes first ever since.',
+    chapter: {
+      label: 'The incubator',
+      title: 'Eighteen eggs, and no margin for a silent failure.',
+      body:
+        'Big Bertha, my 15-foot reticulated python, laid 18 eggs while I was in high school. Each baby was worth real money, around $10,000 across the clutch, so I built an incubator from scratch: a drinks fridge, fans and sensors to hold heat and humidity, and alerts so I would know the moment anything drifted. A missed reading was not a bug ticket. It was a dead animal. I have designed around the failure modes first ever since.',
+      facts: ['15 ft of snake', '18 eggs', '$10k on the line'],
+    },
     shots: [
       {
         src: '/about/big-bertha.jpg',
@@ -456,7 +472,10 @@ export const REPTILE_ROOM: ReadonlyArray<RoomBlock> = [
   },
   {
     id: 'teaching',
-    lede: 'The best part was never the animals. It was handing one to someone who was sure they’d hate it.',
+    chapter: {
+      label: 'The best part',
+      title: 'It was never the animals. It was handing one to someone who was sure they’d hate it.',
+    },
     shots: [
       {
         src: '/about/class-beardies.jpg',

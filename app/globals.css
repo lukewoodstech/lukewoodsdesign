@@ -5744,13 +5744,67 @@ p a {
   gap: 2.5rem;
 }
 
-.rr__lede {
-  max-width: 34em;
-  margin: 0 0 1.5rem;
-  font-size: var(--reading-lede);
-  line-height: var(--reading-lede-lh);
+/* A chapter break between rows of photographs: the section header's
+   own voice at a smaller scale. Serif line, centred lede at the reading
+   tokens, mono label over it and mono facts under it, so the story beat
+   is the same material as "The reptile business" above it rather than
+   a paragraph dropped above a picture (Luke, 2026-09-28). */
+.rr__chapter {
+  max-width: 42rem;
+  margin: 1.5rem auto 2.5rem;
+  text-align: center;
+}
+
+.rr__chapter-label {
+  margin: 0 0 1rem;
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.rr__chapter-title {
+  display: block;
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: var(--display-serif-tracking);
+  color: #fff;
+  text-wrap: balance;
+}
+
+.rr__chapter-body {
+  max-width: 40rem;
+  margin: 1.25rem auto 0;
+  font-size: var(--reading-size);
+  line-height: var(--reading-leading);
   color: rgba(255, 255, 255, 0.72);
   text-wrap: pretty;
+}
+
+.rr__facts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rr__facts li {
+  padding: 0.45em 0.8em;
+  border: 1px solid var(--card-ring);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .rr__row {
