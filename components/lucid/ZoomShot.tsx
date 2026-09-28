@@ -2,14 +2,27 @@
 
 import Image from 'next/image'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import type { MouseEvent } from 'react'
 import { createPortal } from 'react-dom'
 
 /*
- * Click-to-expand screenshot for the Lucid case study. The inline shot is a
- * button: hovering surfaces an expand hint, clicking opens the full-resolution
- * capture in a lightbox. The lightbox portals to <body> because Reveal's
- * translate transform would otherwise turn position:fixed into
+ * Click-to-expand screenshot. The inline shot is a button: hovering
+ * surfaces an expand hint, clicking opens the full-resolution capture in a
+ * lightbox. The lightbox portals to <body> because Reveal's translate
+ * transform would otherwise turn position:fixed into
  * position:absolute-within-the-figure.
+ *
+ * The lightbox has two sizes. It opens at FIT: the whole capture on
+ * screen, as large as the viewport allows. Until 2026-09-28 that was all
+ * it did, and "expand" often produced a picture no bigger than the one
+ * just clicked: a figure that already ran the width of a phone, or a
+ * bled figure on a laptop, fit the viewport before the lightbox opened,
+ * so the only thing that changed was the background. Clicking the
+ * opened capture now toggles ZOOM, which lays the image out at its own
+ * pixels (its natural width over the device pixel ratio, or 1.6x fit,
+ * whichever is larger) inside a scrolling box, centred on the point that
+ * was clicked. So the expand always expands, and on a phone the same
+ * tap-and-drag reads a 2880px capture at retina density.
  */
 export default function ZoomShot({
   src,
@@ -27,11 +40,15 @@ export default function ZoomShot({
   eager?: boolean
 }) {
   const [open, setOpen] = useState(false)
+  const [zoom, setZoom] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const imgRef = useRef<HTMLImageElement>(null)
 
   const close = useCallback(() => {
     setOpen(false)
+    setZoom(false)
     triggerRef.current?.focus({ preventScroll: true })
   }, [])
 
@@ -49,6 +66,44 @@ export default function ZoomShot({
       document.body.style.overflow = prevOverflow
     }
   }, [open, close])
+
+  /* Zoom in on the point that was clicked; zoom out back to fit. */
+  const toggleZoom = (e: MouseEvent<HTMLImageElement>) => {
+    e.stopPropagation()
+    const box = scrollRef.current
+    const img = imgRef.current
+    if (!box || !img) return
+    if (zoom) {
+      setZoom(false)
+      return
+    }
+    const r = img.getBoundingClientRect()
+    const fx = (e.clientX - r.left) / r.width
+    const fy = (e.clientY - r.top) / r.height
+    const dpr = window.devicePixelRatio || 1
+    const zoomW = Math.max(r.width * 1.6, Math.min(width, width / dpr))
+    box.style.setProperty('--zoom-w', `${Math.round(zoomW)}px`)
+    setZoom(true)
+    /* Two frames: one for React to commit the class, one for layout. */
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        const zw = img.offsetWidth
+        const zh = img.offsetHeight
+        box.scrollLeft = fx * zw - box.clientWidth / 2
+        box.scrollTop = fy * zh - box.clientHeight / 2
+      }),
+    )
+  }
+
+  /* The scroll box is the backdrop. A click on its own surface (not on
+     the picture, and not on its scrollbar) closes. */
+  const onBackdrop = (e: MouseEvent<HTMLDivElement>) => {
+    const box = e.currentTarget
+    if (e.target !== box) return
+    const r = box.getBoundingClientRect()
+    if (e.clientX - r.left > box.clientWidth || e.clientY - r.top > box.clientHeight) return
+    close()
+  }
 
   return (
     <>
@@ -90,12 +145,26 @@ export default function ZoomShot({
       {open &&
         createPortal(
           <div
-            className="lcs-lightbox"
+            className={`lcs-lightbox${zoom ? ' is-zoomed' : ''}`}
             role="dialog"
             aria-modal="true"
             aria-label={alt}
-            onClick={close}
           >
+            <div ref={scrollRef} className="lcs-lightbox__scroll" onClick={onBackdrop}>
+              <Image
+                ref={imgRef}
+                src={src}
+                alt={alt}
+                width={width}
+                height={height}
+                /* The capture's own width, not the viewport's: ZOOM lays
+                   it out at its own pixels, and a source picked for the
+                   viewport was soft by the time it got there. */
+                sizes={`${width}px`}
+                className="lcs-lightbox__img"
+                onClick={toggleZoom}
+              />
+            </div>
             <button
               ref={closeRef}
               type="button"
@@ -112,17 +181,8 @@ export default function ZoomShot({
                 />
               </svg>
             </button>
-            <Image
-              src={src}
-              alt={alt}
-              width={width}
-              height={height}
-              sizes="100vw"
-              className="lcs-lightbox__img"
-              onClick={(e) => e.stopPropagation()}
-            />
             <p className="lcs-lightbox__esc" aria-hidden="true">
-              Esc or click anywhere to close
+              {zoom ? 'Drag to look around · click to fit' : 'Click the image to zoom · Esc to close'}
             </p>
           </div>,
           document.body,

@@ -60,6 +60,10 @@ export default function ExperienceTimeline({
       { threshold: 0.25 },
     )
     items.forEach((el) => io.observe(el))
+    /* The row of undated cards under the rail rises in the same way,
+       as one group, staggered by CSS. */
+    const aside = root.querySelector('.tl__ongoing')
+    if (aside) io.observe(aside)
 
     /* Reduced motion gets the finished timeline, drawn, immediately. */
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -177,15 +181,30 @@ export default function ExperienceTimeline({
         ))}
       </ol>
 
-      <ul className="tl__ongoing" aria-label="Alongside all of it">
-        {ongoing.map((o) => (
-          <li key={`${o.label}-${o.org}`} className="tl-ongoing">
-            <span className="tl-ongoing__label">{o.label}</span>
-            <span className="tl-ongoing__org">{o.org}</span>
-            <span className="tl-ongoing__note">{o.note}</span>
-          </li>
-        ))}
-      </ul>
+      {/* The undated things, as a row of spec cards under the rail: a
+          mono index, the role, the place, one line on what it is. Same
+          card language as the case studies' people cards. */}
+      <div className="tl__aside">
+        <p className="tl__aside-label" id="tl-aside-label">
+          Alongside all of it
+        </p>
+        <ol className="tl__ongoing" aria-labelledby="tl-aside-label">
+          {ongoing.map((o, i) => (
+            <li
+              key={`${o.label}-${o.org}`}
+              className="tl-ongoing"
+              style={{ '--i': i } as React.CSSProperties}
+            >
+              <span className="tl-ongoing__i" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span className="tl-ongoing__label">{o.label}</span>
+              <span className="tl-ongoing__org">{o.org}</span>
+              <span className="tl-ongoing__note">{o.note}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
     </div>
   )
 }

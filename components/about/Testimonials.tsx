@@ -1,55 +1,41 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties, FocusEvent } from 'react'
 import Image from 'next/image'
 import { useReducedMotion } from '@/lib/useReducedMotion'
 import type { Quote } from '@/lib/about'
 
 /*
- * Kind words as one panel: a wall of tiles on the left with the writer's
- * face set into it, their quote on the right, and two arrows under it.
+ * Kind words as one quiet panel: the writers' faces in a row along the
+ * top, one quote under them in the serif the section headings use, the
+ * byline under that, and a hairline along the foot that fills over the
+ * seconds before the panel moves on.
  *
- * This shape replaced a two-column masonry wall on 2026-09-22, which had
- * itself replaced a carousel that morning. The carousel's problem was
- * real — one panel has to pick a height, and the old one picked the
- * tallest quote and left the short ones floating in an empty box — but
- * the fix is to cut the long quotes down to the same few lines, not to
- * put every word on the page at once. So the quotes in lib/about.ts are
- * trimmed to fit and the quote area reserves the same line count
- * whatever is in it (seven, eight on a narrow phone), which is what
- * keeps the byline and the arrows from hopping when it advances. The
- * quote sits at the bottom of that space, so a short one still lands
- * just above its byline.
+ * The faces are the control. Each is a button that brings up its quote
+ * and the one showing is ringed and in colour, so you can see how many
+ * there are, who they are, and pick one, without arrows. This replaced
+ * (2026-09-28, Luke: "more intentional, and clean") a panel that put a
+ * decorative wall of empty tiles beside the quote and a pair of arrows
+ * under it: the wall was texture with no job, and the arrows could not
+ * say which quote you were on or who else was there.
  *
- * It advances itself every ADVANCE_MS, and stops whenever advancing
+ * One panel has to pick a height, so the quote area reserves a fixed
+ * number of lines (--kw-lines, per breakpoint in globals.css) and the
+ * quotes in lib/about.ts are cut to fit it; the byline and the timer
+ * never hop when it advances.
+ *
+ * It advances itself every ADVANCE_MS, and holds whenever advancing
  * would be rude: while the pointer is over it, while anything inside it
- * has focus, while the tab is in the background, while it is scrolled
- * out of view, and entirely under prefers-reduced-motion — that reader
- * gets the arrows and nothing that moves on its own. Every quote is
- * reachable from the arrows, so nothing here is only available to
- * someone who waits.
- *
- * The tile wall is decoration and says so (aria-hidden): the name it
- * belongs to is in the byline. At phone width the tiles go away and the
- * face comes back as a 3rem tile above the quote, because three columns
- * of tiles on a 375px screen is three columns of nothing.
+ * has keyboard focus, while the tab is in the background, while it is
+ * scrolled out of view, and entirely under prefers-reduced-motion, where
+ * the faces still work and nothing moves on its own. The timer line
+ * pauses with it and starts over when it resumes, so the line never
+ * promises a change it isn't going to make.
  */
 
 /** How long each quote holds before the panel moves on. */
-const ADVANCE_MS = 7000
-
-/*
- * The wall, column by column: 'face' is the cell the headshot sits in,
- * and each column is nudged vertically so the grid reads as a wall that
- * carries on past the panel rather than a 3x4 table. The first column
- * is half off the left edge by design; .kwc clips it.
- */
-const WALL: ReadonlyArray<{ cells: ReadonlyArray<'tile' | 'face'>; shift: string }> = [
-  { cells: ['tile', 'tile', 'tile', 'tile'], shift: '-2.1rem' },
-  { cells: ['tile', 'face', 'tile', 'tile'], shift: '1.4rem' },
-  { cells: ['tile', 'tile', 'tile', 'tile'], shift: '-0.9rem' },
-]
+const ADVANCE_MS = 8000
 
 /** Up to two initials — "Dan Littlewood" → "DL", "Cher" → "C". */
 function initials(name: string) {
@@ -64,13 +50,11 @@ export default function Testimonials({ quotes }: { quotes: ReadonlyArray<Quote> 
   const [hidden, setHidden] = useState(false)
   const [seen, setSeen] = useState(false)
   const rootRef = useRef<HTMLDivElement | null>(null)
+  const barRef = useRef<HTMLElement | null>(null)
   const reduce = useReducedMotion()
 
   const many = quotes.length > 1
-  const go = useCallback(
-    (step: number) => setI((prev) => (prev + step + quotes.length) % quotes.length),
-    [quotes.length],
-  )
+  const paused = reduce || !many || hover || keyed || hidden || !seen
 
   /* Hold while the tab is in the background: come back after lunch and
      the panel should be where you left it, not four quotes along. */
@@ -80,28 +64,33 @@ export default function Testimonials({ quotes }: { quotes: ReadonlyArray<Quote> 
     return () => document.removeEventListener('visibilitychange', onVis)
   }, [])
 
-  /* And hold until it has been scrolled to at least once. */
+  /* And hold until it has been scrolled to. */
   useEffect(() => {
     const el = rootRef.current
     if (!el) return
-    const io = new IntersectionObserver(
-      ([entry]) => setSeen(entry.isIntersecting),
-      { threshold: 0.35 },
-    )
+    const io = new IntersectionObserver(([entry]) => setSeen(entry.isIntersecting), {
+      threshold: 0.35,
+    })
     io.observe(el)
     return () => io.disconnect()
   }, [])
 
   useEffect(() => {
-    if (reduce || !many || hover || keyed || hidden || !seen) return
-    const t = window.setTimeout(() => go(1), ADVANCE_MS)
+    if (paused) return
+    /* The timer line restarts in step with the timeout: a hold froze it
+       part-way, and resuming from there would promise a change sooner
+       than the fresh timeout below will deliver. */
+    barRef.current?.getAnimations().forEach((a) => {
+      a.currentTime = 0
+    })
+    const t = window.setTimeout(() => setI((prev) => (prev + 1) % quotes.length), ADVANCE_MS)
     return () => window.clearTimeout(t)
-    /* `i` is the point: every change, arrow or timer, restarts the clock. */
-  }, [i, reduce, many, hover, keyed, hidden, seen, go])
+    /* `i` is the point: every change, face or timer, restarts the clock. */
+  }, [i, paused, quotes.length])
 
   const q = quotes[i]
 
-  /* Keyboard focus holds the panel; a mouse click on an arrow does not,
+  /* Keyboard focus holds the panel; a mouse click on a face does not,
      or the panel would stop for good the moment someone used it and
      then looked away. :focus-visible is exactly that distinction. */
   const onFocus = (e: FocusEvent<HTMLDivElement>) => {
@@ -111,57 +100,53 @@ export default function Testimonials({ quotes }: { quotes: ReadonlyArray<Quote> 
   return (
     <div
       ref={rootRef}
-      className="kwc"
+      className="kw"
       role="group"
       aria-roledescription="carousel"
       aria-label="Recommendations"
+      style={{ '--kw-ms': `${ADVANCE_MS}ms` } as CSSProperties}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onFocusCapture={onFocus}
       onBlurCapture={() => setKeyed(false)}
     >
-      <div className="kwc__wall" aria-hidden="true">
-        <div className="kwc__cols">
-          {WALL.map((col, c) => (
-            <div key={c} className="kwc__col" style={{ '--kw-shift': col.shift } as CSSProperties}>
-              {col.cells.map((cell, r) =>
-                cell === 'face' ? (
-                  <span key={r} className={`kwc__face ${q.avatar ? '' : 'kwc__face--mono'}`}>
-                    {q.avatar ? (
-                      /* Keyed on the quote so React remounts it and the
-                         fade plays on every change. */
-                      <Image
-                        key={q.id}
-                        src={q.avatar}
-                        alt=""
-                        fill
-                        sizes="160px"
-                        className="kwc__img"
-                      />
-                    ) : (
-                      <span key={q.id} className="kwc__initials kwc__img">
-                        {q.placeholder ? '?' : initials(q.name)}
-                      </span>
-                    )}
-                  </span>
+      {/* One quote needs no picker, and a row of one face is a badge. */}
+      {many && (
+        <ol className="kw__faces" aria-label="Who wrote them">
+          {quotes.map((p, k) => (
+            <li key={p.id}>
+              <button
+                type="button"
+                className={`kw__face${k === i ? ' is-on' : ''}${p.avatar ? '' : ' kw__face--mono'}`}
+                aria-pressed={k === i}
+                aria-label={`${p.name}, ${p.title} at ${p.org}`}
+                onClick={() => setI(k)}
+              >
+                {p.avatar ? (
+                  <Image src={p.avatar} alt="" fill sizes="96px" />
                 ) : (
-                  <span key={r} className="kwc__tile" />
-                ),
-              )}
-            </div>
+                  <span className="kw__initials">{p.placeholder ? '?' : initials(p.name)}</span>
+                )}
+              </button>
+            </li>
           ))}
-        </div>
-      </div>
+        </ol>
+      )}
 
-      <figure className="kwc__panel">
-        <span className="kwc__mark" aria-hidden="true">
-          &ldquo;
-        </span>
-        <blockquote key={q.id} className="kwc__quote">
+      <figure className="kw__panel">
+        {/* Keyed on the quote so React remounts them and the fade plays
+            on every change. */}
+        <blockquote key={q.id} className="kw__quote">
           <p>{q.quote}</p>
         </blockquote>
-        <figcaption key={`${q.id}-who`} className="kwc__who">
-          <span className="kwc__name">
+        <figcaption key={`${q.id}-who`} className="kw__who">
+          {q.logo && (
+            /* 20px marks, one of them an SVG, which the image optimizer
+               won't serve without dangerouslyAllowSVG. */
+            // eslint-disable-next-line @next/next/no-img-element
+            <img className="kw__logo" src={q.logo} alt="" width={20} height={20} />
+          )}
+          <span className="kw__name">
             {q.name}
             {q.placeholder && (
               <span className="ph-tag" aria-label="placeholder">
@@ -169,64 +154,20 @@ export default function Testimonials({ quotes }: { quotes: ReadonlyArray<Quote> 
               </span>
             )}
           </span>
-          <span className="kwc__dot" aria-hidden="true">
-            &middot;
-          </span>
-          {/* Role and mark travel together: at phone width the byline
-              breaks after the name, not between a company and its logo. */}
-          <span className="kwc__org">
-            <span className="kwc__role">
-              {q.title} @ {q.org}
-            </span>
-            {q.logo && (
-              /* 18px marks, one of them an SVG, which the image optimizer
-                 won't serve without dangerouslyAllowSVG. */
-              // eslint-disable-next-line @next/next/no-img-element
-              <img className="kwc__logo" src={q.logo} alt="" width={18} height={18} />
-            )}
+          <span className="kw__role">
+            {q.title}, {q.org}
           </span>
         </figcaption>
-
-        {/* One quote needs no controls, and arrows that move nothing are
-            the fake controls this site doesn't draw. */}
-        {many && (
-          <div className="kwc__nav">
-            <button
-              type="button"
-              className="kwc__arrow"
-              onClick={() => go(-1)}
-              aria-label="Previous recommendation"
-            >
-              <Chevron dir="left" />
-            </button>
-            <button
-              type="button"
-              className="kwc__arrow"
-              onClick={() => go(1)}
-              aria-label="Next recommendation"
-            >
-              <Chevron dir="right" />
-            </button>
-          </div>
-        )}
       </figure>
-    </div>
-  )
-}
 
-function Chevron({ dir }: { dir: 'left' | 'right' }) {
-  return (
-    <svg viewBox="0 0 16 16" width="15" height="15" fill="none" aria-hidden="true">
-      <g
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        transform={dir === 'left' ? 'rotate(180 8 8)' : undefined}
-      >
-        <path d="M2.5 8h11" />
-        <path d="M9.5 4l4 4-4 4" />
-      </g>
-    </svg>
+      {/* The timer: not a control, a reason. It says the change that is
+          about to happen is on a clock, and how far along the clock is.
+          Gone entirely when nothing advances on its own. */}
+      {many && !reduce && (
+        <span className="kw__timer" aria-hidden="true">
+          <i ref={barRef} key={i} className={paused ? 'is-paused' : undefined} />
+        </span>
+      )}
+    </div>
   )
 }

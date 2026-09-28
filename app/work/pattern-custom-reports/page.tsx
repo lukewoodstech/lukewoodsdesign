@@ -116,8 +116,12 @@ const CAP = { width: 2880, height: 2048 }
 export default function PatternCaseStudy() {
   return (
     <div className="cs pcs cs-surface cs-story min-h-screen text-white">
-      {/* No `next` while the Hoth study is hidden (HIDDEN_WORK in lib/work). */}
-      <SiteNav />
+      {/*
+       * The chain in lib/caseStudies goes Pattern → Hoth → Lucid, but Hoth is
+       * hidden (HIDDEN_WORK in lib/work), so `next` skips it and wraps to
+       * Lucid — the same study the Read next cards below lead with.
+       */}
+      <SiteNav next={{ href: '/work/lucid-ai', title: 'Bringing Lucid AI to the homepage' }} />
 
       <main id="main" className="sitenav-offset pb-24">
         {/* ══ Title block ══ */}
@@ -141,25 +145,22 @@ export default function PatternCaseStudy() {
                 </>
               }
               facts={[
-                { label: 'Role', value: 'Product Design Intern', icon: 'user' },
-                { label: 'Team', value: 'Design, product, and engineering', icon: 'users' },
-                {
-                  label: 'Timeline',
-                  value: 'January to October 2025, a nine-week project',
-                  icon: 'clock',
-                },
-                { label: 'Tools', value: 'Figma, Pendo, ClickUp', icon: 'tool' },
+                /* Two spans of time, kept apart: the internship is the
+                   role's dates, the project is nine weeks inside them. One
+                   fact that said both read as a nine-week internship. */
+                { label: 'Role', value: 'Product Design Intern, January to October 2025' },
+                { label: 'Team', value: 'Design, product, and engineering' },
+                { label: 'Project', value: 'Nine weeks, from the ticket to handoff' },
+                { label: 'Tools', value: 'Figma, Pendo, ClickUp' },
                 {
                   label: 'Status',
                   value: 'Validated in usability testing, shipped by the team after my internship',
-                  icon: 'flag',
                   span: true,
                 },
                 {
                   label: 'Skills used',
                   value:
                     'Discovery interviews, product analytics, scoping with leadership, information architecture, prototyping, usability testing, handoff',
-                  icon: 'sparkle',
                   span: true,
                 },
               ]}
@@ -170,7 +171,7 @@ export default function PatternCaseStudy() {
         {/* ══ Hero band: the redesigned home, built in code, on real hardware.
             Every template and report tile has its own name and its own chart,
             drawn from the same series as the report widgets further down. ══ */}
-        <Band className="pcs-hero-band">
+        <Band tone="accent" className="pcs-hero-band">
           <figure className="m-0">
             <Macbook>
               <MockStage native={1180}>
@@ -291,8 +292,8 @@ export default function PatternCaseStudy() {
               />
             </div>
             <p className="cs-cap">
-              Copy of January Town Hall, three times over. People were duplicating because building
-              was harder than copying.
+              The old Custom Reports home: a bare list with no previews, where a report and its
+              copies look identical. Building was harder than copying, so people copied.
             </p>
           </Block>
         </Col>
@@ -340,32 +341,26 @@ export default function PatternCaseStudy() {
             <People
               items={[
                 {
-                  icon: 'chart',
                   title: 'Two metrics per chart',
                   text: 'Comparison stopped at two lines. Anything more meant Excel.',
                 },
                 {
-                  icon: 'layers',
                   title: 'Filters locked at creation',
                   text: 'Filters were unclear and could not be edited once a report existed.',
                 },
                 {
-                  icon: 'pen',
                   title: 'Two confusing modes',
                   text: 'Separate view and edit modes hid basic actions behind a switch nobody expected.',
                 },
                 {
-                  icon: 'tool',
                   title: 'Look-alike controls',
                   text: 'Buttons looked the same as each other, and some things that looked like buttons did nothing.',
                 },
                 {
-                  icon: 'sparkle',
                   title: 'No words on a widget',
                   text: 'A chart could not carry a note, so the explanation lived in the call.',
                 },
                 {
-                  icon: 'mail',
                   title: 'No export',
                   text: 'Sharing a report with a client meant a screen share, screenshots, or Excel.',
                 },
@@ -512,12 +507,10 @@ export default function PatternCaseStudy() {
             <People
               items={[
                 {
-                  icon: 'building',
                   title: 'The brand manager',
                   text: 'Builds the client report, and often edits a chart while presenting it on the call.',
                 },
                 {
-                  icon: 'chart',
                   title: 'The advertising strategist',
                   text: 'Compares more than two metrics at a time and needs the comparison to travel with the report.',
                 },
@@ -844,7 +837,7 @@ export default function PatternCaseStudy() {
           </Act>
 
           <Block tight>
-            <MonoLabel icon="flag">By handoff</MonoLabel>
+            <MonoLabel>By handoff</MonoLabel>
             <Checklist
               items={[
                 'Reports with up to six metrics per chart, lines and bars together, on two axes that follow the unit rules',
@@ -863,7 +856,6 @@ export default function PatternCaseStudy() {
               items={[
                 {
                   label: 'Learnings',
-                  icon: 'bulb',
                   body: (
                     <>
                       <p>
@@ -881,7 +873,6 @@ export default function PatternCaseStudy() {
                 },
                 {
                   label: 'Reflections',
-                  icon: 'pen',
                   body: (
                     <p>
                       The redesign still did not solve missing forecast, wholesale, or

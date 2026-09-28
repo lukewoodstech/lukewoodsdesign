@@ -44,20 +44,20 @@ export type StoryCard =
 
 export const STORY: ReadonlyArray<StoryCard> = [
   /* row 1 */
-  { kind: 'morphmarket', caption: 'I bred and sold reptiles here' },
+  { kind: 'morphmarket', caption: 'I bred and sold reptiles nationwide' },
   { kind: 'byu', caption: 'Earning a CS degree at BYU, HCI emphasis' },
-  { kind: 'photo', src: '/luke-fishing.jpg', alt: 'Luke waist-deep in the Kenai River in Alaska, grinning and holding up a large salmon', caption: 'Waist-deep in the Kenai River, Alaska' },
-  { kind: 'code', caption: 'I designed and built this site, in code' },
+  { kind: 'photo', src: '/luke-fishing.jpg', alt: 'Luke waist-deep in the Kenai River in Alaska, grinning and holding up a large salmon', caption: 'I love outdoor adventures (Kenai, Alaska)' },
+  { kind: 'code', caption: 'A CS degree means I build what I design' },
   { kind: 'photo', src: '/about/dogwalk-first.jpg', alt: 'A small boy in an orange striped shirt walking a dog on a red retractable lead down a suburban sidewalk', caption: 'My first business was walking the neighbours\u2019 dogs' },
   /* row 2 */
   { kind: 'jazz', caption: 'Utah Jazz, win or lose' },
-  { kind: 'photo', src: '/luke-snake.jpg', alt: 'Luke with a snake draped over his shoulders', caption: 'I keep an unreasonable number of reptiles' },
+  { kind: 'photo', src: '/luke-snake.jpg', alt: 'Luke with a snake draped over his shoulders', caption: 'I love animals of all kinds' },
   { kind: 'photo', src: '/luke-woods.jpg', alt: 'Luke Woods standing on a stone balcony in a light blue suit', caption: 'Hi, I\u2019m Luke Woods', center: true },
-  { kind: 'photo', src: '/about/obi-car.jpg', alt: 'Luke in a car holding his black cat Obi up against his shoulder', caption: 'Obi, who supervises' },
+  { kind: 'photo', src: '/about/obi-car.jpg', alt: 'Luke in a car holding his black cat Obi up against his shoulder', caption: 'My cat Obi' },
   { kind: 'figma', caption: 'I\u2019m a Figma Campus Leader' },
   /* row 3 */
   { kind: 'map', caption: 'Currently in Provo, Utah' },
-  { kind: 'photo', src: '/about/ramp-bike.jpg', alt: 'Luke balanced on his bike at the top of the plywood ramp he built in the backyard', caption: 'I built the ramp, then rode it' },
+  { kind: 'photo', src: '/about/ramp-bike.jpg', alt: 'Luke balanced on his bike at the top of the plywood ramp he built in the backyard', caption: 'I have loved building things my entire life' },
   { kind: 'photo', src: '/luke-grand-canyon.jpg', alt: 'Luke smiling in a selfie on a Grand Canyon trail, canyon ridges stretching out behind him', caption: '26 miles across the Grand Canyon' },
   { kind: 'photo', src: '/about/optometry-exam.jpg', alt: 'Luke in black scrubs and a mask holding an eye-testing instrument up to an older patient seated in an exam chair', caption: 'Before design, I ran eye exams' },
   { kind: 'sandbox', caption: 'Building startup software through Sandbox' },
@@ -313,7 +313,10 @@ export const REPTILE_STATS: ReadonlyArray<RoomStat> = [
 ]
 
 export type RoomShot = {
-  src: string
+  /** `null` renders the dashed slot until the photo lands. */
+  src: string | null
+  /** With `src: null`: the file the slot is waiting for, under public/about. */
+  slot?: string
   alt: string
   caption: string
   /** Columns out of 12. */
@@ -355,6 +358,32 @@ export const REPTILE_ROOM: ReadonlyArray<RoomBlock> = [
         caption: 'Feed was the biggest running cost, so I bred the mice and rats myself and took it off the books.',
         span: 4,
         ratio: '3 / 4',
+      },
+    ],
+  },
+  /* Luke asked for these on 2026-09-28. The files aren't in the repo yet
+     (nothing under public/about or ~/Downloads matched), so they are
+     slots: drop `retic-eggs.jpg` and `incubator.jpg` into public/about,
+     set `src`, delete `slot`, and rewrite the captions in your voice.
+     Nothing here claims more than "retic eggs" and "incubator". */
+  {
+    id: 'eggs',
+    shots: [
+      {
+        src: null,
+        slot: 'retic-eggs.jpg',
+        alt: 'A clutch of reticulated python eggs',
+        caption: 'A clutch of retic eggs.',
+        span: 6,
+        ratio: '4 / 3',
+      },
+      {
+        src: null,
+        slot: 'incubator.jpg',
+        alt: 'The incubator the eggs were kept in',
+        caption: 'The incubator. Every animal in the room started in here.',
+        span: 6,
+        ratio: '4 / 3',
       },
     ],
   },

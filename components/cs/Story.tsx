@@ -123,7 +123,7 @@ export function StoryTitle({ children, dim }: { children: ReactNode; dim?: React
   )
 }
 
-export type Fact = { label: string; value: ReactNode; icon?: IcoName; span?: boolean }
+export type Fact = { label: string; value: ReactNode; span?: boolean }
 
 export function MetaGrid({ summary, facts }: { summary: ReactNode; facts: Fact[] }) {
   return (
@@ -136,7 +136,7 @@ export function MetaGrid({ summary, facts }: { summary: ReactNode; facts: Fact[]
         {facts.map((f) => (
           <div key={f.label} className={f.span ? 'cs-meta__span' : undefined}>
             <dt>
-              <MonoLabel icon={f.icon}>{f.label}</MonoLabel>
+              <MonoLabel>{f.label}</MonoLabel>
             </dt>
             <dd>{f.value}</dd>
           </div>
@@ -266,39 +266,44 @@ export function Notes({
 export function KeyQuestion({ lead = 'This sparked a key question:', children }: { lead?: string; children: ReactNode }) {
   return (
     <div className="cs-centered">
-      <div className="cs-spark" aria-hidden="true">
-        <Ico name="bulb" />
-      </div>
       <p className="cs-keyq__lead">{lead}</p>
       <p className="cs-keyq">{children}</p>
     </div>
   )
 }
 
+/* One sentence with the success green ruled down its left edge. It used
+   to sit centred over a glowing check in a circle; the check said nothing
+   the sentence didn't, and the glow was the tell of a generated page. */
 export function SuccessCard({ children }: { children: ReactNode }) {
   return (
     <div className="cs-success">
       <p className="m-0">{children}</p>
-      <span className="cs-success__check" aria-hidden="true">
-        <Ico name="check" />
-      </span>
     </div>
   )
 }
 
-export function People({ items }: { items: { icon: IcoName; title: string; text: string }[] }) {
+/*
+ * Spec cards: the people the work was for, or the problems it found.
+ * Each carries a mono index where an icon in a tinted square used to be
+ * (2026-09-28, Luke: the icon tiles "look so generated"), a short accent
+ * tick on its top edge that runs the width of the card on hover, and
+ * they rise in one after another as the block is reached. An ordered
+ * list, because the index is real: "01 of six problems".
+ */
+export function People({ items }: { items: { title: string; text: string }[] }) {
   return (
-    <div className="cs-people" style={{ '--n': items.length } as React.CSSProperties}>
-      {items.map((p) => (
-        <div key={p.title} className="cs-person">
-          <span className="cs-person__icon" aria-hidden="true">
-            <Ico name={p.icon} />
+    <ol className="cs-people" style={{ '--n': items.length } as React.CSSProperties}>
+      {items.map((p, i) => (
+        <li key={p.title} className="cs-person" style={{ '--i': i } as React.CSSProperties}>
+          <span className="cs-person__i" aria-hidden="true">
+            {String(i + 1).padStart(2, '0')}
           </span>
           <h4>{p.title}</h4>
           <p>{p.text}</p>
-        </div>
+        </li>
       ))}
-    </div>
+    </ol>
   )
 }
 
@@ -358,12 +363,12 @@ export function Pair({
 
 /* ── Closing blocks ─────────────────────────────────────────────── */
 
-export function Two({ items }: { items: { label: string; icon?: IcoName; body: ReactNode }[] }) {
+export function Two({ items }: { items: { label: string; body: ReactNode }[] }) {
   return (
     <div className="cs-two">
       {items.map((it) => (
         <div key={it.label}>
-          <MonoLabel icon={it.icon}>{it.label}</MonoLabel>
+          <MonoLabel>{it.label}</MonoLabel>
           <div className="cs-prose">{it.body}</div>
         </div>
       ))}

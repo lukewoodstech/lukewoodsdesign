@@ -316,8 +316,7 @@ p a {
 .term-hist__delete:focus-visible,
 .term-hist__modal-cancel:focus-visible,
 .term-hist__modal-delete:focus-visible,
-.pstack__dot:focus-visible,
-.kwc__arrow:focus-visible {
+.pstack__dot:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
@@ -1318,7 +1317,7 @@ p a {
    variable, so a study changes color by changing one line. */
 
 .lcs { --accent: #f96b13; --lcs-yellow: #ffd34d; } /* Lucid orange, the tile's #F96B13 */
-.pcs { --accent: #00b37d; }
+.pcs { --accent: #1d7cf3; } /* Pattern: the home tile's blue (.tile-stage--pattern mid stop), was the #00b37d green */
 .acs { --accent: #008fff; } /* Awardco: the tile's blue, also in lib/caseStudies.ts */
 /* .acs keeps the site blue — the :root default already provides it. */
 
@@ -1591,13 +1590,42 @@ p a {
 }
 
 .lcs-zoom .lcs-shot {
-  transition: border-color 0.25s ease, transform 0.25s var(--ease-out-quint);
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.35s ease,
+    transform 0.35s var(--ease-out-quint);
 }
 
+/* Hover: the shot comes toward you a touch and its shadow deepens, so
+   the picture itself says it opens before the hint arrives. Press: it
+   settles back, the way a button does. */
 .lcs-zoom:hover .lcs-shot,
 .lcs-zoom:focus-visible .lcs-shot {
   border-color: rgba(255, 255, 255, 0.28);
-  transform: scale(1.008);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+  transform: translateY(-2px) scale(1.006);
+}
+
+.lcs-zoom:active .lcs-shot {
+  transform: scale(0.996);
+  transition-duration: 0.1s;
+}
+
+/* Inside a canvas frame the shot has no ring of its own (the frame has
+   it), so the frame carries the hover and nothing moves inside its
+   clipped box. */
+.cs-fig__frame { transition: border-color 0.25s ease; }
+
+.cs-fig__frame:has(.lcs-zoom:hover),
+.cs-fig__frame:has(.lcs-zoom:focus-visible) {
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.cs-fig__frame .lcs-zoom:hover .lcs-shot,
+.cs-fig__frame .lcs-zoom:focus-visible .lcs-shot,
+.cs-fig__frame .lcs-zoom:active .lcs-shot {
+  transform: none;
+  box-shadow: none;
 }
 
 .lcs-zoom:focus-visible {
@@ -1650,22 +1678,24 @@ p a {
     transform: none;
   }
   .lcs-zoom:hover .lcs-shot,
-  .lcs-zoom:focus-visible .lcs-shot {
+  .lcs-zoom:focus-visible .lcs-shot,
+  .lcs-zoom:active .lcs-shot {
     transform: none;
   }
 }
 
+/* The lightbox. FIT shows the whole capture as large as the viewport
+   allows; a click on the picture toggles ZOOM, where the scroll box
+   becomes a viewport onto the picture at its own pixels (ZoomShot sets
+   --zoom-w). So "expand" always expands: before this, a figure that
+   already filled a phone, or a bled one on a laptop, opened at the size
+   it was already on the page. */
 .lcs-lightbox {
+  --lb-pad: clamp(0.75rem, 1.5vw, 1.25rem);
   position: fixed;
   inset: 0;
   z-index: 300;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* Tight padding on purpose — the lightbox exists to show the shot LARGE,
-     and generous gutters were eating ~100px of image on laptops. */
-  padding: clamp(0.75rem, 1.5vw, 1.25rem);
-  background: rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.92);
   backdrop-filter: blur(10px);
   animation: lcs-lightbox-in 0.2s ease;
 }
@@ -1675,15 +1705,59 @@ p a {
   to { opacity: 1; }
 }
 
+/* The scroll box is the whole overlay, and the backdrop: a click on it
+   that isn't on the picture closes. */
+.lcs-lightbox__scroll {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--lb-pad);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
 .lcs-lightbox__img {
+  display: block;
   width: auto;
   height: auto;
   max-width: 100%;
-  max-height: 96vh;
-  object-fit: contain;
-  border-radius: 8px;
+  max-height: calc(100vh - 2 * var(--lb-pad));
+  border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+  cursor: zoom-in;
+  animation: lcs-lightbox-img 0.32s var(--ease-out-quint) both;
+}
+
+@keyframes lcs-lightbox-img {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+.lcs-lightbox.is-zoomed .lcs-lightbox__scroll {
+  display: block;
+  padding: 0;
+}
+
+.lcs-lightbox.is-zoomed .lcs-lightbox__img {
+  width: var(--zoom-w, 200vw);
+  max-width: none;
+  max-height: none;
+  margin-inline: auto;
+  border-radius: 0;
+  border: 0;
+  box-shadow: none;
+  cursor: zoom-out;
+  animation: none;
+}
+
+/* A phone gets the picture edge to edge at FIT, so it is never narrower
+   than the bled figure that was just tapped. */
+@media (max-width: 47.99em) {
+  .lcs-lightbox__scroll { padding: var(--lb-pad) 0; }
+  .lcs-lightbox__img { border-radius: 0; border-inline: 0; }
 }
 
 .lcs-lightbox__close {
@@ -1713,6 +1787,8 @@ p a {
 }
 
 .lcs-lightbox__esc {
+  /* Sits over the scroll box; a click through it is a click on the backdrop. */
+  pointer-events: none;
   position: absolute;
   bottom: 1.1rem;
   left: 50%;
@@ -4563,8 +4639,10 @@ p a {
    ═══════════════════════════════════════════════════════════════════ */
 
 .about-pg {
-  --ab-card-r: 16px;
-  --ab-tray-r: 24px;
+  /* Sharper than the 16/24 they were (Luke, 2026-09-28): the rounder
+     corner is the first thing that reads as generated. */
+  --ab-card-r: 10px;
+  --ab-tray-r: 12px;
   --ab-wide: 1240px;
   --ab-narrow: 860px;
   min-height: 100vh;
@@ -4781,6 +4859,17 @@ p a {
   /* Cards crop to a fixed frame, so a shot whose subject isn't dead
      centre sets --card-focus rather than losing a head to the edge. */
   object-position: var(--card-focus, 50% 50%);
+}
+
+/* Photos are things to look at, not things to pick up: no drag ghost,
+   no long-press callout, no tap flash, and nothing to select. */
+.story-card,
+.story-card__art img {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .story-card__cap {
@@ -5273,7 +5362,7 @@ p a {
 .tl-card__logo {
   width: 3rem;
   height: 3rem;
-  border-radius: 12px;
+  border-radius: 8px;
   overflow: hidden;
   display: grid;
   place-items: center;
@@ -5331,7 +5420,7 @@ p a {
 .tl-card__year {
   align-self: start;
   padding: 0.3em 0.7em;
-  border-radius: 8px;
+  border-radius: 4px;
   background: rgba(255, 255, 255, 0.08);
   font-family: var(--font-mono);
   font-size: var(--label-size);
@@ -5362,21 +5451,83 @@ p a {
   color: rgba(255, 255, 255, 0.6);
 }
 
-.tl__ongoing {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1rem;
+/* The undated things, under the rail: a row of four spec cards in the
+   same language as the case studies' people cards. Sharp corners, one
+   hairline, a mono index, and a short accent tick on the top edge that
+   runs the width of the card on hover. Not links, so no lift and no
+   badge: on this site those two mean "opens". They rise in one after
+   another when the row is reached (ExperienceTimeline adds `is-in`). */
+.tl__aside {
   margin-top: 4rem;
 }
 
+.tl__aside-label {
+  margin: 0 0 1rem;
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.tl__ongoing {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 .tl-ongoing {
+  position: relative;
   display: grid;
   gap: 0.3rem;
-  padding: 1.1rem 1.2rem;
+  align-content: start;
+  padding: 1.15rem 1.25rem 1.3rem;
   border: 1px solid var(--card-ring);
-  border-radius: 16px;
+  border-radius: 6px;
+  overflow: hidden;
   /* Opaque for the same reason the role cards are. */
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 70%), #16161d;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 70%), #141419;
+  opacity: 0;
+  translate: 0 12px;
+  transition: border-color 0.25s ease;
+}
+
+.tl__ongoing.is-in .tl-ongoing {
+  animation: spec-in 0.6s var(--ease-out-quint) forwards;
+  animation-delay: calc(var(--i, 0) * 80ms);
+}
+
+.tl-ongoing::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 1.25rem;
+  width: 1.75rem;
+  height: 2px;
+  background: var(--accent, #4c8dff);
+  transition: width 0.5s var(--ease-out-quint);
+}
+
+@media (hover: hover) {
+  .tl-ongoing:hover {
+    border-color: rgba(255, 255, 255, 0.22);
+  }
+
+  .tl-ongoing:hover::before {
+    width: calc(100% - 2.5rem);
+  }
+}
+
+.tl-ongoing__i {
+  margin-bottom: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.45);
 }
 
 .tl-ongoing__label {
@@ -5387,14 +5538,22 @@ p a {
 .tl-ongoing__org {
   font-family: var(--font-mono);
   font-size: var(--label-size);
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .tl-ongoing__note {
-  margin-top: 0.25rem;
+  margin-top: 0.35rem;
   font-size: var(--reading-meta);
   line-height: var(--reading-small-lh);
-  color: rgba(255, 255, 255, 0.62);
+  color: rgba(255, 255, 255, 0.66);
+}
+
+/* Shared by every spec card on the site (people cards, the aside). */
+@keyframes spec-in {
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
 }
 
 /* ── 04 The toolbox ──────────────────────────────────────────────── */
@@ -5418,7 +5577,8 @@ p a {
   font-weight: 400;
   letter-spacing: -0.005em;
   line-height: 1;
-  color: rgba(255, 255, 255, 0.08);
+  /* Was 0.08, a watermark nobody could read (Luke, 2026-09-28). */
+  color: rgba(255, 255, 255, 0.3);
   pointer-events: none;
   user-select: none;
 }
@@ -5433,8 +5593,8 @@ p a {
   font-size: var(--label-size);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  /* The only instruction the toolbox gives; 0.35 measured 3.12:1. */
-  color: rgba(255, 255, 255, 0.58);
+  /* The only instruction the toolbox gives. */
+  color: rgba(255, 255, 255, 0.78);
   pointer-events: none;
 }
 
@@ -5612,78 +5772,93 @@ p a {
     border-color 0.2s ease;
 }
 
-.rr__card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(255, 255, 255, 0.5);
+/* Pointer devices only: on a phone the tap that scrolls past a photo
+   left it lifted and lit, which read as the picture being selected. */
+@media (hover: hover) {
+  .rr__card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
 }
 
-/* ── 06 Kind words ───────────────────────────────────────── */
+/* A slot in the room: the filename sits up top, clear of the caption at
+   the foot, since a phone tile is too short for both in the middle. */
+.rr__card .story-card__slot {
+  align-content: start;
+  padding: 1rem 0.75rem 3rem;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
 
-/* One quote at a time in a single wide panel: tiles on the left with
-   the writer's face set into them, their words on the right. The panel
-   clips — the tile wall is drawn larger than the space it sits in and
-   runs off the top, bottom and left edges, which is what stops it
-   reading as a tidy little 3x4 table. */
-.kwc {
-  /* One place for the quote's type size, because the six-line floor
-     below is measured in it and `em` on the blockquote would measure
-     the inherited 16px instead. */
-  --kwc-size: clamp(1.2rem, 1.7vw, 1.6rem);
-  --kwc-leading: 1.32;
+/* ── 05 Kind words ───────────────────────────────────────────────── */
+
+/* One quote at a time and nothing decorative around it: the writers'
+   faces in a row along the top are the control (each is a button, the
+   one showing is ringed and in colour), the quote sits under them in
+   the serif the section headings use, the byline under that, and a
+   hairline along the foot fills over the seconds before the panel moves
+   on. Replaced (2026-09-28) a panel with a wall of empty tiles beside
+   the quote and a pair of arrows under it. */
+.kw {
+  --kw-size: clamp(1.375rem, 2.3vw, 1.875rem);
+  --kw-leading: 1.28;
+  /* The floor under the quote, in lines: the longest quote in
+     lib/about.ts at this width, so the byline never hops. Measured
+     2026-09-28: four lines everywhere from 600px up. */
+  --kw-lines: 4;
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 21rem) minmax(0, 1fr);
-  gap: clamp(1.5rem, 4vw, 4rem);
-  overflow: hidden;
+  max-width: 52rem;
+  margin-inline: auto;
+  padding: clamp(2rem, 4vw, 3rem) clamp(1.5rem, 4vw, 3rem) clamp(1.75rem, 3vw, 2.5rem);
   border: 1px solid var(--card-ring);
   border-radius: var(--ab-tray-r);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.012) 45%, transparent 75%),
     var(--mono-tile);
+  text-align: center;
+  overflow: hidden;
 }
 
-.kwc__wall {
-  position: relative;
+.kw__faces {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 0 0 clamp(1.5rem, 3vw, 2.25rem);
+  padding: 0;
+  list-style: none;
 }
 
-.kwc__cols {
-  position: absolute;
-  top: -2.5rem;
-  right: 0;
-  bottom: -2.5rem;
-  left: -4.5rem;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.15rem;
-}
-
-.kwc__col {
-  display: grid;
-  grid-auto-rows: 1fr;
-  gap: 1.15rem;
-  transform: translateY(var(--kw-shift, 0));
-}
-
-/* The empty cells: barely there, one step up from the panel they sit
-   on. They are texture, not content. */
-.kwc__tile {
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.045);
-  background: rgba(255, 255, 255, 0.025);
-}
-
-.kwc__face {
+/* A face at rest is small, grey and half there; the one showing is in
+   colour, a step larger, and ringed. Hover brings a face up without
+   choosing it. */
+.kw__face {
   position: relative;
   display: grid;
   place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
   overflow: hidden;
-  border-radius: 14px;
-  border: 1px solid var(--card-ring);
   background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 1px var(--card-ring);
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  opacity: 0.45;
+  filter: grayscale(1);
+  transition:
+    opacity 0.25s ease,
+    filter 0.3s ease,
+    transform 0.35s var(--ease-out-quint),
+    box-shadow 0.25s ease;
 }
 
-/* No headshot: initials on a wash of the two accents, kept quiet. */
-.kwc__face--mono {
+.kw__face img {
+  object-fit: cover;
+}
+
+.kw__face--mono {
   background-image: linear-gradient(
     160deg,
     color-mix(in srgb, var(--mono-blue) 26%, transparent),
@@ -5691,129 +5866,122 @@ p a {
   );
 }
 
-.kwc__img {
-  object-fit: cover;
-  animation: kwc-in 0.5s var(--ease-out-quint) both;
-}
-
-.kwc__initials {
+.kw__initials {
   font-family: var(--font-mono);
   font-size: var(--label-size);
   letter-spacing: 0.06em;
-  color: rgba(255, 255, 255, 0.85);
 }
 
-.kwc__panel {
-  display: flex;
-  flex-direction: column;
+@media (hover: hover) {
+  .kw__face:hover {
+    opacity: 1;
+    filter: none;
+    transform: scale(1.08);
+  }
+}
+
+.kw__face.is-on {
+  opacity: 1;
+  filter: none;
+  transform: scale(1.12);
+  box-shadow:
+    0 0 0 2px var(--mono-tile),
+    0 0 0 3.5px #fff;
+}
+
+.kw__face:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.kw__panel {
   margin: 0;
-  padding: clamp(2rem, 4vw, 3.25rem) clamp(1.5rem, 4vw, 3.5rem) clamp(1.75rem, 3vw, 2.75rem) 0;
 }
 
-.kwc__mark {
-  font-size: 3.5rem;
-  line-height: 0.72;
-  font-weight: var(--display-weight);
-  color: rgba(255, 255, 255, 0.22);
-}
-
-/* Seven lines whether the quote fills them or not: the byline and the
-   arrows below have to stay where they are when it advances. The
-   quotes in lib/about.ts are cut to five to seven lines, so the most
-   air a short one can leave is two. */
-.kwc__quote {
-  /* Bottom-aligned inside that floor: a short quote keeps its distance
-     from the byline and leaves its slack up under the quote mark,
-     where it reads as air rather than as a hole. */
-  display: flex;
-  align-items: flex-end;
-  margin: 1.25rem 0 0;
-  min-height: calc(7 * var(--kwc-leading) * var(--kwc-size) * var(--kwc-line-scale, 1));
-}
-
-.kwc__quote p {
-  margin: 0;
-  max-width: 26em;
-  font-size: var(--kwc-size);
-  font-weight: var(--display-weight);
-  letter-spacing: -0.012em;
-  line-height: var(--kwc-leading);
-  color: rgba(255, 255, 255, 0.94);
-  text-wrap: pretty;
-  animation: kwc-in 0.5s var(--ease-out-quint) both;
-}
-
-.kwc__who {
+.kw__quote {
   display: flex;
   align-items: center;
+  justify-content: center;
+  margin: 0;
+  min-height: calc(var(--kw-lines) * var(--kw-leading) * var(--kw-size));
+}
+
+.kw__quote p {
+  margin: 0;
+  max-width: 24em;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: var(--kw-size);
+  line-height: var(--kw-leading);
+  letter-spacing: -0.005em;
+  color: #fff;
+  text-wrap: pretty;
+  animation: kw-in 0.5s var(--ease-out-quint) both;
+}
+
+.kw__who {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
-  gap: 0.45rem;
-  /* Long enough for the longest byline on one line — a second line
-     would push the arrows down for that one quote — and still short of
-     the Luke AI dock in the bottom-right corner of the section. */
-  max-width: 40em;
+  gap: 0.45rem 0.6rem;
   margin-top: 1.5rem;
   font-size: var(--reading-meta);
-  animation: kwc-in 0.5s 0.05s var(--ease-out-quint) both;
+  animation: kw-in 0.5s 0.06s var(--ease-out-quint) both;
 }
 
-.kwc__name {
-  font-weight: var(--display-weight);
-  color: rgba(255, 255, 255, 0.86);
-}
-
-.kwc__org {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-}
-
-.kwc__dot,
-.kwc__role {
-  /* 0.62 measured over --mono-tile; 0.45 was a hair under AA. */
-  color: rgba(255, 255, 255, 0.62);
-}
-
-/* The company mark, same file the experience timeline uses — a square
-   tile, so it gets the same dark ground and rounded corner there. */
-.kwc__logo {
-  width: 1.125rem;
-  height: 1.125rem;
+/* The company mark, same file the experience timeline uses. */
+.kw__logo {
+  width: 1.25rem;
+  height: 1.25rem;
   border-radius: 4px;
   object-fit: cover;
   background: #15151a;
 }
 
-.kwc__nav {
-  display: flex;
-  gap: 0.6rem;
-  margin-top: 1.6rem;
-}
-
-.kwc__arrow {
-  display: grid;
-  place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  padding: 0;
-  border: 1px solid var(--card-ring);
-  border-radius: 999px;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.68);
-  cursor: pointer;
-  transition:
-    color 0.2s ease,
-    border-color 0.2s ease,
-    background-color 0.2s ease;
-}
-
-.kwc__arrow:hover {
+.kw__name {
+  font-weight: var(--display-weight);
   color: #fff;
-  border-color: rgba(255, 255, 255, 0.38);
-  background: rgba(255, 255, 255, 0.07);
 }
 
-@keyframes kwc-in {
+.kw__role {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.kw__role::before {
+  content: '\00B7';
+  margin-right: 0.6rem;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* The timer along the foot: a reason, not a control. */
+.kw__timer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.kw__timer i {
+  display: block;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.35);
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: kw-timer var(--kw-ms, 8000ms) linear forwards;
+}
+
+.kw__timer i.is-paused {
+  animation-play-state: paused;
+}
+
+@keyframes kw-timer {
+  to { transform: scaleX(1); }
+}
+
+@keyframes kw-in {
   from {
     opacity: 0;
     transform: translateY(6px);
@@ -5866,51 +6034,17 @@ p a {
   }
 
 
-  /* Three columns of tiles on a phone is three columns of nothing, so
-     the wall goes and the face comes back as one tile over the quote. */
-  .kwc {
-    --kwc-size: 1.0625rem;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0;
-    padding: 1.6rem 1.5rem 1.5rem;
+  /* Shorter lines and smaller serif: the longest quote runs seven at
+     393px and eight at 375px (the 27em block below). */
+  .kw {
+    --kw-size: 1.375rem;
+    --kw-lines: 7;
+    padding: 1.6rem 1.25rem 1.5rem;
   }
 
-  .kwc__wall {
-    min-height: 0;
-  }
-
-  .kwc__cols {
-    position: static;
-    display: block;
-  }
-
-  .kwc__col {
-    display: contents;
-  }
-
-  .kwc__tile {
-    display: none;
-  }
-
-  .kwc__face {
-    display: grid;
-    width: 3rem;
-    height: 3rem;
-    border-radius: 10px;
-  }
-
-  .kwc__panel {
-    padding: 1.25rem 0 0;
-  }
-
-  .kwc__mark {
-    font-size: 2.75rem;
-  }
-
-  /* The lines are shorter here, but the type is smaller too, so seven
-     is still the count that holds every quote from about 480px up. */
-  .kwc__quote {
-    margin-top: 0.9rem;
+  .kw__face {
+    width: 2.5rem;
+    height: 2.5rem;
   }
 
 }
@@ -5965,14 +6099,13 @@ p a {
 
   /* Two lines: the name, then who they are. The dot between them is
      only a separator, and a separator at the start of a line is noise. */
-  .kwc__who {
+  .kw__who {
     flex-direction: column;
-    align-items: flex-start;
     gap: 0.3rem;
   }
 
-  .kwc__dot {
-    display: none;
+  .kw__role::before {
+    content: none;
   }
 
   /* The phone card, tightened. It was 413px tall for five roles — a
@@ -5999,7 +6132,7 @@ p a {
   .tl-card__logo {
     width: 2.25rem;
     height: 2.25rem;
-    border-radius: 9px;
+    border-radius: 6px;
   }
 
   .tl-card__role {
@@ -6030,8 +6163,8 @@ p a {
 /* Narrow phones only: the same words run an eighth line here, and the
    floor has to cover the longest quote or the arrows move. */
 @media (max-width: 27em) {
-  .kwc__quote {
-    --kwc-line-scale: 1.15;
+  .kw {
+    --kw-lines: 8;
   }
 }
 
@@ -6047,16 +6180,22 @@ p a {
   .tl-card,
   .tl-node,
   .rr__card,
-  .kwc__arrow {
+  .kw__face {
     transition: none;
+  }
+
+  .tl-ongoing,
+  .tl__ongoing.is-in .tl-ongoing {
+    animation: none;
+    opacity: 1;
+    translate: none;
   }
 
   /* The panel no longer advances on its own for this reader (see
      components/about/Testimonials.tsx); the arrows still work, and the
      quote they bring in simply appears. */
-  .kwc__img,
-  .kwc__quote p,
-  .kwc__who {
+  .kw__quote p,
+  .kw__who {
     animation: none;
   }
 
@@ -6853,9 +6992,9 @@ p a {
 /* ── Small chrome ─────────────────────────────────────────────── */
 .cs-pill {
   display: inline-block;
-  padding: 0.4em 1em;
+  padding: 0.4em 0.8em;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 999px;
+  border-radius: 3px;
   background: rgba(255, 255, 255, 0.05);
   font-family: var(--font-mono);
   font-size: 0.75rem;
@@ -6892,7 +7031,17 @@ p a {
   color: #fff;
 }
 
-.cs-h3 .cs-dim { color: rgba(255, 255, 255, 0.45); font-weight: 500; }
+/* The gloss is its own line under the noun, not a grey tail on the same
+   one: set inline it read as one sentence that changed colour halfway
+   through (Luke, 2026-09-28). */
+.cs-h3 .cs-dim {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: rgba(255, 255, 255, 0.55);
+}
 .cs-h3 + .cs-prose { margin-top: 0.85rem; }
 
 /* Mono italic caption, for the sketches and the design-file artifacts. */
@@ -6915,7 +7064,9 @@ p a {
   letter-spacing: var(--display-serif-tracking);
 }
 
-.cs-title__for { color: rgba(255, 255, 255, 0.42); }
+/* One colour. The tail ("in Predict", "at Awardco") used to be dimmed,
+   and a title that changes colour mid-sentence reads as two things. */
+.cs-title__for { color: inherit; }
 
 .cs-meta {
   display: grid;
@@ -7043,16 +7194,15 @@ p a {
 .cs-app-icon {
   display: grid;
   place-items: center;
-  width: 76px;
-  height: 76px;
+  width: 60px;
+  height: 60px;
   margin: 2.25rem auto 0;
-  border-radius: 20px;
+  border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  background: linear-gradient(180deg, #1a1a1d, #0e0e10);
-  box-shadow: 0 0 44px color-mix(in srgb, var(--accent) 38%, transparent);
+  background: #121216;
 }
 
-.cs-app-icon img { width: 40px; height: 40px; object-fit: contain; }
+.cs-app-icon img { width: 32px; height: 32px; object-fit: contain; }
 
 /* ── Big numbers ──────────────────────────────────────────────── */
 .cs-bigstats {
@@ -7246,7 +7396,7 @@ p a {
   position: absolute;
   width: 380px;
   padding: 1.9rem 2.1rem 2rem;
-  border-radius: 16px;
+  border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: linear-gradient(160deg, #1f1f23, #141416);
   box-shadow: 0 24px 50px rgba(0, 0, 0, 0.5);
@@ -7289,7 +7439,7 @@ p a {
   place-items: center;
   width: 52px;
   height: 52px;
-  border-radius: 14px;
+  border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: #1a1a1d;
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.5);
@@ -7311,20 +7461,6 @@ p a {
 }
 
 /* ── Key question band ────────────────────────────────────────── */
-.cs-spark {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  margin: 0 auto 1.1rem;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: #1a1a1d;
-  color: #fff;
-}
-
-.cs-spark svg { width: 20px; height: 20px; }
-
 .cs-keyq__lead {
   margin: 0 0 0.75rem;
   font-size: 0.9375rem;
@@ -7349,42 +7485,48 @@ p a {
   text-underline-offset: 0.2em;
 }
 
-/* ── "Success will be measured by" card ───────────────────────── */
+/* ── "Success meant" card ─────────────────────────────────────── */
+/* One sentence with the success green ruled down its left edge. It used
+   to sit centred over a glowing check in a circle. */
 .cs-success {
-  width: min(100%, 420px);
+  position: relative;
+  width: min(100%, 560px);
   margin: 0 auto;
-  padding: 1.5rem 1.75rem 1.6rem;
-  border-radius: 16px;
+  padding: 1.3rem 1.6rem 1.35rem 1.75rem;
+  border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  background: #17171a;
-  text-align: center;
-  font-size: 0.9375rem;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.78);
+  background: #131316;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.8);
+  text-wrap: pretty;
+}
+
+.cs-success::before {
+  content: '';
+  position: absolute;
+  top: 1.1rem;
+  bottom: 1.1rem;
+  left: -1px;
+  width: 2px;
+  background: var(--c3);
 }
 
 .cs-success strong { color: #fff; font-weight: 600; }
 
-.cs-success__check {
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  margin: 1.1rem auto 0;
-  border-radius: 50%;
-  background: var(--c3);
-  color: #0a0a0a;
-  box-shadow: 0 0 26px color-mix(in srgb, var(--c3) 45%, transparent);
-}
-
-.cs-success__check svg { width: 18px; height: 18px; }
-
-/* ── The people the work was for ──────────────────────────────── */
+/* ── Spec cards: the people the work was for, the problems it found ── */
+/* Sharp corners, one hairline, a mono index where an icon in a tinted
+   square used to be, and a short accent tick on the top edge that runs
+   the width of the card on hover. They rise in one after another as the
+   block is reached (Reveal's .is-inview). Not links, so no lift and no
+   badge: on this site those two mean "opens". */
 .cs-people {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0.9rem;
-  margin-top: 1.75rem;
+  gap: 0.75rem;
+  margin: 1.75rem 0 0;
+  padding: 0;
+  list-style: none;
 }
 
 /* One column per item up to three; more than that wraps, so the Pattern
@@ -7392,24 +7534,46 @@ p a {
 @media (min-width: 40em) { .cs-people { grid-template-columns: repeat(min(var(--n, 3), 3), 1fr); } }
 
 .cs-person {
-  padding: 1.35rem 1.35rem 1.45rem;
-  border-radius: 16px;
+  position: relative;
+  padding: 1.2rem 1.3rem 1.35rem;
+  border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  background: linear-gradient(180deg, #17171a, #111113);
+  background: #121216;
+  overflow: hidden;
+  opacity: 0;
+  translate: 0 12px;
+  transition: border-color 0.25s ease;
 }
 
-.cs-person__icon {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
+.is-inview .cs-person {
+  animation: spec-in 0.6s var(--ease-out-quint) forwards;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+.cs-person::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 1.3rem;
+  width: 1.75rem;
+  height: 2px;
+  background: var(--accent);
+  transition: width 0.5s var(--ease-out-quint);
+}
+
+@media (hover: hover) {
+  .cs-person:hover { border-color: rgba(255, 255, 255, 0.22); }
+  .cs-person:hover::before { width: calc(100% - 2.6rem); }
+}
+
+.cs-person__i {
+  display: block;
   margin-bottom: 1rem;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--accent) 14%, transparent);
-  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.45);
 }
-
-.cs-person__icon svg { width: 20px; height: 20px; }
 
 .cs-person h4 {
   margin: 0 0 0.35rem;
@@ -7423,6 +7587,15 @@ p a {
   font-size: 0.9375rem;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.68);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-person,
+  .is-inview .cs-person {
+    animation: none;
+    opacity: 1;
+    translate: none;
+  }
 }
 
 /* ── Emotion chart ────────────────────────────────────────────── */
@@ -7928,7 +8101,7 @@ p a {
   width: min(100%, 520px);
   margin: 0 auto;
   padding: 1.75rem 2rem 1.9rem;
-  border-radius: 18px;
+  border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.14);
   background: rgba(30, 30, 34, 0.55);
   backdrop-filter: blur(14px);

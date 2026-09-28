@@ -106,10 +106,11 @@ export default function AboutPage() {
             <header className="ab-hero sitenav-offset">
               <h1 className="ab-hero__title">Nice to meet you.</h1>
               <p className="ab-hero__lede">
-                I&rsquo;m Luke, a product designer who can also read the pull request. Every
-                project I&rsquo;ve shipped started as something small: a ticket, a complaint, a
-                vague ask. The part I&rsquo;m good at is what comes next, finding the real
-                problem underneath, proving it&rsquo;s worth solving, and building the thing.
+                I&rsquo;m Luke, a product designer who tells the story and builds the thing.
+                Every project I&rsquo;ve shipped started small: a ticket, a complaint, a vague
+                ask. The part I&rsquo;m good at is what comes next: finding the real problem
+                underneath, telling the story that gets a team behind it, and building it, in
+                Figma and in code.
               </p>
             </header>
           }

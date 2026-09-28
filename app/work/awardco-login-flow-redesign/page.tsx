@@ -269,25 +269,22 @@ export default function AwardcoCaseStudy() {
                 </>
               }
               facts={[
-                { label: 'Role', value: 'Product Design Intern', icon: 'user' },
+                { label: 'Role', value: 'Product Design Intern' },
                 {
                   label: 'Team',
                   value: 'Product, engineering, security, and customer success',
-                  icon: 'users',
                 },
-                { label: 'Timeline', value: 'October 2025 to April 2026', icon: 'clock' },
-                { label: 'Tools', value: 'Figma, VS Code, GitHub Copilot', icon: 'tool' },
+                { label: 'Timeline', value: 'October 2025 to April 2026' },
+                { label: 'Tools', value: 'Figma, VS Code, GitHub Copilot' },
                 {
                   label: 'Status',
                   value: 'Passed architecture and security review, handed off for implementation',
-                  icon: 'flag',
                   span: true,
                 },
                 {
                   label: 'Skills used',
                   value:
                     'Login telemetry analysis, discovery interviews, heatmap and usability testing, systems mapping, coded prototyping, architecture and security review, handoff',
-                  icon: 'sparkle',
                   span: true,
                 },
               ]}
@@ -301,7 +298,7 @@ export default function AwardcoCaseStudy() {
             section in Act 03. Frames are bare captures in CSS-drawn devices
             (components/cs/Devices), so the hardware is real-looking
             without shipping a device mockup PNG. ══ */}
-        <Band className="acs-hero-band">
+        <Band tone="accent" className="acs-hero-band">
           <FinalHero
             phone={{
               src: `${IMG}/hero/phone-awardco.png`,
@@ -470,17 +467,14 @@ export default function AwardcoCaseStudy() {
             <People
               items={[
                 {
-                  icon: 'building',
                   title: 'The SSO-company employee',
                   text: 'Their company uses Google or Microsoft. The login page showed a password field anyway, so they used it.',
                 },
                 {
-                  icon: 'phone',
                   title: 'The deskless worker',
                   text: 'Warehouses and theaters, where the phone is the only screen and the work inbox is out of reach.',
                 },
                 {
-                  icon: 'users',
                   title: 'The company admin',
                   text: 'Fielding the support cases. Login help was the top topic, 9,275 cases in 90 days.',
                 },
@@ -826,7 +820,7 @@ export default function AwardcoCaseStudy() {
           </Act>
 
           <Block tight>
-            <MonoLabel icon="flag">What I handed off</MonoLabel>
+            <MonoLabel>What I handed off</MonoLabel>
             <Checklist
               items={[
                 'The token-based flow, mapped as states and transitions',
@@ -844,7 +838,6 @@ export default function AwardcoCaseStudy() {
               items={[
                 {
                   label: 'Learnings',
-                  icon: 'bulb',
                   body: (
                     <>
                       <p>
@@ -863,7 +856,6 @@ export default function AwardcoCaseStudy() {
                 },
                 {
                   label: 'Reflections',
-                  icon: 'pen',
                   body: (
                     <p>
                       One limitation remains. Some deskless workers cannot carry phones during

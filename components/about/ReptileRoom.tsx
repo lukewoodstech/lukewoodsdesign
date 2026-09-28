@@ -34,8 +34,8 @@ export default function ReptileRoom({ blocks }: { blocks: ReadonlyArray<RoomBloc
           <ul className="rr__row">
             {block.shots.map((shot) => (
               <li
-                key={shot.src}
-                className={`story-card rr__card${shot.span >= 6 ? ' rr__card--wide' : ''}`}
+                key={shot.src ?? shot.slot ?? shot.alt}
+                className={`story-card story-card--photo rr__card${shot.span >= 6 ? ' rr__card--wide' : ''}`}
                 style={
                   {
                     '--rr-span': shot.span,
@@ -45,18 +45,24 @@ export default function ReptileRoom({ blocks }: { blocks: ReadonlyArray<RoomBloc
                 }
               >
                 <div className="story-card__art">
-                  <Image
-                    src={shot.src}
-                    alt={shot.alt}
-                    fill
-                    sizes={
-                      shot.span === 12
-                        ? '(max-width: 60em) 92vw, 1100px'
-                        : shot.span === 6
-                          ? '(max-width: 60em) 92vw, 550px'
-                          : '(max-width: 60em) 92vw, 370px'
-                    }
-                  />
+                  {shot.src ? (
+                    <Image
+                      src={shot.src}
+                      alt={shot.alt}
+                      fill
+                      sizes={
+                        shot.span === 12
+                          ? '(max-width: 60em) 92vw, 1100px'
+                          : shot.span === 6
+                            ? '(max-width: 60em) 92vw, 550px'
+                            : '(max-width: 60em) 92vw, 370px'
+                      }
+                    />
+                  ) : (
+                    /* The same dashed slot the story deck draws for a
+                       photo that hasn't landed, naming the file it wants. */
+                    <span className="story-card__slot">photo · {shot.slot ?? 'pending'}</span>
+                  )}
                 </div>
                 <p className="story-card__cap">{shot.caption}</p>
               </li>

@@ -89,7 +89,7 @@ export const caseStudies: CaseStudy[] = [
     slug: 'pattern-custom-reports',
     title: 'Custom Reports in Predict',
     company: 'Pattern',
-    accent: '#00b37d',
+    accent: '#1d7cf3',
     role: 'Product Design Intern',
     // Résumé dates; the Custom Reports project itself ran 9 weeks inside them.
     period: 'Jan – Oct 2025',

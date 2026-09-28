@@ -118,21 +118,19 @@ export default function LucidCaseStudy() {
                 </>
               }
               facts={[
-                { label: 'Role', value: 'Product Design Intern', icon: 'user' },
-                { label: 'Team', value: 'Two scrum teams, Search and AI', icon: 'users' },
-                { label: 'Timeline', value: 'May to August 2026', icon: 'clock' },
-                { label: 'Tools', value: 'Figma, Lucid, Claude Code', icon: 'tool' },
+                { label: 'Role', value: 'Product Design Intern' },
+                { label: 'Team', value: 'Two scrum teams, Search and AI' },
+                { label: 'Timeline', value: 'May to August 2026' },
+                { label: 'Tools', value: 'Figma, Lucid, Claude Code' },
                 {
                   label: 'Released',
                   value: 'General availability, August 5, every Lucid tier',
-                  icon: 'flag',
                   span: true,
                 },
                 {
                   label: 'Skills used',
                   value:
                     'Discovery interviews, rapid prototyping, interaction design, failure-state design, internal testing, A/B test design, engineering handoff',
-                  icon: 'sparkle',
                   span: true,
                 },
               ]}
@@ -248,17 +246,14 @@ export default function LucidCaseStudy() {
             <People
               items={[
                 {
-                  icon: 'building',
                   title: 'The enterprise user',
                   text: 'Belongs to multiple teams, with years of document history to search through.',
                 },
                 {
-                  icon: 'users',
                   title: 'The manager',
                   text: 'Wanted a faster way to understand what their team was working on.',
                 },
                 {
-                  icon: 'chart',
                   title: 'The product leader',
                   text: 'Wanted visibility across the organization and quick summaries of roadmaps and planning documents.',
                 },
@@ -808,7 +803,7 @@ export default function LucidCaseStudy() {
           </Act>
 
           <Block tight>
-            <MonoLabel icon="flag">What I handed off</MonoLabel>
+            <MonoLabel>What I handed off</MonoLabel>
             <Checklist
               items={[
                 'The side panel and full-page experiences',
@@ -826,7 +821,6 @@ export default function LucidCaseStudy() {
               items={[
                 {
                   label: 'Learnings',
-                  icon: 'bulb',
                   body: (
                     <>
                       <p>
@@ -845,7 +839,6 @@ export default function LucidCaseStudy() {
                 },
                 {
                   label: 'Reflections',
-                  icon: 'pen',
                   body: (
                     <p>
                       One limitation remained: the AI inside the editor and the Docs List AI{' '}
