@@ -373,53 +373,6 @@ export const REPTILE_ROOM: ReadonlyArray<RoomBlock> = [
       },
     ],
   },
-  /* Big Bertha's clutch (Luke, 2026-09-28). Every number in the lede is
-     his: a 15-foot reticulated python, 18 eggs, around $10,000 of
-     animals riding on the incubator, which he built himself from a
-     drinks fridge with fans, sensors and alerts. The point of the block
-     is the last sentence: it is where "design around the failure modes
-     first" comes from, and the case studies lean on that. Mirrored in
-     BACKGROUND.personal in lib/lukeAiFacts.ts. */
-  {
-    id: 'eggs',
-    chapter: {
-      label: 'The incubator',
-      title: 'Eighteen eggs, and no margin for a silent failure.',
-      body:
-        'Big Bertha, my 15-foot reticulated python, laid 18 eggs while I was in high school. Each baby was worth real money, around $10,000 across the clutch, so I built an incubator from scratch: a drinks fridge, fans and sensors to hold heat and humidity, and alerts so I would know the moment anything drifted. A missed reading was not a bug ticket. It was a dead animal. I have designed around the failure modes first ever since.',
-      facts: ['15 ft of snake', '18 eggs', '$10k on the line'],
-    },
-    shots: [
-      {
-        src: '/about/big-bertha.jpg',
-        alt: 'Big Bertha, a pale albino reticulated python, coiled in a long enclosure with her head raised',
-        caption: 'Big Bertha. Fifteen feet, and the reason the incubator got built.',
-        span: 12,
-        ratio: '16 / 9',
-      },
-      {
-        src: '/about/incubator-fridge.jpg',
-        alt: 'A glass-fronted Rockstar Energy Drink fridge repurposed as an incubator, with four clear tubs of eggs on perlite stacked inside',
-        caption: 'The incubator was a drinks fridge, rewired with fans, sensors and alerts.',
-        span: 4,
-        ratio: '3 / 4',
-      },
-      {
-        src: '/about/retic-eggs-tub.jpg',
-        alt: 'Five large white python eggs on a plastic grid over perlite in a clear tub, a heating panel behind them',
-        caption: 'Eggs on a grid over perlite, inside the fridge.',
-        span: 4,
-        ratio: '3 / 4',
-      },
-      {
-        src: '/about/retic-eggs-hand.jpg',
-        alt: 'Luke\u2019s hand beside four python eggs for scale, each egg longer than his palm',
-        caption: 'Bigger than they look. Eighteen of these, and no margin for a silent failure.',
-        span: 4,
-        ratio: '3 / 4',
-      },
-    ],
-  },
   {
     id: 'room',
     shots: [
@@ -465,6 +418,53 @@ export const REPTILE_ROOM: ReadonlyArray<RoomBlock> = [
         src: '/about/burmese-python.jpg',
         alt: 'Luke standing in front of a hedge with a large albino Burmese python draped across his shoulders and both arms',
         caption: 'Some of them got big.',
+        span: 4,
+        ratio: '3 / 4',
+      },
+    ],
+  },
+  /* Big Bertha's clutch (Luke, 2026-09-28). Every number in the lede is
+     his: a 15-foot reticulated python, 18 eggs, around $10,000 of
+     animals riding on the incubator, which he built himself from a
+     drinks fridge with fans, sensors and alerts. The point of the block
+     is the last sentence: it is where "design around the failure modes
+     first" comes from, and the case studies lean on that. Mirrored in
+     BACKGROUND.personal in lib/lukeAiFacts.ts. */
+  {
+    id: 'eggs',
+    chapter: {
+      label: 'The incubator',
+      title: 'Eighteen eggs, and no margin for a silent failure.',
+      body:
+        'Big Bertha, my 15-foot reticulated python, laid 18 eggs while I was in high school. Each baby was worth real money, around $10,000 across the clutch, so I built an incubator from scratch: a drinks fridge, fans and sensors to hold heat and humidity, and alerts so I would know the moment anything drifted. A missed reading was not a bug ticket. It was a dead animal. I have designed around the failure modes first ever since.',
+      facts: ['15 ft of snake', '18 eggs', '$10k on the line'],
+    },
+    shots: [
+      {
+        src: '/about/big-bertha.jpg',
+        alt: 'Big Bertha, a pale albino reticulated python, coiled in a long enclosure with her head raised',
+        caption: 'Big Bertha. Fifteen feet, and the reason the incubator got built.',
+        span: 12,
+        ratio: '16 / 9',
+      },
+      {
+        src: '/about/incubator-fridge.jpg',
+        alt: 'A glass-fronted Rockstar Energy Drink fridge repurposed as an incubator, with four clear tubs of eggs on perlite stacked inside',
+        caption: 'The incubator was a drinks fridge, rewired with fans, sensors and alerts.',
+        span: 4,
+        ratio: '3 / 4',
+      },
+      {
+        src: '/about/retic-eggs-tub.jpg',
+        alt: 'Five large white python eggs on a plastic grid over perlite in a clear tub, a heating panel behind them',
+        caption: 'Eggs on a grid over perlite, inside the fridge.',
+        span: 4,
+        ratio: '3 / 4',
+      },
+      {
+        src: '/about/retic-eggs-hand.jpg',
+        alt: 'Luke\u2019s hand beside four python eggs for scale, each egg longer than his palm',
+        caption: 'Bigger than they look. Eighteen of these, and no margin for a silent failure.',
         span: 4,
         ratio: '3 / 4',
       },
