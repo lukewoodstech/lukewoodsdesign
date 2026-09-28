@@ -531,9 +531,9 @@ export const CLAIMS: readonly Claim[] = [
     id: 'pattern-problems',
     company: 'Pattern',
     project: 'Custom Reports in Predict',
-    claim: 'Four recurring problems in the old tool',
+    claim: 'Six recurring problems in the old tool',
     wording:
-      'Research showed four recurring problems: charts allowed only two metrics; filters were unclear and could not be edited after creation; separate view and edit modes hid basic actions; and a client-ready report still needed Excel, screenshots, or slides.',
+      'Research showed six recurring problems: charts allowed only two metrics; filters were unclear and could not be edited after creation; separate view and edit modes were confusing and hid basic actions; the widget UI was confusing, with look-alike buttons and controls that looked clickable but were not; there was no way to add text to a widget to explain it; and there was no way to export a report, so sharing with a client meant a call, screenshots, or Excel.',
     status: 'baseline',
     scope: 'project',
     source: '/work/pattern-custom-reports',

@@ -1808,6 +1808,16 @@ p a {
   pointer-events: none;
 }
 
+/* A coded mock on the stage wears the same frame as a capture (.lcs-shot). */
+.lcs-stage__mock {
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  background: #fff;
+}
+.lcs-stage__mock .pm-shell { border-radius: 0; }
+
 @media (prefers-reduced-motion: reduce) {
   .lcs-stage__layer { transition: none; }
 }
@@ -4605,10 +4615,6 @@ p a {
   color: #fff;
 }
 
-.ab-h2__dash {
-  color: rgba(255, 255, 255, 0.4);
-}
-
 .ab-sec__lede {
   margin: 0 auto 2.5rem;
   max-width: 40rem;
@@ -5818,67 +5824,6 @@ p a {
   }
 }
 
-/* ── 07 Let's talk ───────────────────────────────────────────────── */
-
-.ab-sec--talk {
-  border-top: 1px solid var(--card-ring);
-}
-
-.talk {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-  padding: 1rem 0;
-  color: #fff;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.talk__text {
-  font-family: var(--font-serif);
-  font-size: clamp(3.5rem, 11vw, 9rem);
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  line-height: 1;
-  border-bottom: 3px solid #fff;
-  padding-bottom: 0.08em;
-  transition: border-color 0.2s ease;
-}
-
-.talk__arrow {
-  flex: none;
-  width: clamp(3.5rem, 9vw, 7.5rem);
-  height: auto;
-  color: rgba(255, 255, 255, 0.6);
-  transition:
-    transform 0.4s var(--ease-out-quint),
-    color 0.2s ease;
-}
-
-.talk:hover .talk__text,
-.talk:focus-visible .talk__text {
-  border-color: var(--accent);
-}
-
-.talk:hover .talk__arrow,
-.talk:focus-visible .talk__arrow {
-  transform: translateX(0.5em);
-  color: #fff;
-}
-
-/* The base toast centres itself with translate(-50%); pinning it left
-   without resetting that transform pushed it 46px off the left edge, so
-   it read as "OPIED" on a phone. `top` is also cleared because the base
-   rule still had one live alongside this `bottom`. */
-.talk .email-link__toast {
-  left: 0;
-  top: auto;
-  bottom: -1.5rem;
-  transform: translate(0, 0);
-}
-
 /* ── Phones ──────────────────────────────────────────────────────── */
 
 @media (max-width: 60em) {
@@ -5968,12 +5913,6 @@ p a {
     margin-top: 0.9rem;
   }
 
-
-  .talk {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1.25rem;
-  }
 }
 
 /* 47.99em, not 48em: the site's phone/desktop line is `min-width: 48em`,
@@ -6108,7 +6047,6 @@ p a {
   .tl-card,
   .tl-node,
   .rr__card,
-  .talk__arrow,
   .kwc__arrow {
     transition: none;
   }
@@ -6136,8 +6074,7 @@ p a {
     transform: none;
   }
 
-  .rr__card:hover,
-  .talk:hover .talk__arrow {
+  .rr__card:hover {
     transform: none;
   }
 }
@@ -7450,7 +7387,9 @@ p a {
   margin-top: 1.75rem;
 }
 
-@media (min-width: 40em) { .cs-people { grid-template-columns: repeat(var(--n, 3), 1fr); } }
+/* One column per item up to three; more than that wraps, so the Pattern
+   study's six problems sit two rows deep instead of six narrow strips. */
+@media (min-width: 40em) { .cs-people { grid-template-columns: repeat(min(var(--n, 3), 3), 1fr); } }
 
 .cs-person {
   padding: 1.35rem 1.35rem 1.45rem;
@@ -7568,18 +7507,23 @@ p a {
 /* ── Callout figure: labels above, lines dropping onto the shot ── */
 .cs-callouts { margin-top: 2rem; }
 
+/* The figure measures itself (Callouts.tsx) and draws the leader lines in
+   one SVG over labels, band and picture together. */
+.cs-callouts__body { position: relative; }
+
 .cs-callouts__labels {
   display: grid;
   grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr));
   gap: 1.25rem;
   margin: 0;
-  padding: 0;
+  /* The band: where the lines travel sideways, over the page background
+     rather than over the screenshot. Sized per figure by the component. */
+  padding: 0 0 var(--cs-callouts-band, 3rem);
   list-style: none;
 }
 
 .cs-callouts__labels li {
   position: relative;
-  padding-bottom: 2rem; /* room for the stem */
   font-size: 0.9375rem;
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.72);
@@ -7601,57 +7545,52 @@ p a {
   color: var(--co);
 }
 
-/* The stem: from the label's centre down into the picture's gutter. */
-/* The run from the caption into the picture is ONE line: same 2px width,
-   same colour and same dark halo as the segments drawn over the image, and
-   it ends exactly where the stage begins. A 1px stem with no halo was the
-   tell that two different things were being drawn. */
-.cs-callouts__labels li::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  width: 2px;
-  height: 2rem;
-  margin-left: -1px;
-  background: var(--co);
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5);
-  transform: scaleY(0);
-  transform-origin: top center;
-}
-
-.is-inview .cs-callouts__labels li::after {
-  animation: cs-stem 0.5s var(--ease-out-quint) forwards;
-  animation-delay: calc(0.2s + var(--i) * 0.15s);
-}
-
-@keyframes cs-stem { to { transform: scaleY(1); } }
-
+/* The ring is an inset shadow, not a border: a border would shrink the box
+   the percentages are measured against by 1px a side and push every line
+   and pin off the image by that much. */
 .cs-callouts__stage {
   position: relative;
   border-radius: 10px;
   overflow: hidden;
-  border: 1px solid var(--card-ring);
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+  box-shadow: inset 0 0 0 1px var(--card-ring), 0 24px 80px rgba(0, 0, 0, 0.55);
 }
 
 .cs-callouts__stage img { display: block; width: 100%; height: auto; }
 
-.cs-callouts__seg {
+/* One SVG over the whole figure, in screen pixels. Every leader is a single
+   path with rounded elbows, drawn twice: a dark halo under a 2px colour
+   run, so it stays legible where it crosses the picture. pathLength=1
+   makes the draw-on a 0→1 dash. Sits above the stage but below nothing
+   interactive: the labels' hover still works because the SVG ignores the
+   pointer. */
+.cs-callouts__lines {
   position: absolute;
-  background: var(--co);
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5);
-  opacity: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
   pointer-events: none;
 }
 
-.cs-callouts__seg--v { width: 2px; transform: translateX(-1px); }
-.cs-callouts__seg--h { height: 2px; transform: translateY(-1px); }
-
-.is-inview .cs-callouts__seg {
-  animation: cs-chart-pop 0.35s ease forwards;
-  animation-delay: calc(0.7s + var(--i) * 0.15s);
+.cs-callouts__halo,
+.cs-callouts__lead {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
 }
+
+.cs-callouts__halo { stroke: rgba(0, 0, 0, 0.45); stroke-width: 6px; }
+.cs-callouts__lead { stroke: var(--co); stroke-width: 2px; }
+
+.is-inview .cs-callouts__halo,
+.is-inview .cs-callouts__lead {
+  animation: cs-draw 0.7s var(--ease-out-quint) forwards;
+  animation-delay: calc(0.65s + var(--i) * 0.15s);
+}
+
+@keyframes cs-draw { to { stroke-dashoffset: 0; } }
 
 .cs-callouts__box {
   position: absolute;
@@ -7695,10 +7634,10 @@ p a {
 /* Hover a label: the other callouts fall back so one pairing reads.
    Done with a filter rather than opacity, which the reveal keyframes own. */
 .cs-callouts__labels li { transition: filter 0.25s ease; }
-.cs-callouts__stage [data-i] { transition: filter 0.25s ease; }
+.cs-callouts [data-i] { transition: filter 0.25s ease; }
 
 .cs-callouts:has(.cs-callouts__labels li:hover) .cs-callouts__labels li,
-.cs-callouts:has(.cs-callouts__labels li:hover) .cs-callouts__stage [data-i] {
+.cs-callouts:has(.cs-callouts__labels li:hover) [data-i] {
   filter: brightness(0.35);
 }
 
@@ -7708,27 +7647,26 @@ p a {
    `li:hover`, which the dimming rule outranked, so the caption you were
    pointing at was the one that went dark. */
 .cs-callouts:has(.cs-callouts__labels li:nth-child(1):hover) .cs-callouts__labels li:nth-child(1),
-.cs-callouts:has(.cs-callouts__labels li:nth-child(1):hover) .cs-callouts__stage [data-i='0'],
+.cs-callouts:has(.cs-callouts__labels li:nth-child(1):hover) [data-i='0'],
 .cs-callouts:has(.cs-callouts__labels li:nth-child(2):hover) .cs-callouts__labels li:nth-child(2),
-.cs-callouts:has(.cs-callouts__labels li:nth-child(2):hover) .cs-callouts__stage [data-i='1'],
+.cs-callouts:has(.cs-callouts__labels li:nth-child(2):hover) [data-i='1'],
 .cs-callouts:has(.cs-callouts__labels li:nth-child(3):hover) .cs-callouts__labels li:nth-child(3),
-.cs-callouts:has(.cs-callouts__labels li:nth-child(3):hover) .cs-callouts__stage [data-i='2'],
+.cs-callouts:has(.cs-callouts__labels li:nth-child(3):hover) [data-i='2'],
 .cs-callouts:has(.cs-callouts__labels li:nth-child(4):hover) .cs-callouts__labels li:nth-child(4),
-.cs-callouts:has(.cs-callouts__labels li:nth-child(4):hover) .cs-callouts__stage [data-i='3'] {
+.cs-callouts:has(.cs-callouts__labels li:nth-child(4):hover) [data-i='3'] {
   filter: none;
 }
 
 @media (max-width: 40em) {
-  .cs-callouts__labels { grid-template-columns: 1fr; gap: 0.9rem; }
-  .cs-callouts__labels li { padding-bottom: 0; }
-  .cs-callouts__labels li::after, .cs-callouts__seg { display: none; }
+  .cs-callouts__labels { grid-template-columns: 1fr; gap: 0.9rem; padding-bottom: 0; }
+  .cs-callouts__lines { display: none; }
   .cs-callouts__pin { width: 18px; height: 18px; font-size: 0.6rem; }
   .cs-callouts__stage { margin-top: 1.25rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cs-callouts__labels li::after, .is-inview .cs-callouts__labels li::after { animation: none; transform: none; }
-  .cs-callouts__seg, .is-inview .cs-callouts__seg { animation: none; opacity: 1; }
+  .cs-callouts__halo, .cs-callouts__lead,
+  .is-inview .cs-callouts__halo, .is-inview .cs-callouts__lead { animation: none; stroke-dashoffset: 0; }
   .cs-callouts__box, .is-inview .cs-callouts__box,
   .cs-callouts__pin, .is-inview .cs-callouts__pin { animation: none; opacity: 1; }
 }
@@ -7894,7 +7832,7 @@ p a {
 
 /* A pair of phones standing in for one laptop on the final-designs band.
    Awardco only, and it stands the study's own Iphone frames here, so the
-   width lands on .acs-iphone rather than .cs-phone. Cross-axis start, so a
+   width lands on .cs-iphone rather than .cs-phone. Cross-axis start, so a
    rounding difference between the two can never stretch one off its
    aspect ratio. */
 .cs-phones {
@@ -7904,7 +7842,7 @@ p a {
   gap: 6%;
 }
 
-.cs-phones .acs-iphone { width: 42%; }
+.cs-phones .cs-iphone { width: 42%; }
 
 .cs-phone {
   width: 42%;
@@ -7947,7 +7885,7 @@ p a {
   /* Awardco only. The Macbook's base is 112% of the lid and hangs 6% past
      it either side; the two-column layout has room for that, the single
      column does not, and .cs-final clips what escapes. */
-  .cs-final__stage .acs-macbook { width: 86%; margin-inline: auto; }
+  .cs-final__stage .cs-macbook { width: 86%; margin-inline: auto; }
 }
 
 /* ── Learnings / reflections ──────────────────────────────────── */
@@ -8092,7 +8030,7 @@ p a {
 }
 
 /* ── Awardco: the login flow as its own screens ──────────────────── */
-.acs-flow {
+.cs-flow {
   --flow-gap: clamp(0.75rem, 1.6vw, 1.5rem);
   /* Breaks out of the 800px prose column: six screens need the room, and
      both strips must share a track width to be comparable. */
@@ -8110,7 +8048,7 @@ p a {
 
 /* Subgrid keeps the screens on one line and the notes on another, however
    many lines each title wraps to, with no reserved empty space. */
-.acs-flow__step {
+.cs-flow__step {
   position: relative;
   z-index: 1;
   display: grid;
@@ -8120,14 +8058,14 @@ p a {
   min-width: 0;
 }
 
-.acs-flow__head {
+.cs-flow__head {
   display: flex;
   align-items: baseline;
   gap: 0.45rem;
   margin-bottom: 0.6rem;
 }
 
-.acs-flow__num {
+.cs-flow__num {
   flex: none;
   font-family: var(--font-mono);
   font-size: var(--label-micro, 0.6875rem);
@@ -8135,7 +8073,7 @@ p a {
   color: var(--accent);
 }
 
-.acs-flow__title {
+.cs-flow__title {
   margin: 0;
   font-size: 0.875rem;
   font-weight: 600;
@@ -8144,11 +8082,11 @@ p a {
   text-wrap: balance;
 }
 
-.acs-flow__shot { position: relative; }
+.cs-flow__shot { position: relative; }
 
 /* The chip names what the step costs the user, so it sits on the screen.
    Kept small: at six across, a screen is only ~180px wide. */
-.acs-flow__flag {
+.cs-flow__flag {
   position: absolute;
   left: 0.35rem;
   bottom: 0.35rem;
@@ -8165,12 +8103,12 @@ p a {
   pointer-events: none;
 }
 
-.acs-flow--problem .acs-flow__flag {
+.cs-flow--problem .cs-flow__flag {
   color: #ffd27a;
   border-color: rgba(255, 210, 122, 0.5);
 }
 
-.acs-flow__note {
+.cs-flow__note {
   margin-top: 0.6rem;
   font-size: 0.75rem;
   line-height: 1.5;
@@ -8178,7 +8116,7 @@ p a {
 }
 
 /* The connector sits in the gap, centred on the screen beside it. */
-.acs-flow__link {
+.cs-flow__link {
   position: absolute;
   top: 50%;
   left: 100%;
@@ -8189,14 +8127,14 @@ p a {
 
 /* The carry chip is wider than the gap it sits in, so its step has to paint
    above the following one or the chip is clipped by that screen. */
-.acs-flow__step:has(.acs-flow__link--carry) { z-index: 2; }
+.cs-flow__step:has(.cs-flow__link--carry) { z-index: 2; }
 
-.acs-flow__link--carry {
+.cs-flow__link--carry {
   background: var(--accent);
   box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 55%, transparent);
 }
 
-.acs-flow__carry {
+.cs-flow__carry {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -8216,7 +8154,7 @@ p a {
 /* Six screens do not survive being sixthed on a phone. Scroll instead, so
    the flow still reads left to right at a legible size. */
 @media (max-width: 60em) {
-  .acs-flow {
+  .cs-flow {
     grid-template-columns: none;
     /* Must clear the three explicit rows too, or auto-flow:column fills
        them downward and the strip becomes columns of three. */
@@ -8228,8 +8166,8 @@ p a {
     padding-bottom: 0.75rem;
     overscroll-behavior-x: contain;
   }
-  .acs-flow__step { grid-row: auto; grid-template-rows: none; scroll-snap-align: start; }
-  .acs-flow__carry { display: none; }
+  .cs-flow__step { grid-row: auto; grid-template-rows: none; scroll-snap-align: start; }
+  .cs-flow__carry { display: none; }
 }
 
 /* The hero band holds a phone, a laptop and a caption, so unlike
@@ -8253,7 +8191,7 @@ p a {
    small comparison row. */
 
 /* iPhone 15 Pro: 71.6 x 147.6mm body around a 393 x 852pt screen. */
-.acs-iphone {
+.cs-iphone {
   container-type: inline-size;
   position: relative;
   width: 100%;
@@ -8268,7 +8206,7 @@ p a {
     0 30px 60px rgba(0, 0, 0, 0.45);
 }
 
-.acs-iphone__screen {
+.cs-iphone__screen {
   position: relative;
   height: 100%;
   overflow: hidden;
@@ -8277,10 +8215,10 @@ p a {
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.9);
 }
 
-.acs-iphone__screen img { object-fit: cover; object-position: top center; }
+.cs-iphone__screen img { object-fit: cover; object-position: top center; }
 
 /* Dynamic Island: 125 x 36pt, sitting 11pt below the top of the screen. */
-.acs-iphone__island {
+.cs-iphone__island {
   position: absolute;
   top: 1.3%;
   left: 50%;
@@ -8292,7 +8230,7 @@ p a {
   z-index: 2;
 }
 
-.acs-iphone__btn {
+.cs-iphone__btn {
   position: absolute;
   width: 1.1cqw;
   border-radius: 1cqw;
@@ -8300,11 +8238,11 @@ p a {
 }
 
 /* Left edge: action button, then the volume pair. */
-.acs-iphone__btn--action   { left: -0.9cqw; top: 16%;   height: 5.2%; }
-.acs-iphone__btn--vol-up   { left: -0.9cqw; top: 25.5%; height: 8%; }
-.acs-iphone__btn--vol-down { left: -0.9cqw; top: 35.5%; height: 8%; }
+.cs-iphone__btn--action   { left: -0.9cqw; top: 16%;   height: 5.2%; }
+.cs-iphone__btn--vol-up   { left: -0.9cqw; top: 25.5%; height: 8%; }
+.cs-iphone__btn--vol-down { left: -0.9cqw; top: 35.5%; height: 8%; }
 /* Right edge: side button, set lower than the volume keys. */
-.acs-iphone__btn--power {
+.cs-iphone__btn--power {
   right: -0.9cqw;
   top: 28%;
   height: 12%;
@@ -8313,13 +8251,13 @@ p a {
 
 /* MacBook Pro: aluminium rim, black bezel with a slightly deeper chin, the
    camera notch cut into the top of the picture, and a tapered base. */
-.acs-macbook {
+.cs-macbook {
   container-type: inline-size;
   position: relative;
   width: 100%;
 }
 
-.acs-macbook__lid {
+.cs-macbook__lid {
   position: relative;
   padding: 0.45%;
   border-radius: 1.4cqw 1.4cqw 0.3cqw 0.3cqw;
@@ -8329,13 +8267,13 @@ p a {
     0 40px 80px rgba(0, 0, 0, 0.5);
 }
 
-.acs-macbook__bezel {
+.cs-macbook__bezel {
   padding: 1.45% 1.05% 1.85%;
   border-radius: 1.1cqw 1.1cqw 0.2cqw 0.2cqw;
   background: #08080a;
 }
 
-.acs-macbook__screen {
+.cs-macbook__screen {
   position: relative;
   aspect-ratio: var(--screen-ar, 16 / 10);
   overflow: hidden;
@@ -8343,11 +8281,11 @@ p a {
   background: #000;
 }
 
-.acs-macbook__screen > * { width: 100%; height: 100%; }
-.acs-macbook__screen img { object-fit: cover; object-position: top center; }
+.cs-macbook__screen > * { width: 100%; height: 100%; }
+.cs-macbook__screen img { object-fit: cover; object-position: top center; }
 
 /* The notch is a cutout in the picture, so it matches the bezel exactly. */
-.acs-macbook__notch {
+.cs-macbook__notch {
   position: absolute;
   top: 0;
   left: 50%;
@@ -8361,7 +8299,7 @@ p a {
 
 /* The base: the closed underside seen edge-on, wider than the lid and
    tapering very slightly toward the desk. */
-.acs-macbook__base {
+.cs-macbook__base {
   position: relative;
   width: 112%;
   margin-inline: -6%;
@@ -8373,7 +8311,7 @@ p a {
 }
 
 /* The thumb lip cut into the front edge. */
-.acs-macbook__lip {
+.cs-macbook__lip {
   position: absolute;
   top: 0;
   left: 50%;
@@ -8386,7 +8324,7 @@ p a {
 
 /* ── Awardco: the brand-colour constraint ────────────────────────
    Three full pages side by side. Breaks out of the prose column the same
-   way .acs-flow does, because the comparison is the point and 250px each
+   way .cs-flow does, because the comparison is the point and 250px each
    would not carry it. */
 .acs-brands {
   --brands-w: min(1240px, calc(100vw - 2 * var(--cs-pad)));
@@ -8423,9 +8361,331 @@ p a {
   color: rgba(255, 255, 255, 0.62);
 }
 
-/* Same breakpoint as .acs-flow: below this, three tinted pages side by side
+/* Same breakpoint as .cs-flow: below this, three tinted pages side by side
    squeeze the notes to about 30 characters a line. */
 @media (max-width: 60em) {
   .acs-brands { grid-template-columns: 1fr; grid-template-rows: none; }
   .acs-brands__item { grid-row: auto; grid-template-rows: none; }
 }
+
+/* Pattern's hero band. Like .acs-hero-band: the MacBook is a whole object
+   with a base, so the band must not crop its bottom edge the way
+   .cs-hero-band does for the older frameless laptop. */
+.pcs-hero-band {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding: clamp(2rem, 5vw, 4rem) var(--cs-pad);
+}
+
+.pcs-hero-band > * { width: min(100%, 1100px); margin-inline: auto; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   Predict mock (.pm): the coded Custom Reports redesign for the Pattern
+   study. Light surface, Predict's own tokens from the design file
+   (Wix Madefor Display, navy ink #1d3261, border #d7d8e5, link #005e95).
+   Scoped under .pm so none of it leaks into the site's dark chrome, and
+   sized in px because the mock is a fixed-width product screen that
+   MockStage scales as a whole.
+   ═══════════════════════════════════════════════════════════════════ */
+.pm {
+  --pm-ink: #1d3261;
+  --pm-ink-2: #8184a9;
+  --pm-ink-3: #b8bcbf;
+  --pm-line: #d7d8e5;
+  --pm-line-soft: #e6e7ed;
+  --pm-faint: #fbfbfb;
+  --pm-row: #f8f8f8;
+  --pm-link: #005e95;
+  --pm-link-bg: #ebf5ff;
+  --pm-good: #1a6541;
+  --pm-bad: #aa371f;
+  --pm-cta: #0f5c3f;
+  --pm-radius: 8px;
+  color: var(--pm-ink);
+  background: #fff;
+  font-size: 12px;
+  line-height: 1.35;
+  -webkit-font-smoothing: antialiased;
+  text-align: left;
+}
+
+.pm *, .pm *::before, .pm *::after { box-sizing: border-box; }
+.pm p, .pm h2, .pm h3, .pm h4, .pm ul { margin: 0; }
+/* The site colours headings with each study's accent; the mock is Predict's UI. */
+.pm h2, .pm h3, .pm h4 { color: var(--pm-ink); font-family: inherit; letter-spacing: 0; }
+.pm ul { list-style: none; padding: 0; }
+.pm button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+.pm img { display: block; }
+.pm .pm-icon { width: 16px; height: 16px; flex: none; }
+.pm .pm-icon--sm { width: 14px; height: 14px; }
+
+/* ── Shell: rail + top bar ─────────────────────────────────────── */
+.pm-shell { display: grid; grid-template-columns: 72px 1fr; min-height: 640px; }
+.pm-rail {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 12px 0; border-right: 1px solid var(--pm-line); background: #fff;
+}
+.pm-rail__logo { display: grid; justify-items: center; gap: 4px; margin-bottom: 10px; }
+.pm-rail__logo img { width: 26px; height: 26px; }
+.pm-rail__logo span {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.04em; color: var(--pm-ink);
+  border: 1px solid #5b5bd6; border-radius: 999px; padding: 1px 7px;
+}
+.pm-rail ul { display: grid; gap: 4px; width: 100%; }
+.pm-rail li { display: grid; place-items: center; height: 52px; position: relative; opacity: 0.85; }
+.pm-rail li img { width: 22px; height: 22px; }
+.pm-rail li.is-active { background: #f3f4f8; opacity: 1; }
+.pm-rail li.is-active::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--pm-ink); }
+.pm-rail__bottom { margin-top: auto; border-top: 1px solid var(--pm-line); padding-top: 6px; }
+
+.pm-main { display: flex; flex-direction: column; min-width: 0; background: var(--pm-row); }
+.pm-top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px; background: #fff; border-bottom: 1px solid var(--pm-line);
+}
+.pm-top__title { font-size: 16px; font-weight: 700; position: relative; padding-bottom: 6px; }
+.pm-top__title::after { content: ''; position: absolute; left: 0; bottom: 0; width: 32px; height: 3px; background: var(--pm-ink); }
+.pm-top__tools { display: flex; align-items: center; gap: 10px; }
+.pm-chip {
+  display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 14px;
+  border: 1px solid var(--pm-line); border-radius: 999px; background: #fff;
+  font-size: 11px; letter-spacing: 0.02em; color: var(--pm-ink-2); white-space: nowrap;
+}
+.pm-pill {
+  display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px;
+  border: 1px solid var(--pm-line); border-radius: 999px; background: #fff; font-size: 12px;
+}
+.pm-pill--round { width: 32px; padding: 0; justify-content: center; }
+.pm-content { padding: 16px 20px 72px; display: grid; gap: 14px; }
+.pm-ctabar {
+  margin-top: auto; display: flex; justify-content: flex-end; padding: 12px 20px;
+  background: #fff; border-top: 1px solid var(--pm-line);
+}
+.pm-cta {
+  display: inline-flex; align-items: center; height: 36px; padding: 0 18px; border-radius: 999px;
+  background: var(--pm-cta); color: #fff; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+}
+.pm-link { color: var(--pm-link); font-size: 12px; font-weight: 500; }
+.pm-btn {
+  display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 16px;
+  border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.pm-btn--ghost { border: 1px solid var(--pm-line); background: #fff; color: var(--pm-ink); }
+
+/* ── Home ──────────────────────────────────────────────────────── */
+.pm-panel { background: #fff; border: 1px solid var(--pm-line); border-radius: var(--pm-radius); padding: 16px 20px; }
+.pm-panel__head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+.pm-panel__head h3 { font-size: 14px; font-weight: 500; }
+.pm-panel--bar { display: flex; align-items: center; gap: 16px; padding: 12px 20px; }
+.pm-total { display: grid; padding-right: 16px; border-right: 1px solid var(--pm-line); }
+.pm-total span { font-size: 12px; color: var(--pm-ink-2); }
+.pm-total strong { font-size: 20px; font-weight: 500; }
+.pm-searchbox {
+  display: flex; align-items: center; gap: 10px; width: 300px; height: 40px; padding: 0 14px;
+  border: 1px solid var(--pm-line); border-radius: 4px; color: var(--pm-ink-2); font-size: 13px;
+}
+.pm-panel--bar .pm-btn { margin-left: auto; }
+
+.pm-templates { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 14px; }
+.pm-templates li { display: grid; gap: 8px; font-size: 12px; }
+.pm-template {
+  aspect-ratio: 1.55; border: 1px solid var(--pm-line); border-radius: 4px; background: #fff;
+  overflow: hidden; display: grid; align-items: end; padding: 6px;
+}
+.pm-template--blank { background: #fff; }
+.pm-spark { width: 100%; height: 100%; display: block; }
+
+.pm-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.pm-tile { background: #fff; border: 1px solid var(--pm-line); border-radius: var(--pm-radius); overflow: hidden; }
+.pm-tile__head, .pm-tile__foot {
+  display: flex; align-items: center; justify-content: space-between; padding: 10px 12px;
+}
+.pm-tile__head { border-bottom: 1px solid var(--pm-line); }
+.pm-tile__foot { border-top: 1px solid var(--pm-line); font-size: 12px; }
+.pm-tile__chart { padding: 12px; }
+.pm-tile__chart .pm-spark { height: 120px; border: 1px solid var(--pm-line-soft); border-radius: 4px; padding: 6px; }
+.pm-tag {
+  display: inline-flex; align-items: center; height: 24px; padding: 0 8px; border-radius: 3px;
+  border: 1px solid var(--pm-link); color: var(--pm-link); background: #fff;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+}
+
+/* ── Widget ────────────────────────────────────────────────────── */
+.pm-widget { background: #fff; border: 1px solid var(--pm-line); border-radius: var(--pm-radius); overflow: hidden; }
+.pm-widget__head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 14px 16px; border-bottom: 1px solid var(--pm-line);
+}
+.pm-widget__title { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.pm-widget__title h3 { font-size: 16px; font-weight: 700; white-space: nowrap; }
+.pm-widget__brand {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pm-ink-2);
+  padding-left: 14px; border-left: 1px solid var(--pm-line);
+}
+.pm-widget__tools { display: flex; align-items: center; gap: 10px; flex: none; }
+.pm-widget__caption {
+  padding: 12px 16px; font-size: 12px; line-height: 20px; color: var(--pm-ink);
+  border-bottom: 1px solid var(--pm-line); max-width: 78ch;
+}
+.pm-iconbtn {
+  display: grid; place-items: center; width: 32px; height: 32px; border-radius: 999px;
+  border: 1px solid transparent;
+}
+.pm-iconbtn:hover, .pm-iconbtn[aria-expanded='true'] { border-color: var(--pm-line); background: var(--pm-faint); }
+.pm-iconbtn:focus-visible { outline: 2px solid var(--pm-link); outline-offset: 2px; }
+
+.pm-widget__primary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); background: var(--pm-faint); border-bottom: 1px solid var(--pm-line); }
+.pm-widget__primary .pm-card + .pm-card { border-left: 1px solid var(--pm-line); }
+.pm-widget__secondary { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-bottom: 1px solid var(--pm-line); }
+.pm-widget__secondary .pm-card + .pm-card { border-left: 1px solid var(--pm-line); }
+
+.pm-card { display: flex; gap: 8px; align-items: flex-start; padding: 12px 16px; min-width: 0; overflow: hidden; }
+.pm-card--primary { height: 88px; align-items: center; }
+.pm-card__dot { width: 10px; height: 10px; border-radius: 999px; border: 1.5px solid var(--pm-ink-3); margin-top: 3px; flex: none; }
+.pm-card--primary .pm-card__dot { margin-top: 0; }
+.pm-card__dot--off { background: transparent; }
+.pm-card__body { display: grid; gap: 2px; min-width: 0; }
+.pm-card__label { display: flex; align-items: center; gap: 6px; font-size: 12px; white-space: nowrap; min-width: 0; }
+.pm-card__name { overflow: hidden; text-overflow: ellipsis; }
+.pm-card--primary .pm-card__label { font-size: 14px; }
+.pm-card__value { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.pm-card__value strong { font-size: 16px; font-weight: 400; }
+.pm-card--primary .pm-card__value strong { font-size: 22px; font-weight: 600; }
+.pm-delta { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; white-space: nowrap; }
+.pm-delta--good { color: var(--pm-good); }
+.pm-delta--bad { color: var(--pm-bad); }
+.pm-delta__sep { width: 1px; height: 10px; background: var(--pm-line); }
+.pm-delta__arrow { font-size: 9px; }
+
+/* Line / bar glyphs (components/predict/KindGlyph). */
+.pm-kind { display: inline-block; flex: none; }
+.pm-card__label .pm-kind { color: var(--pm-ink-2); }
+
+/* ── Chart ─────────────────────────────────────────────────────── */
+.pm-chart { position: relative; padding: 14px 8px 4px; }
+.pm-chart svg { display: block; width: 100%; height: auto; overflow: visible; touch-action: pan-y; }
+.pm-chart__grid { stroke: var(--pm-line-soft); stroke-width: 1; }
+.pm-chart__tick { font-size: 10px; fill: var(--pm-ink-2); font-family: inherit; }
+.pm-chart__cross { stroke: var(--pm-ink-3); stroke-width: 1; stroke-dasharray: 3 3; }
+.pm-tip {
+  position: absolute; top: 14px; z-index: 2; pointer-events: none;
+  background: #fff; border: 1px solid var(--pm-line); border-radius: 6px;
+  box-shadow: 0 6px 20px rgba(29, 50, 97, 0.12); padding: 8px 10px; min-width: 190px;
+}
+.pm-tip__month { font-size: 11px; font-weight: 700; color: var(--pm-ink-2); margin-bottom: 4px; letter-spacing: 0.04em; }
+.pm-tip__row { display: grid; grid-template-columns: 10px 1fr auto; align-items: center; gap: 8px; font-size: 12px; line-height: 20px; }
+.pm-tip__val { font-variant-numeric: tabular-nums; }
+.pm-swatch { display: inline-block; width: 10px; height: 10px; border-radius: 999px; flex: none; }
+.pm-legend {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px;
+  padding: 8px 12px 12px; font-size: 12px;
+}
+.pm-legend li { display: inline-flex; align-items: center; gap: 8px; }
+.pm-legend__axis { font-weight: 700; color: var(--pm-ink-2); font-size: 11px; }
+.pm-legend__line { display: inline-block; width: 20px; height: 3px; border-radius: 2px; }
+.pm-legend__bar { display: inline-block; width: 10px; height: 10px; border-radius: 2px; }
+
+/* ── Drawer ────────────────────────────────────────────────────── */
+.pm-drawer {
+  background: #fff; border: 1px solid var(--pm-line); border-radius: var(--pm-radius);
+  display: flex; flex-direction: column; gap: 12px; padding: 0 0 12px; min-width: 0;
+}
+.pm-drawer__head { padding: 14px 16px; border-bottom: 1px solid var(--pm-line); }
+.pm-drawer__head h3 { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.pm-switch {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 0 16px; font-size: 12px; cursor: pointer; position: relative;
+}
+.pm-switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.pm-switch__track {
+  width: 32px; height: 18px; border-radius: 999px; background: var(--pm-line); position: relative; flex: none;
+  transition: background 0.15s ease;
+}
+.pm-switch__track::after {
+  content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 999px;
+  background: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); transition: translate 0.15s ease;
+}
+.pm-switch input:checked + .pm-switch__track { background: var(--pm-link); }
+.pm-switch input:checked + .pm-switch__track::after { translate: 14px 0; }
+.pm-switch input:focus-visible + .pm-switch__track { outline: 2px solid var(--pm-link); outline-offset: 2px; }
+.pm-drawer__note { padding: 0 16px; font-size: 11px; line-height: 16px; color: var(--pm-ink-2); min-height: 32px; }
+.pm-drawer__label { padding: 4px 16px 0; font-size: 12px; font-weight: 500; }
+.pm-search {
+  margin: 0 16px; height: 36px; padding: 0 12px; border: 1px solid var(--pm-line); border-radius: 4px;
+  font: inherit; font-size: 12px; color: var(--pm-ink); background: #fff;
+}
+.pm-search:focus { outline: 2px solid var(--pm-link); outline-offset: 1px; }
+.pm-drawer__group { margin: 0 16px; border: 1px solid var(--pm-line); border-radius: 4px; overflow: hidden; }
+.pm-drawer__grouphead {
+  display: flex; justify-content: space-between; align-items: center; padding: 6px 10px;
+  background: var(--pm-row); font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--pm-ink-2);
+}
+.pm-drawer__grouphead button { color: var(--pm-link); font-size: 10px; font-weight: 600; letter-spacing: 0.06em; }
+.pm-drawer__grouphead button:disabled { color: var(--pm-ink-3); cursor: default; }
+.pm-drawer__list { display: grid; }
+.pm-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 10px; height: 32px; }
+.pm-row + .pm-row { border-top: 1px solid var(--pm-line-soft); }
+.pm-row--off { color: var(--pm-ink-3); }
+.pm-row__main { display: flex; align-items: center; gap: 10px; min-width: 0; cursor: pointer; }
+.pm-row--off .pm-row__main { cursor: not-allowed; }
+.pm-row__main input { width: 14px; height: 14px; margin: 0; accent-color: var(--pm-link); }
+.pm-row__main span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pm-row__ctl { display: flex; align-items: center; gap: 10px; flex: none; }
+.pm-row__unit { font-size: 10px; color: var(--pm-ink-3); letter-spacing: 0.04em; }
+.pm-kindswitch { display: inline-flex; border: 1px solid var(--pm-line); border-radius: 4px; overflow: hidden; }
+.pm-kindswitch button { display: grid; place-items: center; width: 24px; height: 20px; color: var(--pm-ink-3); }
+.pm-kindswitch button + button { border-left: 1px solid var(--pm-line); }
+.pm-kindswitch button[aria-pressed='true'] { color: var(--pm-ink); background: var(--pm-link-bg); }
+.pm-kindswitch button:focus-visible { outline: 2px solid var(--pm-link); outline-offset: -2px; }
+.pm-axis {
+  display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 3px;
+  border: 1px solid var(--pm-line); font-size: 10px; font-weight: 700; color: var(--pm-ink);
+}
+.pm-drawer__hint { padding: 8px 10px; font-size: 11px; line-height: 15px; color: var(--pm-ink-2); border-top: 1px solid var(--pm-line-soft); background: var(--pm-faint); }
+.pm-drawer__foot { padding: 4px 16px 0; }
+.pm-drawer__foot .pm-link { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* ── The lab: widget beside drawer ─────────────────────────────── */
+.pm-lab { padding: 16px; border-radius: 12px; background: var(--pm-row); }
+.pm-lab__presets { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
+.pm-lab__try { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pm-ink-2); margin-right: 4px; }
+.pm-preset {
+  height: 30px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--pm-line); background: #fff; font-size: 12px;
+}
+.pm-preset[aria-pressed='true'] { border-color: var(--pm-link); background: var(--pm-link-bg); color: var(--pm-link); }
+.pm-preset:focus-visible { outline: 2px solid var(--pm-link); outline-offset: 2px; }
+.pm-lab__stage { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-items: start; }
+.pm-lab__stage--open { grid-template-columns: minmax(0, 1fr) 300px; }
+@media (max-width: 64em) {
+  .pm-lab__stage--open { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ── The stage that scales a fixed-width mock ──────────────────── */
+.pm-stage { position: relative; overflow: hidden; width: 100%; }
+
+/* The mock inside the site's laptop: fill the screen, no rounded edges. */
+.cs-macbook__screen .pm-shell { border-radius: 0; min-height: 100%; }
+
+/* A figure that needs more than the prose column: the same breakout the
+   flow strip and brand row use, as one reusable class. */
+.cs-breakout {
+  --bo-w: min(1240px, calc(100vw - 2 * var(--cs-pad)));
+  width: var(--bo-w);
+  margin-inline: calc((100% - var(--bo-w)) / 2);
+}
+
+/* The Predict mock on narrow screens: the lab stays usable rather than
+   shrinking to a thumbnail, so its rows re-flow instead of scaling. */
+@media (max-width: 48em) {
+  .pm-lab { padding: 8px; }
+  .pm-widget__secondary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pm-widget__secondary .pm-card + .pm-card { border-left: 0; }
+  .pm-widget__secondary .pm-card { border-top: 1px solid var(--pm-line); }
+  .pm-widget__secondary .pm-card:nth-child(2n) { border-left: 1px solid var(--pm-line); }
+  .pm-widget__head { flex-wrap: wrap; }
+  .pm-widget__tools .pm-chip { display: none; }
+}
+
+/* Inside the site's laptop the stage fills the 16:10 screen and the scaled
+   mock clips at the bottom, whatever height it measured: a dashboard that
+   continues below the fold is the right picture, a black band is not. */
+.cs-macbook__screen .pm-stage { position: absolute; inset: 0; height: auto !important; }

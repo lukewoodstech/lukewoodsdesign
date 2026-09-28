@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { Iphone, Macbook } from '@/components/awardco/Devices'
+import { Iphone, Macbook } from '@/components/cs/Devices'
 
 /*
  * The Awardco hero: the finished sign-in, mobile first.

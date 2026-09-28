@@ -1,30 +1,34 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import Image from 'next/image'
 
-type Layer = {
+type Base = { label: string; caption: string }
+type ImageLayer = Base & {
   src: string
   alt: string
-  label: string
-  caption: string
   width: number
   height: number
 }
+type NodeLayer = Base & { node: ReactNode }
+type Layer = ImageLayer | NodeLayer
 
 /*
- * Two-layer crossfade with a segmented toggle. Serves both the before/after
- * moment (old search vs the shipped panel) and the side panel to full page
- * expand state — the same primitive, different copy. Buttons are real buttons,
- * aria-pressed carries state, and both images stay in the DOM so the fade is
- * a pure opacity swap with no layout shift (the stage keeps the taller
- * layer's aspect box via the visible layer being position-static).
+ * Layered crossfade with a segmented toggle. Serves the before/after moment
+ * (old search vs the shipped panel), the side panel to full page expand
+ * state, and the cut concept vs what shipped — the same primitive, different
+ * copy. A layer is either a capture (src) or a coded mock (node), so a real
+ * screenshot can sit on one side of the toggle and the site's own rebuild of
+ * the design on the other. Buttons are real buttons, aria-pressed carries
+ * state, and every layer stays in the DOM so the fade is a pure opacity
+ * swap with no layout shift (the stage keeps the visible layer's height via
+ * that layer being position-static).
  */
 export default function CompareStage({
   layers,
   ariaLabel,
 }: {
-  layers: [Layer, Layer]
+  layers: Layer[]
   ariaLabel: string
 }) {
   const [active, setActive] = useState(0)
@@ -48,25 +52,35 @@ export default function CompareStage({
       <div className="lcs-stage mt-4">
         {layers.map((l, i) => (
           <div
-            key={l.src}
+            key={l.label}
             className={`lcs-stage__layer ${active === i ? '' : 'lcs-stage__layer--hidden'}`}
             aria-hidden={active !== i}
           >
-            <Image
-              src={l.src}
-              alt={l.alt}
-              width={l.width}
-              height={l.height}
-              sizes="(min-width: 60em) 80vw, 100vw"
-              className="lcs-shot"
-              /* Feeds the page's figure height ceiling; see `.lcs-shot`. */
-              style={{ '--shot-ar': String(l.width / l.height) } as React.CSSProperties}
-            />
+            {'node' in l ? (
+              <div className="lcs-stage__mock">{l.node}</div>
+            ) : (
+              <Image
+                src={l.src}
+                alt={l.alt}
+                width={l.width}
+                height={l.height}
+                sizes="(min-width: 60em) 80vw, 100vw"
+                className="lcs-shot"
+                /* Feeds the page's figure height ceiling; see `.lcs-shot`. */
+                style={
+                  {
+                    '--shot-ar': String(l.width / l.height),
+                  } as React.CSSProperties
+                }
+              />
+            )}
           </div>
         ))}
       </div>
 
-      <p className="cs-cap" aria-live="polite">{layers[active].caption}</p>
+      <p className="cs-cap" aria-live="polite">
+        {layers[active].caption}
+      </p>
     </div>
   )
 }

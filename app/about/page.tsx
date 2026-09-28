@@ -7,7 +7,6 @@ import Toolbox from '@/components/about/Toolbox'
 import ReptileRoom from '@/components/about/ReptileRoom'
 import BigStats from '@/components/cs/BigStats'
 import Testimonials from '@/components/about/Testimonials'
-import LetsTalk from '@/components/about/LetsTalk'
 import { STORY, ROLES, ONGOING, TOOLS, REPTILE_ROOM, REPTILE_STATS, QUOTES } from '@/lib/about'
 import { SITE } from '@/lib/site'
 
@@ -79,16 +78,11 @@ export const metadata: Metadata = {
   },
 }
 
-/* A section heading in this page's voice: big, centred, with the
-   trailing dash that says "and here it is". */
+/* A section heading in this page's voice: big and centred. */
 function Title({ children, id }: { children: React.ReactNode; id?: string }) {
   return (
     <h2 className="ab-h2" id={id}>
       {children}
-      <span className="ab-h2__dash" aria-hidden="true">
-        {' '}
-        —
-      </span>
     </h2>
   )
 }
@@ -168,16 +162,6 @@ export default function AboutPage() {
                 a wall of five cards with nothing over it is just text. */}
             <Title id="kind-words">Kind words</Title>
             <Testimonials quotes={QUOTES} />
-          </div>
-        </section>
-
-        {/* ── 06 Let's talk ── */}
-        <section className="ab-sec ab-sec--talk" aria-labelledby="talk">
-          <div className="ab-wide">
-            <h2 className="visually-hidden" id="talk">
-              Get in touch
-            </h2>
-            <LetsTalk />
           </div>
         </section>
 

@@ -60,22 +60,22 @@ export default function FlowStrip({
 
   return (
     <ol
-      className={`acs-flow acs-flow--${tone}`}
+      className={`cs-flow cs-flow--${tone}`}
       aria-label={label}
       style={{ '--cols': cols } as React.CSSProperties}
     >
       {steps.map((s, i) => (
-        <li className="acs-flow__step" key={s.src}>
-          <div className="acs-flow__head">
-            <span className="acs-flow__num" aria-hidden="true">
+        <li className="cs-flow__step" key={s.src}>
+          <div className="cs-flow__head">
+            <span className="cs-flow__num" aria-hidden="true">
               {String(i + 1).padStart(2, '0')}
             </span>
-            <h4 className="acs-flow__title">{s.title}</h4>
+            <h4 className="cs-flow__title">{s.title}</h4>
           </div>
 
           {/* The connector lives inside the shot so it centres on the screen,
               whatever height the title above it wrapped to. */}
-          <div className="acs-flow__shot">
+          <div className="cs-flow__shot">
             <ZoomShot
               src={s.src}
               alt={s.alt}
@@ -83,18 +83,18 @@ export default function FlowStrip({
               height={s.height}
               sizes="(min-width: 60em) 20vw, 70vw"
             />
-            {s.flag && <span className="acs-flow__flag">{s.flag}</span>}
+            {s.flag && <span className="cs-flow__flag">{s.flag}</span>}
             {i < steps.length - 1 && (
               <span
-                className={`acs-flow__link${s.carry ? ' acs-flow__link--carry' : ''}`}
+                className={`cs-flow__link${s.carry ? ' cs-flow__link--carry' : ''}`}
                 aria-hidden="true"
               >
-                {s.carry && <span className="acs-flow__carry">{s.carry}</span>}
+                {s.carry && <span className="cs-flow__carry">{s.carry}</span>}
               </span>
             )}
           </div>
 
-          <p className="acs-flow__note">{s.note}</p>
+          <p className="cs-flow__note">{s.note}</p>
         </li>
       ))}
     </ol>

@@ -8,8 +8,8 @@ import Reveal from '@/components/lucid/Reveal'
 import CompareStage from '@/components/lucid/CompareStage'
 import ZoomShot from '@/components/lucid/ZoomShot'
 import FinalHero from '@/components/awardco/FinalHero'
-import FlowStrip, { type FlowStep } from '@/components/awardco/FlowStrip'
-import { Iphone, Macbook } from '@/components/awardco/Devices'
+import FlowStrip, { type FlowStep } from '@/components/cs/FlowStrip'
+import { Iphone, Macbook } from '@/components/cs/Devices'
 import BigStats from '@/components/cs/BigStats'
 import Journey from '@/components/cs/Journey'
 import Callouts from '@/components/cs/Callouts'
@@ -66,7 +66,7 @@ import { SITE } from '@/lib/site'
  *   static, Awardco branding only (phone 1102:32286, desktop 1102:37132).
  *   It replaces the before/after slider, which opened the study on the old
  *   design rather than the new one. Devices are drawn in CSS by
- *   components/awardco/Devices, not composited into the PNGs, so the same
+ *   components/cs/Devices, not composited into the PNGs, so the same
  *   capture can appear framed here and bare in the brand row.
  * - Act 03 carries the brand-colour constraint: Awardco 1102:37132,
  *   Cinemark 1102:37155, Accenture 1102:37182. Desktop only, because the
@@ -299,7 +299,7 @@ export default function AwardcoCaseStudy() {
             branding and nothing else. It used to cycle three customer brands,
             which buried the point; the brand-colour range now has its own
             section in Act 03. Frames are bare captures in CSS-drawn devices
-            (components/awardco/Devices), so the hardware is real-looking
+            (components/cs/Devices), so the hardware is real-looking
             without shipping a device mockup PNG. ══ */}
         <Band className="acs-hero-band">
           <FinalHero
@@ -434,7 +434,6 @@ export default function AwardcoCaseStudy() {
                   y: 50,
                   w: 6.5,
                   h: 15,
-                  gy: 44,
                 },
                 {
                   label: '98% for SSO',
@@ -530,7 +529,6 @@ export default function AwardcoCaseStudy() {
                   y: 23,
                   w: 12.5,
                   h: 47,
-                  gy: 17,
                 },
                 {
                   label: 'Password-first, 4.6s',
@@ -539,7 +537,6 @@ export default function AwardcoCaseStudy() {
                   y: 23,
                   w: 12.5,
                   h: 47,
-                  gy: 11,
                 },
               ]}
             />
