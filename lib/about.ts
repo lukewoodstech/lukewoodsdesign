@@ -64,9 +64,10 @@ export const STORY: ReadonlyArray<StoryCard> = [
 ]
 
 /* ── The experience rail ────────────────────────────────────────────
-   Newest first. `href` is only set where a published case study exists —
-   Hoth's route is password-gated (HIDDEN_WORK in lib/work.ts), so that
-   row has none. `logo` is a tile in public/logos; where there isn't one,
+   Newest first. `href` is a published case study, or with `external`
+   the company's own site: Hoth's study is password-gated (HIDDEN_WORK
+   in lib/work.ts), so its card goes to hoth.com instead (Luke,
+   2026-09-28). `logo` is a tile in public/logos; where there isn't one,
    `mark` is the letter the tile shows and `color` its ground. */
 
 export type Role = {
@@ -87,6 +88,8 @@ export type Role = {
    */
   short: string
   href?: string
+  /** `href` leaves the site: opens in a new tab and says where it goes. */
+  external?: boolean
   logo?: string
   mark?: string
   color?: string
@@ -134,6 +137,8 @@ export const ROLES: ReadonlyArray<Role> = [
     summary:
       'Product design at an early-stage encrypted work platform, formerly Mention. The case study is written but password-protected while it clears review.',
     short: 'Product design at an early-stage encrypted work platform, formerly Mention.',
+    href: 'https://hoth.com',
+    external: true,
     logo: '/logos/hoth.png',
   },
   {

@@ -135,7 +135,19 @@ export default function ExperienceTimeline({
                 </span>
                 <span className="tl-card__title">
                   <span className="tl-card__role">
-                    {r.href ? (
+                    {r.href && r.external ? (
+                      /* Off-site (Hoth's study is gated): a plain anchor
+                         in a new tab, and the label says where it goes. */
+                      <a
+                        href={r.href}
+                        className="tl-card__go"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${r.role} at ${r.company}: visit ${r.href.replace(/^https?:\/\//, '')} (opens in a new tab)`}
+                      >
+                        {r.role}
+                      </a>
+                    ) : r.href ? (
                       /* The whole card is this one link — its ::after
                          stretches over the card (see .tl-card__go). */
                       <Link
