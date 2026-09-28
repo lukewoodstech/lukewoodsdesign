@@ -313,7 +313,8 @@ export const REPTILE_STATS: ReadonlyArray<RoomStat> = [
 ]
 
 export type RoomShot = {
-  /** `null` renders the dashed slot until the photo lands. */
+  /** `null` renders the dashed slot until the photo lands (unused now;
+      the retic shots arrived 2026-09-28). */
   src: string | null
   /** With `src: null`: the file the slot is waiting for, under public/about. */
   slot?: string
@@ -361,29 +362,45 @@ export const REPTILE_ROOM: ReadonlyArray<RoomBlock> = [
       },
     ],
   },
-  /* Luke asked for these on 2026-09-28. The files aren't in the repo yet
-     (nothing under public/about or ~/Downloads matched), so they are
-     slots: drop `retic-eggs.jpg` and `incubator.jpg` into public/about,
-     set `src`, delete `slot`, and rewrite the captions in your voice.
-     Nothing here claims more than "retic eggs" and "incubator". */
+  /* Big Bertha's clutch (Luke, 2026-09-28). Every number in the lede is
+     his: a 15-foot reticulated python, 18 eggs, around $10,000 of
+     animals riding on the incubator, which he built himself from a
+     drinks fridge with fans, sensors and alerts. The point of the block
+     is the last sentence: it is where "design around the failure modes
+     first" comes from, and the case studies lean on that. Mirrored in
+     BACKGROUND.personal in lib/lukeAiFacts.ts. */
   {
     id: 'eggs',
+    lede:
+      'Big Bertha, my 15-foot reticulated python, laid 18 eggs while I was in high school. Each baby was worth real money, around $10,000 across the clutch, so I built an incubator from scratch: a drinks fridge, fans and sensors to hold heat and humidity, and alerts so I would know the moment anything drifted. A missed reading was not a bug ticket. It was a dead animal. I have designed around the failure modes first ever since.',
     shots: [
       {
-        src: null,
-        slot: 'retic-eggs.jpg',
-        alt: 'A clutch of reticulated python eggs',
-        caption: 'A clutch of retic eggs.',
-        span: 6,
-        ratio: '4 / 3',
+        src: '/about/big-bertha.jpg',
+        alt: 'Big Bertha, a pale albino reticulated python, coiled in a long enclosure with her head raised',
+        caption: 'Big Bertha. Fifteen feet, and the reason the incubator got built.',
+        span: 12,
+        ratio: '16 / 9',
       },
       {
-        src: null,
-        slot: 'incubator.jpg',
-        alt: 'The incubator the eggs were kept in',
-        caption: 'The incubator. Every animal in the room started in here.',
-        span: 6,
-        ratio: '4 / 3',
+        src: '/about/incubator-fridge.jpg',
+        alt: 'A glass-fronted Rockstar Energy Drink fridge repurposed as an incubator, with four clear tubs of eggs on perlite stacked inside',
+        caption: 'The incubator was a drinks fridge, rewired with fans, sensors and alerts.',
+        span: 4,
+        ratio: '3 / 4',
+      },
+      {
+        src: '/about/retic-eggs-tub.jpg',
+        alt: 'Five large white python eggs on a plastic grid over perlite in a clear tub, a heating panel behind them',
+        caption: 'Eggs on a grid over perlite, inside the fridge.',
+        span: 4,
+        ratio: '3 / 4',
+      },
+      {
+        src: '/about/retic-eggs-hand.jpg',
+        alt: 'Luke\u2019s hand beside four python eggs for scale, each egg longer than his palm',
+        caption: 'Bigger than they look. Eighteen of these, and no margin for a silent failure.',
+        span: 4,
+        ratio: '3 / 4',
       },
     ],
   },

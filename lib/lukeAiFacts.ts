@@ -752,6 +752,11 @@ export const BACKGROUND = {
     'Built the enclosures himself out of wood and glass rather than buying them.',
     'Bred his own mice and rats on racks he built, to feed the collection and cut the business’s largest running cost.',
     'Did his own basic veterinary work, including ultrasounds on gravid females to check a clutch before it was due.',
+    /* Luke, 2026-09-28. The $10,000 is the approximate VALUE of the
+       clutch of babies, not money earned; see PROHIBITED_PATTERNS. */
+    'His 15-foot reticulated python, Big Bertha, laid 18 eggs while he was in high school; the babies were worth around $10,000 in total.',
+    'Built the incubator for those eggs from scratch out of a drinks fridge, wiring in fans and sensors to hold heat and humidity and alerts so he would know at once if conditions drifted, because a missed reading meant a dead animal, not a bug ticket.',
+    'Says that incubator is where his habit of designing around failure modes first, instead of assuming the happy path, comes from.',
     'Taught reptile handling to whoever would listen: family, friends, and his mother’s elementary class, in person and over Zoom during remote school.',
     'His first business as a kid, before the reptiles, was walking neighbours’ dogs.',
     'Built a bike and skate ramp in the family backyard.',
@@ -797,6 +802,10 @@ export const PROHIBITED_PATTERNS: readonly ProhibitedPattern[] = [
   {
     pattern: /\$?30[,.]?000\b[^.\n]{0,20}\b(a|per|each)\s+month\b/i,
     reason: 'The reptile business figure is annual, not monthly.',
+  },
+  {
+    pattern: /\b(profit|earnings?|earned|made|income|revenue|sold\s+for)\b[^.\n]{0,40}\$?10[,.]?000\b|\$?10[,.]?000\b[^.\n]{0,40}\b(profit|earnings?|earned|income|revenue)\b/i,
+    reason: 'The $10,000 is the approximate value of the retic clutch, never money earned or sold.',
   },
   {
     pattern: /\bdaily\s+users?\b/i,
