@@ -22,7 +22,6 @@ import {
   Col,
   GhostCard,
   H3,
-  Ico,
   KeyQuestion,
   MetaGrid,
   MonoLabel,
@@ -782,9 +781,6 @@ export default function PatternCaseStudy() {
         <Band dust>
           <Col>
             <Reveal className="cs-centered">
-              <div className="cs-spark" aria-hidden="true">
-                <Ico name="users" />
-              </div>
               <p className="cs-release">
                 The starting templates came from a <strong>report-building competition</strong>{' '}
                 with brand managers and advertising strategists, not from my assumptions

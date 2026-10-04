@@ -22,7 +22,6 @@ import {
   Col,
   GhostCard,
   H3,
-  Ico,
   KeyQuestion,
   MetaGrid,
   MonoLabel,
@@ -706,9 +705,6 @@ export default function LucidCaseStudy() {
         <Band dust>
           <Col>
             <Reveal className="cs-centered">
-              <div className="cs-spark" aria-hidden="true">
-                <Ico name="rocket" />
-              </div>
               <p className="cs-release">
                 Internal users on <strong>July 20</strong>. General availability on{' '}
                 <strong>August 5</strong>, across every Lucid tier.

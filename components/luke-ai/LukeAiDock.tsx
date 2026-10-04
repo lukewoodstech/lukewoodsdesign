@@ -31,6 +31,11 @@ import LukeSprite from './LukeSprite'
  *
  * Phones keep the chip. Down there the panel is the whole screen, so
  * opening by default would be opening a page nobody asked for.
+ *
+ * Case studies keep the chip too, until someone opens it. Their heroes
+ * run the role, team, tools and skills down the right-hand column, and an
+ * open panel sat on top of exactly that. Once a visitor opens or closes
+ * the panel themselves, that choice wins everywhere.
  */
 
 /* /chat IS this conversation, maximized. A dock on top of it would be the
@@ -48,14 +53,22 @@ const noopSubscribe = () => () => {}
    between the two keeps the chip. */
 const OPENS_ITSELF = '(min-width: 60em)'
 
+/* Pages where the panel waits to be asked for. */
+const STARTS_CLOSED_ON = ['/work']
+
 export default function LukeAiDock() {
   const pathname = usePathname()
   /* Read once, on mount. The dock lives in the layout and is never
      remounted, so a close survives every client-side navigation after
      it, and a visitor who puts the panel away keeps it away. */
-  const [open, setOpen] = useState(
+  const [wide] = useState(
     () => typeof window !== 'undefined' && window.matchMedia(OPENS_ITSELF).matches,
   )
+  /* null until the visitor opens or closes it; after that their choice
+     replaces the default on every page. */
+  const [choice, setChoice] = useState<boolean | null>(null)
+  const startsClosed = STARTS_CLOSED_ON.some((p) => pathname === p || pathname.startsWith(`${p}/`))
+  const open = choice ?? (wide && !startsClosed)
 
   /* Nothing renders on the server. The chip is a control and nothing
      else: without JS it would sit in the corner doing nothing, so it
@@ -72,7 +85,7 @@ export default function LukeAiDock() {
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false)
+      if (e.key === 'Escape') setChoice(false)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -84,13 +97,13 @@ export default function LukeAiDock() {
     <div className={`ai-dock${open ? ' is-open' : ''}`}>
       {open ? (
         <div className="ai-dock__panel">
-          <LukeAiCard onClose={() => setOpen(false)} />
+          <LukeAiCard onClose={() => setChoice(false)} />
         </div>
       ) : (
         <button
           type="button"
           className="ai-dock__chip"
-          onClick={() => setOpen(true)}
+          onClick={() => setChoice(true)}
           aria-label="Open Luke AI"
         >
           <span className="ai-dock__name" aria-hidden="true">

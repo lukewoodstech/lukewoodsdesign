@@ -499,6 +499,8 @@ const PATHS: Record<IcoName, ReactNode> = {
 export function Ico({ name, className = '' }: { name: IcoName; className?: string }) {
   return (
     <svg
+      width="20"
+      height="20"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"

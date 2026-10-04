@@ -1840,7 +1840,7 @@ p a {
   appearance: none;
   border: none;
   background: transparent;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.72);
   font-family: var(--font-sans);
   font-size: var(--label-size);
   font-weight: 600;
@@ -2178,50 +2178,17 @@ p a {
 
 /* ────────────────────────────────────────────────────────────────────────────
    Awardco + Pattern (.acs / .pcs) — overrides for the shared lcs-* mechanics.
-   Their Before/After toggles need to read as controls, not whispers. Colors
-   come from --accent, so each page keeps its own. */
+   Colors come from --accent, so each page keeps its own. */
 
-/* Both options must read as buttons at rest — the inherited pill row hid the
-   unselected label until you hovered it, so the control didn't read as a
-   toggle at all. Each segment gets its own visible box; the active one fills
-   with the page's accent. */
-.acs .lcs-seg,
-.pcs .lcs-seg {
-  display: flex;
-  width: 100%;
-  max-width: 340px;
-  gap: 6px;
-  padding: 5px;
-  border-color: rgba(255, 255, 255, 0.28);
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.acs .lcs-seg__btn,
-.pcs .lcs-seg__btn {
-  flex: 1;
-  text-align: center;
-  font-size: var(--reading-meta);
-  padding: 0.7em 1.25em;
-  color: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 999px;
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-}
-
-.acs .lcs-seg__btn:hover,
-.pcs .lcs-seg__btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-}
-
+/* The toggle is the same compact pill row on all three case studies. These
+   two pages used to carry a wider, boxed version, which made the same
+   control look like a different component next to Lucid's. All that stays
+   is the label colour: dark ink reads on Lucid's orange, not on blue. */
 .acs .lcs-seg__btn[aria-pressed='true'],
 .acs .lcs-seg__btn[aria-selected='true'],
 .pcs .lcs-seg__btn[aria-pressed='true'],
 .pcs .lcs-seg__btn[aria-selected='true'] {
-  background: var(--accent);
-  border-color: var(--accent);
   color: #fff;
-  font-weight: 600;
 }
 
 /* Awardco (2026-09-16 rewrite): three metric tiles, not four. One row on
