@@ -47,8 +47,14 @@ export async function generateMetadata({
   const cs = getCaseStudy(slug)
   if (!cs) return {}
 
-  // Unwritten studies fall back to the site blurb rather than shipping "[One-sentence tagline: …]"
-  const description = real(cs.tagline) ?? real(cs.summary) ?? SITE.description
+  // Unwritten studies fall back to the site blurb rather than shipping
+  // "[One-sentence tagline: …]". Gated studies fall back to it too: the
+  // page serves a lock screen, and a link preview that quotes the tagline
+  // would be the one place the locked copy leaks (Linear's unfurl of
+  // /work/pitch showed exactly that).
+  const description = PROTECTED_SLUGS.has(cs.slug)
+    ? SITE.description
+    : (real(cs.tagline) ?? real(cs.summary) ?? SITE.description)
   const title = pageTitle(cs.title, cs.company)
 
   return {
