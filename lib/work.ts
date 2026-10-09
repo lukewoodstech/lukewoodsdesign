@@ -49,14 +49,26 @@ export const ALL_WORK: ReadonlyArray<WorkItem> = [
     file: 'hoth.tsx',
     href: '/work/hoth',
   },
+  {
+    slug: 'pitch',
+    label: '05 · pitch',
+    title: 'pitch',
+    nav: 'pitch',
+    file: 'pitch.tsx',
+    href: '/work/pitch',
+  },
 ]
 
 /*
  * Studies not ready to show. A slug here drops the tile from both home
  * layouts and the nav, and the canvas strip shortens to match; the route
- * itself stays (Hoth's is password-gated). Delete the slug to bring it back.
+ * itself stays (Hoth's and Pitch's are password-gated). Delete the slug to
+ * bring it back.
+ *
+ * Pitch is the live one: the study grows while the company is being built,
+ * so it stays hidden and gated until there is enough to show in public.
  */
-export const HIDDEN_WORK: ReadonlySet<string> = new Set(['hoth'])
+export const HIDDEN_WORK: ReadonlySet<string> = new Set(['hoth', 'pitch'])
 
 export const WORK: ReadonlyArray<WorkItem> = ALL_WORK.filter((w) => !HIDDEN_WORK.has(w.slug))
 

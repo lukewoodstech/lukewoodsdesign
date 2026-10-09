@@ -261,6 +261,70 @@ export const caseStudies: CaseStudy[] = [
     ],
     nextSlug: 'pattern-custom-reports',
   },
+  {
+    /*
+     * A living study. Pitch is being built right now, and this page is
+     * written alongside it rather than reconstructed afterwards — hidden
+     * (HIDDEN_WORK) and password-gated (PROTECTED_SLUGS) until it is ready
+     * to be seen, and the home canvas is left alone until then.
+     *
+     * House rules for this entry, which future edits keep:
+     * - Impact first, few words. Each beat is what changed and why it
+     *   mattered, in one or two sentences. If a line needs a third, cut it.
+     * - No pilot customer names, pilot figures or product screenshots until
+     *   Braden and Braxton have seen them here. Public positioning
+     *   (usepitch.app) is fine to repeat.
+     * - Role and dates follow the résumé; `period` stays open-ended.
+     * - Out of the prev/next chain on purpose (no nextSlug, nothing points
+     *   here), so public studies never link to a locked door.
+     * - Luke AI knows nothing about Pitch yet (lib/lukeAiFacts.ts). That is
+     *   deliberate: the truth layer gets Pitch when the study is promoted.
+     */
+    slug: 'pitch',
+    title: 'Building Pitch',
+    company: 'Pitch',
+    accent: '#c9937d',
+    role: 'CTO',
+    period: 'Sep 2026 – present',
+    summary: 'An AI coach for reps who sell face to face.',
+    headline: [
+      'Recording to coaching, shipped to a live pilot',
+      'Marketing site rebuilt and live in three days',
+      'Every PR tested and reviewed, across six repos',
+    ],
+    tagline:
+      'A wearable mic hears every live sales pitch. Pitch turns it into stats and coaching for the rep and the manager. I design it and build it.',
+    overview:
+      'Pitch is a three-person startup. I own design and engineering: the phone app reps record with, the manager console, the audio pipeline behind both, and the website that brings customers in.',
+    problemPoints: [
+      'Sales teams have years of records and have never heard the conversation before each one',
+      'Reps will not log anything, so every number has to come from the mic',
+      'A product that listens all day gets sabotaged the moment it feels like surveillance',
+    ],
+    process: [
+      {
+        heading: 'Made recording something a rep can trust',
+        body: 'Capture now survives a locked phone, the record bar says what it is doing in one line, and a door closes on the room’s real noise level instead of a fixed threshold.',
+      },
+      {
+        heading: 'Built the way in',
+        body: 'Owner signs up on the web, invites a manager, the manager invites reps, and a rep is recording on their own phone with no one from Pitch in the loop.',
+      },
+      {
+        heading: 'Shipped the front door',
+        body: 'Rebuilt the marketing site for everyone who sells face to face and put it live in three days, with a demo request that lands in our CRM and books a real call.',
+      },
+      {
+        heading: 'Made the stack safe to move fast',
+        body: 'Tests, typecheck and an AI review on every pull request, a row-level-security suite, and one shipped log so decisions outlive the chat that made them.',
+      },
+    ],
+    outcomes: [
+      'A pilot team records, uploads and sees coaching without touching anything but the record button',
+      'Managers see their own team by default, and the owner sets up the company once',
+      'The public site, demo funnel and pilot onboarding went live within two weeks of my first commit',
+    ],
+  },
 ]
 
 export function getCaseStudy(slug: string): CaseStudy | undefined {
