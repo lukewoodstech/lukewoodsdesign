@@ -6245,8 +6245,7 @@ p a {
    for the why. Words blur in on arrival; hovering a hot word lights it,
    deals its decorations out around the sentence (photos, icons, or stat
    chips), swaps the subline, and rolls the ending over letter by letter.
-   Nothing else in the sentence reacts. A blue "hover me" tag rides the
-   pointer until a hot word has been found once.
+   Nothing else in the sentence reacts.
    ════════════════════════════════════════════════════════════════ */
 
 .hero-intro {
@@ -6652,93 +6651,6 @@ p a {
 @media (max-width: 47.99em) {
   .hero-sub {
     font-size: 0.8125rem;
-  }
-}
-
-/* ── The "hover me" tag ── */
-
-/* ── The hint: pixel Luke leans in from the foot of the first screen ──
-   Scenery, never a control: nothing here takes a pointer. He sits at the
-   bottom-left so he never lands on the sentence, and slides out of frame
-   when he's done. */
-
-.hero-peek {
-  position: absolute;
-  left: clamp(1rem, 5vw, 5rem);
-  bottom: 0;
-  z-index: 2;
-  display: flex;
-  align-items: flex-end;
-  gap: 0.5rem;
-  pointer-events: none;
-  opacity: 0;
-  transform: translateY(24%);
-  transition: opacity 0.35s ease, transform 0.5s var(--ease-out-quint);
-}
-
-.hero-peek.is-on {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* 2 css px per sprite pixel: whole multiples only, or the pixels blur. */
-.hero-peek__face {
-  display: block;
-  width: 128px;
-  height: 112px;
-  /* Cropped at the bottom edge: he's leaning in, not floating. */
-  margin-bottom: -28px;
-}
-
-/* The speech bubble: terminal furniture, sharp corners, the site blue. */
-.hero-peek__say {
-  margin: 0 0 2.6rem;
-  padding: 0.35rem 0.6rem;
-  border: 1px solid rgba(0, 143, 255, 0.55);
-  border-radius: 4px;
-  background: #101010;
-  font-family: var(--font-mono);
-  font-size: var(--label-size);
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-  color: var(--mono-blue);
-}
-
-.hero-peek__up {
-  margin-left: 0.35rem;
-  opacity: 0.8;
-}
-
-/* A pointer hovers, a finger taps: only one of these is ever true. */
-.hero-peek__say-tap {
-  display: none;
-}
-
-@media (hover: none) {
-  .hero-peek__say-hover {
-    display: none;
-  }
-
-  .hero-peek__say-tap {
-    display: inline;
-  }
-}
-
-/* No room beside the sentence on a phone: he tucks into the corner. */
-@media (max-width: 47.99em) {
-  .hero-peek {
-    left: 0.75rem;
-    gap: 0.35rem;
-  }
-
-  .hero-peek__face {
-    width: 96px;
-    height: 84px;
-    margin-bottom: -22px;
-  }
-
-  .hero-peek__say {
-    margin-bottom: 2rem;
   }
 }
 

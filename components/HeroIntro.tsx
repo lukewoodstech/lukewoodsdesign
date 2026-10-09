@@ -17,7 +17,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { SITE, INTRO } from '@/lib/site'
 import { STORY } from '@/lib/about'
 import { useReducedMotion } from '@/lib/useReducedMotion'
-import HeroPeek from '@/components/HeroPeek'
 
 /*
  * The hero intro (2026-09-21), after the opening of
@@ -58,11 +57,10 @@ import HeroPeek from '@/components/HeroPeek'
  * that word for as long as it lasts, and the cycle carries on from there
  * afterwards. Under reduced motion nothing turns over on its own.
  *
- * Nothing marks the hot words, so pixel Luke (HeroPeek) leans in from
- * the foot of the screen a few seconds in and says "hover me" — up to
- * three times, and never again once a word has been opened. Touch
- * devices toggle a mode by tapping the word, and he says "tap me"
- * there. Keyboard focus on a word opens its mode too.
+ * Nothing marks the hot words and nothing points at them: they are
+ * there to be found. (Pixel Luke used to lean in and say "hover me";
+ * Luke cut the hint on 2026-10-05.) Touch devices toggle a mode by
+ * tapping the word. Keyboard focus on a word opens its mode too.
  *
  * The first screen of the homepage (Home), at every width.
  */
@@ -111,7 +109,6 @@ const WORD_COUNT = LINES.flat().length
 
 /* What assistive tech reads: the resting sentence, once. */
 const SENTENCE = `${SITE.name} is a creative & impact-driven ${TAILS.rest}`
-export const TIP_SEEN_KEY = 'hero-tip-seen'
 
 /*
  * Where a decoration sits. `y` is a percentage of a box drawn around the
@@ -396,12 +393,6 @@ export default function HeroIntro() {
      sentence. */
   const [auto, setAuto] = useState<Mode>('impact')
   const state: State = mode ?? auto
-  /* Whether the hot words have been found this session. The ref is the
-     one the pointer handlers read; the state is what silences the peek,
-     and it only ever flips inside an event, never in an effect. */
-  const seenRef = useRef(false)
-  const [seen, setSeen] = useState(false)
-
   /* The cycle: paused while a word is hovered, and restarted from that
      word's role when the hover ends, so the ending never rolls away the
      instant the pointer leaves. */
@@ -421,22 +412,14 @@ export default function HeroIntro() {
    * For a few hours on 2026-09-22 a hoverless screen opened its own
    * modes on the cycle, on the reasoning that a phone otherwise never
    * finds the words. Luke's call on seeing it: the clean sentence is
-   * better and the decorations stay behind the tap. Pixel Luke is the
-   * one who says they are there — that is his whole job — so the
-   * sentence rests at every width, as designed.
+   * better and the decorations stay behind the tap, so the sentence
+   * rests at every width, as designed.
    */
   const shown: Mode | null = mode
 
   const open = (m: Mode) => {
     setMode(m)
     setAuto(m)
-    setSeen(true)
-    if (!seenRef.current) {
-      seenRef.current = true
-      try {
-        sessionStorage.setItem(TIP_SEEN_KEY, '1')
-      } catch {}
-    }
   }
 
   /*
@@ -604,7 +587,6 @@ export default function HeroIntro() {
       {/* Pixel Luke only asks you to find the words where finding them
           is the point. On a phone the sentence is already showing what
           they do, so `shown` silences him without a rule of his own. */}
-      <HeroPeek silenced={seen || shown !== null} />
     </div>
   )
 }
