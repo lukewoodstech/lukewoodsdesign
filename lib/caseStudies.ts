@@ -304,7 +304,7 @@ export const caseStudies: CaseStudy[] = [
     process: [
       {
         heading: 'Made recording something a rep can trust',
-        body: 'Capture now survives a locked phone, the record bar says what it is doing in one line, and a door closes on the room’s real noise level instead of a fixed threshold.',
+        body: 'Capture now survives a locked phone, one record control starts it from any screen, and a door closes on the room’s real noise level instead of a fixed threshold.',
       },
       {
         heading: 'Built the way in',
