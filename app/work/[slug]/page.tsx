@@ -10,7 +10,8 @@ import SiteNav from '@/components/SiteNav'
 import ZoomShot from '@/components/lucid/ZoomShot'
 import ScreenCarousel from '@/components/ScreenCarousel'
 import { Bullets } from '@/components/CaseStudy'
-import { Act, Band, Block, Checklist, Col, H3, MetaGrid, StoryTitle, type Fact } from '@/components/cs/Story'
+import BigStats from '@/components/cs/BigStats'
+import { Act, Band, Block, Checklist, Col, H3, MetaGrid, Pill, StoryTitle, type Fact } from '@/components/cs/Story'
 import {
   getCaseStudy,
   caseStudies,
@@ -265,6 +266,28 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
             </Col>
           </Band>
         ) : null}
+
+        {/* ══ At a glance ══ */}
+        {cs.glance && cs.glance.length > 0 && (
+          <Col wide>
+            <Block className="cs-centered">
+              <Pill>The project at a glance</Pill>
+              <BigStats
+                small
+                stats={cs.glance.map((g) => ({
+                  value: g.value,
+                  suffix: g.suffix,
+                  caption: (
+                    <>
+                      <strong>{g.lead}</strong>
+                      {g.rest && <> {g.rest}</>}
+                    </>
+                  ),
+                }))}
+              />
+            </Block>
+          </Col>
+        )}
 
         {/* ══ The problem ══ */}
         {(real(cs.problemIntro) || problemPoints.length > 0) && (

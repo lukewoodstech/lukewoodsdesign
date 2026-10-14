@@ -84,6 +84,12 @@ export type CaseStudy = {
    * 2026-10-14: "take out the whole PR and timeline thing").
    */
   hideTimeline?: boolean
+  /*
+   * "The project at a glance": the big-number row under the hero, as on the
+   * bespoke studies. `lead` is the bold start of the caption, `rest` the
+   * plain words after it.
+   */
+  glance?: { value: number | string; suffix?: string; lead: string; rest?: string }[]
   nextSlug?: string
 }
 
@@ -422,6 +428,13 @@ export const caseStudies: CaseStudy[] = [
     heroCaption: 'The nametag, assembled and apart: copper nameplate, titanium frame, and the core with two mics',
     // The renders' own ground, sampled from the composite's left and right edges.
     heroGround: '#e2e0d8',
+    // Product facts only: pilot figures stay off the page (Luke, 2026-10-14).
+    glance: [
+      { value: 4, lead: 'products', rest: 'built, from the nametag to the admin console' },
+      { value: 2, lead: 'beamforming mics', rest: 'in the nametag' },
+      { value: 12, suffix: 'h', lead: 'battery', rest: 'per charge' },
+      { value: 3, lead: 'people', rest: 'on the team' },
+    ],
     nextSlug: 'lucid-ai',
   },
 ]
