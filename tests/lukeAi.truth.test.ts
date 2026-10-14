@@ -271,7 +271,7 @@ test('routeActions: point at the right case studies', () => {
 test('site description is the grounded line and the layout uses it', () => {
   assert.equal(
     SITE.description,
-    'Product designer combining research, systems thinking, and code to ship useful products across Lucid, Awardco, and Pattern.',
+    'Product designer combining research, systems thinking, and code to ship useful products: Pitch, Lucid, Awardco, and Pattern.',
   )
   /* The description may only name work a visitor can actually open. Hoth is
      hidden and gated, so naming it here pointed the site's widest-reaching

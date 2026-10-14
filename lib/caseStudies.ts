@@ -205,7 +205,8 @@ export const caseStudies: CaseStudy[] = [
         caption: 'Final in-report design — multi-metric comparison with color customization',
       },
     ],
-    nextSlug: 'hoth',
+    // Pitch, not Hoth: Hoth is still gated, and a public study must never link to a locked door.
+    nextSlug: 'pitch',
   },
   {
     slug: 'hoth',
@@ -304,11 +305,10 @@ export const caseStudies: CaseStudy[] = [
   {
     /*
      * A living study. Pitch is being built right now, and this page is
-     * written alongside it rather than reconstructed afterwards. Since
-     * 2026-10-14 (LUK-122) it has a tile on the home canvas, so a visitor
-     * can see that Pitch exists; the page itself stays password-gated
-     * (PROTECTED_SLUGS) until it is ready to be seen, and that is also
-     * where Braden and Braxton see each screenshot before it goes public.
+     * written alongside it rather than reconstructed afterwards. It was
+     * password-gated from 2026-10-09 (LUK-76) until Luke promoted it on
+     * 2026-10-14 (LUK-77); it has had a tile on the home canvas since
+     * LUK-122 the same day.
      *
      * House rules for this entry, which future edits keep:
      * - Impact first, few words. Each beat is what changed and why it
@@ -422,6 +422,7 @@ export const caseStudies: CaseStudy[] = [
     heroCaption: 'The nametag, assembled and apart: copper nameplate, titanium frame, and the core with two mics',
     // The renders' own ground, sampled from the composite's left and right edges.
     heroGround: '#e2e0d8',
+    nextSlug: 'lucid-ai',
   },
 ]
 

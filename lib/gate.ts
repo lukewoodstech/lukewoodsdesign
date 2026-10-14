@@ -13,5 +13,6 @@ export const UNLOCK_COOKIE = 'cs_unlocked'
  */
 export const UNLOCK_HINT_COOKIE = 'cs_unlocked_hint'
 
-/** Studies that render the gate instead of the article until unlocked. */
-export const PROTECTED_SLUGS = new Set(['hoth', 'pitch'])
+/** Studies that render the gate instead of the article until unlocked.
+    Pitch left this set on 2026-10-14 (LUK-77): Luke promoted it. */
+export const PROTECTED_SLUGS = new Set(['hoth'])

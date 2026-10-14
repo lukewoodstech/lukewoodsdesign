@@ -19,7 +19,7 @@ export const SITE = {
    * description promises exactly what the site delivers.
    */
   description:
-    'Product designer combining research, systems thinking, and code to ship useful products across Lucid, Awardco, and Pattern.',
+    'Product designer combining research, systems thinking, and code to ship useful products: Pitch, Lucid, Awardco, and Pattern.',
   email: 'lukewoodstech@gmail.com',
   linkedin: 'https://www.linkedin.com/in/lukewoodstech',
   /*

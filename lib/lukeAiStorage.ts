@@ -227,12 +227,16 @@ export function forApi(messages: Message[]) {
 
 /*
  * Real site routes only. The case studies with public pages are the three
- * bespoke ones; Hoth is password-gated and its tile hidden, so it gets no
- * action. Matches are on the company name as the answer would write it.
+ * bespoke ones and Pitch (public since 2026-10-14); Hoth is password-gated
+ * and its tile hidden, so it gets no action. Matches are on the company
+ * name as the answer would write it.
  */
 export type RouteAction = { label: string; href: string }
 
 const ROUTES: ReadonlyArray<{ test: RegExp; href: string; label: string }> = [
+  /* "pitch" is the product's own noun (a sales pitch), so the company only
+     counts capitalised, like Pattern below. */
+  { test: /\bPitch\b/, href: '/work/pitch', label: 'read the Pitch case study' },
   { test: /\blucid\b/i, href: '/work/lucid-ai', label: 'read the Lucid case study' },
   {
     test: /\bawardco\b/i,
@@ -256,6 +260,7 @@ export function routeActions(body: string): RouteAction[] {
    showing nothing — still keyed to what the answer talked about. */
 export function fallbackFollowups(body: string): string[] {
   const out: string[] = []
+  if (/\bPitch\b/.test(body)) out.push('What do you own at Pitch?')
   if (/\bLucid\b/.test(body)) out.push('What shipped at Lucid in 12 weeks?')
   if (/\bAwardco\b/i.test(body)) out.push('What was validated before the Awardco handoff?')
   if (/\bPattern\b/.test(body)) out.push('What tradeoff did you make at Pattern?')

@@ -2,12 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import GateModal from './GateModal'
 import TileFooter from './TileFooter'
-import { unlockCaseStudy } from '@/app/work/[slug]/actions'
-import { UNLOCK_HINT_COOKIE } from '@/lib/gate'
-import { getCaseStudy } from '@/lib/caseStudies'
 import { useEnterToOpen } from '@/lib/useEnterToOpen'
 
 /*
@@ -26,36 +21,23 @@ import { useEnterToOpen } from '@/lib/useEnterToOpen'
  * tile's .phone chrome; its size and position are its own (.pitch-phone
  * in globals.css), and the print is .pitch-plate.
  *
- * The study behind the tile is password-gated, like Hoth's: a click asks
- * for the password in place, and once the unlock cookie is set (readable
- * via its hint twin) the tile navigates like any other.
+ * The study was password-gated like Hoth's until 2026-10-14 (LUK-77);
+ * the card is a plain link now, the title's stretched link in TileFooter.
  */
 
 const STAGE_LABEL =
   'A phone showing the Pitch rep app: a feed of doors from yesterday, each with its score, a play button ringed in its score colour, and one line of coaching. Behind it, a print of the Pitch nametag, a brushed copper plate engraved with the word pitch'
 
 export default function PitchTile() {
-  const router = useRouter()
   const [hovered, setHovered] = useState(false)
-  const [gateOpen, setGateOpen] = useState(false)
 
-  const openStudy = () => {
-    if (document.cookie.split('; ').some((c) => c.startsWith(`${UNLOCK_HINT_COOKIE}=1`))) {
-      router.push('/work/pitch')
-    } else {
-      setGateOpen(true)
-    }
-  }
-
-  useEnterToOpen(hovered && !gateOpen, openStudy)
+  useEnterToOpen(hovered, '/work/pitch')
 
   return (
     <div
       className="workgrid__item"
-      style={{ cursor: 'pointer' }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={openStudy}
     >
       <div className="tile-stage tile-stage--pitch">
         {/* Dark overlay — behind the phone, dims the render on hover */}
@@ -90,14 +72,6 @@ export default function PitchTile() {
         hovered={hovered}
       />
 
-      <GateModal
-        open={gateOpen}
-        onClose={() => setGateOpen(false)}
-        slug="pitch"
-        company={getCaseStudy('pitch')?.company ?? 'Pitch'}
-        title={getCaseStudy('pitch')?.title ?? 'Pitch'}
-        action={unlockCaseStudy}
-      />
     </div>
   )
 }
