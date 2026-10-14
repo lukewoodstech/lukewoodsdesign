@@ -4,6 +4,7 @@ import LucidTile from './LucidTile'
 import AwardcoMobileTile from './AwardcoMobileTile'
 import PatternTile from './PatternTile'
 import HothTile from './HothTile'
+import PitchTile from './PitchTile'
 
 /*
  * The ordered list of work tiles with their layer labels, for the homepage.
@@ -27,6 +28,7 @@ const TILE_ART: Record<string, ReactNode> = {
   awardco: <AwardcoMobileTile />,
   pattern: <PatternTile />,
   hoth: <HothTile />,
+  pitch: <PitchTile />,
 }
 
 export const WORK_TILES: ReadonlyArray<WorkItem & { tile: ReactNode }> = WORK.map((item) => ({

@@ -1,6 +1,8 @@
 export type ProcessStep = {
   heading: string
   body: string
+  /** A figure shown right under this step, for a study whose beats are things to look at. */
+  figure?: Figure
 }
 
 export type Figure = {
@@ -44,6 +46,13 @@ export type CaseStudy = {
   heroCaption?: string
   problemFigure?: Figure
   processFigures?: Figure[]
+  /*
+   * The three section labels, for a study whose shape is not
+   * problem/process/outcome. The template's defaults are "Problem",
+   * "Process" and "Outcome"; Pitch, which is being built rather than
+   * looked back on, says "Why", "What we are building" and "Where it stands".
+   */
+  eyebrows?: { problem?: string; process?: string; outcome?: string }
   nextSlug?: string
 }
 
@@ -264,59 +273,78 @@ export const caseStudies: CaseStudy[] = [
   {
     /*
      * A living study. Pitch is being built right now, and this page is
-     * written alongside it rather than reconstructed afterwards — hidden
-     * (HIDDEN_WORK) and password-gated (PROTECTED_SLUGS) until it is ready
-     * to be seen, and the home canvas is left alone until then.
+     * written alongside it rather than reconstructed afterwards. Since
+     * 2026-10-14 (LUK-122) it has a tile on the home canvas, so a visitor
+     * can see that Pitch exists; the page itself stays password-gated
+     * (PROTECTED_SLUGS) until it is ready to be seen, and that is also
+     * where Braden and Braxton see each screenshot before it goes public.
      *
      * House rules for this entry, which future edits keep:
      * - Impact first, few words. Each beat is what changed and why it
      *   mattered, in one or two sentences. If a line needs a third, cut it.
-     * - No pilot customer names, pilot figures or product screenshots until
-     *   Braden and Braxton have seen them here. Public positioning
-     *   (usepitch.app) is fine to repeat.
+     * - No pilot customer names or pilot figures. Product screens are fine
+     *   here because the gate holds them; public positioning (usepitch.app)
+     *   is fine to repeat anywhere.
      * - Role and dates follow the résumé; `period` stays open-ended.
      * - Out of the prev/next chain on purpose (no nextSlug, nothing points
      *   here), so public studies never link to a locked door.
      * - Luke AI knows nothing about Pitch yet (lib/lukeAiFacts.ts). That is
      *   deliberate: the truth layer gets Pitch when the study is promoted.
+     * - The figures: the nametag renders are the marketing site's own
+     *   (marketing-v2/public/sequence), the app screen is the simulator on
+     *   the Private look (LUK-119), and the site shot is usepitch.app live.
      */
     slug: 'pitch',
     title: 'Building Pitch',
     company: 'Pitch',
-    accent: '#c9937d',
+    // Cornflower, the brand accent locked 2026-10-13 (LUK-119).
+    accent: '#4c7be8',
     role: 'CTO',
     period: 'Sep 2026 – present',
-    summary: 'An AI coach for reps who sell face to face.',
+    summary: 'A nametag mic and an AI coach for reps who sell face to face.',
     headline: [
-      'Recording to coaching, shipped to a live pilot',
+      'Live with a pilot team',
+      'App, console, pipeline and site, designed and built by me',
       'Marketing site rebuilt and live in three days',
-      'Every PR tested and reviewed, across six repos',
     ],
     tagline:
-      'A wearable mic hears every live sales pitch. Pitch turns it into stats and coaching for the rep and the manager. I design it and build it.',
+      'A nametag mic hears every live sales pitch. Pitch scores it and coaches the rep. I design it and build it.',
     overview:
       'Pitch is a three-person startup. I own design and engineering: the phone app reps record with, the manager console, the audio pipeline behind both, and the website that brings customers in.',
+    eyebrows: { problem: 'Why', process: 'What we are building', outcome: 'Where it stands' },
     problemPoints: [
-      'Sales teams have years of records and have never heard the conversation before each one',
+      'Sales teams keep years of records and have never heard the conversation behind any of them',
       'Reps will not log anything, so every number has to come from the mic',
       'A product that listens all day gets sabotaged the moment it feels like surveillance',
     ],
     process: [
       {
-        heading: 'Made recording something a rep can trust',
-        body: 'Capture now survives a locked phone, the record bar says what it is doing in one line, and a door closes on the room’s real noise level instead of a fixed threshold.',
+        heading: 'The nametag',
+        body: 'A copper nameplate on a titanium frame, with two beamforming mics and a 12-hour battery in the core. It clips to a shirt and looks like exactly what it is.',
       },
       {
-        heading: 'Built the way in',
-        body: 'Owner signs up on the web, invites a manager, the manager invites reps, and a rep is recording on their own phone with no one from Pitch in the loop.',
+        heading: 'The rep app',
+        body: 'Recording survives a locked phone and a noisy street. Every door lands in a feed with its score, its recording and one line on what to do next.',
+        figure: {
+          src: '/work/pitch/app-feed.png',
+          caption: 'The feed: every door, its score, the recording, and one line of coaching',
+        },
       },
       {
-        heading: 'Shipped the front door',
-        body: 'Rebuilt the marketing site for everyone who sells face to face and put it live in three days, with a demo request that lands in our CRM and books a real call.',
+        heading: 'The manager console',
+        body: 'Managers see their own team by default: who is improving, who needs coaching, and the recording behind every number.',
       },
       {
-        heading: 'Made the stack safe to move fast',
-        body: 'Tests, typecheck and an AI review on every pull request, a row-level-security suite, and one shipped log so decisions outlive the chat that made them.',
+        heading: 'The site',
+        body: 'Rebuilt usepitch.app for everyone who sells face to face and put it live in three days, with a demo request that lands in our CRM and books a real call.',
+        figure: {
+          src: '/work/pitch/site-hero.png',
+          caption: 'usepitch.app: the nametag is the hero, and every button books a demo',
+        },
+      },
+      {
+        heading: 'My role',
+        body: 'Design and engineering end to end: the screens, the code behind them, tests and review on every pull request, and one shipped log so three people stay in step.',
       },
     ],
     outcomes: [
@@ -324,6 +352,8 @@ export const caseStudies: CaseStudy[] = [
       'Managers see their own team by default, and the owner sets up the company once',
       'The public site, demo funnel and pilot onboarding went live within two weeks of my first commit',
     ],
+    heroSrc: '/work/pitch/nametag.png',
+    heroCaption: 'The nametag, assembled and apart: copper nameplate, titanium frame, and the core with two mics',
   },
 ]
 

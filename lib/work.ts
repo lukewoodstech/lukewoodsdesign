@@ -43,7 +43,7 @@ export const ALL_WORK: ReadonlyArray<WorkItem> = [
   },
   {
     slug: 'hoth',
-    label: '04 · hoth',
+    label: '05 · hoth',
     title: 'hoth',
     nav: 'hoth',
     file: 'hoth.tsx',
@@ -51,7 +51,7 @@ export const ALL_WORK: ReadonlyArray<WorkItem> = [
   },
   {
     slug: 'pitch',
-    label: '05 · pitch',
+    label: '04 · pitch',
     title: 'pitch',
     nav: 'pitch',
     file: 'pitch.tsx',
@@ -65,10 +65,12 @@ export const ALL_WORK: ReadonlyArray<WorkItem> = [
  * itself stays (Hoth's and Pitch's are password-gated). Delete the slug to
  * bring it back.
  *
- * Pitch is the live one: the study grows while the company is being built,
- * so it stays hidden and gated until there is enough to show in public.
+ * Pitch left this set on 2026-10-14 (LUK-122): it has a tile now, so the
+ * canvas says Pitch exists, while the study behind it stays gated
+ * (lib/gate.ts) until it is promoted (LUK-77). The labels are numbered by
+ * what shows: Pitch is the fourth card, so Hoth, still hidden, took 05.
  */
-export const HIDDEN_WORK: ReadonlySet<string> = new Set(['hoth', 'pitch'])
+export const HIDDEN_WORK: ReadonlySet<string> = new Set(['hoth'])
 
 export const WORK: ReadonlyArray<WorkItem> = ALL_WORK.filter((w) => !HIDDEN_WORK.has(w.slug))
 

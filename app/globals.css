@@ -739,6 +739,41 @@ p a {
 }
 
 /*
+ * Pitch. The stage IS the product shot: the marketing site's render of the
+ * assembled nametag, on the render's own warm grey (#DEDBD3, SEQUENCE_BG in
+ * marketing-v2/lib/sequence.ts) as the fallback behind it. Covered, not
+ * fitted: the render carries a vignette, so sizing it smaller than the
+ * stage left its edge as a visible band against the flat colour, and
+ * zooming it cropped the plate. At cover the plate spans the middle two
+ * thirds of a wide stage and the phone sits over its blank right end;
+ * pinned left for the narrow phone stage, where cover crops the sides.
+ * The scrim is
+ * lighter still than the other brands': this ground is pale, and at 0.46 a
+ * copper plate goes muddy rather than dark.
+ */
+.tile-stage--pitch {
+  --scrim: 0.34;
+  background:
+    url('/work/pitch/nametag-front.webp') 0% 50% / cover no-repeat,
+    #dedbd3;
+}
+
+/*
+ * One phone, bottom right, in front of the plate's blank end. Smaller than
+ * the Awardco trio's primary so the nametag stays the subject; it starts
+ * low enough that the stage's overflow crops the feed where the
+ * screenshot's third card begins. Two classes, because .phone below sets
+ * the same properties and comes later in this file: a single class here
+ * loses to it and the phone lands centred at the trio's primary size.
+ */
+.phone.pitch-phone {
+  --pw: min(30cqw, 46cqh);
+  top: 24cqh;
+  left: 84%;
+  box-shadow: 0 18px 44px rgba(40, 30, 20, 0.38), 0 2px 10px rgba(40, 30, 20, 0.2);
+}
+
+/*
  * The Pattern report panel, hung from the stage's bottom edge. The viewBox
  * frames the card box — 328×234 in the SVG's own units — so this element
  * and the drawn card are the same rectangle; the card itself is drawn 10

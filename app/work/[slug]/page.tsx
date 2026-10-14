@@ -198,7 +198,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
         {real(cs.overview) && <Prose className="cs-prose--intro mt-14">{cs.overview}</Prose>}
 
         {(real(cs.problemIntro) || problemPoints.length > 0) && (
-          <Section eyebrow="Problem">
+          <Section eyebrow={cs.eyebrows?.problem ?? 'Problem'}>
             {real(cs.problemIntro) && <Prose>{cs.problemIntro}</Prose>}
             {problemPoints.length > 0 && <Bullets items={problemPoints} />}
           </Section>
@@ -207,7 +207,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
         {cs.problemFigure && <Fig {...cs.problemFigure} />}
 
         {processSteps.length > 0 && (
-          <Section eyebrow="Process">
+          <Section eyebrow={cs.eyebrows?.process ?? 'Process'}>
             <div className="mt-8 space-y-8">
               {processSteps.map((step, i) => (
                 <div key={i}>
@@ -218,6 +218,10 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                     {step.heading}
                   </h3>
                   <p className="cs-prose pl-10">{step.body}</p>
+                  {/* A beat that is a thing to look at carries its picture
+                      with it, instead of all the figures piling up after
+                      the last step. */}
+                  {step.figure && <Fig {...step.figure} />}
                 </div>
               ))}
             </div>
@@ -229,7 +233,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
         ))}
 
         {outcomes.length > 0 && (
-          <Section eyebrow="Outcome">
+          <Section eyebrow={cs.eyebrows?.outcome ?? 'Outcome'}>
             <Bullets items={outcomes} />
           </Section>
         )}
