@@ -9,13 +9,13 @@ import Footer from '@/components/Footer'
 import SiteNav from '@/components/SiteNav'
 import ZoomShot from '@/components/lucid/ZoomShot'
 import ScreenCarousel from '@/components/ScreenCarousel'
-import { Section, Prose, Bullets, FactStrip } from '@/components/CaseStudy'
+import { Bullets } from '@/components/CaseStudy'
+import { Act, Band, Block, Checklist, Col, H3, MetaGrid, StoryTitle, type Fact } from '@/components/cs/Story'
 import {
   getCaseStudy,
   caseStudies,
   real,
   isPlaceholder,
-  shortTeam,
   BESPOKE_SLUGS,
 } from '@/lib/caseStudies'
 import type { Figure } from '@/lib/caseStudies'
@@ -129,137 +129,187 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
     }
   }
 
-  /* The narrative fields are optional: a study with a bespoke page carries
-     none of them, and an unwritten one has none yet. Every section below is
-     already conditional on having something to show, so absent and
-     still-placeholder collapse to the same empty list. */
+  /*
+   * The article runs on the story primitives the three bespoke studies
+   * use (components/cs/Story), so a data-driven study reads as the same
+   * object as a hand-built one: serif title, summary beside a facts grid,
+   * the hero on the accent band, then acts. Before 2026-10-14 this
+   * template had its own plainer header (sans title, a fact strip), and
+   * Luke asked for the Pitch page to look like the others.
+   *
+   * The narrative fields are optional: a study with a bespoke page carries
+   * none of them, and an unwritten one has none yet. Every section below
+   * is conditional on having something to show, so absent and
+   * still-placeholder collapse to the same empty list.
+   */
   const problemPoints = (cs.problemPoints ?? []).filter((p) => !isPlaceholder(p))
   const processSteps = (cs.process ?? []).filter((s) => !isPlaceholder(s.heading))
   const outcomes = (cs.outcomes ?? []).filter((o) => !isPlaceholder(o))
-  const facts = (
-    [
-      ['Role', real(cs.role)],
-      ['Timeline', cs.hideTimeline ? undefined : real(cs.period)],
-      ['Team', shortTeam(cs.team)],
-    ] as const
-  ).filter((f): f is ['Role' | 'Timeline' | 'Team', string] => Boolean(f[1]))
+  const headline = (cs.headline ?? []).filter((h) => !isPlaceholder(h))
+  const eyebrows = cs.eyebrows ?? {}
+
+  const facts: Fact[] = []
+  if (real(cs.role)) facts.push({ label: 'Role', value: cs.role })
+  if (real(cs.team)) facts.push({ label: 'Team', value: cs.team })
+  if (!cs.hideTimeline && real(cs.period)) facts.push({ label: 'Timeline', value: cs.period })
+  if (real(cs.tools)) facts.push({ label: 'Tools', value: cs.tools })
+  if (headline.length > 0) {
+    facts.push({
+      label: eyebrows.impact ?? 'Impact',
+      value: (
+        <ul className="cs-meta__list">
+          {headline.map((h) => (
+            <li key={h}>{h}</li>
+          ))}
+        </ul>
+      ),
+      span: true,
+    })
+  }
+  if (real(cs.skills)) facts.push({ label: 'Skills used', value: cs.skills, span: true })
+
+  const summary = [real(cs.tagline), real(cs.overview)].filter(Boolean) as string[]
+
+  /* Acts count from 01 in page order; an absent section does not take a number. */
+  let act = 0
+  const num = () => String(++act).padStart(2, '0')
 
   return (
-    <div className="cs min-h-screen bg-black text-white" style={accentStyle}>
+    <div className="cs cs-surface cs-story min-h-screen text-white" style={accentStyle}>
 
       <SiteNav
         next={next && { href: `/work/${next.slug}`, title: next.title }}
       />
 
-      <main id="main" className="max-w-[860px] mx-auto px-8 pb-32 sitenav-offset">
+      <main id="main" className="sitenav-offset pb-24">
 
-        <header className="pt-10 pb-12">
-          <p className="cs-eyebrow mb-4">{cs.company}</p>
-          <h1 className="cs-title">
-            {cs.title}
-          </h1>
-          {real(cs.tagline) && (
-            <p className="cs-lede">
-              {cs.tagline}
+        {/* ══ Title block ══ */}
+        <Col>
+          <header className="pt-10">
+            <p className="cs-eyebrow mb-5">
+              {cs.company}
+              {real(cs.role) && <> · {cs.role}</>}
             </p>
-          )}
-          <FactStrip facts={[...facts]} impact={cs.headline} impactLabel={cs.eyebrows?.impact ?? 'Impact'} />
-        </header>
+            <StoryTitle>{cs.title}</StoryTitle>
+            {(summary.length > 0 || facts.length > 0) && (
+              <MetaGrid
+                summary={summary.map((text, i) => (
+                  <p key={i}>{text}</p>
+                ))}
+                facts={facts}
+              />
+            )}
+          </header>
+        </Col>
 
+        {/* ══ Hero band: the study's one picture, on its colour ══ */}
         {cs.slug === 'awardco-login-flow-redesign' ? (
-          /* The home tile's before/after slider, promoted to hero — the first
-             thing you see and touch on this study. */
-          <>
-            <BeforeAfterHero
-              beforeSrc="/before.png"
-              afterSrc="/after.png"
-              beforeAlt="Awardco's original login screen, showing every authentication method at once"
-              afterAlt="The redesigned Awardco login screen, leading with single sign-on"
-              aspect={2016 / 1270}
-            />
-            <p className="cs-cap">
-              Drag across the frame: the old login on the left, the shipped redesign on the right.
-            </p>
-          </>
+          <Band tone="accent">
+            <Col wide>
+              <BeforeAfterHero
+                beforeSrc="/before.png"
+                afterSrc="/after.png"
+                beforeAlt="Awardco's original login screen, showing every authentication method at once"
+                afterAlt="The redesigned Awardco login screen, leading with single sign-on"
+                aspect={2016 / 1270}
+              />
+              <p className="cs-cap cs-cap--mono mt-5 text-center">
+                Drag across the frame: the old login on the left, the shipped redesign on the right.
+              </p>
+            </Col>
+          </Band>
         ) : cs.heroSrc ? (
-          <figure className="m-0">
-            <Image
-              src={cs.heroSrc}
-              alt=""
-              width={1600}
-              height={1000}
-              priority
-              sizes="(min-width: 860px) 860px, 100vw"
-              className="w-full h-auto rounded-lg border border-white/10"
-            />
-            <figcaption className="cs-cap">{cs.heroCaption ?? 'Final design overview'}</figcaption>
-          </figure>
+          <Band tone="accent">
+            <Col wide>
+              <figure className="m-0">
+                <Image
+                  src={cs.heroSrc}
+                  alt=""
+                  width={1600}
+                  height={1000}
+                  priority
+                  sizes="(min-width: 1200px) 1100px, 100vw"
+                  className="w-full h-auto rounded-xl cs-hero-still"
+                />
+                <figcaption className="cs-cap cs-cap--mono mt-5 text-center">
+                  {cs.heroCaption ?? 'Final design overview'}
+                </figcaption>
+              </figure>
+            </Col>
+          </Band>
         ) : null}
 
-        {real(cs.overview) && <Prose className="cs-prose--intro mt-14">{cs.overview}</Prose>}
-
+        {/* ══ The problem ══ */}
         {(real(cs.problemIntro) || problemPoints.length > 0) && (
-          <Section eyebrow={cs.eyebrows?.problem ?? 'Problem'}>
-            {real(cs.problemIntro) && <Prose>{cs.problemIntro}</Prose>}
-            {problemPoints.length > 0 && <Bullets items={problemPoints} />}
-          </Section>
-        )}
-
-        {cs.problemFigure && <Fig {...cs.problemFigure} />}
-
-        {processSteps.length > 0 && (
-          <Section eyebrow={cs.eyebrows?.process ?? 'Process'}>
-            <div className="mt-8 space-y-8">
-              {processSteps.map((step, i) => (
-                <div key={i}>
-                  <h3 className="cs-subhead mb-2">
-                    <span className="text-[var(--accent)] mr-3 tabular-nums">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    {step.heading}
-                  </h3>
-                  <p className="cs-prose pl-10">{step.body}</p>
-                  {/* A beat that is a thing to look at carries its picture
-                      with it, instead of all the figures piling up after
-                      the last step. */}
-                  {step.figure && <Fig {...step.figure} />}
-                  {step.screens && step.screens.length > 0 && (
-                    <ScreenCarousel screens={step.screens} />
-                  )}
+          <Col>
+            <Act phase="The problem" num={num()} title={eyebrows.problem ?? 'Problem'}>
+              {real(cs.problemIntro) && (
+                <div className="cs-prose">
+                  <p>{cs.problemIntro}</p>
                 </div>
-              ))}
-            </div>
-          </Section>
+              )}
+              {problemPoints.length > 0 && <Bullets items={problemPoints} />}
+            </Act>
+            {cs.problemFigure && <Fig {...cs.problemFigure} />}
+          </Col>
         )}
 
-        {cs.processFigures?.map((fig, i) => (
-          <Fig key={i} {...fig} />
-        ))}
+        {/* ══ The work, beat by beat ══ */}
+        {processSteps.length > 0 && (
+          <Col>
+            <Act phase="The work" num={num()} title={eyebrows.process ?? 'Process'} />
+            {processSteps.map((step) => (
+              <Block key={step.heading}>
+                <H3>{step.heading}</H3>
+                <div className="cs-prose">
+                  <p>{step.body}</p>
+                </div>
+                {/* A beat that is a thing to look at carries its picture
+                    with it, instead of all the figures piling up after
+                    the last step. */}
+                {step.figure && <Fig {...step.figure} />}
+                {step.screens && step.screens.length > 0 && (
+                  <ScreenCarousel screens={step.screens} />
+                )}
+              </Block>
+            ))}
+            {cs.processFigures?.map((fig, i) => (
+              <Fig key={i} {...fig} />
+            ))}
+          </Col>
+        )}
 
+        {/* ══ Where it landed ══ */}
         {outcomes.length > 0 && (
-          <Section eyebrow={cs.eyebrows?.outcome ?? 'Outcome'}>
-            <Bullets items={outcomes} />
-          </Section>
+          <Col>
+            <Act phase="Today" num={num()} title={eyebrows.outcome ?? 'Outcome'}>
+              <Checklist items={outcomes} />
+            </Act>
+          </Col>
         )}
 
         {/*
           Prev/next moved down from the top nav — a reader wants the next
           project after finishing this one, not before starting it.
         */}
-        <nav className="worknav mt-24 pt-8 border-t border-white/10 flex flex-wrap items-center justify-between gap-4" aria-label="More work">
-          {prev ? (
-            <Link href={`/work/${prev.slug}`} className="footer-link -ml-4">
-              ← {prev.title}
-            </Link>
-          ) : (
-            <span />
-          )}
-          {next && (
-            <Link href={`/work/${next.slug}`} className="footer-link -mr-4 ml-auto text-right">
-              {next.title} →
-            </Link>
-          )}
-        </nav>
+        {(prev || next) && (
+          <Col>
+            <nav className="worknav mt-24 pt-8 border-t border-white/10 flex flex-wrap items-center justify-between gap-4" aria-label="More work">
+              {prev ? (
+                <Link href={`/work/${prev.slug}`} className="footer-link -ml-4">
+                  ← {prev.title}
+                </Link>
+              ) : (
+                <span />
+              )}
+              {next && (
+                <Link href={`/work/${next.slug}`} className="footer-link -mr-4 ml-auto text-right">
+                  {next.title} →
+                </Link>
+              )}
+            </nav>
+          </Col>
+        )}
 
       </main>
 

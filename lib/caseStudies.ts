@@ -30,6 +30,9 @@ export type CaseStudy = {
   role: string
   period: string
   team?: string
+  /** Facts for the story header's grid; the bespoke pages hardcode theirs. */
+  tools?: string
+  skills?: string
   /** One line for the work-grid tile. Kept here so tile copy can't drift from the case study. */
   summary: string
   /** 2–3 short metrics for the at-a-glance row. Omit until the study has real numbers. */
@@ -321,6 +324,10 @@ export const caseStudies: CaseStudy[] = [
     role: 'CTO',
     period: 'Sep 2026 – present',
     hideTimeline: true,
+    team: 'Three people: two founders and me',
+    tools: 'Figma, React Native and Expo, Next.js, Supabase, Node, Claude Code',
+    skills:
+      'Product design, interaction design, mobile and web engineering, data modelling, audio and AI pipeline, brand',
     summary: 'A nametag mic and an AI coach for reps who sell face to face.',
     headline: [
       'A nametag mic, a rep app, a manager console and an admin console',

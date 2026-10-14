@@ -1188,6 +1188,27 @@ p a {
   }
 }
 
+/*
+ * The data-driven template's facts grid: a spanning fact may hold a short
+ * list (Pitch's "Built" lines). Plain lines, one per row, no bullets: the
+ * mono label above already says what they are.
+ */
+.cs-meta__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cs-meta__list li + li { margin-top: 0.35rem; }
+
+/* A still picture on the accent band, where the bespoke pages put a laptop:
+   a hairline so a pale render has an edge against the colour. */
+.cs-hero-still {
+  display: block;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+}
+
 /* Tile SVG base */
 .tile-svg {
   position: absolute;
