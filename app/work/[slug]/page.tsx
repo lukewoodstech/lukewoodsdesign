@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
-import Link from 'next/link'
 import Image from 'next/image'
 import BeforeAfterHero from '@/components/BeforeAfterHero'
 import CaseStudyGate from '@/components/CaseStudyGate'
 import Footer from '@/components/Footer'
+import ReadNext from '@/components/ReadNext'
 import SiteNav from '@/components/SiteNav'
 import ZoomShot from '@/components/lucid/ZoomShot'
 import ScreenCarousel from '@/components/ScreenCarousel'
@@ -112,7 +112,6 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
   const cs = getCaseStudy(slug)
   if (!cs) notFound()
 
-  const prev = caseStudies.find((c) => c.nextSlug === cs.slug)
   const next = cs.nextSlug ? getCaseStudy(cs.nextSlug) : undefined
   const accentStyle = { '--accent': cs.accent } as React.CSSProperties
 
@@ -316,28 +315,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
           </Col>
         )}
 
-        {/*
-          Prev/next moved down from the top nav — a reader wants the next
-          project after finishing this one, not before starting it.
-        */}
-        {(prev || next) && (
-          <Col>
-            <nav className="worknav mt-24 pt-8 border-t border-white/10 flex flex-wrap items-center justify-between gap-4" aria-label="More work">
-              {prev ? (
-                <Link href={`/work/${prev.slug}`} className="footer-link -ml-4">
-                  ← {prev.title}
-                </Link>
-              ) : (
-                <span />
-              )}
-              {next && (
-                <Link href={`/work/${next.slug}`} className="footer-link -mr-4 ml-auto text-right">
-                  {next.title} →
-                </Link>
-              )}
-            </nav>
-          </Col>
-        )}
+        <ReadNext current={cs.slug} />
 
       </main>
 

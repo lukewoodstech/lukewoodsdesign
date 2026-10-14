@@ -2,8 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Footer from '@/components/Footer'
 import SiteNav from '@/components/SiteNav'
-import AwardcoMobileTile from '@/components/AwardcoMobileTile'
-import PatternTile from '@/components/PatternTile'
+import ReadNext from '@/components/ReadNext'
 import Reveal from '@/components/lucid/Reveal'
 import CompareStage from '@/components/lucid/CompareStage'
 import ShipTimeline from '@/components/lucid/ShipTimeline'
@@ -871,16 +870,7 @@ export default function LucidCaseStudy() {
         </Col>
 
         {/* ══ Read next ══ */}
-        <Col>
-          <Block>
-            <span className="cs-eyebrow">More work</span>
-            <h2 className="cs-headline">Read next</h2>
-            <div className="cs-next">
-              <AwardcoMobileTile />
-              <PatternTile />
-            </div>
-          </Block>
-        </Col>
+        <ReadNext current="lucid-ai" />
       </main>
 
       <Footer width="article" />

@@ -4064,6 +4064,12 @@ p a {
   .cs-next {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  /* An odd count leaves an orphan in the last row; the lead card takes the
+     whole first row instead. */
+  .cs-next > :first-child:nth-last-child(odd) {
+    grid-column: 1 / -1;
+  }
 }
 
 .cs-next .workgrid__item {

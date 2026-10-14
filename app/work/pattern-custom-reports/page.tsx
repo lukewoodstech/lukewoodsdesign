@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
 import Footer from '@/components/Footer'
 import SiteNav from '@/components/SiteNav'
-import AwardcoMobileTile from '@/components/AwardcoMobileTile'
-import LucidTile from '@/components/LucidTile'
+import ReadNext from '@/components/ReadNext'
 import Reveal from '@/components/lucid/Reveal'
 import CompareStage from '@/components/lucid/CompareStage'
 import ZoomShot from '@/components/lucid/ZoomShot'
@@ -904,16 +903,7 @@ export default function PatternCaseStudy() {
         </Col>
 
         {/* ══ Read next ══ */}
-        <Col>
-          <Block>
-            <span className="cs-eyebrow">More work</span>
-            <h2 className="cs-headline">Read next</h2>
-            <div className="cs-next">
-              <LucidTile />
-              <AwardcoMobileTile />
-            </div>
-          </Block>
-        </Col>
+        <ReadNext current="pattern" />
       </main>
 
       <Footer width="article" />
