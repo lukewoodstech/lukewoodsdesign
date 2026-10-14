@@ -17,9 +17,19 @@ export type WorkItem = {
 }
 
 export const ALL_WORK: ReadonlyArray<WorkItem> = [
+  /* Pitch leads: it is the current work, and the canvas runs newest first
+     (Luke, 2026-10-14). */
+  {
+    slug: 'pitch',
+    label: '01 · pitch',
+    title: 'pitch',
+    nav: 'pitch',
+    file: 'pitch.tsx',
+    href: '/work/pitch',
+  },
   {
     slug: 'lucid-ai',
-    label: '01 · lucid ai',
+    label: '02 · lucid ai',
     title: 'lucid ai search',
     nav: 'lucid',
     file: 'lucid-ai.tsx',
@@ -27,7 +37,7 @@ export const ALL_WORK: ReadonlyArray<WorkItem> = [
   },
   {
     slug: 'awardco',
-    label: '02 · awardco',
+    label: '03 · awardco',
     title: 'awardco login',
     nav: 'awardco',
     file: 'awardco.tsx',
@@ -35,7 +45,7 @@ export const ALL_WORK: ReadonlyArray<WorkItem> = [
   },
   {
     slug: 'pattern',
-    label: '03 · pattern',
+    label: '04 · pattern',
     title: 'pattern custom reports',
     nav: 'pattern',
     file: 'pattern.tsx',
@@ -49,14 +59,6 @@ export const ALL_WORK: ReadonlyArray<WorkItem> = [
     file: 'hoth.tsx',
     href: '/work/hoth',
   },
-  {
-    slug: 'pitch',
-    label: '04 · pitch',
-    title: 'pitch',
-    nav: 'pitch',
-    file: 'pitch.tsx',
-    href: '/work/pitch',
-  },
 ]
 
 /*
@@ -68,7 +70,8 @@ export const ALL_WORK: ReadonlyArray<WorkItem> = [
  * Pitch left this set on 2026-10-14 (LUK-122): it has a tile now, so the
  * canvas says Pitch exists, while the study behind it stays gated
  * (lib/gate.ts) until it is promoted (LUK-77). The labels are numbered by
- * what shows: Pitch is the fourth card, so Hoth, still hidden, took 05.
+ * what shows: Pitch is the first card since 2026-10-14, Hoth, still
+ * hidden, keeps 05.
  */
 export const HIDDEN_WORK: ReadonlySet<string> = new Set(['hoth'])
 

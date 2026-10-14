@@ -1068,6 +1068,126 @@ p a {
   object-position: top center;
 }
 
+/*
+ * ─── Screen carousel (components/ScreenCarousel) ───────────────────
+ * A scroll-snap row of full phone screens under a case-study beat. On a
+ * wide page three fit side by side and the row does not scroll; on a
+ * phone each screen takes most of the width and snaps.
+ */
+.cs-screens {
+  margin: 2rem 0 3rem;
+}
+
+.cs-screens__row {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding: 0.25rem 0 0.75rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.cs-screens__row::-webkit-scrollbar {
+  display: none;
+}
+
+.cs-screens__item {
+  flex: 0 0 min(70vw, 280px);
+  margin: 0;
+  scroll-snap-align: start;
+}
+
+/* The phone: the home tiles' thin bezel, at reading size. */
+.cs-screens__phone {
+  padding: 2.4%;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 13%/6%;
+  background: #0e0e14;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+}
+
+.cs-screens__phone img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10.5%/4.8%;
+}
+
+.cs-screens__name {
+  margin-top: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: var(--label-micro, 0.72rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  text-align: center;
+}
+
+.cs-screens__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.cs-screens__arrow,
+.cs-screens__dot {
+  font-family: var(--font-mono);
+  font-size: var(--label-micro, 0.72rem);
+  color: rgba(255, 255, 255, 0.6);
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.cs-screens__arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.cs-screens__arrow:not(:disabled):hover,
+.cs-screens__dot:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.cs-screens__dots {
+  display: flex;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cs-screens__dot {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cs-screens__dot.is-current {
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* Three screens fit beside each other at the article's full measure, so
+   the row stops scrolling and the arrows have nothing to do. Sized as a
+   third of the row rather than a fixed width: the measure is 860px less
+   its padding, and 3 × 280px overflowed it by a screen's edge. */
+@media (min-width: 860px) {
+  .cs-screens__item {
+    flex-basis: calc((100% - 2.5rem) / 3);
+  }
+
+  .cs-screens__nav {
+    display: none;
+  }
+}
+
 /* Tile SVG base */
 .tile-svg {
   position: absolute;

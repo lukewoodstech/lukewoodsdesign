@@ -8,6 +8,7 @@ import CaseStudyGate from '@/components/CaseStudyGate'
 import Footer from '@/components/Footer'
 import SiteNav from '@/components/SiteNav'
 import ZoomShot from '@/components/lucid/ZoomShot'
+import ScreenCarousel from '@/components/ScreenCarousel'
 import { Section, Prose, Bullets, FactStrip } from '@/components/CaseStudy'
 import {
   getCaseStudy,
@@ -138,7 +139,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
   const facts = (
     [
       ['Role', real(cs.role)],
-      ['Timeline', real(cs.period)],
+      ['Timeline', cs.hideTimeline ? undefined : real(cs.period)],
       ['Team', shortTeam(cs.team)],
     ] as const
   ).filter((f): f is ['Role' | 'Timeline' | 'Team', string] => Boolean(f[1]))
@@ -162,7 +163,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
               {cs.tagline}
             </p>
           )}
-          <FactStrip facts={[...facts]} impact={cs.headline} />
+          <FactStrip facts={[...facts]} impact={cs.headline} impactLabel={cs.eyebrows?.impact ?? 'Impact'} />
         </header>
 
         {cs.slug === 'awardco-login-flow-redesign' ? (
@@ -222,6 +223,9 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                       with it, instead of all the figures piling up after
                       the last step. */}
                   {step.figure && <Fig {...step.figure} />}
+                  {step.screens && step.screens.length > 0 && (
+                    <ScreenCarousel screens={step.screens} />
+                  )}
                 </div>
               ))}
             </div>

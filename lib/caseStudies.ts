@@ -3,6 +3,16 @@ export type ProcessStep = {
   body: string
   /** A figure shown right under this step, for a study whose beats are things to look at. */
   figure?: Figure
+  /** Full phone screens shown under this step as a carousel (components/ScreenCarousel). */
+  screens?: Screen[]
+}
+
+export type Screen = {
+  src: string
+  /** What is on the screen, for a reader who cannot see it. */
+  alt: string
+  /** The short name under the dot: "Feed", "Stats", "Coach". */
+  label: string
 }
 
 export type Figure = {
@@ -52,7 +62,14 @@ export type CaseStudy = {
    * "Process" and "Outcome"; Pitch, which is being built rather than
    * looked back on, says "Why", "What we are building" and "Where it stands".
    */
-  eyebrows?: { problem?: string; process?: string; outcome?: string }
+  eyebrows?: { problem?: string; process?: string; outcome?: string; impact?: string }
+  /*
+   * Leave the Timeline fact off the at-a-glance row. `period` still feeds
+   * the year on the home tile; this only keeps it off the page, for a
+   * study about what is being built rather than when (Pitch, Luke
+   * 2026-10-14: "take out the whole PR and timeline thing").
+   */
+  hideTimeline?: boolean
   nextSlug?: string
 }
 
@@ -282,6 +299,8 @@ export const caseStudies: CaseStudy[] = [
      * House rules for this entry, which future edits keep:
      * - Impact first, few words. Each beat is what changed and why it
      *   mattered, in one or two sentences. If a line needs a third, cut it.
+ * - What was built, not when or how it was shipped: no dates, no pull
+ *   request or process talk (Luke, 2026-10-14). Timeline is hidden.
      * - No pilot customer names or pilot figures. Product screens are fine
      *   here because the gate holds them; public positioning (usepitch.app)
      *   is fine to repeat anywhere.
@@ -301,17 +320,23 @@ export const caseStudies: CaseStudy[] = [
     accent: '#4c7be8',
     role: 'CTO',
     period: 'Sep 2026 – present',
+    hideTimeline: true,
     summary: 'A nametag mic and an AI coach for reps who sell face to face.',
     headline: [
+      'A nametag mic, a rep app, a manager console and an admin console',
+      'Every conversation recorded, transcribed and scored by AI',
       'Live with a pilot team',
-      'App, console, pipeline and site, designed and built by me',
-      'Marketing site rebuilt and live in three days',
     ],
     tagline:
-      'A nametag mic hears every live sales pitch. Pitch scores it and coaches the rep. I design it and build it.',
+      'A nametag mic hears every live sales pitch. AI scores it and coaches the rep. I design it and build it.',
     overview:
-      'Pitch is a three-person startup. I own design and engineering: the phone app reps record with, the manager console, the audio pipeline behind both, and the website that brings customers in.',
-    eyebrows: { problem: 'Why', process: 'What we are building', outcome: 'Where it stands' },
+      'Pitch is a three-person startup. I own design and engineering across the product: the app the nametag pairs with, the manager console, the internal admin console, the audio and AI pipeline behind them, and the public site.',
+    eyebrows: {
+      problem: 'Why',
+      process: 'What we are building',
+      outcome: 'Where it stands',
+      impact: 'Built',
+    },
     problemPoints: [
       'Sales teams keep years of records and have never heard the conversation behind any of them',
       'Reps will not log anything, so every number has to come from the mic',
@@ -324,19 +349,40 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         heading: 'The rep app',
-        body: 'Recording survives a locked phone and a noisy street. Every door lands in a feed with its score, its recording and one line on what to do next.',
-        figure: {
-          src: '/work/pitch/app-feed.png',
-          caption: 'The feed: every door, its score, the recording, and one line of coaching',
-        },
+        body: 'Recording runs in the background, survives a locked phone, and splits a shift into doors by the street’s own noise level. Every door lands in the feed scored, with its recording and one line of coaching; Stats tracks pace against the rep’s goals, and Coach turns a lost objection into the rep’s own best answer and a two-minute roleplay.',
+        screens: [
+          {
+            src: '/work/pitch/screen-feed.png',
+            label: 'Feed',
+            alt: 'The Feed: yesterday’s doors, each with its score, a play button ringed in the score’s colour, the outcome (Callback or Sold), and one line of coaching',
+          },
+          {
+            src: '/work/pitch/screen-stats.png',
+            label: 'Stats',
+            alt: 'Stats: sales this week against the goal with a pace line, today’s conversations, pitches and close attempts against targets, and a field-day streak',
+          },
+          {
+            src: '/work/pitch/screen-coach.png',
+            label: 'Coach',
+            alt: 'Coach: an objection the rep lost a door on, quoted from the transcript with what the rep said, a button to show a good response, and a two-minute roleplay',
+          },
+        ],
+      },
+      {
+        heading: 'The AI behind it',
+        body: 'Every recording is transcribed with the speakers labelled, then scored against what a good pitch does phase by phase: intro, discovery, objections, close. The rep sees one number, with the misses and the clip under it, and the coaching comes from the rep’s own doors.',
       },
       {
         heading: 'The manager console',
-        body: 'Managers see their own team by default: who is improving, who needs coaching, and the recording behind every number.',
+        body: 'The team board, who needs coaching today, and every rep’s pitches with the transcript and score breakdown behind each number. Managers see their own team by default; the owner sets the company up once.',
+      },
+      {
+        heading: 'Pitch HQ',
+        body: 'The internal console that provisions customers: company, offices and teams, recording consent by state, retention, and the roster import that invites managers. Demo requests from the site land here as deals. Founders only, behind MFA.',
       },
       {
         heading: 'The site',
-        body: 'Rebuilt usepitch.app for everyone who sells face to face and put it live in three days, with a demo request that lands in our CRM and books a real call.',
+        body: 'usepitch.app, rebuilt for everyone who sells face to face: the nametag in three parts, how it works, the console, and a demo request that works the prospect’s own numbers and books a call.',
         figure: {
           src: '/work/pitch/site-hero.png',
           caption: 'usepitch.app: the nametag is the hero, and every button books a demo',
@@ -344,13 +390,13 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         heading: 'My role',
-        body: 'Design and engineering end to end: the screens, the code behind them, tests and review on every pull request, and one shipped log so three people stay in step.',
+        body: 'Design and engineering, end to end. I draw the screens, build them, wire the data and the pipeline behind them, and ship.',
       },
     ],
     outcomes: [
       'A pilot team records, uploads and sees coaching without touching anything but the record button',
       'Managers see their own team by default, and the owner sets up the company once',
-      'The public site, demo funnel and pilot onboarding went live within two weeks of my first commit',
+      'App, consoles and site are live; scoring moves to a check-based judge with a quote for every check next',
     ],
     heroSrc: '/work/pitch/nametag.png',
     heroCaption: 'The nametag, assembled and apart: copper nameplate, titanium frame, and the core with two mics',
