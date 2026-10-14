@@ -153,6 +153,16 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
   if (real(cs.team)) facts.push({ label: 'Team', value: cs.team })
   if (!cs.hideTimeline && real(cs.period)) facts.push({ label: 'Timeline', value: cs.period })
   if (real(cs.tools)) facts.push({ label: 'Tools', value: cs.tools })
+  if (cs.site) {
+    facts.push({
+      label: 'Live at',
+      value: (
+        <a href={cs.site.href} className="cs-meta__link" target="_blank" rel="noopener noreferrer">
+          {cs.site.label}
+        </a>
+      ),
+    })
+  }
   if (headline.length > 0) {
     facts.push({
       label: eyebrows.impact ?? 'Impact',

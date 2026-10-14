@@ -33,6 +33,8 @@ export type CaseStudy = {
   /** Facts for the story header's grid; the bespoke pages hardcode theirs. */
   tools?: string
   skills?: string
+  /** Where the work is live, for the facts grid. */
+  site?: { href: string; label: string }
   /** One line for the work-grid tile. Kept here so tile copy can't drift from the case study. */
   summary: string
   /** 2–3 short metrics for the at-a-glance row. Omit until the study has real numbers. */
@@ -328,6 +330,7 @@ export const caseStudies: CaseStudy[] = [
     tools: 'Figma, React Native and Expo, Next.js, Supabase, Node, Claude Code',
     skills:
       'Product design, interaction design, mobile and web engineering, data modelling, audio and AI pipeline, brand',
+    site: { href: 'https://usepitch.app', label: 'usepitch.app' },
     summary: 'A nametag mic and an AI coach for reps who sell face to face.',
     headline: [
       'A nametag mic, a rep app, a manager console and an admin console',
