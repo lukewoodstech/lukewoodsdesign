@@ -19,6 +19,8 @@ export type Figure = {
   src?: string
   caption: string
   height?: string
+  /** A figure that is a door, not a picture to inspect: clicking opens this URL instead of the lightbox. */
+  href?: string
 }
 
 export type CaseStudy = {
@@ -59,6 +61,13 @@ export type CaseStudy = {
   outcomes?: string[]
   heroSrc?: string
   heroCaption?: string
+  /*
+   * The hero band's colour when the hero is a photograph rather than a
+   * device frame: set it to the picture's own ground so the band and the
+   * picture read as one surface (Pitch's nametag renders sit on a warm
+   * off-white; on the accent blue the picture looked pasted on).
+   */
+  heroGround?: string
   problemFigure?: Figure
   processFigures?: Figure[]
   /*
@@ -396,6 +405,7 @@ export const caseStudies: CaseStudy[] = [
         figure: {
           src: '/work/pitch/site-hero.png',
           caption: 'usepitch.app: the nametag is the hero, and every button books a demo',
+          href: 'https://usepitch.app',
         },
       },
       {
@@ -410,6 +420,8 @@ export const caseStudies: CaseStudy[] = [
     ],
     heroSrc: '/work/pitch/nametag.png',
     heroCaption: 'The nametag, assembled and apart: copper nameplate, titanium frame, and the core with two mics',
+    // The renders' own ground, sampled from the composite's left and right edges.
+    heroGround: '#e2e0d8',
   },
 ]
 

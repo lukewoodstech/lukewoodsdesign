@@ -34,10 +34,13 @@ export function Band({
   crop = false,
   flush = false,
   className = '',
+  style,
 }: {
   children: ReactNode
   /** lift = one step above the page ground; accent = the study's colour */
   tone?: 'lift' | 'accent'
+  /** For a band whose colour is a picture's own ground rather than a token. */
+  style?: React.CSSProperties
   /** Faint drifting specks, for the bands that carry a single statement. */
   dust?: boolean
   /** The band's bottom edge crops its content (the hero laptop). */
@@ -55,7 +58,11 @@ export function Band({
   ]
     .filter(Boolean)
     .join(' ')
-  return <section className={cls}>{children}</section>
+  return (
+    <section className={cls} style={style}>
+      {children}
+    </section>
+  )
 }
 
 /* A block that rises in on scroll, with the column's rhythm above it. */

@@ -81,13 +81,27 @@ export async function generateMetadata({
  * exists, nothing at all while the caption is still scaffolding. (The old
  * template rendered grey placeholder boxes with bracketed captions.)
  */
-const Fig = ({ caption, src }: Figure) => {
+const Fig = ({ caption, src, href }: Figure) => {
   if (!src || isPlaceholder(caption)) return null
   return (
     <figure className="my-12">
       {/* alt is empty by design — the figcaption below already carries this
           text, and duplicating it makes screen readers announce it twice. */}
-      <ZoomShot src={src} alt="" width={1600} height={1000} sizes="(min-width: 860px) 860px, 100vw" />
+      {href ? (
+        /* A door, not a picture: the same frame and hover hint as the
+           lightbox trigger, but the click goes to the live thing. */
+        <a className="lcs-zoom" href={href} target="_blank" rel="noopener noreferrer">
+          <Image src={src} alt="" width={1600} height={1000} sizes="(min-width: 860px) 860px, 100vw" className="lcs-shot" />
+          <span className="lcs-zoom__hint" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M3 1h8v8M11 1 1 11" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            Open {href.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+          </span>
+        </a>
+      ) : (
+        <ZoomShot src={src} alt="" width={1600} height={1000} sizes="(min-width: 860px) 860px, 100vw" />
+      )}
       <figcaption className="cs-cap">{caption}</figcaption>
     </figure>
   )
@@ -229,7 +243,11 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
             </Col>
           </Band>
         ) : cs.heroSrc ? (
-          <Band tone="accent">
+          <Band
+            tone="accent"
+            className={cs.heroGround ? 'cs-band--ground' : undefined}
+            style={cs.heroGround ? { background: cs.heroGround } : undefined}
+          >
             <Col wide>
               <figure className="m-0">
                 <Image
@@ -239,7 +257,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                   height={1000}
                   priority
                   sizes="(min-width: 1200px) 1100px, 100vw"
-                  className="w-full h-auto rounded-xl cs-hero-still"
+                  className={cs.heroGround ? 'w-full h-auto cs-hero-melt' : 'w-full h-auto rounded-xl cs-hero-still'}
                 />
                 <figcaption className="cs-cap cs-cap--mono mt-5 text-center">
                   {cs.heroCaption ?? 'Final design overview'}
