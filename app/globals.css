@@ -9116,8 +9116,6 @@ p a {
 .cs-pair .cs-cap { text-align: center; }
 .cs-pair__item .cs-screens__name { display: block; }
 
-/* A looping screen recording in a study figure (LUK-200). */
-.cs-video { display: block; width: 100%; height: auto; }
 
 /* Two or three phones in one row on desktop (LUK-201): fixed phone width,
    centred, no arrows. Below 48em they stay a swipe row with dots. */
@@ -9180,36 +9178,22 @@ p a {
   margin-top: clamp(4.5rem, 9vw, 8rem);
   scroll-margin-top: 5.5rem;
 }
-.cs-stage__label {
-  margin: 0 0 0.75rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
 .cs-stage__title {
   margin: 0;
-  font-size: clamp(1.75rem, 3.4vw, 2.5rem);
+  font-size: clamp(1.625rem, 3vw, 2.125rem);
   font-weight: 600;
   line-height: 1.15;
   letter-spacing: -0.02em;
   color: #fff;
   text-wrap: balance;
 }
-.cs-stage__bridge {
-  margin: 1rem 0 0;
-  font-size: 1.0625rem;
-  line-height: 1.55;
-  font-style: italic;
-  color: rgba(255, 255, 255, 0.55);
-}
 .cs-stage > .cs-prose { margin-top: 1.25rem; }
 .cs-stage .cs-stack--compact { margin-top: 3rem; }
 
-/* The rail: in the left gutter once there is room for it beside the
-   800px column. Fades in while the reader is inside the stages. */
+/* The rail: a plain contents list in the left gutter once there is room
+   beside the 800px column. Text only, like a table of contents: the stage
+   being read is white with a short accent rule beside it, the rest grey.
+   No dots, no connecting line, no glow (Luke, 2026-11-03). */
 .cs-rail { display: none; }
 @media (min-width: 75em) {
   .cs-rail {
@@ -9217,61 +9201,41 @@ p a {
     position: fixed;
     z-index: 30;
     top: 50%;
-    left: max(1.5rem, calc(50vw - var(--story-col) / 2 - 15rem));
-    width: 12rem;
+    left: max(1.5rem, calc(50vw - var(--story-col) / 2 - 14rem));
+    width: 11rem;
     transform: translateY(-50%);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.35s ease;
+    transition: opacity 0.3s ease;
   }
   .cs-rail.is-visible { opacity: 1; pointer-events: auto; }
-  .cs-rail ol {
+  .cs-rail ol { list-style: none; margin: 0; padding: 0; }
+  .cs-rail a {
     position: relative;
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    display: block;
+    padding: 0.35rem 0 0.35rem 0.9rem;
+    font-size: 0.8125rem;
+    line-height: 1.35;
+    color: rgba(255, 255, 255, 0.38);
+    text-decoration: none;
+    transition: color 0.2s ease;
   }
-  /* The line the dots sit on. */
-  .cs-rail ol::before {
+  .cs-rail a::before {
     content: '';
     position: absolute;
-    left: 5px;
-    top: 0.9rem;
-    bottom: 0.9rem;
-    width: 1px;
-    background: rgba(255, 255, 255, 0.14);
+    left: 0;
+    top: 0.45rem;
+    bottom: 0.45rem;
+    width: 2px;
+    border-radius: 1px;
+    background: transparent;
+    transition: background 0.2s ease;
   }
-  .cs-rail a {
-    display: flex;
-    align-items: center;
-    gap: 0.85rem;
-    padding: 0.5rem 0;
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.4);
-    font-size: 0.8125rem;
-    line-height: 1.3;
-    transition: color 0.25s ease;
-  }
-  .cs-rail a:hover { color: rgba(255, 255, 255, 0.8); }
-  .cs-rail a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 4px; }
-  .cs-rail__dot {
-    position: relative;
-    flex: none;
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    background: #000;
-    box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.3);
-    transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
-  }
-  .cs-rail li.is-done a { color: rgba(255, 255, 255, 0.6); }
-  .cs-rail li.is-done .cs-rail__dot { background: rgba(255, 255, 255, 0.55); box-shadow: none; }
-  .cs-rail li.is-current a { color: #fff; font-weight: 600; }
-  .cs-rail li.is-current .cs-rail__dot {
-    background: var(--accent);
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 28%, transparent);
-    transform: scale(1.1);
-  }
+  .cs-rail a:hover { color: rgba(255, 255, 255, 0.75); }
+  .cs-rail a:focus-visible { outline: 1px solid rgba(255, 255, 255, 0.5); outline-offset: 3px; }
+  .cs-rail li.is-done a { color: rgba(255, 255, 255, 0.55); }
+  .cs-rail li.is-current a { color: #fff; }
+  .cs-rail li.is-current a::before { background: var(--accent); }
 }
 
 /* Narrow screens: a thin bar under the nav with the stage and progress. */
@@ -9295,13 +9259,7 @@ p a {
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 .cs-railbar.is-visible { transform: none; opacity: 1; }
-.cs-railbar__step {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.08em;
-  color: var(--accent);
-}
-.cs-railbar__label { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cs-railbar__label { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cs-railbar__track {
   position: absolute;
   left: 0;
@@ -9318,5 +9276,116 @@ p a {
 }
 @media (min-width: 75em) { .cs-railbar { display: none; } }
 @media (prefers-reduced-motion: reduce) {
-  .cs-rail, .cs-railbar, .cs-rail__dot { transition: none; }
+  .cs-rail, .cs-rail a, .cs-railbar { transition: none; }
 }
+
+/* ── The study video player (LUK-203): YouTube-like controls ───────── */
+.cs-player {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  background: #000;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 18px 48px rgba(0, 0, 0, 0.5);
+  outline: none;
+}
+.cs-player:focus-visible { box-shadow: 0 0 0 2px var(--accent); }
+.cs-player:fullscreen { border-radius: 0; display: flex; align-items: center; }
+.cs-player__video { display: block; width: 100%; height: auto; cursor: pointer; }
+.cs-player:fullscreen .cs-player__video { max-height: 100vh; object-fit: contain; }
+
+.cs-player__big {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4.25rem;
+  height: 4.25rem;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(10, 10, 10, 0.72);
+  color: #fff;
+  cursor: pointer;
+}
+.cs-player__big svg { width: 1.75rem; height: 1.75rem; fill: currentColor; margin-left: 3px; }
+
+.cs-player__bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2rem 0.9rem 0.7rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.cs-player:hover .cs-player__bar,
+.cs-player:focus-within .cs-player__bar,
+.cs-player.is-paused .cs-player__bar { opacity: 1; }
+@media (hover: none) { .cs-player__bar { opacity: 1; } }
+
+.cs-player__btn {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #fff;
+  cursor: pointer;
+}
+.cs-player__btn svg { width: 1.25rem; height: 1.25rem; fill: currentColor; }
+.cs-player__btn svg[fill="none"] { fill: none; }
+.cs-player__btn:focus-visible, .cs-player__track:focus-visible { outline: 1px solid #fff; outline-offset: 2px; border-radius: 4px; }
+.cs-player__time {
+  flex: none;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.85);
+}
+.cs-player__track {
+  position: relative;
+  flex: 1;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  touch-action: none;
+}
+.cs-player__rail {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  transition: height 0.15s ease;
+}
+.cs-player__track:hover .cs-player__rail { height: 6px; }
+.cs-player__fill { position: absolute; inset: 0 auto 0 0; background: var(--accent); }
+.cs-player__knob {
+  position: absolute;
+  top: 50%;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  background: #fff;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.15s ease;
+}
+.cs-player__track:hover .cs-player__knob,
+.cs-player__track:focus-visible .cs-player__knob { transform: translate(-50%, -50%) scale(1); }
+.cs-cap__link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.2em;
+}
+.cs-cap__link:hover { color: #fff; }

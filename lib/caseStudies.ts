@@ -446,13 +446,8 @@ export const caseStudies: CaseStudy[] = [
       {
         id: 'walked-into',
         label: 'What I walked into',
-        title: 'The app hid its own main action',
-        body: 'When I joined, Pitch was loud and hard to use. The brand was an extruded orange PITCH., the screens were dark cards with shouting type and a red score on everything, and recording, the one thing the app exists to do, was a speaker icon in the tab bar.',
-        points: [
-          'Reps will not log anything, so every number has to come from the recording',
-          'Recording was the whole product, and the hardest thing in the app to find',
-          'An app that listens all day gets abandoned the moment it feels like surveillance',
-        ],
+        title: 'What I walked into',
+        body: 'When I joined Pitch, the app worked, but it was hard to use. The brand was a big orange PITCH. in heavy black type, every screen was dark, and scores were shouted in red and green on every card.\n\nThe biggest problem was recording. It\'s the one thing the app exists to do, since reps won\'t log anything by hand, and it was hidden behind a speaker icon in the tab bar. Once it was on, a toast floated over the feed until you figured out how to stop it.',
         steps: [
           {
             screens: [
@@ -478,9 +473,8 @@ export const caseStudies: CaseStudy[] = [
       {
         id: 'direction',
         label: 'Finding the direction',
-        title: 'Calm won over loud',
-        bridge: 'Before redrawing a single screen, I needed to know what Pitch should feel like.',
-        body: 'I redrew the feed, the screen reps open after every door, four ways beside today’s: a dense list after Polymarket, calm cards after Origin, number-first after Coinbase, and one built from our own wordmark. The founders and I chose Private, the calm one: room to breathe, a serif for the moments that matter, and the score as a ring around each play button.',
+        title: 'Finding the direction',
+        body: 'Before changing any screens, I wanted the founders and me to agree on what Pitch should feel like. I took the feed, the screen reps open after every door, and redrew it four ways next to the version we had. Each one borrowed from an app we liked: Polymarket, Origin, Coinbase, and one built from our own logo.\n\nWe picked Private, the calm one. It had the most room to breathe and made each door feel worth replaying. Then I tried eight blues for the accent color, and we went with Cornflower, mostly because it never gets confused with the green, amber and red we use for scores.',
         steps: [
           {
             gallery: {
@@ -495,8 +489,6 @@ export const caseStudies: CaseStudy[] = [
             },
           },
           {
-            heading: 'One accent',
-            body: 'Then I tried eight blues for the single accent, each judged as a button, as text, and against the scores. Cornflower won: friendly, readable, and it never collides with the green, amber and red that grade a door.',
             gallery: {
               items: [
                 { src: '/work/pitch/dir-accents.png', label: 'Eight accents, Cornflower chosen', alt: 'Eight accent swatches, from Iris to Dusk, each shown as a Request a demo button with its contrast as text; Cornflower is outlined', width: 1800, height: 674 },
@@ -508,9 +500,8 @@ export const caseStudies: CaseStudy[] = [
       {
         id: 'system',
         label: 'Building the system',
-        title: 'One accent, and it never touches a score',
-        bridge: 'With a direction chosen, the next job was making it repeatable.',
-        body: 'I turned the direction into one system the app, the site, the console and the emails all share: a lowercase wordmark with a cornflower period, Instrument Serif for titles and scores, Hanken Grotesk for reading, 28-point cards with one soft shadow, and one rule above the rest. The accent marks where to look or tap, never how a door went.',
+        title: 'Building the system',
+        body: 'Next I turned that direction into something we could build from. The logo became a lowercase pitch with a blue period. Titles and scores use a serif, everything else uses Hanken Grotesk, and cards are white with a soft shadow instead of a black outline.\n\nThe rule I cared about most was keeping blue for the things you tap or should look at. Scores keep their own colors, so blue never means good or bad.',
         steps: [
           {
             gallery: {
@@ -529,10 +520,9 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         id: 'recording',
-        label: 'Fixing the main flow',
-        title: 'Recording became one button',
-        bridge: 'The system made the app calmer. The real test was the one action reps take every shift.',
-        body: 'Recording took a speaker icon to start, a toast floating over the feed to watch, and a full-screen sheet to stop. Now it is one button in the centre of the bar. Tap it and Pitch listens all shift, records each conversation on its own and splits the day into doors, and one sheet shows the mic and ends the shift.',
+        label: 'Fixing recording',
+        title: 'Fixing recording',
+        body: 'With the system in place, I went back to recording. Before, starting took a speaker icon, a toast told you that you were live, and stopping meant a full-screen sheet.\n\nNow recording is the big blue button in the middle of the tab bar. A rep taps it once at the start of a shift. Pitch listens the whole time, records each conversation on its own, and splits the day into doors. One small sheet shows which mic it\'s using and ends the shift.',
         steps: [
           {
             before: [
@@ -569,13 +559,12 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         id: 'everywhere',
-        label: 'Carrying it everywhere',
-        title: 'One system, from the feed to the inbox',
-        bridge: 'Once the main flow worked, the same system carried everything around it.',
+        label: 'Rolling it out',
+        title: 'Rolling it out',
+        body: 'From there I moved every screen a rep sees onto the new system, along with the onboarding emails, the manager console and the website.',
         steps: [
           {
-            heading: 'The rep app',
-            body: 'Every rep screen moved onto the system: the day as a serif heading with each door a quiet card, a calendar to jump to any day, and an account page that says plainly what is recorded and why.',
+            body: 'The feed shows each day with its doors underneath. I added a calendar so reps can jump back to any day, and an account page that explains what gets recorded and why.',
             screens: [
               {
                 src: '/work/pitch/feed-now.png',
@@ -595,8 +584,7 @@ export const caseStudies: CaseStudy[] = [
             ],
           },
           {
-            heading: 'Stats and Coach',
-            body: 'Stats shows pace, not just totals: the week’s sales against the goal, and today’s conversations, pitches and close attempts. Coach turns a lost door into practice: the objection, what the rep said, a stronger answer, and a two-minute roleplay.',
+            body: 'Stats tracks pace against the week’s goal instead of just showing totals. Coach takes a door the rep lost and turns it into practice, with what they said, a better answer, and a quick roleplay.',
             screens: [
               {
                 src: '/work/pitch/screen-stats-now.png',
@@ -611,8 +599,7 @@ export const caseStudies: CaseStudy[] = [
             ],
           },
           {
-            heading: 'Onboarding',
-            body: 'A new rep arrives by email: one invite, one link to claim the account and pick a password, then the app. Managers land in the console.',
+            body: 'New reps get one invite email, claim their account, and download the app. Managers sign in to the console.',
             gallery: {
               items: [
                 { src: '/work/pitch/onboard-invite.png', label: 'The invite', alt: 'The invite email: a serif Pitch wordmark, You’re invited to join Pitch, one line on what happens next, and a cornflower Join the team button', width: 1440, height: 880 },
@@ -621,8 +608,7 @@ export const caseStudies: CaseStudy[] = [
             },
           },
           {
-            heading: 'The site',
-            body: 'usepitch.app, for everyone who sells face to face: the app up front, how a pitch gets scored, the manager dashboard, and a demo request on every button.',
+            body: 'I also designed and built the website, usepitch.app.',
             figure: {
               src: '/work/pitch/site-tour-poster.jpg',
               video: '/work/pitch/site-tour.mp4',
@@ -635,9 +621,8 @@ export const caseStudies: CaseStudy[] = [
       {
         id: 'now',
         label: 'Where it is now',
-        title: 'Live with a pilot team',
-        bridge: 'Here is where that leaves Pitch today.',
-        showOutcomes: true,
+        title: 'Where it is now',
+        body: 'Pitch is live with a pilot team. Reps record a full shift with one tap and get coaching on every door, and the brand looks the same from the app icon to the inbox. This is what it\'s built on.',
         showStack: true,
       },
     ],

@@ -10,8 +10,8 @@ import { useEffect, useState } from 'react'
  * current stage, with a progress line. Both show only while the reader is
  * inside the stages, so the hero and the read-next cards stay clean.
  *
- * Which stage is current: the last whose top has passed 35% of the
- * viewport. A rAF-throttled scroll read, cheap at six sections.
+ * Which stage is current: the last whose top has passed the middle of
+ * the viewport, so a heading read near the top already counts. A rAF-throttled scroll read, cheap at six sections.
  */
 export type RailStage = { id: string; label: string }
 
@@ -26,7 +26,7 @@ export default function StageRail({ stages }: { stages: RailStage[] }) {
       raf = 0
       const els = stages.map((s) => document.getElementById(s.id)).filter(Boolean) as HTMLElement[]
       if (els.length === 0) return
-      const line = window.innerHeight * 0.35
+      const line = window.innerHeight * 0.5
       let idx = -1
       els.forEach((el, i) => {
         if (el.getBoundingClientRect().top <= line) idx = i
@@ -66,8 +66,7 @@ export default function StageRail({ stages }: { stages: RailStage[] }) {
               className={i === current ? 'is-current' : i < current ? 'is-done' : undefined}
             >
               <a href={`#${s.id}`} aria-current={i === current ? 'step' : undefined}>
-                <span className="cs-rail__dot" aria-hidden="true" />
-                <span className="cs-rail__label">{s.label}</span>
+                {s.label}
               </a>
             </li>
           ))}
@@ -75,9 +74,6 @@ export default function StageRail({ stages }: { stages: RailStage[] }) {
       </nav>
 
       <div className={`cs-railbar${visible ? ' is-visible' : ''}`} aria-hidden="true">
-        <span className="cs-railbar__step">
-          {String(Math.max(0, current) + 1).padStart(2, '0')} / {String(stages.length).padStart(2, '0')}
-        </span>
         <span className="cs-railbar__label">{here?.label}</span>
         <span className="cs-railbar__track">
           <span className="cs-railbar__fill" style={{ transform: `scaleX(${progress})` }} />

@@ -10,6 +10,7 @@ import SiteNav from '@/components/SiteNav'
 import ZoomShot from '@/components/lucid/ZoomShot'
 import ScreenCarousel from '@/components/ScreenCarousel'
 import StageRail from '@/components/cs/StageRail'
+import VideoPlayer from '@/components/cs/VideoPlayer'
 import { Bullets } from '@/components/CaseStudy'
 import BigStats from '@/components/cs/BigStats'
 import { Act, Band, Block, Checklist, Col, H3, MetaGrid, MonoLabel, Pill, StoryTitle, type Fact } from '@/components/cs/Story'
@@ -88,32 +89,23 @@ const Fig = ({ caption, src, href, video }: Figure) => {
   /* A recording plays muted on a loop, like a still that moves; the still
      is its poster, so the frame never sits empty while it loads. */
   if (video) {
-    const player = (
-      <video
-        className="lcs-shot cs-video"
-        src={video}
-        poster={src}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        aria-label={caption}
-      />
-    )
+    /* A recording you can drive: play, pause, scrub, full screen
+       (VideoPlayer). Clicks belong to the player, so the outbound link
+       moves into the caption. */
     return (
       <figure className="my-12">
-        {href ? (
-          <a className="lcs-zoom" href={href} target="_blank" rel="noopener noreferrer">
-            {player}
-            <span className="lcs-zoom__hint" aria-hidden="true">
-              Open {href.replace(/^https?:\/\//, '').replace(/\/$/, '')}
-            </span>
-          </a>
-        ) : (
-          player
-        )}
-        <figcaption className="cs-cap">{caption}</figcaption>
+        <VideoPlayer src={video} poster={src} label={caption} />
+        <figcaption className="cs-cap">
+          {caption}
+          {href && (
+            <>
+              {' · '}
+              <a href={href} className="cs-cap__link" target="_blank" rel="noopener noreferrer">
+                Open {href.replace(/^https?:\/\//, '').replace(/\/$/, '')} ↗
+              </a>
+            </>
+          )}
+        </figcaption>
       </figure>
     )
   }
@@ -411,12 +403,13 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
             {cs.stages.map((st) => (
               <Col key={st.id}>
                 <section id={st.id} className="cs-stage" aria-labelledby={`${st.id}-title`}>
-                  <p className="cs-stage__label">{st.label}</p>
+                  {/* Heading and body, nothing else (Luke, 2026-11-03). */}
                   <h2 id={`${st.id}-title`} className="cs-stage__title">{st.title}</h2>
-                  {st.bridge && <p className="cs-stage__bridge">{st.bridge}</p>}
                   {st.body && (
                     <div className="cs-prose">
-                      <p>{st.body}</p>
+                      {st.body.split('\n\n').map((para) => (
+                        <p key={para.slice(0, 24)}>{para}</p>
+                      ))}
                     </div>
                   )}
                   {st.points && st.points.length > 0 && <Bullets items={st.points} />}
