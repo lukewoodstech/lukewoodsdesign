@@ -48,15 +48,6 @@ export const ALL_WORK: ReadonlyArray<WorkItem> = [
     section: 'selected',
     href: '/work/pattern-custom-reports',
   },
-  {
-    slug: 'hoth',
-    label: '04 · hoth',
-    title: 'hoth',
-    nav: 'hoth',
-    file: 'hoth.tsx',
-    section: 'selected',
-    href: '/work/hoth',
-  },
   /* The lab: ventures and side projects, below selected work. Pitch led
      the canvas from 2026-10-14 (LUK-122) until 2026-11-03, when Luke moved
      it here so selected work is the client studies (LUK-195). New lab
@@ -69,6 +60,17 @@ export const ALL_WORK: ReadonlyArray<WorkItem> = [
     file: 'pitch.tsx',
     href: '/work/pitch',
     section: 'lab',
+  },
+  /* Hoth joined the lab on 2026-11-03 (Luke): a second card beside Pitch,
+     same treatment, still behind its own password. */
+  {
+    slug: 'hoth',
+    label: '02 · hoth',
+    title: 'hoth',
+    nav: 'hoth',
+    file: 'hoth.tsx',
+    section: 'lab',
+    href: '/work/hoth',
   },
 ]
 
@@ -85,7 +87,7 @@ export const ALL_WORK: ReadonlyArray<WorkItem> = [
  * Lucid 01 to Pattern 03 (Hoth, still hidden, keeps 04) and the lab
  * numbers from its own 01.
  */
-export const HIDDEN_WORK: ReadonlySet<string> = new Set(['hoth'])
+export const HIDDEN_WORK: ReadonlySet<string> = new Set([])
 
 export const WORK: ReadonlyArray<WorkItem> = ALL_WORK.filter((w) => !HIDDEN_WORK.has(w.slug))
 
