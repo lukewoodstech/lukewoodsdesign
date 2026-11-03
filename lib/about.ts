@@ -65,8 +65,8 @@ export const STORY: ReadonlyArray<StoryCard> = [
 
 /* ── The experience rail ────────────────────────────────────────────
    Newest first. `href` is a published case study, or with `external`
-   the company's own site: Hoth's study is password-gated (HIDDEN_WORK
-   in lib/work.ts), so its card goes to hoth.com instead (Luke,
+   the company's own site: Hoth's study is password-gated (lib/gate.ts),
+   so its card goes to hoth.com instead (Luke,
    2026-09-28). `logo` is a tile in public/logos; where there isn't one,
    `mark` is the letter the tile shows and `color` its ground. */
 

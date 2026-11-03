@@ -784,7 +784,7 @@ export const CLAIMS: readonly Claim[] = [
     status: 'shipped',
     scope: 'company-wide',
     source: 'public/resume.pdf',
-    qualifier: 'A product-design internship at an early-stage startup, named separately from the three featured case studies. The case study is unpublished.',
+    qualifier: 'A product-design internship at an early-stage startup, named separately from the three featured case studies. The case study is behind a password, shared on request.',
   },
   {
     id: 'hoth-flows',
@@ -896,7 +896,7 @@ export const BACKGROUND = {
   gaps: [
     'Intern-level experience; graduating April 2028.',
     'Enterprise B2B heavy, consumer light.',
-    'The public case studies are three, Lucid, Awardco and Pattern. Pitch has a case study behind a password, shared on request; Hoth is unpublished. Pitch is current work in pilot, with no results yet.',
+    'The public case studies are three, Lucid, Awardco and Pattern. Pitch and Hoth have case studies behind a password, shared on request. Pitch is current work in pilot, with no results yet.',
   ],
 } as const
 
