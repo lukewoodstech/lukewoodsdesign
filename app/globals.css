@@ -9118,3 +9118,32 @@ p a {
 
 /* A looping screen recording in a study figure (LUK-200). */
 .cs-video { display: block; width: 100%; height: auto; }
+
+/* Two or three phones in one row on desktop (LUK-201): fixed phone width,
+   centred, no arrows. Below 48em they stay a swipe row with dots. */
+@media (min-width: 48em) {
+  .cs-screens--fit .cs-screens__row {
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 230px));
+    justify-content: center;
+    gap: 1.5rem;
+    overflow: visible;
+  }
+  .cs-screens--fit .cs-screens__item { flex: none; }
+  .cs-screens--fit .cs-screens__nav { display: none; }
+
+  /* The stack: the long app list takes the left column and the two short
+     groups stack beside it, instead of leaving a hole under the site. */
+  .cs-stack > .cs-stack__group:first-child { grid-row: span 2; }
+}
+
+/* A pair fits across even a phone: side by side at every width (LUK-201). */
+.cs-screens--n2 .cs-screens__row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 230px));
+  justify-content: center;
+  gap: 0.9rem;
+  overflow: visible;
+}
+.cs-screens--n2 .cs-screens__item { flex: none; }
+.cs-screens--n2 .cs-screens__nav { display: none; }

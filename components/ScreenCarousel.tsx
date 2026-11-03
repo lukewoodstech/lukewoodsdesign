@@ -17,6 +17,10 @@ export default function ScreenCarousel({ screens }: { screens: Screen[] }) {
   /* One screen beside the beat it shows (Pitch's Stats and Coach, LUK-195):
      a plain centred phone, no arrows or dots to page through nothing. */
   const single = screens.length === 1
+  /* Two or three phones fit across the column on desktop, so they sit in
+     one row there instead of paging (Luke, 2026-11-03: "put those visuals
+     in a row together"). The phone keeps the swipe row and its dots. */
+  const fit = screens.length === 2 || screens.length === 3
   const rowRef = useRef<HTMLDivElement>(null)
   const [index, setIndex] = useState(0)
 
@@ -50,7 +54,10 @@ export default function ScreenCarousel({ screens }: { screens: Screen[] }) {
   }
 
   return (
-    <div className={`cs-screens${single ? ' cs-screens--single' : ''}`}>
+    <div
+      className={`cs-screens${single ? ' cs-screens--single' : ''}${fit ? ` cs-screens--fit cs-screens--n${screens.length}` : ''}`}
+      style={fit ? ({ '--n': screens.length } as React.CSSProperties) : undefined}
+    >
       <div ref={rowRef} className="cs-screens__row" role="group" aria-label="App screens">
         {screens.map((s) => (
           <figure key={s.src} className="cs-screens__item">

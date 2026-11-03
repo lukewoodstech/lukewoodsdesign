@@ -366,9 +366,10 @@ export const caseStudies: CaseStudy[] = [
      *   the app work only: Luke's role is contract design and engineering,
      *   and no hardware is described (the nametag was dropped, LUK-194).
      *   The site figure is a capture of usepitch.app taken 2026-11-03 with
-     *   the pilot-count lines hidden. The recording screens are Luke's own
-     *   simulator captures from the same day, door addresses and customer
-     *   names blurred. Stats and Coach are 2026-10-14 captures cut above
+     *   the pilot-count lines hidden; the site beat plays Luke's own screen
+     *   recording of it (site-tour.mp4, 2026-11-03). The recording screens
+     *   are Luke's simulator captures from the same day; all app data is
+     *   mock (Luke), so nothing is blurred. Stats and Coach are 2026-10-14 captures cut above
      *   the tab bar, which has changed since. The stack is a snapshot from
      *   the repos the same day.
      */
@@ -421,7 +422,7 @@ export const caseStudies: CaseStudy[] = [
           {
             src: '/work/pitch/record-ready.png',
             label: 'Ready',
-            alt: 'The feed with the floating tab bar: Feed, Stats, the blue record button in the centre, Coach and Team. Door addresses are blurred.',
+            alt: 'The feed with the floating tab bar: Feed, Stats, the blue record button in the centre, Coach and Team',
           },
           {
             src: '/work/pitch/record-listening.png',
@@ -436,20 +437,14 @@ export const caseStudies: CaseStudy[] = [
         ],
       },
       {
-        heading: 'Stats',
-        body: 'Pace, not just totals: sales this week against the goal, today’s conversations, pitches and close attempts against targets, and a field-day streak.',
+        heading: 'Stats and Coach',
+        body: 'Stats shows pace, not just totals: the week’s sales against the goal, today’s conversations, pitches and close attempts, and a field-day streak. Coach turns a lost door into practice: the objection, what the rep said, a stronger answer, and a two-minute roleplay.',
         screens: [
           {
             src: '/work/pitch/screen-stats-top.png',
             label: 'Stats',
             alt: 'Stats: sales this week against the goal with a pace line, today’s conversations, pitches and close attempts against targets, and a field-day streak',
           },
-        ],
-      },
-      {
-        heading: 'Coach',
-        body: 'A lost door becomes practice. The rep sees the objection, what they said, a stronger answer, and a guided two-minute roleplay.',
-        screens: [
           {
             src: '/work/pitch/screen-coach-top.png',
             label: 'Coach',
@@ -461,8 +456,9 @@ export const caseStudies: CaseStudy[] = [
         heading: 'The site',
         body: 'I designed and built usepitch.app for everyone who sells face to face: the app up front, how a pitch gets scored, the manager dashboard, and a demo request on every button.',
         figure: {
-          src: '/work/pitch/site-hero.png',
-          caption: 'usepitch.app, the hero: the app is the product shot, and every button books a demo',
+          src: '/work/pitch/site-tour-poster.jpg',
+          video: '/work/pitch/site-tour.mp4',
+          caption: 'usepitch.app, top to bottom: the hero, how it works, the dashboard and the features',
           href: 'https://usepitch.app',
         },
       },
