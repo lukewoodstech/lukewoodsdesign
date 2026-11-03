@@ -9074,3 +9074,9 @@ p a {
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.6);
 }
+
+/* One phone beside its beat, and a phone-shaped before/after (LUK-195). */
+.cs-screens--single .cs-screens__row { justify-content: center; overflow: visible; }
+.cs-compare--phone > div { width: min(80vw, 320px); margin-inline: auto; }
+.cs-compare--phone > div > div { border-radius: 10.5%/4.8%; }
+.cs-compare--phone .cs-cap { text-align: center; }

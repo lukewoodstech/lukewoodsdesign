@@ -317,6 +317,21 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                 {/* A beat that is a thing to look at carries its picture
                     with it, instead of all the figures piling up after
                     the last step. */}
+                {step.compare && (
+                  <figure className={`my-12${step.compare.phone ? ' cs-compare--phone' : ''}`}>
+                    <div className={step.compare.phone ? 'cs-screens__phone' : undefined}>
+                      <BeforeAfterHero
+                        beforeSrc={step.compare.beforeSrc}
+                        afterSrc={step.compare.afterSrc}
+                        beforeAlt={step.compare.beforeAlt}
+                        afterAlt={step.compare.afterAlt}
+                        aspect={step.compare.aspect}
+                        frameless={step.compare.phone}
+                      />
+                    </div>
+                    <figcaption className="cs-cap">{step.compare.caption}</figcaption>
+                  </figure>
+                )}
                 {step.figure && <Fig {...step.figure} />}
                 {step.screens && step.screens.length > 0 && (
                   <ScreenCarousel screens={step.screens} />

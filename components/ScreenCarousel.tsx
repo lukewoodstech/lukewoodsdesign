@@ -14,6 +14,9 @@ import type { Screen } from '@/lib/caseStudies'
  * same thin bezel the home tiles use.
  */
 export default function ScreenCarousel({ screens }: { screens: Screen[] }) {
+  /* One screen beside the beat it shows (Pitch's Stats and Coach, LUK-195):
+     a plain centred phone, no arrows or dots to page through nothing. */
+  const single = screens.length === 1
   const rowRef = useRef<HTMLDivElement>(null)
   const [index, setIndex] = useState(0)
 
@@ -47,7 +50,7 @@ export default function ScreenCarousel({ screens }: { screens: Screen[] }) {
   }
 
   return (
-    <div className="cs-screens">
+    <div className={`cs-screens${single ? ' cs-screens--single' : ''}`}>
       <div ref={rowRef} className="cs-screens__row" role="group" aria-label="App screens">
         {screens.map((s) => (
           <figure key={s.src} className="cs-screens__item">
@@ -64,6 +67,7 @@ export default function ScreenCarousel({ screens }: { screens: Screen[] }) {
           </figure>
         ))}
       </div>
+      {!single && (
       <div className="cs-screens__nav">
         <button
           type="button"
@@ -99,6 +103,7 @@ export default function ScreenCarousel({ screens }: { screens: Screen[] }) {
           →
         </button>
       </div>
+      )}
     </div>
   )
 }

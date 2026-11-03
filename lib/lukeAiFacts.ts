@@ -159,10 +159,12 @@ export const CLAIMS: readonly Claim[] = [
     project: 'Building Pitch',
     claim: 'The full redesign of the rep app',
     wording:
-      'Luke redesigned the rep app end to end: light and calm, a serif for the numbers, one cornflower accent saved for what matters. Every screen, icon and component moved to it.',
+      'The old app was loud: hard black outlines, square corners, a heavy display face, and a brand red beside the red that meant fix this. Luke rebuilt it light and calm, with a serif for the numbers and one cornflower accent that never touches a score. He reworked 37 screens in the redesign and built 21 new components for it.',
     status: 'shipped',
     scope: 'project',
-    source: 'lib/caseStudies.ts (pitch); /work/pitch',
+    source: 'lib/caseStudies.ts (pitch); /work/pitch; counts from his commits on the app repo, 2026-11-03',
+    allowed: ['37 screens reworked', '21 new components'],
+    prohibited: ['that he redesigned all 42 screens', 'that he built the whole component library'],
   },
   {
     id: 'pitch-rep-app',

@@ -5,6 +5,21 @@ export type ProcessStep = {
   figure?: Figure
   /** Full phone screens shown under this step as a carousel (components/ScreenCarousel). */
   screens?: Screen[]
+  /** A drag slider between two captures of the same screen, old and new
+      (components/BeforeAfterHero). Phone-shaped pairs sit in a phone frame. */
+  compare?: Compare
+}
+
+export type Compare = {
+  beforeSrc: string
+  afterSrc: string
+  beforeAlt: string
+  afterAlt: string
+  /** Width over height of both images. */
+  aspect: number
+  caption: string
+  /** A phone screen: framed and held to phone width instead of the column. */
+  phone?: boolean
 }
 
 export type Screen = {
@@ -383,24 +398,11 @@ export const caseStudies: CaseStudy[] = [
     process: [
       {
         heading: 'The redesign',
-        body: 'I redesigned the rep app end to end: light and calm, a serif for the numbers, one cornflower accent saved for what matters. Every screen, icon and component moved to it.',
-        screens: [
-          {
-            src: '/work/pitch/screen-feed.png',
-            label: 'Feed',
-            alt: 'The Feed: yesterday’s doors, each with its score, a play button ringed in the score’s colour, the outcome (Callback or Sold), and one line of coaching',
-          },
-          {
-            src: '/work/pitch/screen-stats.png',
-            label: 'Stats',
-            alt: 'Stats: sales this week against the goal with a pace line, today’s conversations, pitches and close attempts against targets, and a field-day streak',
-          },
-          {
-            src: '/work/pitch/screen-coach.png',
-            label: 'Coach',
-            alt: 'Coach: an objection the rep lost a door on, quoted from the transcript with what the rep said, a button to show a good response, and a two-minute roleplay',
-          },
-        ],
+        body: 'The old app was loud: hard black outlines, square corners, a heavy display face, and a brand red beside the red that meant “fix this”. I rebuilt it light and calm: a serif for the numbers, one cornflower accent that never touches a score, and every screen moved onto it.',
+        figure: {
+          src: '/work/pitch/design-system.png',
+          caption: 'The system, drawn from the app’s own tokens: type, colour, the feed card, score bands and the tab bar. Bottom middle, a card rebuilt from the old theme.',
+        },
       },
       {
         heading: 'Recording',
@@ -413,10 +415,24 @@ export const caseStudies: CaseStudy[] = [
       {
         heading: 'Stats',
         body: 'Pace, not just totals: sales this week against the goal, today’s conversations, pitches and close attempts against targets, and a field-day streak.',
+        screens: [
+          {
+            src: '/work/pitch/screen-stats.png',
+            label: 'Stats',
+            alt: 'Stats: sales this week against the goal with a pace line, today’s conversations, pitches and close attempts against targets, and a field-day streak',
+          },
+        ],
       },
       {
         heading: 'Coach',
         body: 'A lost door becomes practice. The rep sees the objection, what they said, a stronger answer, and a guided two-minute roleplay.',
+        screens: [
+          {
+            src: '/work/pitch/screen-coach.png',
+            label: 'Coach',
+            alt: 'Coach: an objection the rep lost a door on, quoted from the transcript with what the rep said, a button to show a good response, and a two-minute roleplay',
+          },
+        ],
       },
       {
         heading: 'The site',
@@ -438,14 +454,17 @@ export const caseStudies: CaseStudy[] = [
       'Stats and Coach are live, both built from the rep’s own doors',
     ],
     heroSrc: '/work/pitch/app-feed.png',
-    heroCaption: 'The redesigned feed: every door scored, with its clip and one line of coaching',
+    heroCaption: 'The feed: every door scored, with its clip and one line of coaching',
     // The capture's own ground, sampled from its middle band.
     heroGround: '#eef0f8',
     // Product facts only: pilot figures stay off the page (Luke, 2026-10-14).
     glance: [
+      // Counted 2026-11-03 from Luke's commits on pitch-mobile main (local
+      // clone; GitHub access ended that day): 37 of the app's 42 screen
+      // files and 21 new component files.
+      { value: 37, lead: 'screens', rest: 'reworked in the redesign' },
+      { value: 21, lead: 'components', rest: 'built new for it' },
       { value: 3, lead: 'core flows', rest: 'designed and built: recording, Stats and Coach' },
-      { value: 1, lead: 'redesign', rest: 'across every screen of the rep app' },
-      { value: 2, lead: 'disciplines', rest: 'design and engineering, on one contract' },
     ],
     // A snapshot as of 2026-11-03 (LUK-195), read from the app and site
     // repos' package.json: Luke may lose repo access, so it lives here.
