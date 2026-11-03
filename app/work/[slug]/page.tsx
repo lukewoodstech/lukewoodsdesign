@@ -361,8 +361,8 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                 <Image
                   src={cs.heroSrc}
                   alt=""
-                  width={1600}
-                  height={1000}
+                  width={cs.heroSize?.width ?? 1600}
+                  height={cs.heroSize?.height ?? 1000}
                   priority
                   sizes="(min-width: 1200px) 1100px, 100vw"
                   className={cs.heroGround ? 'w-full h-auto cs-hero-melt' : 'w-full h-auto rounded-xl cs-hero-still'}

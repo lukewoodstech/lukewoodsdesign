@@ -121,6 +121,8 @@ export type CaseStudy = {
   outcomes?: string[]
   heroSrc?: string
   heroCaption?: string
+  /** The hero file's pixel size, when it is not the default 1600×1000. */
+  heroSize?: { width: number; height: number }
   /*
    * The hero band's colour when the hero is a photograph rather than a
    * device frame: set it to the picture's own ground so the band and the
@@ -624,7 +626,11 @@ export const caseStudies: CaseStudy[] = [
       'A rep records a full shift with one button and sees coaching without touching anything else',
       'Stats and Coach are live, both built from the rep’s own doors',
     ],
-    heroSrc: '/work/pitch/app-feed.png',
+    // Built 2026-11-03 from feed-now.png at its native 1206 px in a drawn
+    // frame, so the phone is never upscaled (the old 1400 px capture
+    // looked grainy). Wide canvas keeps the phone small on the page.
+    heroSrc: '/work/pitch/hero-feed.png',
+    heroSize: { width: 3840, height: 1900 },
     heroCaption: 'The feed: every door scored, with its clip and one line of coaching',
     // The capture's own ground, sampled from its middle band.
     heroGround: '#eef0f8',
