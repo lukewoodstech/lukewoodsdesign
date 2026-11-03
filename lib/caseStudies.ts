@@ -113,7 +113,7 @@ export type CaseStudy = {
   hideTimeline?: boolean
   /**
    * Header layout: summary across the full column, facts in a row below it
-   * (MetaGrid `stacked`). Off by default; Pitch uses it (LUK-200).
+   * (MetaGrid `stacked`). Off by default; Pitch uses it (LUK-199).
    */
   metaStacked?: boolean
   /*
@@ -352,7 +352,7 @@ export const caseStudies: CaseStudy[] = [
      * - Impact first, few words. Each beat is what changed and why it
      *   mattered, in one or two sentences. If a line needs a third, cut it.
  * - What was built, not how it was shipped: no pull request or process
- *   talk (Luke, 2026-10-14). The Timeline fact shows since LUK-200.
+ *   talk (Luke, 2026-10-14). The Timeline fact shows since LUK-199.
      * - No pilot customer names or pilot figures. Product screens are fine
      *   here because the gate holds them; public positioning (usepitch.app)
      *   is fine to repeat anywhere.
@@ -379,7 +379,7 @@ export const caseStudies: CaseStudy[] = [
     accent: '#4c7be8',
     // Named as contract design and engineering (Luke, 2026-11-03, LUK-195).
     role: 'Contract designer and engineer',
-    // Shown since LUK-200 (Luke, 2026-11-03): the header carries Role,
+    // Shown since LUK-199 (Luke, 2026-11-03): the header carries Role,
     // Timeline, Tools and Built only, under a full-width summary.
     period: 'Sep 2026 – present',
     metaStacked: true,

@@ -7273,7 +7273,7 @@ p a {
   color: #fff;
 }
 
-/* Stacked header (LUK-200): the summary takes the full column in a larger,
+/* Stacked header (LUK-199): the summary takes the full column in a larger,
    easier size, then a hairline, then the facts in one row beneath it. */
 .cs-meta--stacked { grid-template-columns: 1fr; gap: 0; }
 @media (min-width: 48em) {
