@@ -419,26 +419,19 @@ export const caseStudies: CaseStudy[] = [
     // Named as contract design and engineering (Luke, 2026-11-03, LUK-195).
     role: 'Contract designer and engineer',
     // Shown since LUK-199 (Luke, 2026-11-03): the header carries Role,
-    // Timeline, Tools and Built only, under a full-width summary.
+    // Timeline and Tools only, under a full-width summary.
     period: 'Sep 2026 – present',
     metaStacked: true,
     tools: 'Figma, React Native, Expo, Supabase, Next.js, Claude Code',
     summary: 'An AI coach for face-to-face sales. I rebranded it, redesigned the app and rebuilt its recording flow.',
-    headline: [
-      'A new brand, from the app icon to the emails',
-      'The rep app redesigned, screen by screen',
-      'Recording rebuilt around one button',
-      'Live with a pilot team',
-    ],
+    // One summary paragraph, with what was built folded in (Luke,
+    // 2026-11-03): no separate grey overview and no Built list.
     tagline:
-      'Pitch is an AI sales coach for people who sell face to face, like door-to-door and field reps. A rep taps record at the start of a shift, and Pitch turns the day into scored conversations and coaching on what to say next time.',
-    overview:
-      'The aim: give every rep the feedback a great manager would, without asking them to log anything. I joined the two founders on contract to design and build it. I rebranded Pitch, redesigned the rep app, and rebuilt recording, its main action, which was hard to find and harder to use.',
+      'Pitch is an AI sales coach for people who sell face to face, like door-to-door and field reps. A rep taps record at the start of a shift, and Pitch turns the day into scored conversations and coaching on what to say next time, the feedback a great manager would give. I joined the two founders on contract to design and build it: a new brand from the app icon to the emails, the rep app redesigned screen by screen, and recording, its main action, rebuilt around one button. It’s live with a pilot team.',
     eyebrows: {
       problem: 'Why',
       process: 'What I built',
       outcome: 'Where it stands',
-      impact: 'Built',
     },
     // The design process as stages with a rail (LUK-203, Luke trying it on
     // Pitch first). Each title is the decision the stage reached.
