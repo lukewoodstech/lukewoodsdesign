@@ -64,8 +64,8 @@ export type CaseStudy = {
   /*
    * The hero band's colour when the hero is a photograph rather than a
    * device frame: set it to the picture's own ground so the band and the
-   * picture read as one surface (Pitch's nametag renders sit on a warm
-   * off-white; on the accent blue the picture looked pasted on).
+   * picture read as one surface (Pitch's app capture sits on a pale
+   * wash; on the accent blue the picture looked pasted on).
    */
   heroGround?: string
   problemFigure?: Figure
@@ -329,52 +329,49 @@ export const caseStudies: CaseStudy[] = [
      *   here), so public studies never link to a locked door.
      * - Luke AI knows nothing about Pitch yet (lib/lukeAiFacts.ts). That is
      *   deliberate: the truth layer gets Pitch when the study is promoted.
-     * - The figures: the nametag renders are the marketing site's own
-     *   (marketing-v2/public/sequence), the app screen is the simulator on
-     *   the Private look (LUK-119), and the site shot is usepitch.app live.
+     * - The figures: every one is a real app screen from the simulator on
+     *   the Private look (LUK-119). Since 2026-11-03 (LUK-195) the study is
+     *   the app work only: Luke's role is contract design and engineering,
+     *   and no hardware is described (the nametag was dropped, LUK-194).
      */
     slug: 'pitch',
     title: 'Building Pitch',
     company: 'Pitch',
     // Cornflower, the brand accent locked 2026-10-13 (LUK-119).
     accent: '#4c7be8',
-    role: 'CTO',
+    // Named as contract design and engineering (Luke, 2026-11-03, LUK-195).
+    role: 'Contract designer and engineer',
     period: 'Sep 2026 – present',
     hideTimeline: true,
-    team: 'Three people: two founders and me',
-    tools: 'Figma, React Native and Expo, Next.js, Supabase, Node, Claude Code',
-    skills:
-      'Product design, interaction design, mobile and web engineering, data modelling, audio and AI pipeline, brand',
+    team: 'Two founders, with me on contract',
+    tools: 'Figma, React Native and Expo, Supabase, Claude Code',
+    skills: 'Product design, interaction design, design systems, mobile engineering',
     site: { href: 'https://usepitch.app', label: 'usepitch.app' },
-    summary: 'A nametag mic and an AI coach for reps who sell face to face.',
+    summary: 'An AI coach for face-to-face sales. I redesigned the app and built its core flows.',
     headline: [
-      'A nametag mic, a rep app, a manager console and an admin console',
-      'Every conversation recorded, transcribed and scored by AI',
+      'A full redesign of the rep app, every screen',
+      'Recording, Stats and Coach, designed and built end to end',
       'Live with a pilot team',
     ],
     tagline:
-      'A nametag mic hears every live sales pitch. AI scores it and coaches the rep. I design it and build it.',
+      'Pitch records a rep’s day at the door and coaches them on it. On contract, I redesigned its app and built the flows reps live in.',
     overview:
-      'Pitch is a three-person startup. I own design and engineering across the product: the app the nametag pairs with, the manager console, the internal admin console, the audio and AI pipeline behind them, and the public site.',
+      'Pitch is a sales-coaching startup for reps who sell face to face: a wearable mic records the day and AI scores every conversation. I joined on contract for design and engineering, redesigned the whole rep app, and built its three main flows: recording, Stats and Coach.',
     eyebrows: {
       problem: 'Why',
-      process: 'What we are building',
+      process: 'What I built',
       outcome: 'Where it stands',
       impact: 'Built',
     },
     problemPoints: [
       'Sales teams keep years of records and have never heard the conversation behind any of them',
-      'Reps will not log anything, so every number has to come from the mic',
-      'A product that listens all day gets sabotaged the moment it feels like surveillance',
+      'Reps will not log anything, so every number has to come from the recording',
+      'An app that listens all day gets abandoned the moment it feels like surveillance',
     ],
     process: [
       {
-        heading: 'The nametag',
-        body: 'A copper nameplate on a titanium frame, with two beamforming mics and a 12-hour battery in the core. It clips to a shirt and looks like exactly what it is.',
-      },
-      {
-        heading: 'The rep app',
-        body: 'Recording runs in the background, survives a locked phone, and splits a shift into doors by the street’s own noise level. Every door lands in the feed scored, with its recording and one line of coaching; Stats tracks pace against the rep’s goals, and Coach turns a lost objection into the rep’s own best answer and a two-minute roleplay.',
+        heading: 'The redesign',
+        body: 'I redesigned the rep app end to end: light and calm, a serif for the numbers, one cornflower accent saved for what matters. Every screen, icon and component moved to it.',
         screens: [
           {
             src: '/work/pitch/screen-feed.png',
@@ -394,46 +391,36 @@ export const caseStudies: CaseStudy[] = [
         ],
       },
       {
-        heading: 'The AI behind it',
-        body: 'Every recording is transcribed with the speakers labelled, then scored against what a good pitch does phase by phase: intro, discovery, objections, close. The rep sees one number, with the misses and the clip under it, and the coaching comes from the rep’s own doors.',
+        heading: 'Recording',
+        body: 'The main flow. A rep starts recording at the top of a shift and forgets it: it runs in the background, survives a locked phone, and splits the day into doors. Each door lands in the feed scored, with its clip and one line of coaching.',
       },
       {
-        heading: 'The manager console',
-        body: 'The team board, who needs coaching today, and every rep’s pitches with the transcript and score breakdown behind each number. Managers see their own team by default; the owner sets the company up once.',
+        heading: 'Stats',
+        body: 'Pace, not just totals: sales this week against the goal, today’s conversations, pitches and close attempts against targets, and a field-day streak.',
       },
       {
-        heading: 'Pitch HQ',
-        body: 'The internal console that provisions customers: company, offices and teams, recording consent by state, retention, and the roster import that invites managers. Demo requests from the site land here as deals. Founders only, behind MFA.',
-      },
-      {
-        heading: 'The site',
-        body: 'usepitch.app, rebuilt for everyone who sells face to face: the nametag in three parts, how it works, the console, and a demo request that works the prospect’s own numbers and books a call.',
-        figure: {
-          src: '/work/pitch/site-hero.png',
-          caption: 'usepitch.app: the nametag is the hero, and every button books a demo',
-          href: 'https://usepitch.app',
-        },
+        heading: 'Coach',
+        body: 'A lost door becomes practice. The rep sees the objection, what they said, a stronger answer, and a guided two-minute roleplay.',
       },
       {
         heading: 'My role',
-        body: 'Design and engineering, end to end. I draw the screens, build them, wire the data and the pipeline behind them, and ship.',
+        body: 'Contract design and engineering. I designed the screens, built them in React Native, wired them to the data, and shipped them to the pilot team.',
       },
     ],
     outcomes: [
-      'A pilot team records, uploads and sees coaching without touching anything but the record button',
-      'Managers see their own team by default, and the owner sets up the company once',
-      'App, consoles and site are live; scoring moves to a check-based judge with a quote for every check next',
+      'Every screen of the rep app runs on the new design',
+      'A pilot team records a full shift and sees coaching without touching anything but the record button',
+      'Stats and Coach are live, both built from the rep’s own doors',
     ],
-    heroSrc: '/work/pitch/nametag.png',
-    heroCaption: 'The nametag, assembled and apart: copper nameplate, titanium frame, and the core with two mics',
-    // The renders' own ground, sampled from the composite's left and right edges.
-    heroGround: '#e2e0d8',
+    heroSrc: '/work/pitch/app-feed.png',
+    heroCaption: 'The redesigned feed: every door scored, with its clip and one line of coaching',
+    // The capture's own ground, sampled from its middle band.
+    heroGround: '#eef0f8',
     // Product facts only: pilot figures stay off the page (Luke, 2026-10-14).
     glance: [
-      { value: 4, lead: 'products', rest: 'built, from the nametag to the admin console' },
-      { value: 2, lead: 'beamforming mics', rest: 'in the nametag' },
-      { value: 12, suffix: 'h', lead: 'battery', rest: 'per charge' },
-      { value: 3, lead: 'people', rest: 'on the team' },
+      { value: 3, lead: 'core flows', rest: 'designed and built: recording, Stats and Coach' },
+      { value: 1, lead: 'redesign', rest: 'across every screen of the rep app' },
+      { value: 2, lead: 'disciplines', rest: 'design and engineering, on one contract' },
     ],
     nextSlug: 'lucid-ai',
   },

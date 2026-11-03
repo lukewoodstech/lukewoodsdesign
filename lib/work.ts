@@ -14,11 +14,53 @@ export type WorkItem = {
   nav: string
   file: string
   href: string
+  /* Which home section the tile sits in: 'selected' is the client case
+     studies, staggered large; 'lab' is ventures and side projects, a
+     smaller grid under them (LUK-195). */
+  section: 'selected' | 'lab'
 }
 
 export const ALL_WORK: ReadonlyArray<WorkItem> = [
-  /* Pitch leads: it is the current work, and the canvas runs newest first
-     (Luke, 2026-10-14). */
+  {
+    slug: 'lucid-ai',
+    label: '01 · lucid ai',
+    title: 'lucid ai search',
+    nav: 'lucid',
+    file: 'lucid-ai.tsx',
+    section: 'selected',
+    href: '/work/lucid-ai',
+  },
+  {
+    slug: 'awardco',
+    label: '02 · awardco',
+    title: 'awardco login',
+    nav: 'awardco',
+    file: 'awardco.tsx',
+    section: 'selected',
+    href: '/work/awardco-login-flow-redesign',
+  },
+  {
+    slug: 'pattern',
+    label: '03 · pattern',
+    title: 'pattern custom reports',
+    nav: 'pattern',
+    file: 'pattern.tsx',
+    section: 'selected',
+    href: '/work/pattern-custom-reports',
+  },
+  {
+    slug: 'hoth',
+    label: '04 · hoth',
+    title: 'hoth',
+    nav: 'hoth',
+    file: 'hoth.tsx',
+    section: 'selected',
+    href: '/work/hoth',
+  },
+  /* The lab: ventures and side projects, below selected work. Pitch led
+     the canvas from 2026-10-14 (LUK-122) until 2026-11-03, when Luke moved
+     it here so selected work is the client studies (LUK-195). New lab
+     tiles go after it, newest first within the section. */
   {
     slug: 'pitch',
     label: '01 · pitch',
@@ -26,38 +68,7 @@ export const ALL_WORK: ReadonlyArray<WorkItem> = [
     nav: 'pitch',
     file: 'pitch.tsx',
     href: '/work/pitch',
-  },
-  {
-    slug: 'lucid-ai',
-    label: '02 · lucid ai',
-    title: 'lucid ai search',
-    nav: 'lucid',
-    file: 'lucid-ai.tsx',
-    href: '/work/lucid-ai',
-  },
-  {
-    slug: 'awardco',
-    label: '03 · awardco',
-    title: 'awardco login',
-    nav: 'awardco',
-    file: 'awardco.tsx',
-    href: '/work/awardco-login-flow-redesign',
-  },
-  {
-    slug: 'pattern',
-    label: '04 · pattern',
-    title: 'pattern custom reports',
-    nav: 'pattern',
-    file: 'pattern.tsx',
-    href: '/work/pattern-custom-reports',
-  },
-  {
-    slug: 'hoth',
-    label: '05 · hoth',
-    title: 'hoth',
-    nav: 'hoth',
-    file: 'hoth.tsx',
-    href: '/work/hoth',
+    section: 'lab',
   },
 ]
 
@@ -70,8 +81,9 @@ export const ALL_WORK: ReadonlyArray<WorkItem> = [
  * Pitch left this set on 2026-10-14 (LUK-122): it has a tile now, so the
  * canvas says Pitch exists, while the study behind it stays gated
  * (lib/gate.ts) until it is promoted (LUK-77). The labels are numbered by
- * what shows: Pitch is the first card since 2026-10-14, Hoth, still
- * hidden, keeps 05.
+ * what shows within each section: since 2026-11-03 selected work runs
+ * Lucid 01 to Pattern 03 (Hoth, still hidden, keeps 04) and the lab
+ * numbers from its own 01.
  */
 export const HIDDEN_WORK: ReadonlySet<string> = new Set(['hoth'])
 

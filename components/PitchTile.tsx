@@ -6,27 +6,20 @@ import TileFooter from './TileFooter'
 import { useEnterToOpen } from '@/lib/useEnterToOpen'
 
 /*
- * Pitch: the app first, the nametag beside it. One phone, large and a
- * little right of centre, rises from the bottom edge showing the rep
- * app's feed as it runs on the simulator today, on the Private look
- * (LUK-119). Behind its left shoulder sits the nametag as a print: the
- * marketing site's render of the assembled plate (public/work/pitch/
- * nametag-plate.png, cropped from frame 1 of the usepitch.app hero
- * sequence), tilted a few degrees. The ground is the app's own pale
- * page wash, so the phone reads as the subject and the copper plate as
- * the supporting piece (Luke, 2026-10-14: "make the mobile app the main
- * character of the tile, and the mic a supporting piece next to it").
- * Nothing is invented: the render is the one the public site shows, and
- * every pixel of UI is a real screen. The phone reuses the Awardco
- * tile's .phone chrome; its size and position are its own (.pitch-phone
- * in globals.css), and the print is .pitch-plate.
+ * Pitch: the app, alone. One phone, large and centred, rises from the
+ * bottom edge showing the rep app's feed as it runs on the simulator, on
+ * the redesigned Private look (LUK-119). The ground is the app's own pale
+ * page wash. Until 2026-11-03 a print of the nametag sat behind the
+ * phone; it left with the nametag (LUK-194) when the study became the
+ * app work Luke did on contract (LUK-195). Every pixel of UI is a real
+ * screen. The phone reuses the Awardco tile's .phone chrome; its size and
+ * position are its own (.pitch-phone in globals.css).
  *
- * The study was password-gated like Hoth's until 2026-10-14 (LUK-77);
- * the card is a plain link now, the title's stretched link in TileFooter.
+ * The card is a plain link, the title's stretched link in TileFooter.
  */
 
 const STAGE_LABEL =
-  'A phone showing the Pitch rep app: a feed of doors from yesterday, each with its score, a play button ringed in its score colour, and one line of coaching. Behind it, a print of the Pitch nametag, a brushed copper plate engraved with the word pitch'
+  'A phone showing the Pitch rep app: a feed of doors from yesterday, each with its score, a play button ringed in its score colour, and one line of coaching.'
 
 export default function PitchTile() {
   const [hovered, setHovered] = useState(false)
@@ -44,14 +37,6 @@ export default function PitchTile() {
         <div className="tile-scrim" style={{ opacity: hovered ? 1 : 0 }} />
 
         <div className="phone-trio" role="img" aria-label={STAGE_LABEL}>
-          <div className="pitch-plate">
-            <Image
-              src="/work/pitch/nametag-plate.png"
-              alt=""
-              fill
-              sizes="(min-width: 48em) 20vw, 50vw"
-            />
-          </div>
           <div className="phone pitch-phone">
             <div className="phone__screen">
               <Image

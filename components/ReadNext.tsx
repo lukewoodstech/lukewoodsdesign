@@ -4,7 +4,7 @@ import { WORK_TILES } from './CanvasBits'
 
 /*
  * The "Read next" cards at the foot of every study: the home canvas's own
- * tiles, in canvas order (Pitch first, newest first), minus the study you
+ * tiles in home order (selected work, then the lab), minus the study you
  * just read. Hidden studies never show, so a public page never links to a
  * locked door. Three cards in a two-column grid: the first spans the row
  * (.cs-next in globals.css).

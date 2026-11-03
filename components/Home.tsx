@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import Footer from './Footer'
 import SiteNav from './SiteNav'
 import HeroIntro from './HeroIntro'
-import { WORK_TILES } from './CanvasBits'
+import { SELECTED_TILES, LAB_TILES } from './CanvasBits'
 
 /*
  * The homepage (2026-09-21): the hero sentence centred at the top, then
@@ -70,7 +70,7 @@ export default function Home() {
             selected work <span aria-hidden="true">—</span>
           </h2>
 
-          {WORK_TILES.map((item, i) => (
+          {SELECTED_TILES.map((item, i) => (
             <article
               key={item.slug}
               className={`home-work__item home-work__item--${i % 2 ? 'right' : 'left'}`}
@@ -85,6 +85,28 @@ export default function Home() {
           ))}
 
         </section>
+
+        {/* The lab (LUK-195): ventures and side projects, set smaller than
+            selected work so the client studies stay the lead. A plain grid,
+            not a carousel: the sideways canvas was the site's most-reported
+            problem, and a grid shows every tile without a gesture. It takes
+            more tiles as they come; past six or so it wants its own page. */}
+        {LAB_TILES.length > 0 && (
+          <section className="home-lab" id="lab" aria-labelledby="home-lab-heading">
+            <h2 id="home-lab-heading" className="home-work__heading home-lab__heading">
+              lab <span aria-hidden="true">—</span>
+            </h2>
+
+            {LAB_TILES.map((item) => (
+              <article key={item.slug} className="home-lab__item">
+                <span className="home-work__label" aria-hidden="true">
+                  {item.label}
+                </span>
+                <div className="home-card home-card--lab">{item.tile}</div>
+              </article>
+            ))}
+          </section>
+        )}
       </main>
 
       <Footer />

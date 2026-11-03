@@ -35,3 +35,7 @@ export const WORK_TILES: ReadonlyArray<WorkItem & { tile: ReactNode }> = WORK.ma
   ...item,
   tile: TILE_ART[item.slug],
 }))
+
+/* The two home sections (LUK-195): the client studies, then the lab. */
+export const SELECTED_TILES = WORK_TILES.filter((w) => w.section === 'selected')
+export const LAB_TILES = WORK_TILES.filter((w) => w.section === 'lab')

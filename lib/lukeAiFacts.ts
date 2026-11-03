@@ -66,8 +66,8 @@ export type Engagement = {
   period: string
   /** The three featured case studies are 'internship'; Hoth is an earlier
       startup internship that is named separately, never totaled with them;
-      Pitch is the startup Luke is building now, as CTO ('founder'). */
-  kind: 'internship' | 'startup-internship' | 'founder'
+      Pitch is current contract work: design and engineering ('contract'). */
+  kind: 'internship' | 'startup-internship' | 'contract'
   route?: string
   summary: string
 }
@@ -82,12 +82,12 @@ export const POSITIONING =
 export const ENGAGEMENTS: readonly Engagement[] = [
   {
     company: 'Pitch',
-    role: 'CTO',
+    role: 'Contract designer and engineer',
     period: 'September 2026 to present',
-    kind: 'founder',
+    kind: 'contract',
     route: '/work/pitch',
     summary:
-      'Sales-coaching startup, three people: a nametag mic and an AI coach for reps who sell face to face. Current work, in pilot. Luke owns design and engineering across the rep app, the manager console, the internal admin console, the audio and AI pipeline, and the public site (usepitch.app).',
+      'Sales-coaching startup for reps who sell face to face. Current contract work, in pilot. Luke redesigned the whole rep app and designed and built its three main flows: recording, Stats and Coach.',
   },
   {
     company: 'Lucid',
@@ -132,79 +132,49 @@ export const INTERNSHIPS = ENGAGEMENTS.filter((e) => e.kind === 'internship')
 
 export const CLAIMS: readonly Claim[] = [
   /* ────────── Pitch ──────────
-     Source: the pitch entry in lib/caseStudies.ts (LUK-77, 2026-10-14).
+     Source: the pitch entry in lib/caseStudies.ts (LUK-77, 2026-10-14;
+     rewritten for the contract role and the app work, LUK-195, 2026-11-03).
      Current work, so every claim is what exists today, never a result. */
   {
     id: 'pitch-role',
     company: 'Pitch',
     project: 'Building Pitch',
-    claim: 'CTO of a three-person startup, owning design and engineering',
+    claim: 'Contract designer and engineer at a sales-coaching startup',
     wording:
-      'Pitch is a three-person startup building a nametag mic and an AI coach for reps who sell face to face. Luke is its CTO and owns design and engineering: the rep app, the manager console, the internal admin console, the audio and AI pipeline behind them, and the public site.',
+      'Pitch is a sales-coaching startup for reps who sell face to face: a wearable mic records the day and AI scores every conversation. Luke works with the two founders on contract, doing design and engineering on the rep app.',
     status: 'shipped',
     scope: 'company-wide',
     source: 'lib/caseStudies.ts (pitch); /work/pitch',
     qualifier: 'Current work, with a pilot team. The portfolio has no pilot customer names, pilot figures, revenue, pricing, fundraising, or user counts for Pitch.',
-    prohibited: ['any sales-lift, close-rate, revenue, or adoption number for Pitch', 'naming a pilot customer'],
+    prohibited: [
+      'any sales-lift, close-rate, revenue, or adoption number for Pitch',
+      'naming a pilot customer',
+      'calling Luke a founder, co-founder or CTO of Pitch',
+      'describing the mic hardware (no device is chosen yet)',
+    ],
   },
   {
-    id: 'pitch-nametag',
+    id: 'pitch-redesign',
     company: 'Pitch',
     project: 'Building Pitch',
-    claim: 'The nametag mic',
+    claim: 'The full redesign of the rep app',
     wording:
-      'The nametag is a copper nameplate on a titanium frame, with two beamforming mics and a 12-hour battery in the core. It clips to a shirt.',
+      'Luke redesigned the rep app end to end: light and calm, a serif for the numbers, one cornflower accent saved for what matters. Every screen, icon and component moved to it.',
     status: 'shipped',
     scope: 'project',
-    source: 'lib/caseStudies.ts (pitch); usepitch.app',
-    qualifier: 'As described on usepitch.app; the hardware is in pilot.',
+    source: 'lib/caseStudies.ts (pitch); /work/pitch',
   },
   {
     id: 'pitch-rep-app',
     company: 'Pitch',
     project: 'Building Pitch',
-    claim: 'The rep app: recording, feed, Stats, Coach',
+    claim: 'The flows he designed and built: recording, Stats, Coach',
     wording:
-      'The rep app records in the background, survives a locked phone, and splits a shift into doors by the street’s own noise level. Every door lands in the feed with its score, its recording and one line of coaching; Stats tracks pace against the rep’s goals, and Coach turns a lost objection into the rep’s own best answer and a two-minute roleplay.',
+      'Recording is the main flow: a rep starts it at the top of a shift and forgets it; it runs in the background, survives a locked phone, and splits the day into doors, each landing in the feed scored with its clip and one line of coaching. Stats shows pace against the week’s goal and today’s targets with a field-day streak. Coach turns a lost door into practice: the objection, what the rep said, a stronger answer, and a guided two-minute roleplay.',
     status: 'shipped',
     scope: 'project',
     source: 'lib/caseStudies.ts (pitch); /work/pitch',
     qualifier: 'Live with a pilot team; no usage or outcome figures are published.',
-  },
-  {
-    id: 'pitch-ai',
-    company: 'Pitch',
-    project: 'Building Pitch',
-    claim: 'How the scoring works',
-    wording:
-      'Every recording is transcribed with the speakers labelled, then scored against what a good pitch does phase by phase: intro, discovery, objections, close. The rep sees one number, with the misses and the clip under it, and the coaching comes from the rep’s own doors.',
-    status: 'shipped',
-    scope: 'project',
-    source: 'lib/caseStudies.ts (pitch); /work/pitch',
-    qualifier: 'A check-based judge with a quote for every check is the next step, not live yet.',
-    prohibited: ['any accuracy, agreement, or effectiveness figure for the scoring', 'presenting the judge as live'],
-  },
-  {
-    id: 'pitch-consoles',
-    company: 'Pitch',
-    project: 'Building Pitch',
-    claim: 'The manager console and Pitch HQ',
-    wording:
-      'The manager console shows the team board, who needs coaching today, and each rep’s pitches with the transcript and score breakdown behind every number; managers see their own team by default. Pitch HQ is the internal console that provisions customers (company, offices and teams, recording consent by state, retention, and the roster import that invites managers) and holds demo requests as deals; founders only, behind MFA.',
-    status: 'shipped',
-    scope: 'project',
-    source: 'lib/caseStudies.ts (pitch); /work/pitch',
-  },
-  {
-    id: 'pitch-site',
-    company: 'Pitch',
-    project: 'Building Pitch',
-    claim: 'The public site',
-    wording:
-      'Luke rebuilt usepitch.app for everyone who sells face to face: the nametag in three parts, how it works, the console, and a demo request that works the prospect’s own numbers and books a call.',
-    status: 'shipped',
-    scope: 'project',
-    source: 'lib/caseStudies.ts (pitch); usepitch.app',
   },
   {
     id: 'pitch-status',
@@ -212,7 +182,7 @@ export const CLAIMS: readonly Claim[] = [
     project: 'Building Pitch',
     claim: 'Where it stands',
     wording:
-      'A pilot team records, uploads and sees coaching without touching anything but the record button; managers see their own team by default, and the owner sets the company up once.',
+      'Every screen of the rep app runs on the new design. A pilot team records a full shift and sees coaching without touching anything but the record button, and Stats and Coach are live.',
     status: 'shipped',
     scope: 'company-wide',
     source: 'lib/caseStudies.ts (pitch); /work/pitch',

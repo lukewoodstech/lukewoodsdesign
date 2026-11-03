@@ -754,39 +754,18 @@ p a {
 }
 
 /*
- * The subject: one phone, large, a little right of centre, rising from
- * the bottom edge like the Awardco trio's primary. Two classes, because
+ * The subject: one phone, large and centred, rising from the bottom edge
+ * like the Awardco trio's primary. The nametag print that sat behind its
+ * shoulder went with the nametag (LUK-194, LUK-195). Two classes, because
  * .phone below sets the same properties and comes later in this file: a
- * single class here loses to it and the phone lands centred at the
- * trio's size.
+ * single class here loses to it and the phone lands at the trio's size.
  */
 .phone.pitch-phone {
   --pw: min(42cqw, 54cqh);
   top: 9cqh;
-  left: 60%;
+  left: 50%;
   z-index: 2;
   box-shadow: 0 24px 56px rgba(30, 40, 90, 0.32), 0 2px 10px rgba(30, 40, 90, 0.16);
-}
-
-/*
- * The supporting piece: the nametag itself, lifted off its render (the
- * subject mask in macOS Vision, see LUK-127), behind the phone's left
- * shoulder and tilted a few degrees. No card, no paper edge: it is the
- * object laid beside the phone, with its own drop shadow.
- */
-.pitch-plate {
-  position: absolute;
-  left: 4%;
-  top: 30cqh;
-  z-index: 1;
-  width: 50cqw;
-  aspect-ratio: 655 / 400;
-  transform: rotate(-4deg);
-  filter: drop-shadow(0 18px 28px rgba(30, 40, 90, 0.28)) drop-shadow(0 2px 4px rgba(30, 40, 90, 0.14));
-}
-
-.pitch-plate img {
-  object-fit: contain;
 }
 
 /*
@@ -7058,6 +7037,39 @@ p a {
 @media (max-width: 47.99em) {
   .home-card .workgrid__item {
     aspect-ratio: 5 / 6;
+  }
+}
+
+/* The lab (LUK-195): a smaller grid under selected work. Same surface and
+   mono labels; half-width cards on desktop, two to a row, so a reader sees
+   it is a second tier at a glance and every tile shows without scrolling
+   sideways. On the phone the cards stack like the rest. */
+.home-lab {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: 1.5rem;
+  row-gap: clamp(2rem, 5vh, 3.5rem);
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: clamp(2rem, 6vh, 4rem) clamp(1rem, 5vw, 3rem) 4rem;
+}
+
+.home-lab__heading,
+.home-lab__item {
+  grid-column: 1 / -1;
+}
+
+.home-lab__heading {
+  margin-bottom: -0.5rem;
+}
+
+.home-lab__item {
+  position: relative;
+}
+
+@media (min-width: 48em) {
+  .home-lab__item {
+    grid-column: span 6;
   }
 }
 
