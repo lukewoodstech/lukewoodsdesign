@@ -108,6 +108,11 @@ export type CaseStudy = {
    * 2026-10-14: "take out the whole PR and timeline thing").
    */
   hideTimeline?: boolean
+  /**
+   * Header layout: summary across the full column, facts in a row below it
+   * (MetaGrid `stacked`). Off by default; Pitch uses it (LUK-199).
+   */
+  metaStacked?: boolean
   /*
    * "The project at a glance": the big-number row under the hero, as on the
    * bespoke studies. `lead` is the bold start of the caption, `rest` the
@@ -343,8 +348,8 @@ export const caseStudies: CaseStudy[] = [
      * House rules for this entry, which future edits keep:
      * - Impact first, few words. Each beat is what changed and why it
      *   mattered, in one or two sentences. If a line needs a third, cut it.
- * - What was built, not when or how it was shipped: no dates, no pull
- *   request or process talk (Luke, 2026-10-14). Timeline is hidden.
+ * - What was built, not how it was shipped: no pull request or process
+ *   talk (Luke, 2026-10-14). The Timeline fact shows since LUK-199.
      * - No pilot customer names or pilot figures. Product screens are fine
      *   here because the gate holds them; public positioning (usepitch.app)
      *   is fine to repeat anywhere.
@@ -368,12 +373,11 @@ export const caseStudies: CaseStudy[] = [
     accent: '#4c7be8',
     // Named as contract design and engineering (Luke, 2026-11-03, LUK-195).
     role: 'Contract designer and engineer',
+    // Shown since LUK-199 (Luke, 2026-11-03): the header carries Role,
+    // Timeline, Tools and Built only, under a full-width summary.
     period: 'Sep 2026 – present',
-    hideTimeline: true,
-    team: 'Two founders, with me on contract',
+    metaStacked: true,
     tools: 'Figma, React Native, Expo, Supabase, Next.js, Claude Code',
-    skills: 'Product design, interaction design, design systems, mobile and web engineering, on-device audio',
-    site: { href: 'https://usepitch.app', label: 'usepitch.app' },
     summary: 'An AI coach for face-to-face sales. I redesigned the app and built its core flows.',
     headline: [
       'A full redesign of the rep app, every screen',
@@ -381,9 +385,9 @@ export const caseStudies: CaseStudy[] = [
       'Live with a pilot team',
     ],
     tagline:
-      'Pitch records a rep’s day at the door and coaches them on it. On contract, I redesigned its app and built the flows reps live in.',
+      'Pitch is an AI sales coach for people who sell face to face, like door-to-door and field reps. A rep taps record at the start of a shift, and Pitch turns the day into scored conversations and coaching on what to say next time.',
     overview:
-      'Pitch is a sales-coaching startup for reps who sell face to face: a wearable mic records the day and AI scores every conversation. I joined on contract for design and engineering, redesigned the whole rep app, and built its three main flows: recording, Stats and Coach.',
+      'The aim: give every rep the feedback a great manager would, without asking them to log anything. I joined the two founders on contract to design and build the app. I redesigned the rep app and built its three core flows: recording, Stats and Coach.',
     eyebrows: {
       problem: 'Why',
       process: 'What I built',

@@ -7273,6 +7273,33 @@ p a {
   color: #fff;
 }
 
+/* Stacked header (LUK-199): the summary takes the full column in a larger,
+   easier size, then a hairline, then the facts in one row beneath it. */
+.cs-meta--stacked { grid-template-columns: 1fr; gap: 0; }
+@media (min-width: 48em) {
+  .cs-meta--stacked { grid-template-columns: 1fr; gap: 0; }
+}
+.cs-meta--stacked .cs-meta__summary .cs-prose {
+  max-width: none;
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.3rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.72);
+}
+.cs-meta--stacked .cs-meta__summary .cs-prose p:first-child {
+  font-size: clamp(1.25rem, 1.05rem + 0.8vw, 1.55rem);
+  line-height: 1.45;
+  color: #fff;
+}
+.cs-meta--stacked .cs-meta__facts {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  gap: 1.75rem 2rem;
+}
+@media (min-width: 48em) {
+  .cs-meta--stacked .cs-meta__facts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
 /* ── Hero laptop, cropped by the band ─────────────────────────── */
 .cs-hero-band {
   margin-top: clamp(2.5rem, 5vw, 4rem);

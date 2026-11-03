@@ -221,6 +221,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                   <p key={i}>{text}</p>
                 ))}
                 facts={facts}
+                stacked={cs.metaStacked}
               />
             )}
           </header>

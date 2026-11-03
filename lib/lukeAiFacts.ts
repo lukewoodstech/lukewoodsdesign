@@ -141,7 +141,7 @@ export const CLAIMS: readonly Claim[] = [
     project: 'Building Pitch',
     claim: 'Contract designer and engineer at a sales-coaching startup',
     wording:
-      'Pitch is a sales-coaching startup for reps who sell face to face: a wearable mic records the day and AI scores every conversation. Luke works with the two founders on contract, doing design and engineering on the rep app.',
+      'Pitch is an AI sales coach for people who sell face to face, like door-to-door and field reps: a rep taps record at the start of a shift, and Pitch turns the day into scored conversations and coaching. The aim is the feedback a great manager would give, without the rep logging anything. Luke works with the two founders on contract, doing design and engineering on the rep app.',
     status: 'shipped',
     scope: 'company-wide',
     source: 'lib/caseStudies.ts (pitch); /work/pitch',

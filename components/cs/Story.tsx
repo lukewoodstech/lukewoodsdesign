@@ -132,9 +132,20 @@ export function StoryTitle({ children, dim }: { children: ReactNode; dim?: React
 
 export type Fact = { label: string; value: ReactNode; span?: boolean }
 
-export function MetaGrid({ summary, facts }: { summary: ReactNode; facts: Fact[] }) {
+/* `stacked` puts the summary across the full column and the facts in a
+   row beneath it, so the page reads top to bottom: what this is, then the
+   particulars (Luke, 2026-11-03, LUK-199). */
+export function MetaGrid({
+  summary,
+  facts,
+  stacked = false,
+}: {
+  summary: ReactNode
+  facts: Fact[]
+  stacked?: boolean
+}) {
   return (
-    <div className="cs-meta">
+    <div className={stacked ? 'cs-meta cs-meta--stacked' : 'cs-meta'}>
       <div className="cs-meta__summary">
         <MonoLabel>Summary</MonoLabel>
         <div className="cs-prose">{summary}</div>
