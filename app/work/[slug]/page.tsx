@@ -183,7 +183,7 @@ function StepMedia({ step }: { step: ProcessStep }) {
         <ScreenCarousel screens={step.screens} />
       )}
       {step.gallery && step.gallery.items.length > 0 && (
-        <figure className="cs-gallery my-10">
+        <figure className={`cs-gallery my-10${step.gallery.items.length > 3 ? ' cs-gallery--many' : ''}`}>
           <div className="cs-gallery__row">
             {step.gallery.items.map((g) => (
               <div

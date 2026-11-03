@@ -9386,3 +9386,16 @@ p a {
   text-underline-offset: 0.2em;
 }
 .cs-cap__link:hover { color: #fff; }
+
+/* Four or more gallery images (the five directions) are too small side by
+   side on a phone: there they become a swipe row at a readable size. */
+@media (max-width: 47.99em) {
+  .cs-gallery--many .cs-gallery__row {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding-bottom: 0.5rem;
+  }
+  .cs-gallery--many .cs-gallery__row::-webkit-scrollbar { display: none; }
+  .cs-gallery--many .cs-gallery__item { flex: 0 0 42% !important; scroll-snap-align: start; }
+}

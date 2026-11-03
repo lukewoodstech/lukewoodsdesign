@@ -473,11 +473,6 @@ export const caseStudies: CaseStudy[] = [
                 label: 'Feed',
                 alt: 'The old Pitch Feed: dark cards titled Pitch 005 and Pitch 004, red and green scores, and an End recording bar over the tab bar',
               },
-              {
-                src: '/work/pitch/before-recording.png',
-                label: 'Recording',
-                alt: 'The old recording state: a green End recording toast with a timer floating over the feed, and a speaker icon in the tab bar',
-              },
             ],
           },
         ],
