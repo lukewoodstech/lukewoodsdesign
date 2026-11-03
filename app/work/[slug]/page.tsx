@@ -269,7 +269,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
   const headline = (cs.headline ?? []).filter((h) => !isPlaceholder(h))
   const eyebrows = cs.eyebrows ?? {}
 
-  const facts: Fact[] = []
+  const facts: Fact[] = [{ label: 'Company', value: cs.about, span: true }]
   if (real(cs.role)) facts.push({ label: 'Role', value: cs.role })
   if (real(cs.team)) facts.push({ label: 'Team', value: cs.team })
   if (!cs.hideTimeline && real(cs.period)) facts.push({ label: 'Timeline', value: cs.period })

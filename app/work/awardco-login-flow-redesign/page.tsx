@@ -33,6 +33,7 @@ import {
   Two,
 } from '@/components/cs/Story'
 import { SITE } from '@/lib/site'
+import { companyAbout } from '@/lib/caseStudies'
 
 /*
  * Custom-built case study — this static route intentionally shadows the
@@ -268,6 +269,7 @@ export default function AwardcoCaseStudy() {
                 </>
               }
               facts={[
+                { label: 'Company', value: companyAbout('awardco-login-flow-redesign'), span: true },
                 { label: 'Role', value: 'Product Design Intern' },
                 {
                   label: 'Team',

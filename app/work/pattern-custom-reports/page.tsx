@@ -33,6 +33,7 @@ import {
   Two,
 } from '@/components/cs/Story'
 import { SITE } from '@/lib/site'
+import { companyAbout } from '@/lib/caseStudies'
 
 /*
  * Custom-built case study: this static route intentionally shadows the
@@ -146,6 +147,7 @@ export default function PatternCaseStudy() {
                 /* Two spans of time, kept apart: the internship is the
                    role's dates, the project is nine weeks inside them. One
                    fact that said both read as a nine-week internship. */
+                { label: 'Company', value: companyAbout('pattern-custom-reports'), span: true },
                 { label: 'Role', value: 'Product Design Intern, January to October 2025' },
                 { label: 'Team', value: 'Design, product, and engineering' },
                 { label: 'Project', value: 'Nine weeks, from the ticket to handoff' },

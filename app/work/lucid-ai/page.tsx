@@ -34,6 +34,7 @@ import {
   Two,
 } from '@/components/cs/Story'
 import { SITE } from '@/lib/site'
+import { companyAbout } from '@/lib/caseStudies'
 
 /*
  * Custom-built case study — this static route intentionally shadows the
@@ -116,6 +117,7 @@ export default function LucidCaseStudy() {
                 </>
               }
               facts={[
+                { label: 'Company', value: companyAbout('lucid-ai'), span: true },
                 { label: 'Role', value: 'Product Design Intern' },
                 { label: 'Team', value: 'Two scrum teams, Search and AI' },
                 { label: 'Timeline', value: 'May to August 2026' },

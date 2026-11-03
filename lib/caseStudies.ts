@@ -87,6 +87,14 @@ export type CaseStudy = {
   slug: string
   title: string
   company: string
+  /*
+   * One plain sentence on what the company does, for the "Company" fact at
+   * the top of every study header. Readers outside Utah had no idea what
+   * Awardco or Pattern were, and some did not know Lucid (Luke, 2026-10-14).
+   * No numbers: a company's own stats are not claims the truth layer can
+   * check, so the line only says what it makes and for whom.
+   */
+  about: string
   /** The study's accent color — drives its OG card and page `--accent`. */
   accent: string
   role: string
@@ -174,6 +182,8 @@ export const caseStudies: CaseStudy[] = [
     slug: 'lucid-ai',
     title: 'Bringing Lucid AI to the homepage',
     company: 'Lucid',
+    about:
+      'Lucid makes Lucidchart and Lucidspark, the visual collaboration tools teams use to diagram systems, map processes, and brainstorm together.',
     accent: '#f96b13',
     role: 'Product Design Intern',
     period: 'May – Aug 2026 · 12 weeks',
@@ -207,6 +217,8 @@ export const caseStudies: CaseStudy[] = [
     slug: 'pattern-custom-reports',
     title: 'Custom Reports in Predict',
     company: 'Pattern',
+    about:
+      'Pattern is an ecommerce accelerator. It sells brands’ products on marketplaces like Amazon and Walmart, and its Predict software shows brands how those products are performing.',
     accent: '#1d7cf3',
     role: 'Product Design Intern',
     // Résumé dates; the Custom Reports project itself ran 9 weeks inside them.
@@ -290,6 +302,7 @@ export const caseStudies: CaseStudy[] = [
     slug: 'hoth',
     title: 'Hoth Landing Page',
     company: 'Hoth',
+    about: 'Hoth is an early-stage startup building an encrypted platform for work.',
     accent: '#008fff',
     role: 'Product Design Intern',
     period: 'Dec 2024 – Apr 2025',
@@ -305,6 +318,8 @@ export const caseStudies: CaseStudy[] = [
     slug: 'awardco-login-flow-redesign',
     title: 'Reducing Authentication Friction',
     company: 'Awardco',
+    about:
+      'Awardco is an employee-recognition platform. Companies use it to reward and recognize employees, who redeem their points through Amazon, gift cards, and travel.',
     accent: '#008fff',
     // Role/period follow the résumé (public/resume.pdf) — the single source of truth.
     role: 'Product Design Intern',
@@ -416,6 +431,8 @@ export const caseStudies: CaseStudy[] = [
     slug: 'pitch',
     title: 'Building Pitch',
     company: 'Pitch',
+    about:
+      'Pitch is an early-stage startup making sales coaching software for reps who sell face to face.',
     // Cornflower, the brand accent locked 2026-10-13 (LUK-119).
     accent: '#4c7be8',
     // Named as contract design and engineering (Luke, 2026-11-03, LUK-195).
@@ -682,6 +699,18 @@ export const caseStudies: CaseStudy[] = [
 
 export function getCaseStudy(slug: string): CaseStudy | undefined {
   return caseStudies.find((cs) => cs.slug === slug)
+}
+
+/*
+ * The company line for a study's header. The bespoke pages hard-code their
+ * other facts, but this one is shared with the template so the sentence
+ * can't drift between a study and its tile or the chat; a slug typo fails
+ * the build instead of rendering an empty fact.
+ */
+export function companyAbout(slug: string): string {
+  const cs = getCaseStudy(slug)
+  if (!cs) throw new Error(`companyAbout: no case study with slug "${slug}"`)
+  return cs.about
 }
 
 /*
