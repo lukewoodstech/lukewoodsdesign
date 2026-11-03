@@ -587,7 +587,7 @@ export const caseStudies: CaseStudy[] = [
                 alt: 'Stats: sales this week against the goal with a pace line, today’s conversations, pitches and close attempts against targets, and the floating tab bar',
               },
               {
-                src: '/work/pitch/screen-coach-top.png',
+                src: '/work/pitch/screen-coach-now.png',
                 label: 'Coach',
                 alt: 'Coach: an objection the rep lost a door on, quoted from the transcript with what the rep said, a button to show a good response, and a two-minute roleplay',
               },
