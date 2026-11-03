@@ -253,41 +253,26 @@ export default function AwardcoCaseStudy() {
           <header className="pt-10">
             <p className="cs-eyebrow mb-5">Awardco · Product Design Internship</p>
             <StoryTitle dim="at Awardco">Reducing authentication friction</StoryTitle>
+            {/* Pitch's header (LUK-199): one summary paragraph across the
+                column, then Company, Role, Timeline and Tools. Team, Status
+                and Skills used came off; the handoff is in the summary. */}
             <MetaGrid
+              stacked
               summary={
-                <>
-                  <p>
-                    Awardco logged <strong>7.7 million failed login attempts</strong> in one
-                    year. I redesigned its fragmented authentication flows into one guided
-                    system across SSO, MFA, password recovery, and mobile.
-                  </p>
-                  <p>
-                    I owned the redesign across desktop and mobile, validated it with{' '}
-                    <strong>20+ external users and a 75-person internal study</strong>, and
-                    took the proposed system through architecture and security review.
-                  </p>
-                </>
+                <p>
+                  Awardco logged 7.7 million failed login attempts in one year. I redesigned
+                  its fragmented authentication flows into one guided system across SSO, MFA,
+                  password recovery, and mobile. I owned the redesign on desktop and mobile,
+                  validated it with 20+ external users and a 75-person internal study, and took
+                  it through architecture and security review before handing it off for
+                  implementation.
+                </p>
               }
               facts={[
                 { label: 'Company', value: companyAbout('awardco-login-flow-redesign'), span: true },
                 { label: 'Role', value: 'Product Design Intern' },
-                {
-                  label: 'Team',
-                  value: 'Product, engineering, security, and customer success',
-                },
                 { label: 'Timeline', value: 'October 2025 to April 2026' },
                 { label: 'Tools', value: 'Figma, VS Code, GitHub Copilot' },
-                {
-                  label: 'Status',
-                  value: 'Passed architecture and security review, handed off for implementation',
-                  span: true,
-                },
-                {
-                  label: 'Skills used',
-                  value:
-                    'Login telemetry analysis, discovery interviews, heatmap and usability testing, systems mapping, coded prototyping, architecture and security review, handoff',
-                  span: true,
-                },
               ]}
             />
           </header>

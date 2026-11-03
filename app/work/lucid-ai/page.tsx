@@ -100,39 +100,26 @@ export default function LucidCaseStudy() {
           <header className="pt-10">
             <p className="cs-eyebrow mb-5">Lucid · Product Design Internship</p>
             <StoryTitle dim="to the homepage">Bringing Lucid AI</StoryTitle>
+            {/* Pitch's header (LUK-199): one summary paragraph across the
+                column, then Company, Role, Timeline and Tools. Team, Skills
+                used and Released came off; the release is in the summary. */}
             <MetaGrid
+              stacked
               summary={
-                <>
-                  <p>
-                    An AI assistant that helps users <strong>find, understand, and create work</strong>{' '}
-                    from the Lucid homepage.
-                  </p>
-                  <p>
-                    I designed an assistant that allowed users to search for documents using{' '}
-                    <strong>whatever details they could remember</strong>, not just the document
-                    title. Within the same experience, I designed high-value AI skills for
-                    summarizing documents, synthesizing information across multiple documents,
-                    and generating new documents.
-                  </p>
-                </>
+                <p>
+                  Lucid AI is an assistant on the Lucid homepage that helps people find,
+                  understand, and create work. I designed it so users could search for a
+                  document with whatever details they remembered, not just its title. In the
+                  same experience, I designed AI skills for summarizing documents, synthesizing
+                  information across multiple documents, and generating new ones. It went to
+                  general availability on August 5, for every Lucid tier.
+                </p>
               }
               facts={[
                 { label: 'Company', value: companyAbout('lucid-ai'), span: true },
                 { label: 'Role', value: 'Product Design Intern' },
-                { label: 'Team', value: 'Two scrum teams, Search and AI' },
                 { label: 'Timeline', value: 'May to August 2026' },
                 { label: 'Tools', value: 'Figma, Lucid, Claude Code' },
-                {
-                  label: 'Released',
-                  value: 'General availability, August 5, every Lucid tier',
-                  span: true,
-                },
-                {
-                  label: 'Skills used',
-                  value:
-                    'Discovery interviews, rapid prototyping, interaction design, failure-state design, internal testing, A/B test design, engineering handoff',
-                  span: true,
-                },
               ]}
             />
           </header>

@@ -128,41 +128,28 @@ export default function PatternCaseStudy() {
           <header className="pt-10">
             <p className="cs-eyebrow mb-5">Pattern · Product Design Internship</p>
             <StoryTitle dim="in Predict">Custom Reports</StoryTitle>
+            {/* Pitch's header (LUK-199): one summary paragraph across the
+                column, then Company, Role, Timeline and Tools. Two spans of
+                time stay apart: Timeline is the internship, and the summary
+                says the project was nine weeks inside it. One fact that said
+                both read as a nine-week internship. */}
             <MetaGrid
+              stacked
               summary={
-                <>
-                  <p>
-                    Redesigning a rigid reporting workflow so brand managers could{' '}
-                    <strong>build, edit, and share multi-metric client reports</strong>{' '}
-                    without falling back to Excel.
-                  </p>
-                  <p>
-                    I found the problem while working on a small feature request, brought the
-                    larger opportunity to the Predict team, and owned a{' '}
-                    <strong>nine-week redesign</strong> of the core reporting workflow.
-                  </p>
-                </>
+                <p>
+                  Predict&rsquo;s reporting workflow was rigid, so brand managers fell back to
+                  Excel to build, edit, and share multi-metric client reports. I found the
+                  problem while working on a small feature request, brought the larger
+                  opportunity to the Predict team, and owned a nine-week redesign of the core
+                  reporting workflow. Usability testing validated it, and the team shipped it
+                  after my internship.
+                </p>
               }
               facts={[
-                /* Two spans of time, kept apart: the internship is the
-                   role's dates, the project is nine weeks inside them. One
-                   fact that said both read as a nine-week internship. */
                 { label: 'Company', value: companyAbout('pattern-custom-reports'), span: true },
-                { label: 'Role', value: 'Product Design Intern, January to October 2025' },
-                { label: 'Team', value: 'Design, product, and engineering' },
-                { label: 'Project', value: 'Nine weeks, from the ticket to handoff' },
+                { label: 'Role', value: 'Product Design Intern' },
+                { label: 'Timeline', value: 'January to October 2025' },
                 { label: 'Tools', value: 'Figma, Pendo, ClickUp' },
-                {
-                  label: 'Status',
-                  value: 'Validated in usability testing, shipped by the team after my internship',
-                  span: true,
-                },
-                {
-                  label: 'Skills used',
-                  value:
-                    'Discovery interviews, product analytics, scoping with leadership, information architecture, prototyping, usability testing, handoff',
-                  span: true,
-                },
               ]}
             />
           </header>
