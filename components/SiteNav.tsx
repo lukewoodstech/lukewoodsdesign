@@ -36,6 +36,7 @@ import { WORK, workForPath } from '@/lib/work'
  */
 
 const LINK = 'footer-link sitebar__link'
+const NAV_WORK = WORK.filter((w) => w.section === 'selected')
 
 export default function SiteNav({
   next,
@@ -92,7 +93,9 @@ export default function SiteNav({
         {/* ── Centre: the work. Named, because on a sideways page the
             abstract section words were three rows for one destination. ── */}
         <nav className="sitebar__sections" aria-label="Case studies">
-          {WORK.map((item) => {
+          {/* Selected work only: lab tiles (Pitch, Hoth) live on the home
+              page, not in the bar (2026-11-03). */}
+          {NAV_WORK.map((item) => {
             const here = currentWork === item.slug
             return (
               <Link
