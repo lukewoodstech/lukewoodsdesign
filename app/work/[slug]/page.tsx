@@ -356,6 +356,15 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                     the last step. */}
                 {/* Old and new, side by side (Luke, 2026-11-03: no drag
                     split). Each half keeps its own label under it. */}
+                {/* Before, then after: the old flow's phones over the new
+                    ones, each row named (LUK-202). */}
+                {step.before && step.before.length > 0 && (
+                  <>
+                    <p className="cs-row-label">Before</p>
+                    <ScreenCarousel screens={step.before} />
+                    {step.screens && step.screens.length > 0 && <p className="cs-row-label">After</p>}
+                  </>
+                )}
                 {step.compare && (
                   <figure className={`cs-pair my-12${step.compare.phone ? ' cs-pair--phone' : ''}`}>
                     <div className="cs-pair__row">
@@ -380,10 +389,34 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                     <figcaption className="cs-cap">{step.compare.caption}</figcaption>
                   </figure>
                 )}
-                {step.figure && <Fig {...step.figure} />}
                 {step.screens && step.screens.length > 0 && (
                   <ScreenCarousel screens={step.screens} />
                 )}
+                {step.gallery && step.gallery.items.length > 0 && (
+                  <figure className="cs-gallery my-10">
+                    <div className="cs-gallery__row">
+                      {step.gallery.items.map((g) => (
+                        <div
+                          key={g.src}
+                          className="cs-gallery__item"
+                          style={{ flex: `${g.width / g.height} 1 0` }}
+                        >
+                          <Image
+                            src={g.src}
+                            alt={g.alt}
+                            width={g.width}
+                            height={g.height}
+                            sizes="(min-width: 860px) 560px, 90vw"
+                            className="cs-gallery__img"
+                          />
+                          <span className="cs-screens__name">{g.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {step.gallery.caption && <figcaption className="cs-cap">{step.gallery.caption}</figcaption>}
+                  </figure>
+                )}
+                {step.figure && <Fig {...step.figure} />}
               </Block>
             ))}
             {cs.processFigures?.map((fig, i) => (

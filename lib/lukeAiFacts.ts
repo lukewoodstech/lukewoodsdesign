@@ -154,12 +154,24 @@ export const CLAIMS: readonly Claim[] = [
     ],
   },
   {
+    id: 'pitch-brand',
+    company: 'Pitch',
+    project: 'Building Pitch',
+    claim: 'The rebrand',
+    wording:
+      'Pitch came to Luke orange and loud: an extruded PITCH. on coral and heavy black type. With the founders he set a calmer direction, a lowercase wordmark with a cornflower period, a serif for the moments that matter, and one accent that never touches a score, then carried it to every surface: the app icon, the app, the site, the manager console, and the invite emails.',
+    status: 'shipped',
+    scope: 'project',
+    source: 'lib/caseStudies.ts (pitch); /work/pitch',
+    prohibited: ['that Luke designed the Pitch wave mark or the p icon (Braden made both later)'],
+  },
+  {
     id: 'pitch-redesign',
     company: 'Pitch',
     project: 'Building Pitch',
-    claim: 'The full redesign of the rep app',
+    claim: 'The redesign of the rep app',
     wording:
-      'The old app was loud: hard black outlines, square corners, a heavy display face, and a brand red beside the red that meant fix this. Luke rebuilt it light and calm, with a serif for the numbers and one cornflower accent that never touches a score. He reworked 37 screens in the redesign and built 21 new components for it.',
+      'The old app read like a dashboard in the dark: shouting type, heavy cards, and a red score on everything. Luke rebuilt every rep screen light and calm on the new system. He reworked 37 screens in the redesign and built 21 new components for it.',
     status: 'shipped',
     scope: 'project',
     source: 'lib/caseStudies.ts (pitch); /work/pitch; counts from his commits on the app repo, 2026-11-03',
@@ -167,12 +179,23 @@ export const CLAIMS: readonly Claim[] = [
     prohibited: ['that he redesigned all 42 screens', 'that he built the whole component library'],
   },
   {
+    id: 'pitch-onboarding',
+    company: 'Pitch',
+    project: 'Building Pitch',
+    claim: 'Onboarding',
+    wording:
+      'A new rep arrives by email: one invite, one link to claim the account and pick a password, then the app. Managers land in the console. Luke designed the invites, the claim and the sign-in on the new system.',
+    status: 'shipped',
+    scope: 'project',
+    source: 'lib/caseStudies.ts (pitch); /work/pitch',
+  },
+  {
     id: 'pitch-rep-app',
     company: 'Pitch',
     project: 'Building Pitch',
     claim: 'The flows he designed and built: recording, Stats, Coach',
     wording:
-      'Recording is the main flow, one tap: Pitch listens for the whole shift and auto-records when a conversation starts, through a locked phone, and an on-device speech model splits the day into doors, each landing in the feed scored with its clip and one line of coaching. One sheet shows which mic it hears and ends the shift. Stats shows pace against the week’s goal and today’s targets with a field-day streak. Coach turns a lost door into practice: the objection, what the rep said, a stronger answer, and a guided two-minute roleplay.',
+      'Recording was the hardest thing to find in the old app: a speaker icon in the tab bar, a toast over the feed, a full-screen sheet to stop. Luke rebuilt it as one button in the centre of the bar, one tap: Pitch listens for the whole shift and auto-records when a conversation starts, through a locked phone, and an on-device speech model splits the day into doors, each landing in the feed scored with its clip and one line of coaching. One sheet shows which mic it hears and ends the shift. Stats shows pace against the week’s goal and today’s targets with a field-day streak. Coach turns a lost door into practice: the objection, what the rep said, a stronger answer, and a guided two-minute roleplay.',
     status: 'shipped',
     scope: 'project',
     source: 'lib/caseStudies.ts (pitch); /work/pitch',
@@ -206,7 +229,7 @@ export const CLAIMS: readonly Claim[] = [
     project: 'Building Pitch',
     claim: 'Where it stands',
     wording:
-      'Every screen of the rep app runs on the new design. A pilot team records a full shift and sees coaching without touching anything but the record button, and Stats and Coach are live.',
+      'The brand and every rep screen run on the new system, from the app icon to the emails. A rep records a full shift with one button and sees coaching without touching anything else, and Stats and Coach are live.',
     status: 'shipped',
     scope: 'company-wide',
     source: 'lib/caseStudies.ts (pitch); /work/pitch',

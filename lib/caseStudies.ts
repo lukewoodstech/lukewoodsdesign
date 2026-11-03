@@ -5,9 +5,24 @@ export type ProcessStep = {
   figure?: Figure
   /** Full phone screens shown under this step as a carousel (components/ScreenCarousel). */
   screens?: Screen[]
+  /** The same flow before the redesign, as a row of phones above `screens`;
+      with it, the two rows are labelled Before and After (LUK-202). */
+  before?: Screen[]
+  /** Flat images in one row at equal heights, each labelled: icons, a share
+      card, an email, a web page (LUK-202). */
+  gallery?: { items: GalleryItem[]; caption?: string }
   /** Two captures of the same screen, old and new, shown side by side
       with Before / After under each. Phone-shaped pairs get phone frames. */
   compare?: Compare
+}
+
+export type GalleryItem = {
+  src: string
+  label: string
+  alt: string
+  /** Intrinsic size, so the row can give every image the same height. */
+  width: number
+  height: number
 }
 
 export type Compare = {
@@ -385,16 +400,17 @@ export const caseStudies: CaseStudy[] = [
     period: 'Sep 2026 – present',
     metaStacked: true,
     tools: 'Figma, React Native, Expo, Supabase, Next.js, Claude Code',
-    summary: 'An AI coach for face-to-face sales. I redesigned the app and built its core flows.',
+    summary: 'An AI coach for face-to-face sales. I rebranded it, redesigned the app and rebuilt its recording flow.',
     headline: [
-      'A full redesign of the rep app, every screen',
-      'Recording, Stats and Coach, designed and built end to end',
+      'A new brand, from the app icon to the emails',
+      'The rep app redesigned, screen by screen',
+      'Recording rebuilt around one button',
       'Live with a pilot team',
     ],
     tagline:
       'Pitch is an AI sales coach for people who sell face to face, like door-to-door and field reps. A rep taps record at the start of a shift, and Pitch turns the day into scored conversations and coaching on what to say next time.',
     overview:
-      'The aim: give every rep the feedback a great manager would, without asking them to log anything. I joined the two founders on contract to design and build the app. I redesigned the rep app and built its three core flows: recording, Stats and Coach.',
+      'The aim: give every rep the feedback a great manager would, without asking them to log anything. I joined the two founders on contract to design and build it. I rebranded Pitch, redesigned the rep app, and rebuilt recording, its main action, which was hard to find and harder to use.',
     eyebrows: {
       problem: 'Why',
       process: 'What I built',
@@ -408,16 +424,68 @@ export const caseStudies: CaseStudy[] = [
     ],
     process: [
       {
-        heading: 'The redesign',
-        body: 'The old app was loud: hard black outlines, square corners, a heavy display face, and a brand red beside the red that meant “fix this”. I rebuilt it light and calm: a serif for the numbers, one cornflower accent that never touches a score, and every screen moved onto it.',
+        heading: 'The brand',
+        body: 'Pitch came to me orange and loud: an extruded PITCH. on coral, heavy black type everywhere. With the founders I set a calmer direction: a lowercase wordmark with a cornflower period, a serif for the moments that matter, and one accent that never touches a score. Then I carried it to every surface, from the app icon to the console and the emails.',
+        gallery: {
+          items: [
+            { src: '/work/pitch/brand-icon-before.png', label: 'Icon, before', alt: 'The old app icon: an extruded blue PITCH. on a coral ground', width: 600, height: 600 },
+            { src: '/work/pitch/brand-icon-after.png', label: 'Icon, after', alt: 'The new app icon: the lowercase wordmark pitch in near-black with a cornflower period, on white', width: 600, height: 600 },
+            { src: '/work/pitch/brand-share.jpg', label: 'Share card', alt: 'The site’s share card: the wordmark, a serif headline with a cornflower period, and one line on a pale ground', width: 1200, height: 630 },
+          ],
+        },
         figure: {
           src: '/work/pitch/design-system.png',
           caption: 'The system, drawn from the app’s own tokens: type, colour, the feed card, score bands and the tab bar. Bottom middle, a card rebuilt from the old theme.',
         },
       },
       {
+        heading: 'The redesign',
+        body: 'The old app read like a dashboard in the dark: shouting type, heavy cards, and a red score on everything. I rebuilt every rep screen light and calm on the new system, with the day as a serif heading and each door a quiet card.',
+        before: [
+          {
+            src: '/work/pitch/before-signin.png',
+            label: 'Sign in',
+            alt: 'The old sign-in: a blurred photo, a heavy PITCH wordmark, and outlined fields',
+          },
+          {
+            src: '/work/pitch/before-feed.png',
+            label: 'Feed',
+            alt: 'The old Pitch Feed: dark cards titled Pitch 005 and Pitch 004, red and green scores, and an End recording bar over the tab bar',
+          },
+        ],
+        screens: [
+          {
+            src: '/work/pitch/feed-now.png',
+            label: 'Feed',
+            alt: 'The new feed: the day as a serif heading with its average, doors as white cards with a score, a clip and one line of coaching, and the floating tab bar',
+          },
+          {
+            src: '/work/pitch/calendar.png',
+            label: 'Go to a day',
+            alt: 'The calendar picker: a sheet over the feed to jump to any day, with days that have doors marked',
+          },
+          {
+            src: '/work/pitch/account.png',
+            label: 'Account',
+            alt: 'Account: the rep, their device and sync status, a reconnect-mic row, support, and what is recorded and why',
+          },
+        ],
+      },
+      {
         heading: 'Recording',
-        body: 'The main flow, one tap. Pitch listens for the whole shift and auto-records when a conversation starts, through a locked phone, splitting the day into doors. One sheet shows which mic it hears, and ends the shift.',
+        body: 'Recording is the one thing the app has to do, and it was the hardest thing to find: a speaker icon in the tab bar, a toast floating over the feed, a full-screen sheet to stop. Now it is one button in the centre of the bar. Tap it and Pitch listens all shift, auto-records each conversation, and one sheet shows the mic and ends the shift.',
+        before: [
+          {
+            src: '/work/pitch/before-recording.png',
+            label: 'Recording',
+            alt: 'The old recording state: a green End recording toast with a timer floating over the feed, and a speaker icon in the tab bar',
+          },
+          {
+            src: '/work/pitch/before-stop.png',
+            label: 'Stopping',
+            alt: 'The old stop: a full-screen End recording? sheet with a black button and a Keep recording link',
+          },
+        ],
         screens: [
           {
             src: '/work/pitch/record-ready.png',
@@ -438,12 +506,12 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         heading: 'Stats and Coach',
-        body: 'Stats shows pace, not just totals: the week’s sales against the goal, today’s conversations, pitches and close attempts, and a field-day streak. Coach turns a lost door into practice: the objection, what the rep said, a stronger answer, and a two-minute roleplay.',
+        body: 'Stats shows pace, not just totals: the week’s sales against the goal, today’s conversations, pitches and close attempts. Coach turns a lost door into practice: the objection, what the rep said, a stronger answer, and a two-minute roleplay.',
         screens: [
           {
-            src: '/work/pitch/screen-stats-top.png',
+            src: '/work/pitch/screen-stats-now.png',
             label: 'Stats',
-            alt: 'Stats: sales this week against the goal with a pace line, today’s conversations, pitches and close attempts against targets, and a field-day streak',
+            alt: 'Stats: sales this week against the goal with a pace line, today’s conversations, pitches and close attempts against targets, and the floating tab bar',
           },
           {
             src: '/work/pitch/screen-coach-top.png',
@@ -451,6 +519,16 @@ export const caseStudies: CaseStudy[] = [
             alt: 'Coach: an objection the rep lost a door on, quoted from the transcript with what the rep said, a button to show a good response, and a two-minute roleplay',
           },
         ],
+      },
+      {
+        heading: 'Onboarding',
+        body: 'A new rep arrives by email: one invite, one link to claim the account and pick a password, then the app. Managers land in the console. I designed the invites, the claim and the sign-in on the same system.',
+        gallery: {
+          items: [
+            { src: '/work/pitch/onboard-invite.png', label: 'The invite', alt: 'The invite email: a serif Pitch wordmark, You’re invited to join Pitch, one line on what happens next, and a cornflower Join the team button', width: 1440, height: 880 },
+            { src: '/work/pitch/onboard-signin.png', label: 'Console sign-in', alt: 'The manager console sign-in: Welcome back in serif over a white card with email and password and a cornflower Sign in button', width: 2880, height: 1800 },
+          ],
+        },
       },
       {
         heading: 'The site',
@@ -462,14 +540,10 @@ export const caseStudies: CaseStudy[] = [
           href: 'https://usepitch.app',
         },
       },
-      {
-        heading: 'My role',
-        body: 'Contract design and engineering. I designed the screens, built them in React Native, wired them to the data, and shipped them to the pilot team.',
-      },
     ],
     outcomes: [
-      'Every screen of the rep app runs on the new design',
-      'A pilot team records a full shift and sees coaching without touching anything but the record button',
+      'The brand and every rep screen run on the new system, from the app icon to the emails',
+      'A rep records a full shift with one button and sees coaching without touching anything else',
       'Stats and Coach are live, both built from the rep’s own doors',
     ],
     heroSrc: '/work/pitch/app-feed.png',

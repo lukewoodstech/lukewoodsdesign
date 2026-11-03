@@ -9147,3 +9147,26 @@ p a {
 }
 .cs-screens--n2 .cs-screens__item { flex: none; }
 .cs-screens--n2 .cs-screens__nav { display: none; }
+
+/* Before / After row names, and the flat gallery row (LUK-202). Gallery
+   items flex by their own aspect ratio, so a square icon and a wide share
+   card stand at the same height. */
+.cs-row-label {
+  margin: 2rem 0 0.25rem;
+  font-family: var(--font-mono);
+  font-size: var(--label-micro, 0.72rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-align: center;
+}
+.cs-row-label + .cs-screens { margin-top: 0.75rem; }
+.cs-gallery__row { display: flex; gap: clamp(0.6rem, 2vw, 1.25rem); align-items: flex-start; }
+.cs-gallery__item { min-width: 0; }
+.cs-gallery__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 14px 36px rgba(0, 0, 0, 0.4);
+}
