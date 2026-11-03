@@ -1,13 +1,8 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Michroma } from 'next/font/google'
-import GateModal from './GateModal'
 import TileFooter from './TileFooter'
-import { unlockCaseStudy } from '@/app/work/[slug]/actions'
-import { UNLOCK_HINT_COOKIE } from '@/lib/gate'
-import { getCaseStudy } from '@/lib/caseStudies'
 import { useEnterToOpen } from '@/lib/useEnterToOpen'
 import { useReducedMotion } from '@/lib/useReducedMotion'
 
@@ -31,7 +26,6 @@ function cellHash(cx: number, cy: number) {
 }
 
 export default function HothTile() {
-  const router = useRouter()
   const reducedMotion = useReducedMotion()
   const [hovered, setHovered]     = useState(false)
   const [glitchOn, setGlitchOn] = useState(false)
@@ -52,22 +46,13 @@ export default function HothTile() {
   const fadeRef    = useRef(0)
   const hoveredRef = useRef(false)
   const runningRef = useRef(false)
-  const [gateOpen, setGateOpen] = useState(false)
-
   /*
-   * This study is password-gated. Instead of navigating to the gate page,
-   * ask for the password right here in a modal; once the unlock cookie is
-   * set (readable via its hint twin) the tile navigates like any other.
+   * The study is password-gated, but the tile is a plain link like Pitch's:
+   * the title's stretched link in TileFooter opens /work/hoth, which shows
+   * the full-page password form. The old in-tile modal opened on the same
+   * click and flashed before the page loaded (Luke, 2026-11-03, LUK-204).
    */
-  const openStudy = () => {
-    if (document.cookie.split('; ').some((c) => c.startsWith(`${UNLOCK_HINT_COOKIE}=1`))) {
-      router.push('/work/hoth')
-    } else {
-      setGateOpen(true)
-    }
-  }
-
-  useEnterToOpen(hovered && !gateOpen, openStudy)
+  useEnterToOpen(hovered, '/work/hoth')
 
   // Coordinates are relative to the stage — the canvas only covers the artwork
   const trackMouse = (e: React.MouseEvent) => {
@@ -167,11 +152,9 @@ export default function HothTile() {
     <div
       ref={tileRef}
       className="workgrid__item"
-      style={{ cursor: 'pointer' }}
       onMouseEnter={(e) => { trackMouse(e); setHovered(true) }}
       onMouseMove={trackMouse}
       onMouseLeave={() => setHovered(false)}
-      onClick={openStudy}
     >
       <div ref={stageRef} className="tile-stage">
         {/* Dark overlay — behind everything, darkens the tile background on hover */}
@@ -225,14 +208,6 @@ export default function HothTile() {
         hovered={hovered}
       />
 
-      <GateModal
-        open={gateOpen}
-        onClose={() => setGateOpen(false)}
-        slug="hoth"
-        company={getCaseStudy('hoth')?.company ?? 'Hoth'}
-        title={getCaseStudy('hoth')?.title ?? 'Hoth'}
-        action={unlockCaseStudy}
-      />
     </div>
   )
 }
