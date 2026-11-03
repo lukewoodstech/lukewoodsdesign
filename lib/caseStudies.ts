@@ -23,6 +23,13 @@ export type Figure = {
   href?: string
 }
 
+/** One layer of a study's tech stack: "The app", "The site". */
+export type StackGroup = {
+  label: string
+  /** Each tool, and what it does in this project. */
+  items: { name: string; use: string }[]
+}
+
 export type CaseStudy = {
   slug: string
   title: string
@@ -68,6 +75,8 @@ export type CaseStudy = {
    * wash; on the accent blue the picture looked pasted on).
    */
   heroGround?: string
+  /** The tech stack, as its own act after the work: a snapshot of what was built on. */
+  stack?: StackGroup[]
   problemFigure?: Figure
   processFigures?: Figure[]
   /*
@@ -76,7 +85,7 @@ export type CaseStudy = {
    * "Process" and "Outcome"; Pitch, which is being built rather than
    * looked back on, says "Why", "What we are building" and "Where it stands".
    */
-  eyebrows?: { problem?: string; process?: string; outcome?: string; impact?: string }
+  eyebrows?: { problem?: string; process?: string; outcome?: string; impact?: string; stack?: string }
   /*
    * Leave the Timeline fact off the at-a-glance row. `period` still feeds
    * the year on the home tile; this only keeps it off the page, for a
@@ -333,6 +342,9 @@ export const caseStudies: CaseStudy[] = [
      *   the Private look (LUK-119). Since 2026-11-03 (LUK-195) the study is
      *   the app work only: Luke's role is contract design and engineering,
      *   and no hardware is described (the nametag was dropped, LUK-194).
+     *   The site figure and the recording screen are captures of
+     *   usepitch.app taken 2026-11-03 with the pilot-count lines hidden;
+     *   the stack is a snapshot from the repos the same day.
      */
     slug: 'pitch',
     title: 'Building Pitch',
@@ -344,8 +356,8 @@ export const caseStudies: CaseStudy[] = [
     period: 'Sep 2026 – present',
     hideTimeline: true,
     team: 'Two founders, with me on contract',
-    tools: 'Figma, React Native and Expo, Supabase, Claude Code',
-    skills: 'Product design, interaction design, design systems, mobile engineering',
+    tools: 'Figma, React Native, Expo, Supabase, Next.js, Claude Code',
+    skills: 'Product design, interaction design, design systems, mobile and web engineering, on-device audio',
     site: { href: 'https://usepitch.app', label: 'usepitch.app' },
     summary: 'An AI coach for face-to-face sales. I redesigned the app and built its core flows.',
     headline: [
@@ -392,7 +404,11 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         heading: 'Recording',
-        body: 'The main flow. A rep starts recording at the top of a shift and forgets it: it runs in the background, survives a locked phone, and splits the day into doors. Each door lands in the feed scored, with its clip and one line of coaching.',
+        body: 'The main flow. A rep starts recording at the top of a shift and forgets it: it runs in the background, survives a locked phone, and an on-device speech model splits the day into doors. Each door lands in the feed scored, with its clip and one line of coaching.',
+        figure: {
+          src: '/work/pitch/record-screen.png',
+          caption: 'The recording screen: one timer, the door count, and a stop button',
+        },
       },
       {
         heading: 'Stats',
@@ -401,6 +417,15 @@ export const caseStudies: CaseStudy[] = [
       {
         heading: 'Coach',
         body: 'A lost door becomes practice. The rep sees the objection, what they said, a stronger answer, and a guided two-minute roleplay.',
+      },
+      {
+        heading: 'The site',
+        body: 'I designed and built usepitch.app for everyone who sells face to face: the app up front, how a pitch gets scored, the manager dashboard, and a demo request on every button.',
+        figure: {
+          src: '/work/pitch/site-hero.png',
+          caption: 'usepitch.app, the hero: the app is the product shot, and every button books a demo',
+          href: 'https://usepitch.app',
+        },
       },
       {
         heading: 'My role',
@@ -421,6 +446,39 @@ export const caseStudies: CaseStudy[] = [
       { value: 3, lead: 'core flows', rest: 'designed and built: recording, Stats and Coach' },
       { value: 1, lead: 'redesign', rest: 'across every screen of the rep app' },
       { value: 2, lead: 'disciplines', rest: 'design and engineering, on one contract' },
+    ],
+    // A snapshot as of 2026-11-03 (LUK-195), read from the app and site
+    // repos' package.json: Luke may lose repo access, so it lives here.
+    stack: [
+      {
+        label: 'The app',
+        items: [
+          { name: 'React Native 0.86 and Expo 57', use: 'the iOS app, with over-the-air updates for JS-only changes' },
+          { name: 'Supabase', use: 'sign-in, Postgres with row-level security, and audio storage' },
+          { name: 'Silero VAD on ONNX Runtime', use: 'on-device speech detection that splits a shift into doors' },
+          { name: 'expo-audio and expo-location', use: 'background recording and the address for each door' },
+          { name: 'React Navigation', use: 'the tab bar with the record button at its centre' },
+          { name: 'Face ID', use: 'the returning-rep sign-in, via expo-local-authentication' },
+          { name: 'Lucide and Instrument Serif', use: 'the icon set and the numbers type in the redesign' },
+        ],
+      },
+      {
+        label: 'The site',
+        items: [
+          { name: 'Next.js 16 and React 19', use: 'usepitch.app, on Vercel' },
+          { name: 'Tailwind CSS 4', use: 'the layout and the light, calm look' },
+          { name: 'GSAP and Lenis', use: 'the scroll-pinned story sections' },
+          { name: 'Sentry', use: 'error reporting' },
+        ],
+      },
+      {
+        label: 'How I work',
+        items: [
+          { name: 'Figma', use: 'screens and the design system' },
+          { name: 'Claude Code', use: 'pairing on the code, from the app to the site' },
+          { name: 'Linear and GitHub', use: 'every change tracked from issue to merge' },
+        ],
+      },
     ],
     nextSlug: 'lucid-ai',
   },

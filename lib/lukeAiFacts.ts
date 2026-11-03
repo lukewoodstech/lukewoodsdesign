@@ -87,7 +87,7 @@ export const ENGAGEMENTS: readonly Engagement[] = [
     kind: 'contract',
     route: '/work/pitch',
     summary:
-      'Sales-coaching startup for reps who sell face to face. Current contract work, in pilot. Luke redesigned the whole rep app and designed and built its three main flows: recording, Stats and Coach.',
+      'Sales-coaching startup for reps who sell face to face. Current contract work, in pilot. Luke redesigned the whole rep app, designed and built its three main flows (recording, Stats and Coach), and built the public site (usepitch.app).',
   },
   {
     company: 'Lucid',
@@ -170,11 +170,33 @@ export const CLAIMS: readonly Claim[] = [
     project: 'Building Pitch',
     claim: 'The flows he designed and built: recording, Stats, Coach',
     wording:
-      'Recording is the main flow: a rep starts it at the top of a shift and forgets it; it runs in the background, survives a locked phone, and splits the day into doors, each landing in the feed scored with its clip and one line of coaching. Stats shows pace against the week’s goal and today’s targets with a field-day streak. Coach turns a lost door into practice: the objection, what the rep said, a stronger answer, and a guided two-minute roleplay.',
+      'Recording is the main flow: a rep starts it at the top of a shift and forgets it; it runs in the background, survives a locked phone, and an on-device speech model splits the day into doors, each landing in the feed scored with its clip and one line of coaching. Stats shows pace against the week’s goal and today’s targets with a field-day streak. Coach turns a lost door into practice: the objection, what the rep said, a stronger answer, and a guided two-minute roleplay.',
     status: 'shipped',
     scope: 'project',
     source: 'lib/caseStudies.ts (pitch); /work/pitch',
     qualifier: 'Live with a pilot team; no usage or outcome figures are published.',
+  },
+  {
+    id: 'pitch-site',
+    company: 'Pitch',
+    project: 'Building Pitch',
+    claim: 'The public site',
+    wording:
+      'Luke designed and built usepitch.app for everyone who sells face to face: the app up front, how a pitch gets scored, the manager dashboard, and a demo request on every button.',
+    status: 'shipped',
+    scope: 'project',
+    source: 'lib/caseStudies.ts (pitch); usepitch.app',
+  },
+  {
+    id: 'pitch-stack',
+    company: 'Pitch',
+    project: 'Building Pitch',
+    claim: 'What he built it on',
+    wording:
+      'The app is React Native and Expo on iOS, with Supabase for sign-in, Postgres and audio storage, and an on-device speech model (Silero voice detection on ONNX Runtime) that splits a shift into doors. The site is Next.js 16 with Tailwind CSS and GSAP, on Vercel. He designs in Figma and pairs with Claude Code.',
+    status: 'shipped',
+    scope: 'project',
+    source: 'lib/caseStudies.ts (pitch, stack); a snapshot of the repos on 2026-11-03',
   },
   {
     id: 'pitch-status',

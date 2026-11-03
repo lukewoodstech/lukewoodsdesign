@@ -11,7 +11,7 @@ import ZoomShot from '@/components/lucid/ZoomShot'
 import ScreenCarousel from '@/components/ScreenCarousel'
 import { Bullets } from '@/components/CaseStudy'
 import BigStats from '@/components/cs/BigStats'
-import { Act, Band, Block, Checklist, Col, H3, MetaGrid, Pill, StoryTitle, type Fact } from '@/components/cs/Story'
+import { Act, Band, Block, Checklist, Col, H3, MetaGrid, MonoLabel, Pill, StoryTitle, type Fact } from '@/components/cs/Story'
 import {
   getCaseStudy,
   caseStudies,
@@ -326,6 +326,29 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
             {cs.processFigures?.map((fig, i) => (
               <Fig key={i} {...fig} />
             ))}
+          </Col>
+        )}
+
+        {/* ══ The stack: what it was built on, layer by layer ══ */}
+        {cs.stack && cs.stack.length > 0 && (
+          <Col>
+            <Act phase="The stack" num={num()} title={eyebrows.stack ?? 'Built with'}>
+              <div className="cs-stack">
+                {cs.stack.map((group) => (
+                  <section key={group.label} className="cs-stack__group" aria-label={group.label}>
+                    <MonoLabel>{group.label}</MonoLabel>
+                    <dl className="cs-stack__list">
+                      {group.items.map((it) => (
+                        <div key={it.name}>
+                          <dt>{it.name}</dt>
+                          <dd>{it.use}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </section>
+                ))}
+              </div>
+            </Act>
           </Col>
         )}
 

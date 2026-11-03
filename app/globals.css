@@ -9036,3 +9036,41 @@ p a {
    mock clips at the bottom, whatever height it measured: a dashboard that
    continues below the fold is the right picture, a black band is not. */
 .cs-macbook__screen .pm-stage { position: absolute; inset: 0; height: auto !important; }
+
+/* ── The stack act (LUK-195) ──────────────────────────────────────
+   A study's tech stack, layer by layer: a mono label per layer, then
+   each tool in white with what it does here in the muted body colour.
+   Two layers side by side on desktop, stacked on the phone. */
+.cs-stack {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 48em) {
+  .cs-stack { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem 3rem; }
+}
+
+.cs-stack__list {
+  margin: 0.9rem 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cs-stack__list > div {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cs-stack__list dt {
+  font-size: 1rem;
+  line-height: 1.4;
+  color: #fff;
+}
+
+.cs-stack__list dd {
+  margin: 0.2rem 0 0;
+  font-size: var(--reading-meta, 0.9375rem);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.6);
+}
