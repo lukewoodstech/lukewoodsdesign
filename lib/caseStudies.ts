@@ -1,6 +1,7 @@
 export type ProcessStep = {
-  heading: string
-  body: string
+  /** Optional inside a stage, where a step may be just its pictures. */
+  heading?: string
+  body?: string
   /** A figure shown right under this step, for a study whose beats are things to look at. */
   figure?: Figure
   /** Full phone screens shown under this step as a carousel (components/ScreenCarousel). */
@@ -14,6 +15,25 @@ export type ProcessStep = {
   /** Two captures of the same screen, old and new, shown side by side
       with Before / After under each. Phone-shaped pairs get phone frames. */
   compare?: Compare
+}
+
+/*
+ * A stage of the design process (LUK-203): the reader moves through these
+ * with a rail beside the page instead of numbered acts. `label` names the
+ * stage in the rail, `title` is the decision it reached, `bridge` is the
+ * one line that carries the reader in from the stage before.
+ */
+export type Stage = {
+  id: string
+  label: string
+  title: string
+  bridge?: string
+  body?: string
+  points?: string[]
+  steps?: ProcessStep[]
+  /** The last stage closes with the outcomes and the stack. */
+  showOutcomes?: boolean
+  showStack?: boolean
 }
 
 export type GalleryItem = {
@@ -110,6 +130,9 @@ export type CaseStudy = {
   heroGround?: string
   /** The tech stack, as its own act after the work: a snapshot of what was built on. */
   stack?: StackGroup[]
+  /** The design process as stages with a rail (LUK-203). When set, these
+      replace the problem / process / stack / outcome acts. */
+  stages?: Stage[]
   problemFigure?: Figure
   processFigures?: Figure[]
   /*
@@ -417,128 +440,205 @@ export const caseStudies: CaseStudy[] = [
       outcome: 'Where it stands',
       impact: 'Built',
     },
-    problemPoints: [
-      'Sales teams keep years of records and have never heard the conversation behind any of them',
-      'Reps will not log anything, so every number has to come from the recording',
-      'An app that listens all day gets abandoned the moment it feels like surveillance',
-    ],
-    process: [
+    // The design process as stages with a rail (LUK-203, Luke trying it on
+    // Pitch first). Each title is the decision the stage reached.
+    stages: [
       {
-        heading: 'The brand',
-        body: 'Pitch came to me orange and loud: an extruded PITCH. on coral, heavy black type everywhere. With the founders I set a calmer direction: a lowercase wordmark with a cornflower period, a serif for the moments that matter, and one accent that never touches a score. Then I carried it to every surface, from the app icon to the console and the emails.',
-        gallery: {
-          items: [
-            { src: '/work/pitch/brand-icon-before.png', label: 'Icon, before', alt: 'The old app icon: an extruded blue PITCH. on a coral ground', width: 600, height: 600 },
-            { src: '/work/pitch/brand-icon-after.png', label: 'Icon, after', alt: 'The new app icon: the lowercase wordmark pitch in near-black with a cornflower period, on white', width: 600, height: 600 },
-            { src: '/work/pitch/brand-share.jpg', label: 'Share card', alt: 'The site’s share card: the wordmark, a serif headline with a cornflower period, and one line on a pale ground', width: 1200, height: 630 },
-          ],
-        },
-        figure: {
-          src: '/work/pitch/design-system.png',
-          caption: 'The system, drawn from the app’s own tokens: type, colour, the feed card, score bands and the tab bar. Bottom middle, a card rebuilt from the old theme.',
-        },
-      },
-      {
-        heading: 'The redesign',
-        body: 'The old app read like a dashboard in the dark: shouting type, heavy cards, and a red score on everything. I rebuilt every rep screen light and calm on the new system, with the day as a serif heading and each door a quiet card.',
-        before: [
-          {
-            src: '/work/pitch/before-signin.png',
-            label: 'Sign in',
-            alt: 'The old sign-in: a blurred photo, a heavy PITCH wordmark, and outlined fields',
-          },
-          {
-            src: '/work/pitch/before-feed.png',
-            label: 'Feed',
-            alt: 'The old Pitch Feed: dark cards titled Pitch 005 and Pitch 004, red and green scores, and an End recording bar over the tab bar',
-          },
+        id: 'walked-into',
+        label: 'What I walked into',
+        title: 'The app hid its own main action',
+        body: 'When I joined, Pitch was loud and hard to use. The brand was an extruded orange PITCH., the screens were dark cards with shouting type and a red score on everything, and recording, the one thing the app exists to do, was a speaker icon in the tab bar.',
+        points: [
+          'Reps will not log anything, so every number has to come from the recording',
+          'Recording was the whole product, and the hardest thing in the app to find',
+          'An app that listens all day gets abandoned the moment it feels like surveillance',
         ],
-        screens: [
+        steps: [
           {
-            src: '/work/pitch/feed-now.png',
-            label: 'Feed',
-            alt: 'The new feed: the day as a serif heading with its average, doors as white cards with a score, a clip and one line of coaching, and the floating tab bar',
-          },
-          {
-            src: '/work/pitch/calendar.png',
-            label: 'Go to a day',
-            alt: 'The calendar picker: a sheet over the feed to jump to any day, with days that have doors marked',
-          },
-          {
-            src: '/work/pitch/account.png',
-            label: 'Account',
-            alt: 'Account: the rep, their device and sync status, a reconnect-mic row, support, and what is recorded and why',
+            screens: [
+              {
+                src: '/work/pitch/before-signin.png',
+                label: 'Sign in',
+                alt: 'The old sign-in: a blurred photo, a heavy PITCH wordmark, and outlined fields',
+              },
+              {
+                src: '/work/pitch/before-feed.png',
+                label: 'Feed',
+                alt: 'The old Pitch Feed: dark cards titled Pitch 005 and Pitch 004, red and green scores, and an End recording bar over the tab bar',
+              },
+              {
+                src: '/work/pitch/before-recording.png',
+                label: 'Recording',
+                alt: 'The old recording state: a green End recording toast with a timer floating over the feed, and a speaker icon in the tab bar',
+              },
+            ],
           },
         ],
       },
       {
-        heading: 'Recording',
-        body: 'Recording is the one thing the app has to do, and it was the hardest thing to find: a speaker icon in the tab bar, a toast floating over the feed, a full-screen sheet to stop. Now it is one button in the centre of the bar. Tap it and Pitch listens all shift, auto-records each conversation, and one sheet shows the mic and ends the shift.',
-        before: [
+        id: 'direction',
+        label: 'Finding the direction',
+        title: 'Calm won over loud',
+        bridge: 'Before redrawing a single screen, I needed to know what Pitch should feel like.',
+        body: 'I redrew the feed, the screen reps open after every door, four ways beside today’s: a dense list after Polymarket, calm cards after Origin, number-first after Coinbase, and one built from our own wordmark. The founders and I chose Private, the calm one: room to breathe, a serif for the moments that matter, and the score as a ring around each play button.',
+        steps: [
           {
-            src: '/work/pitch/before-recording.png',
-            label: 'Recording',
-            alt: 'The old recording state: a green End recording toast with a timer floating over the feed, and a speaker icon in the tab bar',
+            gallery: {
+              items: [
+                { src: '/work/pitch/dir-today.png', label: 'Today', alt: 'The feed as it shipped: dark charcoal cards, capitals and outlined chips', width: 560, height: 1181 },
+                { src: '/work/pitch/dir-market.png', label: 'A · Market', alt: 'Direction A: one dense list of rows with score tiles and a stacked bar for the day', width: 560, height: 1181 },
+                { src: '/work/pitch/dir-private.png', label: 'B · Private', alt: 'Direction B: white rounded cards on a pale page, serif titles and scores, a score ring around each play button', width: 560, height: 1181 },
+                { src: '/work/pitch/dir-exchange.png', label: 'C · Exchange', alt: 'Direction C: today’s average as a big number, then rows with each door against the average', width: 560, height: 1181 },
+                { src: '/work/pitch/dir-pitch.png', label: 'D · Pitch', alt: 'Direction D: scores ending in a coloured period, coaching pinned to the waveform', width: 560, height: 1181 },
+              ],
+              caption: 'The same afternoon of sample doors, drawn five ways. We chose B, Private.',
+            },
           },
           {
-            src: '/work/pitch/before-stop.png',
-            label: 'Stopping',
-            alt: 'The old stop: a full-screen End recording? sheet with a black button and a Keep recording link',
-          },
-        ],
-        screens: [
-          {
-            src: '/work/pitch/record-ready.png',
-            label: 'Ready',
-            alt: 'The feed with the floating tab bar: Feed, Stats, the blue record button in the centre, Coach and Team',
-          },
-          {
-            src: '/work/pitch/record-listening.png',
-            label: 'Listening',
-            alt: 'The listening sheet over the dimmed feed: Listening, just started. Auto-records when a conversation starts. The phone mic with a Change link, then Done and End recording.',
-          },
-          {
-            src: '/work/pitch/record-mic.png',
-            label: 'Mic',
-            alt: 'Connect your mic: the built-in microphone, connected and recording now, with links to search again or forget the mic',
+            heading: 'One accent',
+            body: 'Then I tried eight blues for the single accent, each judged as a button, as text, and against the scores. Cornflower won: friendly, readable, and it never collides with the green, amber and red that grade a door.',
+            gallery: {
+              items: [
+                { src: '/work/pitch/dir-accents.png', label: 'Eight accents, Cornflower chosen', alt: 'Eight accent swatches, from Iris to Dusk, each shown as a Request a demo button with its contrast as text; Cornflower is outlined', width: 1800, height: 674 },
+              ],
+            },
           },
         ],
       },
       {
-        heading: 'Stats and Coach',
-        body: 'Stats shows pace, not just totals: the week’s sales against the goal, today’s conversations, pitches and close attempts. Coach turns a lost door into practice: the objection, what the rep said, a stronger answer, and a two-minute roleplay.',
-        screens: [
+        id: 'system',
+        label: 'Building the system',
+        title: 'One accent, and it never touches a score',
+        bridge: 'With a direction chosen, the next job was making it repeatable.',
+        body: 'I turned the direction into one system the app, the site, the console and the emails all share: a lowercase wordmark with a cornflower period, Instrument Serif for titles and scores, Hanken Grotesk for reading, 28-point cards with one soft shadow, and one rule above the rest. The accent marks where to look or tap, never how a door went.',
+        steps: [
           {
-            src: '/work/pitch/screen-stats-now.png',
-            label: 'Stats',
-            alt: 'Stats: sales this week against the goal with a pace line, today’s conversations, pitches and close attempts against targets, and the floating tab bar',
-          },
-          {
-            src: '/work/pitch/screen-coach-top.png',
-            label: 'Coach',
-            alt: 'Coach: an objection the rep lost a door on, quoted from the transcript with what the rep said, a button to show a good response, and a two-minute roleplay',
+            gallery: {
+              items: [
+                { src: '/work/pitch/brand-icon-before.png', label: 'Icon, before', alt: 'The old app icon: an extruded blue PITCH. on a coral ground', width: 600, height: 600 },
+                { src: '/work/pitch/brand-icon-after.png', label: 'Icon, after', alt: 'The new app icon: the lowercase wordmark pitch in near-black with a cornflower period, on white', width: 600, height: 600 },
+                { src: '/work/pitch/brand-share.jpg', label: 'Share card', alt: 'The site’s share card: the wordmark, a serif headline with a cornflower period, and one line on a pale ground', width: 1200, height: 630 },
+              ],
+            },
+            figure: {
+              src: '/work/pitch/design-system.png',
+              caption: 'The system, drawn from the app’s own tokens: type, colour, the feed card, score bands and the tab bar. Bottom middle, a card rebuilt from the old theme.',
+            },
           },
         ],
       },
       {
-        heading: 'Onboarding',
-        body: 'A new rep arrives by email: one invite, one link to claim the account and pick a password, then the app. Managers land in the console. I designed the invites, the claim and the sign-in on the same system.',
-        gallery: {
-          items: [
-            { src: '/work/pitch/onboard-invite.png', label: 'The invite', alt: 'The invite email: a serif Pitch wordmark, You’re invited to join Pitch, one line on what happens next, and a cornflower Join the team button', width: 1440, height: 880 },
-            { src: '/work/pitch/onboard-signin.png', label: 'Console sign-in', alt: 'The manager console sign-in: Welcome back in serif over a white card with email and password and a cornflower Sign in button', width: 2880, height: 1800 },
-          ],
-        },
+        id: 'recording',
+        label: 'Fixing the main flow',
+        title: 'Recording became one button',
+        bridge: 'The system made the app calmer. The real test was the one action reps take every shift.',
+        body: 'Recording took a speaker icon to start, a toast floating over the feed to watch, and a full-screen sheet to stop. Now it is one button in the centre of the bar. Tap it and Pitch listens all shift, records each conversation on its own and splits the day into doors, and one sheet shows the mic and ends the shift.',
+        steps: [
+          {
+            before: [
+              {
+                src: '/work/pitch/before-recording.png',
+                label: 'Recording',
+                alt: 'The old recording state: a green End recording toast with a timer floating over the feed, and a speaker icon in the tab bar',
+              },
+              {
+                src: '/work/pitch/before-stop.png',
+                label: 'Stopping',
+                alt: 'The old stop: a full-screen End recording? sheet with a black button and a Keep recording link',
+              },
+            ],
+            screens: [
+              {
+                src: '/work/pitch/record-ready.png',
+                label: 'Ready',
+                alt: 'The feed with the floating tab bar: Feed, Stats, the blue record button in the centre, Coach and Team',
+              },
+              {
+                src: '/work/pitch/record-listening.png',
+                label: 'Listening',
+                alt: 'The listening sheet over the dimmed feed: Listening, just started. Auto-records when a conversation starts. The phone mic with a Change link, then Done and End recording.',
+              },
+              {
+                src: '/work/pitch/record-mic.png',
+                label: 'Mic',
+                alt: 'Connect your mic: the built-in microphone, connected and recording now, with links to search again or forget the mic',
+              },
+            ],
+          },
+        ],
       },
       {
-        heading: 'The site',
-        body: 'I designed and built usepitch.app for everyone who sells face to face: the app up front, how a pitch gets scored, the manager dashboard, and a demo request on every button.',
-        figure: {
-          src: '/work/pitch/site-tour-poster.jpg',
-          video: '/work/pitch/site-tour.mp4',
-          caption: 'usepitch.app, top to bottom: the hero, how it works, the dashboard and the features',
-          href: 'https://usepitch.app',
-        },
+        id: 'everywhere',
+        label: 'Carrying it everywhere',
+        title: 'One system, from the feed to the inbox',
+        bridge: 'Once the main flow worked, the same system carried everything around it.',
+        steps: [
+          {
+            heading: 'The rep app',
+            body: 'Every rep screen moved onto the system: the day as a serif heading with each door a quiet card, a calendar to jump to any day, and an account page that says plainly what is recorded and why.',
+            screens: [
+              {
+                src: '/work/pitch/feed-now.png',
+                label: 'Feed',
+                alt: 'The new feed: the day as a serif heading with its average, doors as white cards with a score, a clip and one line of coaching, and the floating tab bar',
+              },
+              {
+                src: '/work/pitch/calendar.png',
+                label: 'Go to a day',
+                alt: 'The calendar picker: a sheet over the feed to jump to any day, with days that have doors marked',
+              },
+              {
+                src: '/work/pitch/account.png',
+                label: 'Account',
+                alt: 'Account: the rep, their device and sync status, a reconnect-mic row, support, and what is recorded and why',
+              },
+            ],
+          },
+          {
+            heading: 'Stats and Coach',
+            body: 'Stats shows pace, not just totals: the week’s sales against the goal, and today’s conversations, pitches and close attempts. Coach turns a lost door into practice: the objection, what the rep said, a stronger answer, and a two-minute roleplay.',
+            screens: [
+              {
+                src: '/work/pitch/screen-stats-now.png',
+                label: 'Stats',
+                alt: 'Stats: sales this week against the goal with a pace line, today’s conversations, pitches and close attempts against targets, and the floating tab bar',
+              },
+              {
+                src: '/work/pitch/screen-coach-top.png',
+                label: 'Coach',
+                alt: 'Coach: an objection the rep lost a door on, quoted from the transcript with what the rep said, a button to show a good response, and a two-minute roleplay',
+              },
+            ],
+          },
+          {
+            heading: 'Onboarding',
+            body: 'A new rep arrives by email: one invite, one link to claim the account and pick a password, then the app. Managers land in the console.',
+            gallery: {
+              items: [
+                { src: '/work/pitch/onboard-invite.png', label: 'The invite', alt: 'The invite email: a serif Pitch wordmark, You’re invited to join Pitch, one line on what happens next, and a cornflower Join the team button', width: 1440, height: 880 },
+                { src: '/work/pitch/onboard-signin.png', label: 'Console sign-in', alt: 'The manager console sign-in: Welcome back in serif over a white card with email and password and a cornflower Sign in button', width: 2880, height: 1800 },
+              ],
+            },
+          },
+          {
+            heading: 'The site',
+            body: 'usepitch.app, for everyone who sells face to face: the app up front, how a pitch gets scored, the manager dashboard, and a demo request on every button.',
+            figure: {
+              src: '/work/pitch/site-tour-poster.jpg',
+              video: '/work/pitch/site-tour.mp4',
+              caption: 'usepitch.app, top to bottom: the hero, how it works, the dashboard and the features',
+              href: 'https://usepitch.app',
+            },
+          },
+        ],
+      },
+      {
+        id: 'now',
+        label: 'Where it is now',
+        title: 'Live with a pilot team',
+        bridge: 'Here is where that leaves Pitch today.',
+        showOutcomes: true,
+        showStack: true,
       },
     ],
     outcomes: [

@@ -166,6 +166,17 @@ export const CLAIMS: readonly Claim[] = [
     prohibited: ['that Luke designed the Pitch wave mark or the p icon (Braden made both later)'],
   },
   {
+    id: 'pitch-direction',
+    company: 'Pitch',
+    project: 'Building Pitch',
+    claim: 'How the direction was chosen',
+    wording:
+      'Before redrawing screens, Luke drew the feed four ways beside the shipped one: a dense list after Polymarket, calm cards after Origin, number-first after Coinbase, and one built from the wordmark. He and the founders chose Private, the calm one. He then compared eight blues for the single accent and chose Cornflower because it never collides with the green, amber and red that grade a door.',
+    status: 'shipped',
+    scope: 'project',
+    source: 'lib/caseStudies.ts (pitch); /work/pitch',
+  },
+  {
     id: 'pitch-redesign',
     company: 'Pitch',
     project: 'Building Pitch',

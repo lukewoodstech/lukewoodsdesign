@@ -9,6 +9,7 @@ import ReadNext from '@/components/ReadNext'
 import SiteNav from '@/components/SiteNav'
 import ZoomShot from '@/components/lucid/ZoomShot'
 import ScreenCarousel from '@/components/ScreenCarousel'
+import StageRail from '@/components/cs/StageRail'
 import { Bullets } from '@/components/CaseStudy'
 import BigStats from '@/components/cs/BigStats'
 import { Act, Band, Block, Checklist, Col, H3, MetaGrid, MonoLabel, Pill, StoryTitle, type Fact } from '@/components/cs/Story'
@@ -19,7 +20,7 @@ import {
   isPlaceholder,
   BESPOKE_SLUGS,
 } from '@/lib/caseStudies'
-import type { Figure } from '@/lib/caseStudies'
+import type { Figure, ProcessStep } from '@/lib/caseStudies'
 import { PROTECTED_SLUGS, UNLOCK_COOKIE, unlockCookieFor } from '@/lib/gate'
 import { SITE } from '@/lib/site'
 import { unlockCaseStudy } from './actions'
@@ -137,6 +138,84 @@ const Fig = ({ caption, src, href, video }: Figure) => {
       )}
       <figcaption className="cs-cap">{caption}</figcaption>
     </figure>
+  )
+}
+
+/*
+ * Everything a beat shows under its text, in reading order: Before over
+ * After, a side-by-side pair, a row of phones, a flat gallery, a figure.
+ * Shared by the process beats and the stage layout (LUK-203).
+ */
+function StepMedia({ step }: { step: ProcessStep }) {
+  return (
+    <>
+      {/* A beat that is a thing to look at carries its picture
+          with it, instead of all the figures piling up after
+          the last step. */}
+      {/* Old and new, side by side (Luke, 2026-11-03: no drag
+          split). Each half keeps its own label under it. */}
+      {/* Before, then after: the old flow's phones over the new
+          ones, each row named (LUK-202). */}
+      {step.before && step.before.length > 0 && (
+        <>
+          <p className="cs-row-label">Before</p>
+          <ScreenCarousel screens={step.before} />
+          {step.screens && step.screens.length > 0 && <p className="cs-row-label">After</p>}
+        </>
+      )}
+      {step.compare && (
+        <figure className={`cs-pair my-12${step.compare.phone ? ' cs-pair--phone' : ''}`}>
+          <div className="cs-pair__row">
+            {[
+              { src: step.compare.beforeSrc, alt: step.compare.beforeAlt, label: 'Before' },
+              { src: step.compare.afterSrc, alt: step.compare.afterAlt, label: 'After' },
+            ].map((half) => (
+              <div key={half.label} className="cs-pair__item">
+                <div className={step.compare!.phone ? 'cs-screens__phone' : 'cs-pair__frame'}>
+                  <Image
+                    src={half.src}
+                    alt={half.alt}
+                    width={1000}
+                    height={Math.round(1000 / step.compare!.aspect)}
+                    sizes="(min-width: 860px) 420px, 50vw"
+                  />
+                </div>
+                <span className="cs-screens__name">{half.label}</span>
+              </div>
+            ))}
+          </div>
+          <figcaption className="cs-cap">{step.compare.caption}</figcaption>
+        </figure>
+      )}
+      {step.screens && step.screens.length > 0 && (
+        <ScreenCarousel screens={step.screens} />
+      )}
+      {step.gallery && step.gallery.items.length > 0 && (
+        <figure className="cs-gallery my-10">
+          <div className="cs-gallery__row">
+            {step.gallery.items.map((g) => (
+              <div
+                key={g.src}
+                className="cs-gallery__item"
+                style={{ flex: `${g.width / g.height} 1 0` }}
+              >
+                <Image
+                  src={g.src}
+                  alt={g.alt}
+                  width={g.width}
+                  height={g.height}
+                  sizes="(min-width: 860px) 560px, 90vw"
+                  className="cs-gallery__img"
+                />
+                <span className="cs-screens__name">{g.label}</span>
+              </div>
+            ))}
+          </div>
+          {step.gallery.caption && <figcaption className="cs-cap">{step.gallery.caption}</figcaption>}
+        </figure>
+      )}
+      {step.figure && <Fig {...step.figure} />}
+    </>
   )
 }
 
@@ -326,6 +405,56 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
           </Col>
         )}
 
+        {cs.stages && cs.stages.length > 0 ? (
+          <>
+            <StageRail stages={cs.stages.map((st) => ({ id: st.id, label: st.label }))} />
+            {cs.stages.map((st) => (
+              <Col key={st.id}>
+                <section id={st.id} className="cs-stage" aria-labelledby={`${st.id}-title`}>
+                  <p className="cs-stage__label">{st.label}</p>
+                  <h2 id={`${st.id}-title`} className="cs-stage__title">{st.title}</h2>
+                  {st.bridge && <p className="cs-stage__bridge">{st.bridge}</p>}
+                  {st.body && (
+                    <div className="cs-prose">
+                      <p>{st.body}</p>
+                    </div>
+                  )}
+                  {st.points && st.points.length > 0 && <Bullets items={st.points} />}
+                  {(st.steps ?? []).map((step, i) => (
+                    <Block key={step.heading ?? `${st.id}-${i}`}>
+                      {step.heading && <H3>{step.heading}</H3>}
+                      {step.body && (
+                        <div className="cs-prose">
+                          <p>{step.body}</p>
+                        </div>
+                      )}
+                      <StepMedia step={step} />
+                    </Block>
+                  ))}
+                  {st.showOutcomes && outcomes.length > 0 && <Checklist items={outcomes} />}
+                  {st.showStack && cs.stack && cs.stack.length > 0 && (
+                    <div className="cs-stack cs-stack--compact">
+                      {cs.stack.map((group) => (
+                        <section key={group.label} className="cs-stack__group" aria-label={group.label}>
+                          <MonoLabel>{group.label}</MonoLabel>
+                          <dl className="cs-stack__list">
+                            {group.items.map((it) => (
+                              <div key={it.name}>
+                                <dt>{it.name}</dt>
+                                <dd>{it.use}</dd>
+                              </div>
+                            ))}
+                          </dl>
+                        </section>
+                      ))}
+                    </div>
+                  )}
+                </section>
+              </Col>
+            ))}
+          </>
+        ) : (
+          <>
         {/* ══ The problem ══ */}
         {(real(cs.problemIntro) || problemPoints.length > 0) && (
           <Col>
@@ -351,72 +480,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                 <div className="cs-prose">
                   <p>{step.body}</p>
                 </div>
-                {/* A beat that is a thing to look at carries its picture
-                    with it, instead of all the figures piling up after
-                    the last step. */}
-                {/* Old and new, side by side (Luke, 2026-11-03: no drag
-                    split). Each half keeps its own label under it. */}
-                {/* Before, then after: the old flow's phones over the new
-                    ones, each row named (LUK-202). */}
-                {step.before && step.before.length > 0 && (
-                  <>
-                    <p className="cs-row-label">Before</p>
-                    <ScreenCarousel screens={step.before} />
-                    {step.screens && step.screens.length > 0 && <p className="cs-row-label">After</p>}
-                  </>
-                )}
-                {step.compare && (
-                  <figure className={`cs-pair my-12${step.compare.phone ? ' cs-pair--phone' : ''}`}>
-                    <div className="cs-pair__row">
-                      {[
-                        { src: step.compare.beforeSrc, alt: step.compare.beforeAlt, label: 'Before' },
-                        { src: step.compare.afterSrc, alt: step.compare.afterAlt, label: 'After' },
-                      ].map((half) => (
-                        <div key={half.label} className="cs-pair__item">
-                          <div className={step.compare!.phone ? 'cs-screens__phone' : 'cs-pair__frame'}>
-                            <Image
-                              src={half.src}
-                              alt={half.alt}
-                              width={1000}
-                              height={Math.round(1000 / step.compare!.aspect)}
-                              sizes="(min-width: 860px) 420px, 50vw"
-                            />
-                          </div>
-                          <span className="cs-screens__name">{half.label}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <figcaption className="cs-cap">{step.compare.caption}</figcaption>
-                  </figure>
-                )}
-                {step.screens && step.screens.length > 0 && (
-                  <ScreenCarousel screens={step.screens} />
-                )}
-                {step.gallery && step.gallery.items.length > 0 && (
-                  <figure className="cs-gallery my-10">
-                    <div className="cs-gallery__row">
-                      {step.gallery.items.map((g) => (
-                        <div
-                          key={g.src}
-                          className="cs-gallery__item"
-                          style={{ flex: `${g.width / g.height} 1 0` }}
-                        >
-                          <Image
-                            src={g.src}
-                            alt={g.alt}
-                            width={g.width}
-                            height={g.height}
-                            sizes="(min-width: 860px) 560px, 90vw"
-                            className="cs-gallery__img"
-                          />
-                          <span className="cs-screens__name">{g.label}</span>
-                        </div>
-                      ))}
-                    </div>
-                    {step.gallery.caption && <figcaption className="cs-cap">{step.gallery.caption}</figcaption>}
-                  </figure>
-                )}
-                {step.figure && <Fig {...step.figure} />}
+                <StepMedia step={step} />
               </Block>
             ))}
             {cs.processFigures?.map((fig, i) => (
@@ -455,6 +519,9 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
               <Checklist items={outcomes} />
             </Act>
           </Col>
+        )}
+
+          </>
         )}
 
         <ReadNext current={cs.slug} />
