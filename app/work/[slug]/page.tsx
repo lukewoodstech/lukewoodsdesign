@@ -317,17 +317,28 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                 {/* A beat that is a thing to look at carries its picture
                     with it, instead of all the figures piling up after
                     the last step. */}
+                {/* Old and new, side by side (Luke, 2026-11-03: no drag
+                    split). Each half keeps its own label under it. */}
                 {step.compare && (
-                  <figure className={`my-12${step.compare.phone ? ' cs-compare--phone' : ''}`}>
-                    <div className={step.compare.phone ? 'cs-screens__phone' : undefined}>
-                      <BeforeAfterHero
-                        beforeSrc={step.compare.beforeSrc}
-                        afterSrc={step.compare.afterSrc}
-                        beforeAlt={step.compare.beforeAlt}
-                        afterAlt={step.compare.afterAlt}
-                        aspect={step.compare.aspect}
-                        frameless={step.compare.phone}
-                      />
+                  <figure className={`cs-pair my-12${step.compare.phone ? ' cs-pair--phone' : ''}`}>
+                    <div className="cs-pair__row">
+                      {[
+                        { src: step.compare.beforeSrc, alt: step.compare.beforeAlt, label: 'Before' },
+                        { src: step.compare.afterSrc, alt: step.compare.afterAlt, label: 'After' },
+                      ].map((half) => (
+                        <div key={half.label} className="cs-pair__item">
+                          <div className={step.compare!.phone ? 'cs-screens__phone' : 'cs-pair__frame'}>
+                            <Image
+                              src={half.src}
+                              alt={half.alt}
+                              width={1000}
+                              height={Math.round(1000 / step.compare!.aspect)}
+                              sizes="(min-width: 860px) 420px, 50vw"
+                            />
+                          </div>
+                          <span className="cs-screens__name">{half.label}</span>
+                        </div>
+                      ))}
                     </div>
                     <figcaption className="cs-cap">{step.compare.caption}</figcaption>
                   </figure>

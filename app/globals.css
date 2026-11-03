@@ -9075,8 +9075,16 @@ p a {
   color: rgba(255, 255, 255, 0.6);
 }
 
-/* One phone beside its beat, and a phone-shaped before/after (LUK-195). */
+/* One phone beside its beat (LUK-195). */
 .cs-screens--single .cs-screens__row { justify-content: center; overflow: visible; }
-.cs-compare--phone > div { width: min(80vw, 320px); margin-inline: auto; }
-.cs-compare--phone > div > div { border-radius: 10.5%/4.8%; }
-.cs-compare--phone .cs-cap { text-align: center; }
+
+/* Before and after, side by side (LUK-195). Two columns at every width;
+   phone pairs are held to two phones' width and centred. */
+.cs-pair__row { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(0.75rem, 3vw, 1.5rem); }
+.cs-pair--phone .cs-pair__row { width: min(100%, 600px); margin-inline: auto; }
+.cs-pair__item { min-width: 0; }
+.cs-pair__item img { display: block; width: 100%; height: auto; }
+.cs-pair__frame img { border-radius: 0.75rem; }
+.cs-pair--phone .cs-screens__phone img { border-radius: 10.5%/4.8%; }
+.cs-pair .cs-cap { text-align: center; }
+.cs-pair__item .cs-screens__name { display: block; }

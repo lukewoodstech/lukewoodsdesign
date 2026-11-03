@@ -5,8 +5,8 @@ export type ProcessStep = {
   figure?: Figure
   /** Full phone screens shown under this step as a carousel (components/ScreenCarousel). */
   screens?: Screen[]
-  /** A drag slider between two captures of the same screen, old and new
-      (components/BeforeAfterHero). Phone-shaped pairs sit in a phone frame. */
+  /** Two captures of the same screen, old and new, shown side by side
+      with Before / After under each. Phone-shaped pairs get phone frames. */
   compare?: Compare
 }
 
