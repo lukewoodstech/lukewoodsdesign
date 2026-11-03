@@ -70,8 +70,11 @@ export default function CaseStudyGate({
       </div>
 
       <p className="mt-6 max-w-md text-base leading-relaxed text-white/70">
-        This case study is locked while it&apos;s being written. Enter the
-        password, or{' '}
+        {/* Hoth is still a draft; Pitch is finished but private (LUK-200). */}
+        {slug === 'hoth'
+          ? 'This case study is locked while it’s being written.'
+          : 'This case study is private.'}{' '}
+        Enter the password, or{' '}
         <a href={MAILTO} className="text-white underline underline-offset-4">
           email me
         </a>{' '}

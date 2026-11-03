@@ -20,7 +20,7 @@ import {
   BESPOKE_SLUGS,
 } from '@/lib/caseStudies'
 import type { Figure } from '@/lib/caseStudies'
-import { PROTECTED_SLUGS, UNLOCK_COOKIE } from '@/lib/gate'
+import { PROTECTED_SLUGS, UNLOCK_COOKIE, unlockCookieFor } from '@/lib/gate'
 import { SITE } from '@/lib/site'
 import { unlockCaseStudy } from './actions'
 
@@ -82,8 +82,40 @@ export async function generateMetadata({
  * exists, nothing at all while the caption is still scaffolding. (The old
  * template rendered grey placeholder boxes with bracketed captions.)
  */
-const Fig = ({ caption, src, href }: Figure) => {
+const Fig = ({ caption, src, href, video }: Figure) => {
   if (!src || isPlaceholder(caption)) return null
+  /* A recording plays muted on a loop, like a still that moves; the still
+     is its poster, so the frame never sits empty while it loads. */
+  if (video) {
+    const player = (
+      <video
+        className="lcs-shot cs-video"
+        src={video}
+        poster={src}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-label={caption}
+      />
+    )
+    return (
+      <figure className="my-12">
+        {href ? (
+          <a className="lcs-zoom" href={href} target="_blank" rel="noopener noreferrer">
+            {player}
+            <span className="lcs-zoom__hint" aria-hidden="true">
+              Open {href.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+            </span>
+          </a>
+        ) : (
+          player
+        )}
+        <figcaption className="cs-cap">{caption}</figcaption>
+      </figure>
+    )
+  }
   return (
     <figure className="my-12">
       {/* alt is empty by design — the figcaption below already carries this
@@ -123,7 +155,11 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
    */
   if (PROTECTED_SLUGS.has(cs.slug)) {
     const store = await cookies()
-    if (store.get(UNLOCK_COOKIE)?.value !== '1') {
+    const unlocked =
+      store.get(unlockCookieFor(cs.slug))?.value === '1' ||
+      // Hoth's visitors from before the per-study split (LUK-200).
+      (cs.slug === 'hoth' && store.get(UNLOCK_COOKIE)?.value === '1')
+    if (!unlocked) {
       return (
         <div className="cs min-h-screen bg-black text-white" style={accentStyle}>
           <SiteNav

@@ -7273,7 +7273,7 @@ p a {
   color: #fff;
 }
 
-/* Stacked header (LUK-199): the summary takes the full column in a larger,
+/* Stacked header (LUK-200): the summary takes the full column in a larger,
    easier size, then a hairline, then the facts in one row beneath it. */
 .cs-meta--stacked { grid-template-columns: 1fr; gap: 0; }
 @media (min-width: 48em) {
@@ -9115,3 +9115,6 @@ p a {
 .cs-pair--phone .cs-screens__phone img { border-radius: 10.5%/4.8%; }
 .cs-pair .cs-cap { text-align: center; }
 .cs-pair__item .cs-screens__name { display: block; }
+
+/* A looping screen recording in a study figure (LUK-200). */
+.cs-video { display: block; width: 100%; height: auto; }

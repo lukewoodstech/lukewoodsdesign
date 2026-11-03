@@ -87,7 +87,7 @@ export const ENGAGEMENTS: readonly Engagement[] = [
     kind: 'contract',
     route: '/work/pitch',
     summary:
-      'Sales-coaching startup for reps who sell face to face. Current contract work, in pilot. Luke redesigned the whole rep app, designed and built its three main flows (recording, Stats and Coach), and built the public site (usepitch.app).',
+      'Sales-coaching startup for reps who sell face to face. Current contract work, in pilot. Luke redesigned the whole rep app, designed and built its three main flows (recording, Stats and Coach), and built the public site (usepitch.app). The case study is password-protected; Luke shares the password on request.',
   },
   {
     company: 'Lucid',
@@ -172,7 +172,7 @@ export const CLAIMS: readonly Claim[] = [
     project: 'Building Pitch',
     claim: 'The flows he designed and built: recording, Stats, Coach',
     wording:
-      'Recording is the main flow: a rep starts it at the top of a shift and forgets it; it runs in the background, survives a locked phone, and an on-device speech model splits the day into doors, each landing in the feed scored with its clip and one line of coaching. Stats shows pace against the week’s goal and today’s targets with a field-day streak. Coach turns a lost door into practice: the objection, what the rep said, a stronger answer, and a guided two-minute roleplay.',
+      'Recording is the main flow, one tap: Pitch listens for the whole shift and auto-records when a conversation starts, through a locked phone, and an on-device speech model splits the day into doors, each landing in the feed scored with its clip and one line of coaching. One sheet shows which mic it hears and ends the shift. Stats shows pace against the week’s goal and today’s targets with a field-day streak. Coach turns a lost door into practice: the objection, what the rep said, a stronger answer, and a guided two-minute roleplay.',
     status: 'shipped',
     scope: 'project',
     source: 'lib/caseStudies.ts (pitch); /work/pitch',
@@ -862,7 +862,7 @@ export const BACKGROUND = {
   gaps: [
     'Intern-level experience; graduating April 2028.',
     'Enterprise B2B heavy, consumer light.',
-    'The published case studies are four, Pitch, Lucid, Awardco and Pattern; Hoth is unpublished. Pitch is current work in pilot, with no results yet.',
+    'The public case studies are three, Lucid, Awardco and Pattern. Pitch has a case study behind a password, shared on request; Hoth is unpublished. Pitch is current work in pilot, with no results yet.',
   ],
 } as const
 

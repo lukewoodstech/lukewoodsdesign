@@ -36,6 +36,9 @@ export type Figure = {
   height?: string
   /** A figure that is a door, not a picture to inspect: clicking opens this URL instead of the lightbox. */
   href?: string
+  /** A screen recording (mp4) that plays muted on a loop in place of the
+      still; `src` becomes its poster frame. */
+  video?: string
 }
 
 /** One layer of a study's tech stack: "The app", "The site". */
@@ -110,7 +113,7 @@ export type CaseStudy = {
   hideTimeline?: boolean
   /**
    * Header layout: summary across the full column, facts in a row below it
-   * (MetaGrid `stacked`). Off by default; Pitch uses it (LUK-199).
+   * (MetaGrid `stacked`). Off by default; Pitch uses it (LUK-200).
    */
   metaStacked?: boolean
   /*
@@ -349,7 +352,7 @@ export const caseStudies: CaseStudy[] = [
      * - Impact first, few words. Each beat is what changed and why it
      *   mattered, in one or two sentences. If a line needs a third, cut it.
  * - What was built, not how it was shipped: no pull request or process
- *   talk (Luke, 2026-10-14). The Timeline fact shows since LUK-199.
+ *   talk (Luke, 2026-10-14). The Timeline fact shows since LUK-200.
      * - No pilot customer names or pilot figures. Product screens are fine
      *   here because the gate holds them; public positioning (usepitch.app)
      *   is fine to repeat anywhere.
@@ -362,9 +365,12 @@ export const caseStudies: CaseStudy[] = [
      *   the Private look (LUK-119). Since 2026-11-03 (LUK-195) the study is
      *   the app work only: Luke's role is contract design and engineering,
      *   and no hardware is described (the nametag was dropped, LUK-194).
-     *   The site figure and the recording screen are captures of
-     *   usepitch.app taken 2026-11-03 with the pilot-count lines hidden;
-     *   the stack is a snapshot from the repos the same day.
+     *   The site figure is a capture of usepitch.app taken 2026-11-03 with
+     *   the pilot-count lines hidden. The recording screens are Luke's own
+     *   simulator captures from the same day, door addresses and customer
+     *   names blurred. Stats and Coach are 2026-10-14 captures cut above
+     *   the tab bar, which has changed since. The stack is a snapshot from
+     *   the repos the same day.
      */
     slug: 'pitch',
     title: 'Building Pitch',
@@ -373,7 +379,7 @@ export const caseStudies: CaseStudy[] = [
     accent: '#4c7be8',
     // Named as contract design and engineering (Luke, 2026-11-03, LUK-195).
     role: 'Contract designer and engineer',
-    // Shown since LUK-199 (Luke, 2026-11-03): the header carries Role,
+    // Shown since LUK-200 (Luke, 2026-11-03): the header carries Role,
     // Timeline, Tools and Built only, under a full-width summary.
     period: 'Sep 2026 – present',
     metaStacked: true,
@@ -410,18 +416,31 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         heading: 'Recording',
-        body: 'The main flow. A rep starts recording at the top of a shift and forgets it: it runs in the background, survives a locked phone, and an on-device speech model splits the day into doors. Each door lands in the feed scored, with its clip and one line of coaching.',
-        figure: {
-          src: '/work/pitch/record-screen.png',
-          caption: 'The recording screen: one timer, the door count, and a stop button',
-        },
+        body: 'The main flow, one tap. Pitch listens for the whole shift and auto-records when a conversation starts, through a locked phone, splitting the day into doors. One sheet shows which mic it hears, and ends the shift.',
+        screens: [
+          {
+            src: '/work/pitch/record-ready.png',
+            label: 'Ready',
+            alt: 'The feed with the floating tab bar: Feed, Stats, the blue record button in the centre, Coach and Team. Door addresses are blurred.',
+          },
+          {
+            src: '/work/pitch/record-listening.png',
+            label: 'Listening',
+            alt: 'The listening sheet over the dimmed feed: Listening, just started. Auto-records when a conversation starts. The phone mic with a Change link, then Done and End recording.',
+          },
+          {
+            src: '/work/pitch/record-mic.png',
+            label: 'Mic',
+            alt: 'Connect your mic: the built-in microphone, connected and recording now, with links to search again or forget the mic',
+          },
+        ],
       },
       {
         heading: 'Stats',
         body: 'Pace, not just totals: sales this week against the goal, today’s conversations, pitches and close attempts against targets, and a field-day streak.',
         screens: [
           {
-            src: '/work/pitch/screen-stats.png',
+            src: '/work/pitch/screen-stats-top.png',
             label: 'Stats',
             alt: 'Stats: sales this week against the goal with a pace line, today’s conversations, pitches and close attempts against targets, and a field-day streak',
           },
@@ -432,7 +451,7 @@ export const caseStudies: CaseStudy[] = [
         body: 'A lost door becomes practice. The rep sees the objection, what they said, a stronger answer, and a guided two-minute roleplay.',
         screens: [
           {
-            src: '/work/pitch/screen-coach.png',
+            src: '/work/pitch/screen-coach-top.png',
             label: 'Coach',
             alt: 'Coach: an objection the rep lost a door on, quoted from the transcript with what the rep said, a button to show a good response, and a two-minute roleplay',
           },

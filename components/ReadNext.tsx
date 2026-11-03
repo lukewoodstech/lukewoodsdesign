@@ -1,6 +1,7 @@
 import { Fragment } from 'react'
 import { Block, Col } from '@/components/cs/Story'
 import { WORK_TILES } from './CanvasBits'
+import { PROTECTED_SLUGS } from '@/lib/gate'
 
 /*
  * The "Read next" cards at the foot of every study: the home canvas's own
@@ -10,7 +11,11 @@ import { WORK_TILES } from './CanvasBits'
  * (.cs-next in globals.css).
  */
 export default function ReadNext({ current }: { current: string }) {
-  const tiles = WORK_TILES.filter((w) => w.slug !== current)
+  /* A public study never ends on a locked door: gated studies (Pitch since
+     LUK-200) stay off every Read next row but their own. */
+  const tiles = WORK_TILES.filter(
+    (w) => w.slug !== current && (!PROTECTED_SLUGS.has(w.slug) || PROTECTED_SLUGS.has(current)),
+  )
   if (tiles.length === 0) return null
 
   return (

@@ -134,7 +134,7 @@ export type Fact = { label: string; value: ReactNode; span?: boolean }
 
 /* `stacked` puts the summary across the full column and the facts in a
    row beneath it, so the page reads top to bottom: what this is, then the
-   particulars (Luke, 2026-11-03, LUK-199). */
+   particulars (Luke, 2026-11-03, LUK-200). */
 export function MetaGrid({
   summary,
   facts,

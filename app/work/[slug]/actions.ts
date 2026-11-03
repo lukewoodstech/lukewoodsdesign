@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { UNLOCK_COOKIE, UNLOCK_HINT_COOKIE } from '@/lib/gate'
+import { UNLOCK_HINT_COOKIE, gatePasswordEnvFor, unlockCookieFor } from '@/lib/gate'
 
 /*
  * Casual gate for studies that aren't ready for public eyes — it keeps the
@@ -22,7 +22,17 @@ import { UNLOCK_COOKIE, UNLOCK_HINT_COOKIE } from '@/lib/gate'
  * open, because a gate that stops working should hide the draft, not
  * publish it.
  */
-const GATE_PASSWORD = process.env.CASE_STUDY_GATE_PASSWORD
+/*
+ * Since 2026-11-03 (LUK-200) each study can carry its own password in
+ * CASE_STUDY_GATE_PASSWORD_<SLUG> (Pitch's in Vercel only). Hoth has none
+ * of its own and keeps the shared variable. Pitch does NOT fall back to the
+ * shared one: if its own is unset it fails closed like any other.
+ */
+function passwordFor(slug: string): string | undefined {
+  const own = process.env[gatePasswordEnvFor(slug)]
+  if (own) return own
+  return slug === 'hoth' ? process.env.CASE_STUDY_GATE_PASSWORD : undefined
+}
 
 export async function unlockCaseStudy(
   _prev: { error: string | null },
@@ -38,8 +48,9 @@ export async function unlockCaseStudy(
    * two empty values and letting everyone in. A misconfigured gate should
    * refuse everybody.
    */
+  const GATE_PASSWORD = passwordFor(slug)
   if (!GATE_PASSWORD) {
-    console.error('[gate] CASE_STUDY_GATE_PASSWORD is not set; refusing every unlock.')
+    console.error(`[gate] no password set for ${slug} (${gatePasswordEnvFor(slug)}); refusing every unlock.`)
     return { error: 'This study can’t be unlocked right now.' }
   }
 
@@ -48,7 +59,7 @@ export async function unlockCaseStudy(
   }
 
   const store = await cookies()
-  store.set(UNLOCK_COOKIE, '1', {
+  store.set(unlockCookieFor(slug), '1', {
     httpOnly: true,
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production',
