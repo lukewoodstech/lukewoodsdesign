@@ -7279,15 +7279,12 @@ p a {
 @media (min-width: 48em) {
   .cs-meta--stacked { grid-template-columns: 1fr; gap: 0; }
 }
+/* The summary is set like the body copy below it, in white (Luke,
+   2026-11-03): no larger lead, so the header and the story read as one. */
 .cs-meta--stacked .cs-meta__summary .cs-prose {
   max-width: none;
-  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.3rem);
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.72);
-}
-.cs-meta--stacked .cs-meta__summary .cs-prose p:first-child {
-  font-size: clamp(1.25rem, 1.05rem + 0.8vw, 1.55rem);
-  line-height: 1.45;
+  font-size: var(--reading-size);
+  line-height: var(--reading-leading);
   color: #fff;
 }
 .cs-meta--stacked .cs-meta__facts {
