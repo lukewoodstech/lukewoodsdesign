@@ -474,7 +474,7 @@ export const caseStudies: CaseStudy[] = [
         id: 'direction',
         label: 'Finding the direction',
         title: 'Finding the direction',
-        body: 'Before changing any screens, I wanted the founders and me to agree on what Pitch should feel like. I took the feed, the screen reps open after every door, and redrew it four ways next to the version we had. Each one borrowed from an app we liked: Polymarket, Origin, Coinbase, and one built from our own logo.\n\nWe picked Private, the calm one. It had the most room to breathe and made each door feel worth replaying. Then I tried eight blues for the accent color, and we went with Cornflower, mostly because it never gets confused with the green, amber and red we use for scores.',
+        body: 'Before changing any screens, I wrote down what the app actually had to do. Reps check it in the few seconds between doors, often outside in the sun. It records them all day, so it has to feel trustworthy, not like it\'s watching them. And every score needs to read as coaching, not a grade.\n\nThe old look didn\'t fit any of that. It was built to feel loud and competitive, like a sports app. So I redrew the feed, the screen reps open after every door, four ways, each testing a different answer to those needs: a dense list that fits more doors on screen, calm cards that make each door feel worth replaying, a view that leads with the number, and one built around our own logo.\n\nWe chose the calm direction because it answered the trust problem best. Coaching read like advice instead of a report card, and wrapping the score around the play button made the score and the recording feel like one thing, so listening back felt natural.',
         steps: [
           {
             gallery: {
@@ -488,6 +488,14 @@ export const caseStudies: CaseStudy[] = [
               caption: 'The same afternoon of sample doors, drawn five ways. We chose B, Private.',
             },
           },
+        ],
+      },
+      {
+        id: 'system',
+        label: 'Building the system',
+        title: 'Building the system',
+        body: 'Then I turned that direction into a system, and each piece came from one of those needs.\n\nColor came first. Scores already use green, amber and red, so the brand color couldn\'t be anything a rep might read as a grade. I tested eight blues and picked Cornflower because it stays clearly apart from the score colors, with a darker version for text that passes contrast on white. Blue only shows up on things you tap or should look at.\n\nType and shape followed the same thinking. Scores and the day\'s heading use a serif, so the numbers that matter stand out at a glance between doors. Everything you actually read uses Hanken Grotesk, which stays clear at small sizes. Cards are white with a soft shadow instead of a black outline, so the screen feels calm instead of busy, and the logo became a lowercase pitch with a blue period so the brand stays quieter than the work.',
+        steps: [
           {
             gallery: {
               items: [
@@ -495,14 +503,6 @@ export const caseStudies: CaseStudy[] = [
               ],
             },
           },
-        ],
-      },
-      {
-        id: 'system',
-        label: 'Building the system',
-        title: 'Building the system',
-        body: 'Next I turned that direction into something we could build from. The logo became a lowercase pitch with a blue period. Titles and scores use a serif, everything else uses Hanken Grotesk, and cards are white with a soft shadow instead of a black outline.\n\nThe rule I cared about most was keeping blue for the things you tap or should look at. Scores keep their own colors, so blue never means good or bad.',
-        steps: [
           {
             gallery: {
               items: [

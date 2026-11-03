@@ -171,7 +171,7 @@ export const CLAIMS: readonly Claim[] = [
     project: 'Building Pitch',
     claim: 'How the direction was chosen',
     wording:
-      'Before redrawing screens, Luke drew the feed four ways beside the shipped one: a dense list after Polymarket, calm cards after Origin, number-first after Coinbase, and one built from the wordmark. He and the founders chose Private, the calm one. He then compared eight blues for the single accent and chose Cornflower because it never collides with the green, amber and red that grade a door.',
+      'Luke started from what the app had to do: reps check it in seconds between doors, often outdoors; it records all day, so it must feel trustworthy rather than watchful; and a score has to read as coaching, not a grade. He redrew the feed four ways, each testing a different answer, and with the founders chose the calm direction because it answered the trust problem best. For color, scores already use green, amber and red, so he tested eight blues and chose Cornflower because it stays clearly apart from the score colors, with a darker version for text that passes contrast on white.',
     status: 'shipped',
     scope: 'project',
     source: 'lib/caseStudies.ts (pitch); /work/pitch',
