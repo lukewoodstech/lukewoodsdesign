@@ -23,7 +23,9 @@ import Reveal from '@/components/lucid/Reveal'
  * one continuous path with rounded elbows.
  *
  * Hovering a label dims the other callouts so one pairing reads at a time.
- * On phones the lines go away and the pins carry the pairing alone.
+ * Touch has no hover, so there a tap on a label or a pin picks the pairing
+ * and a second tap (or a tap on the picture) lets it go. On phones the
+ * lines go away and the pins carry the pairing alone.
  */
 export type Callout = {
   label: string
@@ -80,6 +82,29 @@ export default function Callouts({
   const root = useRef<HTMLDivElement>(null)
   const stage = useRef<HTMLDivElement>(null)
   const [geo, setGeo] = useState<Geo | null>(null)
+  const [active, setActive] = useState<number | null>(null)
+  /* The pointer behind the next click: a mouse already lit the pair on
+     hover, so its click should not toggle it back off. */
+  const via = useRef<string>('')
+
+  const pick = (i: number) => ({
+    onPointerDown: (e: React.PointerEvent) => {
+      via.current = e.pointerType
+    },
+    onPointerEnter: (e: React.PointerEvent) => {
+      if (e.pointerType === 'mouse') setActive(i)
+    },
+    onPointerLeave: (e: React.PointerEvent) => {
+      if (e.pointerType === 'mouse') setActive(null)
+    },
+    onClick: (e: React.MouseEvent) => {
+      e.stopPropagation()
+      const mouse = via.current === 'mouse'
+      via.current = ''
+      if (!mouse) setActive((a) => (a === i ? null : i))
+    },
+  })
+  const on = (i: number) => (active === i ? 'is-on' : undefined)
 
   useEffect(() => {
     const el = root.current
@@ -107,26 +132,29 @@ export default function Callouts({
       <div
         ref={root}
         className="cs-callouts__body"
+        data-active={active ?? undefined}
         style={{ '--n': n, '--cs-callouts-band': `${band}px` } as React.CSSProperties}
       >
         <ol className="cs-callouts__labels">
           {items.map((c, i) => (
-            <li key={c.label} style={vars(i)}>
-              <span className="cs-mono-label">
-                <i>{i + 1}</i>
-                {c.label}
-              </span>
-              <br />
-              {c.text}
+            <li key={c.label} style={vars(i)} className={on(i)}>
+              <button type="button" className="cs-callouts__pick" aria-pressed={active === i} {...pick(i)}>
+                <span className="cs-mono-label">
+                  <i>{i + 1}</i>
+                  {c.label}
+                </span>
+                <br />
+                {c.text}
+              </button>
             </li>
           ))}
         </ol>
-        <div ref={stage} className="cs-callouts__stage">
+        <div ref={stage} className="cs-callouts__stage" onClick={() => setActive(null)}>
           <Image src={src} alt="" width={width} height={height} sizes={sizes} />
           {items.map((c, i) => {
             const { ax, ay } = land(c)
             return (
-              <span key={c.label} data-i={i} style={vars(i)} aria-hidden="true">
+              <span key={c.label} data-i={i} className={on(i)} style={vars(i)} aria-hidden="true">
                 <span
                   className="cs-callouts__box"
                   style={{
@@ -139,7 +167,11 @@ export default function Callouts({
                 {/* The numbered pin where the line lands: the same number as
                     the label, in the same colour, so the pairing reads even
                     where the line crosses busy content. */}
-                <span className="cs-callouts__pin" style={{ left: `${ax}%`, top: `${ay}%` }}>
+                <span
+                  className="cs-callouts__pin"
+                  style={{ left: `${ax}%`, top: `${ay}%` }}
+                  {...pick(i)}
+                >
                   {i + 1}
                 </span>
               </span>
@@ -164,7 +196,7 @@ export default function Callouts({
                 geo.stageTop + (ay / 100) * geo.stageH,
               )
               return (
-                <g key={c.label} data-i={i} style={vars(i)}>
+                <g key={c.label} data-i={i} className={on(i)} style={vars(i)}>
                   <path d={d} className="cs-callouts__halo" pathLength={1} />
                   <path d={d} className="cs-callouts__lead" pathLength={1} />
                 </g>
