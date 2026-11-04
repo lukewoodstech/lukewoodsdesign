@@ -8135,31 +8135,42 @@ p a {
   animation-delay: calc(1.4s + var(--i) * 0.15s);
 }
 
-/* Hover a label: the other callouts fall back so one pairing reads.
-   Done with a filter rather than opacity, which the reveal keyframes own. */
+/* Pick a label (hover with a mouse, tap on touch; Callouts.tsx keeps the
+   choice in data-active): the other callouts fall back so one pairing
+   reads. Done with a filter rather than opacity, which the reveal
+   keyframes own. */
 .cs-callouts__labels li { transition: filter 0.25s ease; }
 .cs-callouts [data-i] { transition: filter 0.25s ease; }
 
-.cs-callouts:has(.cs-callouts__labels li:hover) .cs-callouts__labels li,
-.cs-callouts:has(.cs-callouts__labels li:hover) [data-i] {
+.cs-callouts__body[data-active] .cs-callouts__labels li:not(.is-on),
+.cs-callouts__body[data-active] [data-i]:not(.is-on) {
   filter: brightness(0.35);
 }
 
-/* The hovered pair — caption AND its line — stays lit. Both halves use the
-   same nth-child selector so they carry the same weight; an earlier version
-   lit the line with a heavy :has() chain but the caption with a bare
-   `li:hover`, which the dimming rule outranked, so the caption you were
-   pointing at was the one that went dark. */
-.cs-callouts:has(.cs-callouts__labels li:nth-child(1):hover) .cs-callouts__labels li:nth-child(1),
-.cs-callouts:has(.cs-callouts__labels li:nth-child(1):hover) [data-i='0'],
-.cs-callouts:has(.cs-callouts__labels li:nth-child(2):hover) .cs-callouts__labels li:nth-child(2),
-.cs-callouts:has(.cs-callouts__labels li:nth-child(2):hover) [data-i='1'],
-.cs-callouts:has(.cs-callouts__labels li:nth-child(3):hover) .cs-callouts__labels li:nth-child(3),
-.cs-callouts:has(.cs-callouts__labels li:nth-child(3):hover) [data-i='2'],
-.cs-callouts:has(.cs-callouts__labels li:nth-child(4):hover) .cs-callouts__labels li:nth-child(4),
-.cs-callouts:has(.cs-callouts__labels li:nth-child(4):hover) [data-i='3'] {
-  filter: none;
+/* The label is a button so touch and keyboard can pick it; it should still
+   read as the caption it was. */
+.cs-callouts__pick {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
+
+.cs-callouts__pick:focus-visible {
+  outline: 2px solid var(--co);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* Pins answer taps too, so on a phone the number on the picture can be
+   tapped to find its caption. */
+.cs-callouts__pin { pointer-events: auto; cursor: pointer; }
 
 @media (max-width: 40em) {
   .cs-callouts__labels { grid-template-columns: 1fr; gap: 0.9rem; padding-bottom: 0; }
