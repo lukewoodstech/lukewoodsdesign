@@ -9257,6 +9257,18 @@ p a {
   .cs-rail li.is-done a { color: rgba(255, 255, 255, 0.55); }
   .cs-rail li.is-current a { color: #fff; }
   .cs-rail li.is-current a::before { background: var(--accent); }
+
+  /* The Awardco flow strips break out to 1240px and ran under the rail.
+     On a page with a strip, the rail steps out past the strip's edge
+     when there is room, and the strip narrows to clear the rail when
+     there is not. */
+  :root:has(.cs-flow) .cs-rail {
+    left: max(
+      1.5rem,
+      min(calc(50vw - var(--story-col) / 2 - 14rem), calc(50vw - 620px - 13rem))
+    );
+  }
+  .cs-flow { --flow-w: min(1240px, calc(100vw - 2 * 14rem)); }
 }
 
 /* Narrow screens: a thin bar under the nav with the stage and progress. */
