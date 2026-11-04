@@ -229,6 +229,7 @@ const BRANDS: { name: string; src: string; alt: string; note: string }[] = [
 /* The design process, in the order it happened. Each label is also the
    stage's heading, as on Pitch. */
 const STAGES = [
+  { id: 'audit', label: 'Auditing the old login' },
   { id: 'data', label: 'Digging into the data' },
   { id: 'testing', label: 'Testing three directions' },
   { id: 'token', label: 'Carrying the login forward' },
@@ -337,9 +338,17 @@ export default function AwardcoCaseStudy() {
         {/* ══ The design process, stage by stage, with the rail (LUK-203) ══ */}
         <StageRail stages={STAGES} />
 
+        {/* The old design, shown before anything else argues against it.
+            before-login.png is the screen cropped out of
+            public/before.png (a password tenant, so all three methods
+            show); the laptop frame baked into that file is why it was
+            cropped rather than reused. Every callout restates something
+            already on this page: the generic SSO label (mobile stage),
+            the unreachable work inbox and the password field shown to SSO
+            companies (Luke's own paragraphs), and the 34.6% rate. */}
         <Stage
-          id="data"
-          title="Digging into the data"
+          id="audit"
+          title="Auditing the old login"
           body={
             <>
               <p>
@@ -349,14 +358,67 @@ export default function AwardcoCaseStudy() {
                 their own.
               </p>
               <p>
-                My PM brought me a known pain point: login was driving heavy support volume. I
-                worked with our technical lead, account managers, and the customer-success team to
-                understand how big the problem really was.
+                My PM brought me a known pain point: login was driving heavy support volume. Before
+                touching the numbers, I went through the login the way an employee would.
               </p>
             </>
           }
         >
           <Col>
+            <Block>
+              <Callouts
+                src={`${FLOW}/before-login.png`}
+                alt="The old company login page, annotated: a generic Sign in with SSO button, a card that emails a password-free code to an Email, username, or ID field, and a Sign in with Password button underneath. Three ways in, with nothing saying which one the company uses"
+                width={880}
+                height={700}
+                items={[
+                  {
+                    label: 'Sign in with SSO',
+                    text: <>SSO, but which one? It never says <strong>Google, Microsoft, or Okta</strong>, so people didn&rsquo;t recognize it as theirs.</>,
+                    x: 25.9,
+                    y: 25.3,
+                    w: 48,
+                    h: 5.4,
+                    ax: 30,
+                  },
+                  {
+                    label: 'Email me a code',
+                    text: <>The default path sends a code to a <strong>work inbox</strong> that deskless workers often couldn&rsquo;t open on their phones.</>,
+                    x: 26.8,
+                    y: 43.3,
+                    w: 46.2,
+                    h: 28.1,
+                    ax: 64,
+                  },
+                  {
+                    label: 'Sign in with Password',
+                    text: <>Shown even at companies that use SSO. The method people reached for <strong>worked 34.6% of the time</strong>.</>,
+                    x: 28.4,
+                    y: 73.4,
+                    w: 43,
+                    h: 5.4,
+                    ax: 70,
+                  },
+                ]}
+              />
+            </Block>
+
+            <Block>
+              <div className="cs-prose">
+                <p>
+                  Three ways in, two of them the same blue button, and nothing on the page says which
+                  one your company actually uses. That answer lived in each company&rsquo;s IT setup,
+                  and the login asked employees to guess it. A wrong guess meant a failed attempt or
+                  a support ticket.
+                </p>
+                <p>
+                  Guessing right wasn&rsquo;t the end of it, either. The universal login page and the
+                  company login page didn&rsquo;t share what they knew, so someone who had already
+                  entered a code could be asked to sign in all over again.
+                </p>
+              </div>
+            </Block>
+
             <Notes
               quotes
               label="What people ran into when they tried to log in"
@@ -366,13 +428,27 @@ export default function AwardcoCaseStudy() {
                 'The code went to my work inbox, and I can’t open that on my phone',
               ]}
             />
+          </Col>
+        </Stage>
 
+        <Stage
+          id="data"
+          title="Digging into the data"
+          body={
+            <p>
+              The audit showed why people were confused. To find out what that confusion cost, I
+              worked with our technical lead, account managers, and the customer-success team on a
+              year of login telemetry and support cases.
+            </p>
+          }
+        >
+          <Col>
             <Block>
               <div className="cs-prose">
                 <p>
-                  The problem wasn&rsquo;t simply that people forgot their credentials. Awardco
-                  showed several ways to sign in and expected people to know which one their company
-                  supported. Password login alone accounted for 6.7 million failures.
+                  The numbers backed up the audit. The problem wasn&rsquo;t that people forgot their
+                  credentials; it was that they picked the wrong door. Password login alone
+                  accounted for 6.7 million failures.
                 </p>
               </div>
               <Callouts
