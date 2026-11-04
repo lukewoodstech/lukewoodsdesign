@@ -296,7 +296,7 @@ export default function AwardcoCaseStudy() {
         </Band>
 
         {/* ══ The problem ══ */}
-        <Band dust>
+        <Band dust flush>
           <Col>
             <Problem iconSrc="/logos/awardco.png" iconAlt="Awardco">
               How might we get people signed in when{' '}

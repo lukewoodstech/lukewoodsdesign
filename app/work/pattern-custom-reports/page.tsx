@@ -172,7 +172,7 @@ export default function PatternCaseStudy() {
         </Band>
 
         {/* ══ The problem ══ */}
-        <Band dust>
+        <Band dust flush>
           <Col>
             <Problem iconSrc="/logos/pattern.png" iconAlt="Pattern">
               How might we let brand managers{' '}
