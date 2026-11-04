@@ -8194,6 +8194,7 @@ p a {
 }
 
 .cs-paper--sm { width: min(100%, 440px); transform: rotate(2deg); }
+.cs-paper--flat { transform: none; }
 .cs-paper.mt-14 { margin-top: 3.5rem; }
 .cs-paper .lcs-shot { border-radius: 6px; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6); }
 .cs-paper + .cs-cap--mono { margin-top: 2.25rem; max-width: 46ch; }

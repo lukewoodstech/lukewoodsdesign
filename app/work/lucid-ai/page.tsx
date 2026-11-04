@@ -314,7 +314,7 @@ export default function LucidCaseStudy() {
           <Band>
             <Col>
               <Reveal>
-                <div className="cs-paper">
+                <div className="cs-paper cs-paper--flat">
                   <ZoomShot
                     src={`${IMG}/skills-ideation.png`}
                     alt="An ideation grid of twenty candidate capabilities for the homepage assistant, including Find docs, Summarize, Catch up, Build a diagram, dormant files, and project status"
