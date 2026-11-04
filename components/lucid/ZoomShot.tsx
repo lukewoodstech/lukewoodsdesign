@@ -45,8 +45,6 @@ export default function ZoomShot({
   const closeRef = useRef<HTMLButtonElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
   const imgRef = useRef<HTMLImageElement>(null)
-  /* Width of the inline shot when it was clicked, to compare FIT against. */
-  const inlineW = useRef(0)
 
   const close = useCallback(() => {
     setOpen(false)
@@ -69,13 +67,19 @@ export default function ZoomShot({
     }
   }, [open, close])
 
-  /* Lay the picture out at ZOOM size, scrolled so the point at (fx, fy),
-     as fractions of the picture, sits in the middle of the screen. */
-  const zoomAt = useCallback((fx: number, fy: number) => {
+  /* Zoom in on the point that was clicked; zoom out back to fit. */
+  const toggleZoom = (e: MouseEvent<HTMLImageElement>) => {
+    e.stopPropagation()
     const box = scrollRef.current
     const img = imgRef.current
     if (!box || !img) return
+    if (zoom) {
+      setZoom(false)
+      return
+    }
     const r = img.getBoundingClientRect()
+    const fx = (e.clientX - r.left) / r.width
+    const fy = (e.clientY - r.top) / r.height
     const dpr = window.devicePixelRatio || 1
     const zoomW = Math.max(r.width * 1.6, Math.min(width, width / dpr))
     box.style.setProperty('--zoom-w', `${Math.round(zoomW)}px`)
@@ -89,31 +93,7 @@ export default function ZoomShot({
         box.scrollTop = fy * zh - box.clientHeight / 2
       }),
     )
-  }, [width])
-
-  /* Zoom in on the point that was clicked; zoom out back to fit. */
-  const toggleZoom = (e: MouseEvent<HTMLImageElement>) => {
-    e.stopPropagation()
-    if (zoom) {
-      setZoom(false)
-      return
-    }
-    const r = e.currentTarget.getBoundingClientRect()
-    zoomAt((e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height)
   }
-
-  /* On a phone a figure often already runs the width of the screen, so
-     FIT would only be a few percent bigger than what was tapped. Then the
-     lightbox opens straight at ZOOM, centred; a tap still shows it whole. */
-  useEffect(() => {
-    if (!open) return
-    const id = requestAnimationFrame(() => {
-      const fitW = imgRef.current?.getBoundingClientRect().width ?? 0
-      const phone = window.matchMedia('(max-width: 47.99em)').matches
-      if (phone && inlineW.current && fitW < inlineW.current * 1.4) zoomAt(0.5, 0.5)
-    })
-    return () => cancelAnimationFrame(id)
-  }, [open, zoomAt])
 
   /* The scroll box is the backdrop. A click on its own surface (not on
      the picture, and not on its scrollbar) closes. */
@@ -131,10 +111,7 @@ export default function ZoomShot({
         ref={triggerRef}
         type="button"
         className="lcs-zoom"
-        onClick={(e) => {
-          inlineW.current = e.currentTarget.getBoundingClientRect().width
-          setOpen(true)
-        }}
+        onClick={() => setOpen(true)}
         aria-haspopup="dialog"
         aria-label={`Expand image: ${alt}`}
       >
@@ -185,12 +162,6 @@ export default function ZoomShot({
                    viewport was soft by the time it got there. */
                 sizes={`${width}px`}
                 className="lcs-lightbox__img"
-                /* FIT is sized from the screen and this ratio, never from
-                   the file's natural size: next/image labels the served
-                   file with the srcset width (3840w for a 1440px capture),
-                   so the browser reads it as a 2.7x image and its natural
-                   width shrinks to 540px. */
-                style={{ '--lb-ar': String(width / height) } as React.CSSProperties}
                 onClick={toggleZoom}
               />
             </div>

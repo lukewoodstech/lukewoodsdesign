@@ -280,7 +280,7 @@ export const CLAIMS: readonly Claim[] = [
     project: 'Lucid AI on the homepage',
     claim: 'Internal release on July 20',
     wording:
-      'The assistant reached internal users on July 20, ahead of the general release.',
+      'The assistant reached internal users on July 20, and that early release exposed friction the team had not predicted.',
     status: 'shipped',
     scope: 'project',
     source: '/work/lucid-ai',

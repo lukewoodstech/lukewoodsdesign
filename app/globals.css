@@ -1922,8 +1922,7 @@ p a {
 
 .lcs-lightbox__img {
   display: block;
-  /* As wide as the screen allows without running taller than it. */
-  width: min(100%, calc((100vh - 2 * var(--lb-pad)) * var(--lb-ar, 1.5)));
+  width: auto;
   height: auto;
   max-width: 100%;
   max-height: calc(100vh - 2 * var(--lb-pad));
@@ -2272,98 +2271,76 @@ p a {
   font-variant-numeric: tabular-nums;
 }
 
-/* @mention figure (components/lucid/MentionFlow): two moments on one white
-   card, type @ then the resolved chip, at one consistent scale. */
-.lcs-mflow {
-  display: grid;
-  gap: 32px;
-  padding: 28px;
+/* Mention demo — resolved chip rendered in page language, not a screenshot */
+.lcs-mention {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.85em 1.2em;
+  font-size: var(--reading-meta);
+  color: rgba(255, 255, 255, 0.8);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  flex-wrap: wrap;
+}
+
+.lcs-mention__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  color: var(--accent);
+  border-radius: 999px;
+  padding: 0.18em 0.6em;
+  font-weight: 600;
+}
+
+/* @mention figure — the design file's own exported components, composed on
+   one white card in the order the interaction runs: type, pick, resolved.
+   Coordinates are the design file's own, in a 560×560 box: the 480×32
+   input at the top, the 327px menu hanging under the mention, and the two
+   resolved states below. The menu export is cropped to the component's own
+   327px bounds — Figma bleeds the canvas fill into the shadow margin, which
+   read as a stray beige block on the card. */
+.lcs-mentionfig {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 560 / 580;
+  padding: 24px;
   border-radius: 10px;
   background: #fff;
-  color: #282c33;
-  font-size: 15px;
-  line-height: 1.4;
 }
 
-.lcs-mflow__step { position: relative; }
-
-.lcs-mflow p.lcs-mflow__label {
-  margin: 0 0 10px;
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 12px;
-  letter-spacing: 0.02em;
-  color: #6b7280;
-}
-.lcs-mflow__label span { color: #282c33; margin-right: 6px; }
-
-.lcs-mflow__bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 44px;
-  padding: 8px 12px;
-  border: 1px solid #a9adb3;
-  border-radius: 6px;
-  background: #fff;
-}
-.lcs-mflow__icon { flex: none; color: #282c33; }
-.lcs-mflow__query { flex: 1; min-width: 0; }
-
-.lcs-mflow__at { color: #1a5fd0; font-weight: 500; }
-.lcs-mflow__caret {
-  display: inline-block;
-  width: 1.5px;
-  height: 1.05em;
-  margin-left: 1px;
-  vertical-align: -0.15em;
-  background: #282c33;
+.lcs-mentionfig__stage {
+  position: absolute;
+  inset: 24px;
 }
 
-.lcs-mflow__chip {
-  display: inline-block;
-  padding: 0 8px;
-  border-radius: 999px;
-  background: #d4e6fd;
-  color: #0b3a75;
+.lcs-mentionfig img {
+  position: absolute;
+  height: auto;
 }
 
-.lcs-mflow__menu {
-  width: min(300px, 100%);
-  margin: 6px 0 0 clamp(0px, 32%, 170px);
-  padding: 4px 0;
-  list-style: none;
-  border-radius: 8px;
-  background: #fff;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06), 0 5px 15px rgba(0, 0, 0, 0.15);
+/* left / top / width as a percentage of the 560-wide design box */
+.lcs-mentionfig__typing { left: 0; top: 0; width: 85.7%; }
+/* Figma bleeds the canvas fill into this node's export, so the image is
+   clipped back to the menu card itself; the radius matches its 8px corner. */
+.lcs-mentionfig__menu {
+  /* The image is inset and oversized so that the VISIBLE card lands where
+     the design file puts the menu: x 171, y 37, 327 wide in the 560 box. */
+  left: 27.5%;
+  top: 3.7%;
+  width: 64.5%;
+  clip-path: inset(4.7% 4.7% 6% 4.7% round 3%);
 }
-.lcs-mflow__menu li {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 7px 12px;
-}
-.lcs-mflow__menu li.is-active { background: #f1f3f5; }
-
-.lcs-mflow__avatar {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  font-size: 12px;
-  font-weight: 600;
-  color: #282c33;
-}
-.lcs-mflow__avatar--team { background: #f1f3f5; }
-
-.lcs-mflow__who { display: grid; min-width: 0; }
-.lcs-mflow__who strong { font-size: 14px; font-weight: 600; }
-.lcs-mflow__who span { font-size: 13px; color: #5c6370; }
+.lcs-mentionfig__person { left: 0; top: 74.8%; width: 85.7%; }
+.lcs-mentionfig__team   { left: 0; top: 91%; width: 85.7%; }
 
 @media (max-width: 40em) {
-  .lcs-mflow { padding: 16px; gap: 24px; font-size: 14px; }
-  .lcs-mflow__menu { margin-left: 0; }
+  .lcs-mentionfig { padding: 12px; }
+  .lcs-mentionfig__stage { inset: 12px; }
 }
 
 /* Failure-state tab panels */
@@ -8025,31 +8002,42 @@ p a {
   animation-delay: calc(1.4s + var(--i) * 0.15s);
 }
 
-/* Hover a label: the other callouts fall back so one pairing reads.
-   Done with a filter rather than opacity, which the reveal keyframes own. */
+/* Pick a label (hover with a mouse, tap on touch; Callouts.tsx keeps the
+   choice in data-active): the other callouts fall back so one pairing
+   reads. Done with a filter rather than opacity, which the reveal
+   keyframes own. */
 .cs-callouts__labels li { transition: filter 0.25s ease; }
 .cs-callouts [data-i] { transition: filter 0.25s ease; }
 
-.cs-callouts:has(.cs-callouts__labels li:hover) .cs-callouts__labels li,
-.cs-callouts:has(.cs-callouts__labels li:hover) [data-i] {
+.cs-callouts__body[data-active] .cs-callouts__labels li:not(.is-on),
+.cs-callouts__body[data-active] [data-i]:not(.is-on) {
   filter: brightness(0.35);
 }
 
-/* The hovered pair — caption AND its line — stays lit. Both halves use the
-   same nth-child selector so they carry the same weight; an earlier version
-   lit the line with a heavy :has() chain but the caption with a bare
-   `li:hover`, which the dimming rule outranked, so the caption you were
-   pointing at was the one that went dark. */
-.cs-callouts:has(.cs-callouts__labels li:nth-child(1):hover) .cs-callouts__labels li:nth-child(1),
-.cs-callouts:has(.cs-callouts__labels li:nth-child(1):hover) [data-i='0'],
-.cs-callouts:has(.cs-callouts__labels li:nth-child(2):hover) .cs-callouts__labels li:nth-child(2),
-.cs-callouts:has(.cs-callouts__labels li:nth-child(2):hover) [data-i='1'],
-.cs-callouts:has(.cs-callouts__labels li:nth-child(3):hover) .cs-callouts__labels li:nth-child(3),
-.cs-callouts:has(.cs-callouts__labels li:nth-child(3):hover) [data-i='2'],
-.cs-callouts:has(.cs-callouts__labels li:nth-child(4):hover) .cs-callouts__labels li:nth-child(4),
-.cs-callouts:has(.cs-callouts__labels li:nth-child(4):hover) [data-i='3'] {
-  filter: none;
+/* The label is a button so touch and keyboard can pick it; it should still
+   read as the caption it was. */
+.cs-callouts__pick {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
+
+.cs-callouts__pick:focus-visible {
+  outline: 2px solid var(--co);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* Pins answer taps too, so on a phone the number on the picture can be
+   tapped to find its caption. */
+.cs-callouts__pin { pointer-events: auto; cursor: pointer; }
 
 @media (max-width: 40em) {
   .cs-callouts__labels { grid-template-columns: 1fr; gap: 0.9rem; padding-bottom: 0; }
@@ -8073,6 +8061,7 @@ p a {
 }
 
 .cs-paper--sm { width: min(100%, 440px); transform: rotate(2deg); }
+.cs-paper--flat { transform: none; }
 .cs-paper.mt-14 { margin-top: 3.5rem; }
 .cs-paper .lcs-shot { border-radius: 6px; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6); }
 .cs-paper + .cs-cap--mono { margin-top: 2.25rem; max-width: 46ch; }
@@ -9257,18 +9246,6 @@ p a {
   .cs-rail li.is-done a { color: rgba(255, 255, 255, 0.55); }
   .cs-rail li.is-current a { color: #fff; }
   .cs-rail li.is-current a::before { background: var(--accent); }
-
-  /* The Awardco flow strips break out to 1240px and ran under the rail.
-     On a page with a strip, the rail steps out past the strip's edge
-     when there is room, and the strip narrows to clear the rail when
-     there is not. */
-  :root:has(.cs-flow) .cs-rail {
-    left: max(
-      1.5rem,
-      min(calc(50vw - var(--story-col) / 2 - 14rem), calc(50vw - 620px - 13rem))
-    );
-  }
-  .cs-flow { --flow-w: min(1240px, calc(100vw - 2 * 14rem)); }
 }
 
 /* Narrow screens: a thin bar under the nav with the stage and progress. */
