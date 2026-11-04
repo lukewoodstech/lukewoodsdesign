@@ -9184,7 +9184,8 @@ p a {
   color: #fff;
   text-wrap: balance;
 }
-.cs-stage > .cs-prose { margin-top: 1.25rem; }
+.cs-stage > .cs-prose,
+.cs-stage__body { margin-top: 1.25rem; }
 .cs-stage .cs-stack--compact { margin-top: 3rem; }
 
 /* The rail: a plain contents list in the left gutter once there is room

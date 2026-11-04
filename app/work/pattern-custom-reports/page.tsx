@@ -6,32 +6,15 @@ import Reveal from '@/components/lucid/Reveal'
 import CompareStage from '@/components/lucid/CompareStage'
 import ZoomShot from '@/components/lucid/ZoomShot'
 import BigStats from '@/components/cs/BigStats'
-import Journey from '@/components/cs/Journey'
+import Stage from '@/components/cs/Stage'
+import StageRail from '@/components/cs/StageRail'
 import Callouts from '@/components/cs/Callouts'
 import { Macbook } from '@/components/cs/Devices'
 import MetricLab from '@/components/predict/MetricLab'
 import MockStage from '@/components/predict/MockStage'
 import ReportPage from '@/components/predict/ReportPage'
 import ReportsHome from '@/components/predict/ReportsHome'
-import {
-  Act,
-  Band,
-  Block,
-  Checklist,
-  Col,
-  GhostCard,
-  H3,
-  KeyQuestion,
-  MetaGrid,
-  MonoLabel,
-  Pair,
-  People,
-  Pill,
-  Problem,
-  StoryTitle,
-  SuccessCard,
-  Two,
-} from '@/components/cs/Story'
+import { Band, Block, Col, MetaGrid, Pill, Problem, StoryTitle } from '@/components/cs/Story'
 import { SITE } from '@/lib/site'
 import { companyAbout } from '@/lib/caseStudies'
 
@@ -52,6 +35,11 @@ import { companyAbout } from '@/lib/caseStudies'
  *   time-saved claims.
  * - The team built and shipped the redesign AFTER the internship: outcomes
  *   are "validated through usability testing and shipped after my internship".
+ * - Stages edition (2026-11-03, Luke): acts and the Journey strip gave way
+ *   to design-process stages with the StageRail, as on Pitch. Each stage is
+ *   a heading and plain body; subheads, the task/solution pairs, the six
+ *   problem cards, the checklist and the What next card were folded into
+ *   the body or cut.
  * - Filter override behavior is unverified, so filters are described only as
  *   clearer and editable after creation.
  *
@@ -111,6 +99,18 @@ export const metadata: Metadata = {
 const IMG = '/work/pattern'
 const OLD = `${IMG}/old`
 const CAP = { width: 2880, height: 2048 }
+
+/* The design process, in the order it happened. Each label is also the
+   stage's heading, as on Pitch. */
+const STAGES = [
+  { id: 'ticket', label: 'Starting from a ticket' },
+  { id: 'research', label: 'Researching the workflow' },
+  { id: 'scope', label: 'Scoping with leadership' },
+  { id: 'first-report', label: 'Designing the first report' },
+  { id: 'chart', label: 'Designing the multi-metric chart' },
+  { id: 'testing', label: 'Testing with 20 users' },
+  { id: 'handoff', label: 'Handing off' },
+]
 
 export default function PatternCaseStudy() {
   return (
@@ -213,410 +213,358 @@ export default function PatternCaseStudy() {
           </Block>
         </Col>
 
-        {/* ══ The journey ══ */}
-        <Col>
-          <Block className="cs-centered">
-            <Pill>The journey</Pill>
-            <Journey stops={['Discover', 'Scope', 'Design', 'Test', 'Handoff']} />
-          </Block>
-        </Col>
+        {/* ══ The design process, stage by stage, with the rail (LUK-203) ══ */}
+        <StageRail stages={STAGES} />
 
-        {/* ══ Act 01 · Discover ══ */}
-        <Col>
-          <Act phase="Discover" num="01" title="A one-line ticket exposed a much larger problem">
-            <div className="cs-prose">
+        <Stage
+          id="ticket"
+          title="Starting from a ticket"
+          body={
+            <>
               <p>
-                My first assignment was a small ClickUp ticket: let users{' '}
-                <strong>duplicate a widget</strong> so they would not have to rebuild the
-                same configuration. It was estimated at one or two days.
+                My first assignment was a small ClickUp ticket: let users duplicate a widget so they
+                wouldn&rsquo;t have to rebuild the same setup. It was estimated at one or two days.
               </p>
               <p>
-                As I worked through the flow, duplication started to look like a symptom.
-                Users were cloning widgets because{' '}
-                <strong>creating and editing reports was slow, rigid, and repetitive</strong>.
+                As I worked through the flow, duplication started to look like a symptom. People
+                were cloning widgets because creating and editing reports was slow, rigid, and
+                repetitive.
               </p>
-            </div>
-          </Act>
-        </Col>
+            </>
+          }
+        >
+          <Band>
+            <Col>
+              <Reveal>
+                <div className="cs-paper cs-paper--sm">
+                  <ZoomShot
+                    src={`${IMG}/clickup-ticket.png`}
+                    alt="The ClickUp ticket that started the project, titled Custom Reports, Duplicate Widget Option, status DEV HANDOFF, t-shirt size X Small, one to two days"
+                    width={821}
+                    height={581}
+                    sizes="(min-width: 40em) 440px, 100vw"
+                  />
+                </div>
+                <p className="cs-cap cs-cap--mono">
+                  A one-to-two-day duplication ticket revealed problems across the entire
+                  reporting workflow.
+                </p>
+              </Reveal>
+            </Col>
+          </Band>
 
-        <Band>
           <Col>
-            <Reveal>
-              <H3 dim="where it started">The ticket</H3>
-              <div className="cs-paper cs-paper--sm mt-14">
+            <Block>
+              <div className="cs-prose">
+                <p>
+                  The Custom Reports list sat behind a BETA sub-tab on the Reports page, with no
+                  previews and no way to tell a report from its copies. The only way to reuse a
+                  setup was to duplicate the whole report and edit the copy.
+                </p>
+              </div>
+              <div className="cs-fig__frame mt-6">
                 <ZoomShot
-                  src={`${IMG}/clickup-ticket.png`}
-                  alt="The ClickUp ticket that started the project, titled Custom Reports, Duplicate Widget Option, status DEV HANDOFF, t-shirt size X Small, one to two days"
-                  width={821}
-                  height={581}
-                  sizes="(min-width: 40em) 440px, 100vw"
+                  src={`${OLD}/home-copies.png`}
+                  alt="The old Custom Reports list: a plain table of six reports, four of them named Copy of, with a small menu offering Share, Edit, Make a Copy, and Delete"
+                  {...CAP}
+                  sizes="(min-width: 60em) 800px, 100vw"
                 />
               </div>
-              <p className="cs-cap cs-cap--mono">
-                A one-to-two-day duplication ticket revealed problems across the entire
-                reporting workflow.
+              <p className="cs-cap">
+                The old Custom Reports home: a bare list with no previews, where a report and its
+                copies look identical. Building was harder than copying, so people copied.
               </p>
-            </Reveal>
+            </Block>
           </Col>
-        </Band>
+        </Stage>
 
-        <Col>
-          <Block>
-            <H3 dim="the symptom, in the product">Six reports, four of them copies</H3>
-            <div className="cs-prose mt-3">
+        <Stage
+          id="research"
+          title="Researching the workflow"
+          body={
+            <>
               <p>
-                The Custom Reports list sat behind a <strong>BETA sub-tab</strong> on the Reports
-                page, with no previews and no way to tell a report from its copies. The only way to
-                reuse a configuration was to duplicate the whole report and edit the copy.
+                I ran weekly discovery interviews throughout my Pattern internship, and reporting
+                workarounds kept coming up in conversations about other parts of Predict. I also
+                held a focused session with four UK brand managers who had used Custom Reports.
               </p>
-            </div>
-            <div className="cs-fig__frame mt-6">
-              <ZoomShot
-                src={`${OLD}/home-copies.png`}
-                alt="The old Custom Reports list: a plain table of six reports, four of them named Copy of, with a small menu offering Share, Edit, Make a Copy, and Delete"
-                {...CAP}
-                sizes="(min-width: 60em) 800px, 100vw"
-              />
-            </div>
-            <p className="cs-cap">
-              The old Custom Reports home: a bare list with no previews, where a report and its
-              copies look identical. Building was harder than copying, so people copied.
-            </p>
-          </Block>
-        </Col>
-
-        <Band dust>
+              <p>
+                The product data I had showed that roughly 60% of eligible users created at least
+                one report in the feature&rsquo;s first year, but only about 15% came back. People
+                understood the potential value, but the workflow wasn&rsquo;t useful enough to
+                repeat.
+              </p>
+            </>
+          }
+        >
           <Col>
-            <KeyQuestion>
-              Why were people <u>cloning widgets</u> instead of building the report they
-              needed?
-            </KeyQuestion>
-          </Col>
-        </Band>
-
-        <Col>
-          <Block>
-            <H3 dim="the problem was not demand">The evidence</H3>
-            <div className="cs-prose mt-3">
-              <p>
-                I ran weekly discovery interviews throughout my Pattern internship. Reporting
-                workarounds repeatedly appeared in conversations about other parts of Predict.
-                I also held a focused session with <strong>four UK brand managers</strong> who
-                had used Custom Reports.
-              </p>
-              <p>
-                Available product data showed that roughly 60% of eligible users created at
-                least one report during the feature&rsquo;s first year, but{' '}
-                <strong>only about 15% returned</strong>. People understood the potential
-                value but did not find the existing workflow useful enough to repeat.
-              </p>
-            </div>
-          </Block>
-
-          <Block>
-            <BigStats
-              small
-              stats={[
-                { value: '~60%', caption: <>of eligible users <strong>tried</strong> a report in year one</> },
-                { value: '~15%', caption: <>of them <strong>came back</strong></> },
-              ]}
-            />
-          </Block>
-
-          <Block>
-            <H3 dim="from the research">Six recurring problems</H3>
-            <People
-              items={[
-                {
-                  title: 'Two metrics per chart',
-                  text: 'Comparison stopped at two lines. Anything more meant Excel.',
-                },
-                {
-                  title: 'Filters locked at creation',
-                  text: 'Filters were unclear and could not be edited once a report existed.',
-                },
-                {
-                  title: 'Two confusing modes',
-                  text: 'Separate view and edit modes hid basic actions behind a switch nobody expected.',
-                },
-                {
-                  title: 'Look-alike controls',
-                  text: 'Buttons looked the same as each other, and some things that looked like buttons did nothing.',
-                },
-                {
-                  title: 'No words on a widget',
-                  text: 'A chart could not carry a note, so the explanation lived in the call.',
-                },
-                {
-                  title: 'No export',
-                  text: 'Sharing a report with a client meant a screen share, screenshots, or Excel.',
-                },
-              ]}
-            />
-          </Block>
-
-          <Block>
-            <H3 dim="viewing and editing, kept apart">The old tool</H3>
-            <Callouts
-              src={`${OLD}/widget-view.png`}
-              alt="The old report in view mode, annotated: a two-line chart of Ad Clicks against ACOS, a second widget titled Multiple metrics on a line chart, a cloud icon in each widget header, and an Exit Report button with a pencil icon"
-              {...CAP}
-              items={[
-                {
-                  label: 'The ask, in the product',
-                  text: (
-                    <>
-                      A test widget titled{' '}
-                      <strong>&ldquo;Multiple metrics on a line chart?&rdquo;</strong> The question
-                      was already on screen.
-                    </>
-                  ),
-                  x: 7,
-                  y: 65.5,
-                  w: 36,
-                  h: 4.5,
-                  ax: 25,
-                  ay: 65.5,
-                },
-                {
-                  label: 'Two lines, then stop',
-                  text: (
-                    <>
-                      Ad Clicks and ACOS. The third metric had <strong>nowhere to go</strong>.
-                    </>
-                  ),
-                  x: 6.5,
-                  y: 38.5,
-                  w: 92,
-                  h: 24,
-                },
-                {
-                  label: 'Looks clickable',
-                  text: (
-                    <>
-                      The cloud in every header <strong>was not a button</strong>. Neither were the
-                      metric dots.
-                    </>
-                  ),
-                  x: 95.5,
-                  y: 18.5,
-                  w: 3.5,
-                  h: 3.5,
-                  ax: 97,
-                  ay: 18.5,
-                },
-                {
-                  label: 'Locked filters',
-                  text: <>Set once at creation, then <strong>out of reach</strong>.</>,
-                  x: 78.5,
-                  y: 10.5,
-                  w: 16.5,
-                  h: 4,
-                  ax: 86.5,
-                  ay: 10.5,
-                },
-                {
-                  label: 'Exit to edit',
-                  text: (
-                    <>
-                      A pencil that <strong>leaves the report</strong>. Editing was a different
-                      place.
-                    </>
-                  ),
-                  x: 88.5,
-                  y: 94.5,
-                  w: 10.5,
-                  h: 4.5,
-                  ax: 93.5,
-                  ay: 94.5,
-                },
-              ]}
-            />
-          </Block>
-
-          <Block>
-            <H3 dim="a switch nobody expected">Two modes</H3>
-            <CompareStage
-              ariaLabel="The old report in view mode and in edit mode"
-              layers={[
-                {
-                  src: `${OLD}/widget-view.png`,
-                  alt: 'The old report in view mode: widgets with charts, an Exit Report button at the bottom right',
-                  label: 'View',
-                  caption:
-                    'Presenting: the chart, but no way to change a filter or a metric without leaving.',
-                  ...CAP,
-                },
-                {
-                  src: `${OLD}/widget-edit.png`,
-                  alt: 'The old report in edit mode: grey Add Widget bars between widgets, an Edit button on each, and a Done button at the bottom right',
-                  label: 'Edit',
-                  caption:
-                    'Editing: a different page with different controls, reached through a pencil that said Exit Report.',
-                  ...CAP,
-                },
-              ]}
-            />
-          </Block>
-
-          <Block>
-            <div className="cs-prose">
-              <p>
-                The two-metric limit was not a Custom Reports decision. It came from{' '}
-                <strong>Predict&rsquo;s charts everywhere</strong>: every page in the platform drew
-                two metrics on two axes, and Custom Reports inherited it.
-              </p>
-            </div>
-            <div className="cs-fig__frame mt-6">
-              <ZoomShot
-                src={`${OLD}/traffic-two-metrics.png`}
-                alt="Predict's Traffic page: a two-line chart of Sales and Ad Sales with one axis on each side, above a row of metric cards"
-                width={2940}
-                height={1912}
-                sizes="(min-width: 60em) 800px, 100vw"
+            <Block>
+              <BigStats
+                small
+                stats={[
+                  { value: '~60%', caption: <>of eligible users <strong>tried</strong> a report in year one</> },
+                  { value: '~15%', caption: <>of them <strong>came back</strong></> },
+                ]}
               />
-            </div>
-            <p className="cs-cap">
-              Predict&rsquo;s own Traffic page. Two metrics, two axes, the same ceiling the report
-              widget inherited.
-            </p>
-          </Block>
+            </Block>
 
-          <Block>
-            <SuccessCard>
-              Success meant a <strong>useful first report without Excel</strong>, with more
-              control revealed only when someone needed it.
-            </SuccessCard>
-          </Block>
+            <Block>
+              <div className="cs-prose">
+                <p>
+                  The research kept pointing to six problems. Charts stopped at two metrics, so
+                  anything more meant Excel. Filters were unclear and couldn&rsquo;t be edited once
+                  a report existed. Separate view and edit modes hid basic actions behind a switch
+                  nobody expected. Buttons looked the same as each other, and some things that
+                  looked like buttons did nothing. A chart couldn&rsquo;t carry a note, so the
+                  explanation lived in the call. And there was no export, so sharing a report with a
+                  client meant a screen share, screenshots, or Excel.
+                </p>
+              </div>
+              <Callouts
+                src={`${OLD}/widget-view.png`}
+                alt="The old report in view mode, annotated: a two-line chart of Ad Clicks against ACOS, a second widget titled Multiple metrics on a line chart, a cloud icon in each widget header, and an Exit Report button with a pencil icon"
+                {...CAP}
+                items={[
+                  {
+                    label: 'The ask, in the product',
+                    text: (
+                      <>
+                        A test widget titled{' '}
+                        <strong>&ldquo;Multiple metrics on a line chart?&rdquo;</strong> The question
+                        was already on screen.
+                      </>
+                    ),
+                    x: 7,
+                    y: 65.5,
+                    w: 36,
+                    h: 4.5,
+                    ax: 25,
+                    ay: 65.5,
+                  },
+                  {
+                    label: 'Two lines, then stop',
+                    text: (
+                      <>
+                        Ad Clicks and ACOS. The third metric had <strong>nowhere to go</strong>.
+                      </>
+                    ),
+                    x: 6.5,
+                    y: 38.5,
+                    w: 92,
+                    h: 24,
+                  },
+                  {
+                    label: 'Looks clickable',
+                    text: (
+                      <>
+                        The cloud in every header <strong>was not a button</strong>. Neither were the
+                        metric dots.
+                      </>
+                    ),
+                    x: 95.5,
+                    y: 18.5,
+                    w: 3.5,
+                    h: 3.5,
+                    ax: 97,
+                    ay: 18.5,
+                  },
+                  {
+                    label: 'Locked filters',
+                    text: <>Set once at creation, then <strong>out of reach</strong>.</>,
+                    x: 78.5,
+                    y: 10.5,
+                    w: 16.5,
+                    h: 4,
+                    ax: 86.5,
+                    ay: 10.5,
+                  },
+                  {
+                    label: 'Exit to edit',
+                    text: (
+                      <>
+                        A pencil that <strong>leaves the report</strong>. Editing was a different
+                        place.
+                      </>
+                    ),
+                    x: 88.5,
+                    y: 94.5,
+                    w: 10.5,
+                    h: 4.5,
+                    ax: 93.5,
+                    ay: 94.5,
+                  },
+                ]}
+              />
+            </Block>
 
-          <Block>
-            <H3 dim="two groups who reported every week">Who it was for</H3>
-            <People
-              items={[
-                {
-                  title: 'The brand manager',
-                  text: 'Builds the client report, and often edits a chart while presenting it on the call.',
-                },
-                {
-                  title: 'The advertising strategist',
-                  text: 'Compares more than two metrics at a time and needs the comparison to travel with the report.',
-                },
-              ]}
-            />
-          </Block>
+            <Block>
+              <CompareStage
+                ariaLabel="The old report in view mode and in edit mode"
+                layers={[
+                  {
+                    src: `${OLD}/widget-view.png`,
+                    alt: 'The old report in view mode: widgets with charts, an Exit Report button at the bottom right',
+                    label: 'View',
+                    caption:
+                      'Presenting: the chart, but no way to change a filter or a metric without leaving.',
+                    ...CAP,
+                  },
+                  {
+                    src: `${OLD}/widget-edit.png`,
+                    alt: 'The old report in edit mode: grey Add Widget bars between widgets, an Edit button on each, and a Done button at the bottom right',
+                    label: 'Edit',
+                    caption:
+                      'Editing: a different page with different controls, reached through a pencil that said Exit Report.',
+                    ...CAP,
+                  },
+                ]}
+              />
+            </Block>
 
-        </Col>
+            <Block>
+              <div className="cs-prose">
+                <p>
+                  The two-metric limit wasn&rsquo;t a Custom Reports decision. It came from
+                  Predict&rsquo;s charts everywhere: every page in the platform drew two metrics on
+                  two axes, and Custom Reports inherited it.
+                </p>
+              </div>
+              <div className="cs-fig__frame mt-6">
+                <ZoomShot
+                  src={`${OLD}/traffic-two-metrics.png`}
+                  alt="Predict's Traffic page: a two-line chart of Sales and Ad Sales with one axis on each side, above a row of metric cards"
+                  width={2940}
+                  height={1912}
+                  sizes="(min-width: 60em) 800px, 100vw"
+                />
+              </div>
+              <p className="cs-cap">
+                Predict&rsquo;s own Traffic page. Two metrics, two axes, the same ceiling the report
+                widget inherited.
+              </p>
+            </Block>
 
-        {/* ══ Act 02 · Scope ══ */}
-        <Col>
-          <Act phase="Scope" num="02" title="The most flexible concept was the one we could not build">
-            <div className="cs-prose">
+            <Block>
+              <div className="cs-prose">
+                <p>
+                  Two groups reported every week. Brand managers build the client report.
+                  Advertising strategists compare more than two metrics at a time and need that
+                  comparison to travel with the report. For both, success meant a useful first
+                  report without Excel, with more control showing up only when someone needed it.
+                </p>
+              </div>
+            </Block>
+          </Col>
+        </Stage>
+
+        <Stage
+          id="scope"
+          title="Scoping with leadership"
+          body={
+            <>
               <p>
                 I brought the evidence to the Predict product and design team. With my design
-                manager and Director of Product, I scoped a nine-week project around the
-                highest-value workflow: <strong>creating reports, configuring widgets and
-                filters, and editing report content</strong>.
+                manager and Director of Product, I scoped a nine-week project around the most
+                valuable workflow: creating reports, configuring widgets and filters, and editing
+                report content.
               </p>
               <p>
-                The largest constraint was <strong>engineering capacity</strong>. I could not
-                introduce new data sources, replace Predict&rsquo;s design system, or assume
-                the team could rebuild the report builder from scratch.
+                The biggest constraint was engineering capacity. I couldn&rsquo;t introduce new
+                data sources, replace Predict&rsquo;s design system, or assume the team could
+                rebuild the report builder from scratch.
               </p>
-            </div>
-          </Act>
-
-          <Pair
-            level={3}
-            num="01"
-            task="Advanced users wanted a free canvas to drag charts and layer dimensions"
-            solution="A structured report with list-based reordering, and the canvas on the roadmap"
-            visual={
-              <>
+              <p>
+                Advanced users wanted a free canvas where they could drag charts around and layer
+                dimensions, so I explored a Slides-style canvas. It matched how they thought about
+                building a report, but it went past the engineering budget. I presented the
+                concept, the user evidence, and the tradeoffs, and leadership made the scope
+                decision. I focused on keeping the most important value inside a structured report
+                the team could ship, with reordering in a list and the canvas on the roadmap. People
+                still got control over report structure without the team building an entirely new
+                editing system.
+              </p>
+            </>
+          }
+        >
+          <Col>
+            <Block>
+              <CompareStage
+                ariaLabel="The cut drag-and-drop canvas concept versus the list-based reordering that shipped"
+                layers={[
+                  {
+                    src: `${IMG}/figma/canvas-concept.png`,
+                    alt: 'The cut concept: a Slides-style report builder with a left rail of draggable widget thumbnails next to the report canvas',
+                    label: 'Cut concept',
+                    caption:
+                      'The canvas concept matched how advanced users thought about building a report, but it needed an editing system engineering could not build in nine weeks.',
+                    ...CAP,
+                  },
+                  {
+                    node: (
+                      <MockStage native={1180}>
+                        <ReportPage />
+                      </MockStage>
+                    ),
+                    label: 'Shipped',
+                    caption:
+                      'What shipped: a structured report whose widgets carry a written description, up to six metrics on two axes, and the edit controls on the widget itself. Reordering lives in a list, not on a canvas.',
+                  },
+                ]}
+              />
+              {/* The same decision seen from the front door: the old list
+                  of copies against the coded home with templates and a
+                  live preview per report. */}
+              <div className="mt-10">
                 <CompareStage
-                  ariaLabel="The cut drag-and-drop canvas concept versus the list-based reordering that shipped"
+                  ariaLabel="The Custom Reports home before and after the redesign"
                   layers={[
                     {
-                      src: `${IMG}/figma/canvas-concept.png`,
-                      alt: 'The cut concept: a Slides-style report builder with a left rail of draggable widget thumbnails next to the report canvas',
-                      label: 'Cut concept',
+                      src: `${OLD}/home-copies.png`,
+                      alt: 'The old Custom Reports list: a plain table of six reports, four of them named Copy of, behind a BETA sub-tab',
+                      label: 'Home, before',
                       caption:
-                        'The canvas concept matched how advanced users thought about building a report, but it needed an editing system engineering could not build in nine weeks.',
+                        'Before: a text list behind a BETA sub-tab. No previews, and no way to tell a report from its copies.',
                       ...CAP,
                     },
                     {
                       node: (
                         <MockStage native={1180}>
-                          <ReportPage />
+                          <ReportsHome />
                         </MockStage>
                       ),
-                      label: 'Shipped',
+                      label: 'Home, after',
                       caption:
-                        'What shipped: a structured report whose widgets carry a written description, up to six metrics on two axes, and the edit controls on the widget itself. Reordering lives in a list, not on a canvas.',
+                        'After: templates to start from, a search and count bar, and a live chart preview on every report.',
                     },
                   ]}
                 />
-                {/* The same decision seen from the front door: the old list
-                    of copies against the coded home with templates and a
-                    live preview per report. */}
-                <div className="mt-10">
-                  <CompareStage
-                    ariaLabel="The Custom Reports home before and after the redesign"
-                    layers={[
-                      {
-                        src: `${OLD}/home-copies.png`,
-                        alt: 'The old Custom Reports list: a plain table of six reports, four of them named Copy of, behind a BETA sub-tab',
-                        label: 'Home, before',
-                        caption:
-                          'Before: a text list behind a BETA sub-tab. No previews, and no way to tell a report from its copies.',
-                        ...CAP,
-                      },
-                      {
-                        node: (
-                          <MockStage native={1180}>
-                            <ReportsHome />
-                          </MockStage>
-                        ),
-                        label: 'Home, after',
-                        caption:
-                          'After: templates to start from, a search and count bar, and a live chart preview on every report.',
-                      },
-                    ]}
-                  />
-                </div>
-              </>
-            }
-          >
-            <p>
-              I explored a Slides-style canvas. It matched the mental model of advanced users,
-              but it exceeded the engineering budget. I presented the concept, user evidence,
-              and tradeoffs. <strong>Leadership made the scope decision</strong>, and I focused
-              on preserving the most important value inside a structured experience the team
-              could ship. Users still gained control over report structure without requiring
-              the team to build an entirely new editing system.
-            </p>
-          </Pair>
-        </Col>
+              </div>
+            </Block>
+          </Col>
+        </Stage>
 
-        {/* ══ Act 03 · Design ══ */}
-        <Col>
-          <Act phase="Design" num="03" title="The redesign guided the first report, then got out of the way">
-            <div className="cs-prose">
+        <Stage
+          id="first-report"
+          title="Designing the first report"
+          body={
+            <>
               <p>
-                Because many users did not return after their first attempt, the redesign
-                focused first on making <strong>report creation easier to understand</strong>.
-                The goal was not to expose every reporting option immediately. It was to help
-                users create a useful first report and reveal more control when they needed
-                it.
+                Because so many people didn&rsquo;t come back after their first try, I focused first
+                on making report creation easier to understand. The goal wasn&rsquo;t to show every
+                reporting option up front. It was to help people make a useful first report and
+                reveal more control when they needed it.
               </p>
-            </div>
-          </Act>
-
-          <Pair
-            level={3}
-            num="02"
-            task="A first report could be silently limited by scope and filters nobody explained"
-            solution="A guided creation flow that explains scope and filters before they bite"
-            visual={
+              <p>
+                The new home replaced the text list with templates and visual report previews. A
+                guided creation flow collects the report name, scope, filters, and first widget,
+                explaining scope and filters before they can quietly limit the report, and then
+                puts you inside a working report.
+              </p>
+            </>
+          }
+        >
+          <Col>
+            <Block>
               <CompareStage
                 ariaLabel="The two steps of the new Create Custom Report flow"
                 layers={[
@@ -640,256 +588,196 @@ export default function PatternCaseStudy() {
                   },
                 ]}
               />
-            }
-          >
-            <p>
-              The new home replaced a text list with{' '}
-              <strong>templates and visual report previews</strong>. A guided creation flow
-              collected the report name, scope, filters, and first widget before placing the user
-              inside a working report.
-            </p>
-          </Pair>
-        </Col>
+            </Block>
+          </Col>
+        </Stage>
 
-        {/* ══ The multi-metric chart: the constraint, the rules, and the lab.
-            Wide, because the widget and its drawer need the room. ══ */}
-        <Col>
-          <Block>
-            <H3 dim="two axes, many kinds of number">Up to six metrics on one chart</H3>
-            <div className="cs-prose mt-3">
+        {/* The multi-metric chart: the constraint, the rules, and the lab.
+            The lab breaks out of the column, because the widget and its
+            drawer need the room. */}
+        <Stage
+          id="chart"
+          title="Designing the multi-metric chart"
+          body={
+            <>
               <p>
-                Predict&rsquo;s charts had two y-axes and stopped at two metrics. Users wanted to
-                compare five or six, and to mix lines with bars. The hard part was not drawing more
-                lines. It was that <strong>the metrics come in different units</strong>: dollars,
-                counts, percentages, ratios, and a chart still only has two sides.
+                Predict&rsquo;s charts had two y-axes and stopped at two metrics. People wanted to
+                compare five or six, and to mix lines with bars. The hard part wasn&rsquo;t drawing
+                more lines. It was that metrics come in different units, like dollars, counts,
+                percentages, and ratios, and a chart still only has two sides.
               </p>
               <p>
-                The rules I landed on: every metric has a unit. The first unit family on the chart
-                takes the left axis, the second takes the right, and{' '}
-                <strong>a third family is blocked with a reason</strong> rather than squeezed onto a
-                scale that would lie. Each metric chooses line or bar. A switch lets same-unit
-                metrics share one scale, or split across both axes when one would flatten the other.
+                Here are the rules I landed on. Every metric has a unit. The first unit family on
+                the chart takes the left axis, the second takes the right, and a third family is
+                blocked with a reason instead of being squeezed onto a scale that would lie. Each
+                metric chooses line or bar. A switch lets same-unit metrics share one scale, or
+                split across both axes when one would flatten the other.
               </p>
-            </div>
-          </Block>
-        </Col>
-
-        <Col>
-          <Block className="cs-breakout">
-            <MetricLab />
-          </Block>
-          <p className="cs-cap cs-cap--mono mt-4 text-center">
-            Live. Change metrics, marks, or the axis switch and the chart, ticks, badges, and header
-            follow the same rules.
-          </p>
-        </Col>
-
-        <Col>
-          <Block>
-            <div className="cs-prose">
-              <p>
-                The same widget carries a <strong>caption that travels with the chart</strong>, so a
-                report can explain itself when it is shared instead of relying on whoever is
-                presenting it. And the numbers on it agree with each other: ROAS on a card is the ad
-                sales over ad spend that the chart is drawing.
-              </p>
-            </div>
-          </Block>
-        </Col>
-
-        {/* ══ Act 04 · Test ══ */}
-        <Col>
-          <Act phase="Test" num="04" title="Testing removed the boundary between viewing and editing">
-            <div className="cs-prose">
-              <p>
-                I tested the redesigned flows with <strong>20 users</strong>: ten brand
-                managers and ten advertising strategists. I expected them to prefer a clean
-                separation between presenting a report and editing it. Testing showed the
-                opposite. Brand managers often <strong>edited charts while presenting them
-                to a client</strong>. Switching modes added friction at the moment they needed
-                the tool to feel most responsive.
-              </p>
-            </div>
-          </Act>
-
-          <Block>
-            <H3 dim="the most important change testing produced">One combined mode</H3>
-            <Callouts
-              src={`${IMG}/figma/widget-redesign.png`}
-              alt="The redesigned report in its single combined mode, annotated: an Edit button and an editable filter chip sit on the widget itself, above a multi-metric chart"
-              {...CAP}
-              items={[
-                {
-                  label: 'Edit in context',
-                  text: <>The action sits on the widget. <strong>No mode switch.</strong></>,
-                  x: 91,
-                  y: 10.5,
-                  w: 7,
-                  h: 4,
-                  ax: 94.5,
-                  ay: 10.5,
-                },
-                {
-                  label: 'Filters stay editable',
-                  text: <>Scope can change <strong>after the report exists</strong>.</>,
-                  x: 67,
-                  y: 10.5,
-                  w: 21,
-                  h: 4,
-                  ax: 77.5,
-                  ay: 10.5,
-                },
-                {
-                  label: 'More than two',
-                  text: <>The multi-metric chart, <strong>presented and edited in one place</strong>.</>,
-                  x: 6.5,
-                  y: 16.5,
-                  w: 92,
-                  h: 14,
-                  ax: 50,
-                  ay: 16.5,
-                },
-              ]}
-            />
-          </Block>
-
-          <Block>
-            <div className="cs-prose">
-              <p>
-                I removed the separate edit mode and{' '}
-                <strong>combined viewing and editing into one experience</strong>. Actions appeared
-                in context, filters remained editable after report creation, and the controls that
-                looked like buttons now were buttons. It simplified the interface while supporting
-                the way reports were actually used.
-              </p>
-            </div>
-          </Block>
-        </Col>
-
-        <Band dust>
+            </>
+          }
+        >
           <Col>
-            <Reveal className="cs-centered">
-              <p className="cs-release">
-                The starting templates came from a <strong>report-building competition</strong>{' '}
-                with brand managers and advertising strategists, not from my assumptions
-                about a good client report.
-              </p>
-            </Reveal>
-            <Reveal className="mt-8">
-              <div className="cs-prose mx-auto text-center">
+            <Block className="cs-breakout">
+              <MetricLab />
+            </Block>
+            <p className="cs-cap cs-cap--mono mt-4 text-center">
+              Live. Change metrics, marks, or the axis switch and the chart, ticks, badges, and header
+              follow the same rules.
+            </p>
+
+            <Block>
+              <div className="cs-prose">
                 <p>
-                  Participants used the new system to create the reports they found most
-                  useful in their actual work. The strongest entries became the templates in
-                  the product, and the competition gave me another round of feedback from the
-                  people most familiar with the workflow.
+                  The same widget carries a caption that travels with the chart, so a shared report
+                  can explain itself instead of relying on whoever is presenting it. And the numbers
+                  on it agree with each other: ROAS on a card is the ad sales over ad spend that the
+                  chart is drawing.
                 </p>
               </div>
-            </Reveal>
+            </Block>
           </Col>
-        </Band>
+        </Stage>
 
-        {/* ══ Final designs band: the coded home and a finished report ══ */}
-        <Band tone="accent" className="cs-final">
-          <p className="cs-final__word" aria-hidden="true">
-            Final designs
-          </p>
-          <div className="cs-final__stage" style={{ paddingInline: 'var(--cs-pad)' }}>
-            <Macbook style={{ '--r': '-5deg', '--y': '6%' } as React.CSSProperties}>
-              <MockStage native={1180}>
-                <ReportsHome />
-              </MockStage>
-            </Macbook>
-            <Macbook style={{ '--r': '4deg', '--y': '-4%' } as React.CSSProperties}>
-              <MockStage native={1180}>
-                <ReportPage />
-              </MockStage>
-            </Macbook>
-          </div>
-        </Band>
-
-        {/* ══ Act 05 · Handoff ══ */}
-        <Col>
-          <Act phase="Handoff" num="05" title="Validated in testing and shipped after my internship">
-            <div className="cs-prose">
+        <Stage
+          id="testing"
+          title="Testing with 20 users"
+          body={
+            <>
               <p>
-                The redesign was validated through 20 usability sessions and{' '}
-                <strong>shipped by the Pattern team after my internship</strong>. I delivered
-                annotated designs, the prototype, supporting documentation, a prioritized
-                backlog, and a follow-up testing plan.
+                I tested the redesigned flows with 20 users: ten brand managers and ten advertising
+                strategists. I expected them to want a clean split between presenting a report and
+                editing it. Testing showed the opposite. Brand managers often edited charts while
+                presenting them to a client, and switching modes added friction right when they
+                needed the tool to feel most responsive.
               </p>
+              <p>
+                So I removed the separate edit mode and combined viewing and editing into one.
+                Actions show up in context, filters stay editable after a report is created, and the
+                controls that looked like buttons now are buttons. That simplified the interface and
+                fit the way reports were actually used.
+              </p>
+            </>
+          }
+        >
+          <Col>
+            <Block>
+              <Callouts
+                src={`${IMG}/figma/widget-redesign.png`}
+                alt="The redesigned report in its single combined mode, annotated: an Edit button and an editable filter chip sit on the widget itself, above a multi-metric chart"
+                {...CAP}
+                items={[
+                  {
+                    label: 'Edit in context',
+                    text: <>The action sits on the widget. <strong>No mode switch.</strong></>,
+                    x: 91,
+                    y: 10.5,
+                    w: 7,
+                    h: 4,
+                    ax: 94.5,
+                    ay: 10.5,
+                  },
+                  {
+                    label: 'Filters stay editable',
+                    text: <>Scope can change <strong>after the report exists</strong>.</>,
+                    x: 67,
+                    y: 10.5,
+                    w: 21,
+                    h: 4,
+                    ax: 77.5,
+                    ay: 10.5,
+                  },
+                  {
+                    label: 'More than two',
+                    text: <>The multi-metric chart, <strong>presented and edited in one place</strong>.</>,
+                    x: 6.5,
+                    y: 16.5,
+                    w: 92,
+                    h: 14,
+                    ax: 50,
+                    ay: 16.5,
+                  },
+                ]}
+              />
+            </Block>
+
+            <Block>
+              <div className="cs-prose">
+                <p>
+                  The starting templates came from a report-building competition with brand
+                  managers and advertising strategists, not from my own assumptions about a good
+                  client report. Participants used the new system to build the reports they found
+                  most useful in their real work. The strongest entries became the templates in the
+                  product, and the competition gave me another round of feedback from the people who
+                  knew the workflow best.
+                </p>
+              </div>
+            </Block>
+          </Col>
+        </Stage>
+
+        <Stage
+          id="handoff"
+          title="Handing off"
+          body={
+            <>
+              <p>
+                The redesign was validated through 20 usability sessions and shipped by the Pattern
+                team after my internship. By handoff, a chart could hold up to six metrics, with
+                lines and bars together on two axes that follow the unit rules. Viewing and editing
+                were one mode, filters could be changed after a report was created, and every widget
+                had a caption that travels with the chart. Reports could be reordered, duplicated,
+                shared, and exported, and the template library was seeded by reports users built.
+              </p>
+              <p>
+                I delivered annotated designs, the prototype, supporting documentation, a
+                prioritized backlog, and a follow-up testing plan.
+              </p>
+            </>
+          }
+        >
+          <Band tone="accent" className="cs-final">
+            <p className="cs-final__word" aria-hidden="true">
+              Final designs
+            </p>
+            <div className="cs-final__stage" style={{ paddingInline: 'var(--cs-pad)' }}>
+              <Macbook style={{ '--r': '-5deg', '--y': '6%' } as React.CSSProperties}>
+                <MockStage native={1180}>
+                  <ReportsHome />
+                </MockStage>
+              </Macbook>
+              <Macbook style={{ '--r': '4deg', '--y': '-4%' } as React.CSSProperties}>
+                <MockStage native={1180}>
+                  <ReportPage />
+                </MockStage>
+              </Macbook>
             </div>
-          </Act>
+          </Band>
 
-          <Block tight>
-            <MonoLabel>By handoff</MonoLabel>
-            <Checklist
-              items={[
-                'Reports with up to six metrics per chart, lines and bars together, on two axes that follow the unit rules',
-                'One combined mode in place of separate viewing and editing',
-                'Filters that can be changed after report creation',
-                'A caption on every widget that travels with the chart',
-                'Reports that can be reordered, duplicated, shared, and exported',
-                'A template library seeded by user-built reports',
-                'Annotated designs, prototype, documentation, backlog, and a testing plan',
-              ]}
-            />
-          </Block>
-
-          <Block>
-            <Two
-              items={[
-                {
-                  label: 'Learnings',
-                  body: (
-                    <>
-                      <p>
-                        My first instinct was to include everything users requested. Trying to
-                        build all of it would have produced{' '}
-                        <strong>another complicated report builder</strong>.
-                      </p>
-                      <p>
-                        The harder and more valuable work was identifying the changes that
-                        improved the core workflow for everyone, then{' '}
-                        <strong>fitting them inside what engineering could support</strong>.
-                      </p>
-                    </>
-                  ),
-                },
-                {
-                  label: 'Reflections',
-                  body: (
-                    <p>
-                      The redesign still did not solve missing forecast, wholesale, or
-                      logistics data. Those were <strong>platform limitations, not interface
-                      problems</strong>, and they are what stands between Predict and being
-                      someone&rsquo;s complete reporting tool.
-                    </p>
-                  ),
-                },
-              ]}
-            />
-          </Block>
-
-          <Reveal>
-            <GhostCard
-              word="What next?"
-              title="What would come next?"
-              items={[
-                <>
-                  <strong>Send a report to the client from Predict</strong>, through Gmail, so the
-                  old routine of a screen share or screenshots ends. That flow is in design now.
-                </>,
-                <>
-                  Measure whether users <strong>return to build a second report</strong>
-                </>,
-                <>
-                  Investigate the <strong>forecast, wholesale, and logistics gaps</strong> that
-                  still send people to Excel
-                </>,
-              ]}
-            />
-          </Reveal>
-        </Col>
+          <Col>
+            <Block>
+              <div className="cs-prose">
+                <p>
+                  My first instinct was to include everything users asked for. Trying to build all
+                  of it would have produced another complicated report builder. The harder and more
+                  valuable work was finding the changes that improved the core workflow for
+                  everyone, then fitting them inside what engineering could support.
+                </p>
+                <p>
+                  The redesign still didn&rsquo;t solve missing forecast, wholesale, or logistics
+                  data. Those were platform limitations, not interface problems, and they&rsquo;re
+                  what stands between Predict and being someone&rsquo;s complete reporting tool.
+                </p>
+                <p>
+                  Next, I&rsquo;d let people send a report to the client from Predict through Gmail,
+                  so the old routine of a screen share or screenshots ends. That flow is in design
+                  now. I&rsquo;d also measure whether people return to build a second report, and
+                  look into the forecast, wholesale, and logistics gaps that still send people to
+                  Excel.
+                </p>
+              </div>
+            </Block>
+          </Col>
+        </Stage>
 
         {/* ══ Read next ══ */}
         <ReadNext current="pattern" />

@@ -3,35 +3,16 @@ import Image from 'next/image'
 import Footer from '@/components/Footer'
 import SiteNav from '@/components/SiteNav'
 import ReadNext from '@/components/ReadNext'
-import Reveal from '@/components/lucid/Reveal'
 import CompareStage from '@/components/lucid/CompareStage'
 import ZoomShot from '@/components/lucid/ZoomShot'
 import FinalHero from '@/components/awardco/FinalHero'
 import FlowStrip, { type FlowStep } from '@/components/cs/FlowStrip'
 import { Iphone, Macbook } from '@/components/cs/Devices'
 import BigStats from '@/components/cs/BigStats'
-import Journey from '@/components/cs/Journey'
+import Stage from '@/components/cs/Stage'
+import StageRail from '@/components/cs/StageRail'
 import Callouts from '@/components/cs/Callouts'
-import {
-  Act,
-  Band,
-  Block,
-  Checklist,
-  Col,
-  GhostCard,
-  H3,
-  KeyQuestion,
-  MetaGrid,
-  MonoLabel,
-  Notes,
-  Pair,
-  People,
-  Pill,
-  Problem,
-  StoryTitle,
-  SuccessCard,
-  Two,
-} from '@/components/cs/Story'
+import { Band, Block, Col, MetaGrid, Notes, Pill, Problem, StoryTitle } from '@/components/cs/Story'
 import { SITE } from '@/lib/site'
 import { companyAbout } from '@/lib/caseStudies'
 
@@ -51,6 +32,10 @@ import { companyAbout } from '@/lib/caseStudies'
  * - 25% faster login, +4.5% sign-ins, and 27s → 5.9s are BEFORE/AFTER
  *   USABILITY TESTING results, never production analytics — the impact
  *   strip says so in its own caption.
+ * - Stages edition (2026-11-03, Luke): acts and the Journey strip gave way
+ *   to design-process stages with the StageRail, as on Pitch. Each stage is
+ *   a heading and plain body; subheads, task/solution pairs, the checklist
+ *   and the What next card were folded into the body or cut.
  * - Implementation happened after the internship — the page says "handed
  *   off", not "live".
  * - Deliberately not rendered (assets stay in the repo): company-login-authed,
@@ -68,7 +53,7 @@ import { companyAbout } from '@/lib/caseStudies'
  *   design rather than the new one. Devices are drawn in CSS by
  *   components/cs/Devices, not composited into the PNGs, so the same
  *   capture can appear framed here and bare in the brand row.
- * - Act 03 carries the brand-colour constraint: Awardco 1102:37132,
+ * - The brand stage carries the brand-colour constraint: Awardco 1102:37132,
  *   Cinemark 1102:37155, Accenture 1102:37182. Desktop only, because the
  *   customer's tint covers the whole page and the file has no Accenture
  *   mobile with an Okta button to pair honestly against its desktop. The
@@ -80,7 +65,7 @@ import { companyAbout } from '@/lib/caseStudies'
  *   page, "🛑 READY FOR DEV 🛑", so the high-fidelity work is easy to miss.
  *   The earlier 924:21185 "ACO CLP" is a different, older frame with no
  *   background fill, which is why its export looked washed out.
- * - Act 03's before/after toggle is replaced by two FlowStrips built from
+ * - The old before/after toggle is replaced by two FlowStrips built from
  *   the design file's own "Current Flow - Problem" (1063:11643) and
  *   "Proposed Flow" (1063:11666 / 1063:11746) sections. Both strips share
  *   four screen files; the after flow is the before flow minus two screens.
@@ -208,7 +193,7 @@ const AFTER_FLOW: FlowStep[] = [
 ]
 
 /*
- * The brand-colour constraint, Act 03. Desktop frames only: the customer's
+ * The brand-colour constraint, in its own stage. Desktop frames only: the customer's
  * tint covers the whole page, which a phone would show less of, and the
  * design file has no Accenture mobile with an Okta button to pair honestly
  * against its desktop.
@@ -238,6 +223,18 @@ const BRANDS: { name: string; src: string; alt: string; note: string }[] = [
     alt: 'The same login page in Accenture branding: a pale purple page, a white card, and a purple Continue button',
     note: 'The strict case. Accenture held the tightest brand standards of any customer I designed against, so the page had to be right with no latitude.',
   },
+]
+
+/* The design process, in the order it happened. Each label is also the
+   stage's heading, as on Pitch. */
+const STAGES = [
+  { id: 'data', label: 'Digging into the data' },
+  { id: 'testing', label: 'Testing three directions' },
+  { id: 'token', label: 'Carrying the login forward' },
+  { id: 'mobile', label: 'Designing for mobile' },
+  { id: 'brands', label: 'Designing for every brand' },
+  { id: 'prototyping', label: 'Prototyping in code' },
+  { id: 'handoff', label: 'Handing off' },
 ]
 
 export default function AwardcoCaseStudy() {
@@ -281,7 +278,7 @@ export default function AwardcoCaseStudy() {
         {/* ══ Hero band: the finished thing, mobile first, Awardco's own
             branding and nothing else. It used to cycle three customer brands,
             which buried the point; the brand-colour range now has its own
-            section in Act 03. Frames are bare captures in CSS-drawn devices
+            stage. Frames are bare captures in CSS-drawn devices
             (components/cs/Devices), so the hardware is real-looking
             without shipping a device mockup PNG. ══ */}
         <Band tone="accent" className="acs-hero-band">
@@ -336,283 +333,266 @@ export default function AwardcoCaseStudy() {
           </Block>
         </Col>
 
-        {/* ══ The journey ══ */}
-        <Col>
-          <Block className="cs-centered">
-            <Pill>The journey</Pill>
-            <Journey stops={['Discover', 'Test', 'Design', 'Prototype', 'Handoff']} />
-          </Block>
-        </Col>
+        {/* ══ The design process, stage by stage, with the rail (LUK-203) ══ */}
+        <StageRail stages={STAGES} />
 
-        {/* ══ Act 01 · Discover ══ */}
-        <Col>
-          <Act
-            phase="Discover"
-            num="01"
-            title="Users were not entering the wrong password. They were choosing the wrong method."
-          >
-            <div className="cs-prose">
+        <Stage
+          id="data"
+          title="Digging into the data"
+          body={
+            <>
               <p>
-                Awardco is an employee-recognition platform where{' '}
-                <strong>every customer configures authentication differently</strong>.
-                Depending on their company, users might need SSO, a password, MFA, or a
-                login code. The existing experience made users figure that out themselves.
+                Awardco is an employee-recognition platform where every customer sets up
+                authentication differently. Depending on their company, someone might need SSO, a
+                password, MFA, or a login code, and the old login made them figure out which one on
+                their own.
               </p>
               <p>
-                My PM brought me a known pain point: login generated heavy support volume. I
-                worked with our technical lead, account managers, and customer-success team
-                to understand <strong>how large the problem really was</strong>.
+                My PM brought me a known pain point: login was driving heavy support volume. I
+                worked with our technical lead, account managers, and the customer-success team to
+                understand how big the problem really was.
               </p>
-            </div>
-          </Act>
-
-          <Notes
-            label="Three situations from the research. Restated, not quotes."
-            notes={[
-              'Entered a code on the universal page, reached the company page, and was asked to authenticate again',
-              'Chose password login without realizing the company used Google or Microsoft SSO',
-              'Got a login code sent to a work inbox they could not open from their phone',
-            ]}
-          />
-        </Col>
-
-        <Band dust>
+            </>
+          }
+        >
           <Col>
-            <KeyQuestion>
-              How might we <u>route users to the method that works</u>, instead of asking
-              them to choose?
-            </KeyQuestion>
-          </Col>
-        </Band>
-
-        <Col>
-          <Block>
-            <H3 dim="a year of login telemetry">The evidence</H3>
-            <div className="cs-prose mt-3">
-              <p>
-                The problem was not simply that users forgot their credentials. Awardco was
-                presenting several authentication methods and expecting users to understand
-                which one their company supported.{' '}
-                <strong>Password login alone accounted for 6.7 million failures.</strong>
-              </p>
-            </div>
-            <Callouts
-              src={`${IMG}/failed-logins-data.png`}
-              alt="Charts from a year of login telemetry, annotated: password login shows 6.69 million failures against 3.54 million successes, while login codes, MFA, and SSO succeed 86 to 98 percent of the time"
-              width={1433}
-              height={806}
-              items={[
-                {
-                  label: '6.7M failures',
-                  text: <>Password login failed <strong>nearly two out of three times</strong>.</>,
-                  x: 30.5,
-                  y: 26,
-                  w: 16.5,
-                  h: 39,
-                },
-                {
-                  label: '34.6% success',
-                  text: <>The method most users reached for was the one <strong>least likely to work</strong>.</>,
-                  x: 56.5,
-                  y: 50,
-                  w: 6.5,
-                  h: 15,
-                },
-                {
-                  label: '98% for SSO',
-                  text: <>Guided methods succeeded. The fix was <strong>routing</strong>, not a better password field.</>,
-                  x: 76.5,
-                  y: 26,
-                  w: 7,
-                  h: 39,
-                },
+            <Notes
+              label="Three situations from the research. Restated, not quotes."
+              notes={[
+                'Entered a code on the universal page, reached the company page, and was asked to authenticate again',
+                'Chose password login without realizing the company used Google or Microsoft SSO',
+                'Got a login code sent to a work inbox they could not open from their phone',
               ]}
             />
-          </Block>
 
-          <Block>
-            <BigStats
-              small
-              stats={[
-                { value: '45.9M', caption: <>login attempts in <strong>one year</strong></> },
-                { value: '7.7M', caption: <>of them <strong>failed</strong></> },
-                { value: '9,275', caption: <>login support cases in <strong>90 days</strong></> },
-              ]}
-            />
-          </Block>
-
-          <Block>
-            <SuccessCard>
-              Success meant <strong>routing each user to the method most likely to
-              work</strong>, then proving it in before-and-after testing.
-            </SuccessCard>
-          </Block>
-
-          <Block>
-            <H3 dim="three people the old login failed">Who it was for</H3>
-            <People
-              items={[
-                {
-                  title: 'The SSO-company employee',
-                  text: 'Their company uses Google or Microsoft. The login page showed a password field anyway, so they used it.',
-                },
-                {
-                  title: 'The deskless worker',
-                  text: 'Warehouses and theaters, where the phone is the only screen and the work inbox is out of reach.',
-                },
-                {
-                  title: 'The company admin',
-                  text: 'Fielding the support cases. Login help was the top topic, 9,275 cases in 90 days.',
-                },
-              ]}
-            />
-          </Block>
-
-        </Col>
-
-        {/* ══ Act 02 · Test ══ */}
-        <Col>
-          <Act phase="Test" num="02" title="The faster design reinforced the wrong behavior">
-            <div className="cs-prose">
-              <p>
-                I tested three login directions with <strong>75 people across Awardco</strong>:
-                the existing experience, an SSO-first design, and a password-first design.
-              </p>
-              <p>
-                The existing experience took users an average of 27 seconds to decide where
-                to begin. The SSO-first design reduced that to 5.9 seconds. Password-first
-                was even faster at 4.6 seconds and scored slightly higher on confidence.{' '}
-                <strong>I still chose SSO-first.</strong>
-              </p>
-            </div>
-          </Act>
-
-          <Block>
-            <Callouts
-              src={`${IMG}/heatmap-testing.png`}
-              alt="Heatmap testing of three login variants, annotated: the control shows scattered attention, the SSO-first variant shows focus on the SSO button, the password-first variant shows focus on the password field. Decision time fell from 27 seconds to 5.9 with SSO-first"
-              width={1433}
-              height={806}
-              items={[
-                {
-                  label: 'Control, 27s',
-                  text: <>Attention scattered across the page. <strong>Hesitation</strong> before the first tap.</>,
-                  x: 7,
-                  y: 23,
-                  w: 12.5,
-                  h: 47,
-                },
-                {
-                  label: 'SSO-first, 5.9s',
-                  text: <>Focus lands on the SSO button. <strong>The chosen design.</strong></>,
-                  x: 20.5,
-                  y: 23,
-                  w: 12.5,
-                  h: 47,
-                },
-                {
-                  label: 'Password-first, 4.6s',
-                  text: <>Fastest in the test, but it reinforced the method that <strong>failed most in the product</strong>.</>,
-                  x: 34,
-                  y: 23,
-                  w: 12.5,
-                  h: 47,
-                },
-              ]}
-            />
-          </Block>
-
-          <Block>
-            <div className="cs-prose">
-              <p>
-                Password-first performed well because it emphasized the option users already
-                recognized. But password login failed nearly two out of three times in the real
-                product. Optimizing for the fastest test result would have{' '}
-                <strong>reinforced the behavior causing most of Awardco&rsquo;s failures</strong>.
-              </p>
-              <p>The fastest design was not the one most likely to help users sign in.</p>
-            </div>
-          </Block>
-        </Col>
-
-        {/* ══ Act 03 · Design ══ */}
-        <Col>
-          <Act phase="Design" num="03" title="The real fix was a token, not another screen">
-            <div className="cs-prose">
-              <p>
-                The universal login page originally identified the user but{' '}
-                <strong>did not carry that authentication</strong>{' '}
-                into their company&rsquo;s
-                login experience. Users could enter a login code and then immediately be asked
-                for another code or password.
-              </p>
-            </div>
-          </Act>
-
-          {/* The two flows, screen by screen. Shown one after the other rather
-              than behind a toggle: the argument is that the second strip is
-              the first with two screens removed, and a toggle hides exactly
-              that. */}
-          <Block>
-            <H3 dim="six screens, two codes, two trips to the inbox">The flow users had</H3>
-            <FlowStrip
-              tone="problem"
-              label="The Awardco login flow before the redesign, screen by screen"
-              steps={BEFORE_FLOW}
-              tracks={BEFORE_FLOW.length}
-            />
-          </Block>
-
-          <Block>
-            <H3 dim="four screens, one code">The flow I proposed</H3>
-            <FlowStrip
-              label="The Awardco login flow after the redesign, screen by screen"
-              steps={AFTER_FLOW}
-              tracks={BEFORE_FLOW.length}
-            />
-            <p className="cs-cap">
-              The same three screens the old flow opened with, and then straight into the
-              app. The company login page and the second code are gone, because the first
-              authentication now travels with the user.
-            </p>
-          </Block>
-
-          <Block>
-            <div className="cs-prose">
-              <p>
-                If the company only requires a login code, the user is already authenticated.
-                If it also requires a password, <strong>their email is already populated</strong>{' '}
-                and they only complete the remaining step.
-              </p>
-            </div>
-            <figure className="acs-branch">
-              <ZoomShot
-                src={`${FLOW}/after-password-branch.png`}
-                alt="The redesigned company login page for a company that also requires a password: the email is already filled in as luke.woods@awardco.com, and only the password field is left"
-                width={1440}
-                height={1024}
-                sizes="(min-width: 60em) 60vw, 100vw"
+            <Block>
+              <div className="cs-prose">
+                <p>
+                  The problem wasn&rsquo;t simply that people forgot their credentials. Awardco
+                  showed several ways to sign in and expected people to know which one their company
+                  supported. Password login alone accounted for 6.7 million failures.
+                </p>
+              </div>
+              <Callouts
+                src={`${IMG}/failed-logins-data.png`}
+                alt="Charts from a year of login telemetry, annotated: password login shows 6.69 million failures against 3.54 million successes, while login codes, MFA, and SSO succeed 86 to 98 percent of the time"
+                width={1433}
+                height={806}
+                items={[
+                  {
+                    label: '6.7M failures',
+                    text: <>Password login failed <strong>nearly two out of three times</strong>.</>,
+                    x: 30.5,
+                    y: 26,
+                    w: 16.5,
+                    h: 39,
+                  },
+                  {
+                    label: '34.6% success',
+                    text: <>The method most users reached for was the one <strong>least likely to work</strong>.</>,
+                    x: 56.5,
+                    y: 50,
+                    w: 6.5,
+                    h: 15,
+                  },
+                  {
+                    label: '98% for SSO',
+                    text: <>Guided methods succeeded. The fix was <strong>routing</strong>, not a better password field.</>,
+                    x: 76.5,
+                    y: 26,
+                    w: 7,
+                    h: 39,
+                  },
+                ]}
               />
-              <figcaption className="cs-cap">
-                The password branch. One field, not a fresh login.
-              </figcaption>
-            </figure>
-            <div className="cs-prose">
-              <p>
-                I mapped the system as <strong>states and transitions</strong>, then worked
-                through the proposal with engineering, architecture, and security. It passed
-                review without material changes. Engineering owned the implementation details,
-                while I owned the concept and end-to-end experience.
-              </p>
-            </div>
-          </Block>
+            </Block>
 
-          <Pair
-            level={3}
-            num="01"
-            task="Deskless workers got codes in inboxes they could not open from their phones"
-            solution="SMS verification, and only the methods the company supports"
-            visual={
+            <Block>
+              <BigStats
+                small
+                stats={[
+                  { value: '45.9M', caption: <>login attempts in <strong>one year</strong></> },
+                  { value: '7.7M', caption: <>of them <strong>failed</strong></> },
+                  { value: '9,275', caption: <>login support cases in <strong>90 days</strong></> },
+                ]}
+              />
+            </Block>
+
+            <Block>
+              <div className="cs-prose">
+                <p>
+                  The old login failed three kinds of people. Employees at companies that use Google
+                  or Microsoft saw a password field anyway, so they used it. Deskless workers in
+                  warehouses and theaters had a phone as their only screen and couldn&rsquo;t reach
+                  their work inbox. And company admins fielded the support cases: login help was the
+                  top topic, with 9,275 cases in 90 days.
+                </p>
+                <p>
+                  So success meant sending each person to the method most likely to work, then
+                  proving it in before-and-after testing.
+                </p>
+              </div>
+            </Block>
+          </Col>
+        </Stage>
+
+        <Stage
+          id="testing"
+          title="Testing three directions"
+          body={
+            <>
+              <p>
+                I tested three login directions with 75 people across Awardco: the existing
+                experience, an SSO-first design, and a password-first design.
+              </p>
+              <p>
+                With the existing experience, people took 27 seconds on average to decide where to
+                start. SSO-first cut that to 5.9 seconds. Password-first was even faster at 4.6
+                seconds and scored slightly higher on confidence. I still chose SSO-first.
+              </p>
+            </>
+          }
+        >
+          <Col>
+            <Block>
+              <Callouts
+                src={`${IMG}/heatmap-testing.png`}
+                alt="Heatmap testing of three login variants, annotated: the control shows scattered attention, the SSO-first variant shows focus on the SSO button, the password-first variant shows focus on the password field. Decision time fell from 27 seconds to 5.9 with SSO-first"
+                width={1433}
+                height={806}
+                items={[
+                  {
+                    label: 'Control, 27s',
+                    text: <>Attention scattered across the page. <strong>Hesitation</strong> before the first tap.</>,
+                    x: 7,
+                    y: 23,
+                    w: 12.5,
+                    h: 47,
+                  },
+                  {
+                    label: 'SSO-first, 5.9s',
+                    text: <>Focus lands on the SSO button. <strong>The chosen design.</strong></>,
+                    x: 20.5,
+                    y: 23,
+                    w: 12.5,
+                    h: 47,
+                  },
+                  {
+                    label: 'Password-first, 4.6s',
+                    text: <>Fastest in the test, but it reinforced the method that <strong>failed most in the product</strong>.</>,
+                    x: 34,
+                    y: 23,
+                    w: 12.5,
+                    h: 47,
+                  },
+                ]}
+              />
+            </Block>
+
+            <Block>
+              <div className="cs-prose">
+                <p>
+                  Password-first did well because it put the option people already recognized up
+                  front. But in the real product, password login failed nearly two out of three
+                  times. Going with the fastest test result would have reinforced the behavior
+                  behind most of Awardco&rsquo;s failures.
+                </p>
+                <p>The fastest design wasn&rsquo;t the one most likely to get people signed in.</p>
+              </div>
+            </Block>
+          </Col>
+        </Stage>
+
+        {/* The two flows, one after the other rather than behind a toggle:
+            the argument is that the second strip is the first with two
+            screens removed, and a toggle hides exactly that. */}
+        <Stage
+          id="token"
+          title="Carrying the login forward"
+          body={
+            <>
+              <p>
+                The universal login page identified you, but it didn&rsquo;t carry that
+                authentication into your company&rsquo;s login page. So you could enter a login code
+                and then immediately be asked for another code or a password.
+              </p>
+              <p>
+                The old flow took six screens, two codes, and two trips to the inbox. The flow I
+                proposed takes four screens and one code.
+              </p>
+            </>
+          }
+        >
+          <Col>
+            <Block>
+              <p className="cs-row-label">Before</p>
+              <FlowStrip
+                tone="problem"
+                label="The Awardco login flow before the redesign, screen by screen"
+                steps={BEFORE_FLOW}
+                tracks={BEFORE_FLOW.length}
+              />
+              <p className="cs-row-label">After</p>
+              <FlowStrip
+                label="The Awardco login flow after the redesign, screen by screen"
+                steps={AFTER_FLOW}
+                tracks={BEFORE_FLOW.length}
+              />
+              <p className="cs-cap">
+                The same three screens the old flow opened with, and then straight into the app.
+                The company login page and the second code are gone, because the first
+                authentication now travels with the user.
+              </p>
+            </Block>
+
+            <Block>
+              <div className="cs-prose">
+                <p>
+                  If the company only requires a login code, you&rsquo;re already authenticated. If
+                  it also requires a password, your email is already filled in and you only finish
+                  that one step.
+                </p>
+              </div>
+              <figure className="acs-branch">
+                <ZoomShot
+                  src={`${FLOW}/after-password-branch.png`}
+                  alt="The redesigned company login page for a company that also requires a password: the email is already filled in as luke.woods@awardco.com, and only the password field is left"
+                  width={1440}
+                  height={1024}
+                  sizes="(min-width: 60em) 60vw, 100vw"
+                />
+                <figcaption className="cs-cap">
+                  The password branch. One field, not a fresh login.
+                </figcaption>
+              </figure>
+              <div className="cs-prose">
+                <p>
+                  I mapped the system as states and transitions, then worked through the proposal
+                  with engineering, architecture, and security. It passed review without material
+                  changes. Engineering owned the implementation details, and I owned the concept and
+                  the end-to-end experience.
+                </p>
+              </div>
+            </Block>
+          </Col>
+        </Stage>
+
+        <Stage
+          id="mobile"
+          title="Designing for mobile"
+          body={
+            <p>
+              Many Awardco users work in warehouses, theaters, and other places where their phone is
+              the main way in, and their login codes went to work inboxes they couldn&rsquo;t open
+              from it. The redesigned mobile experience added SMS verification and only shows the
+              sign-in options the person&rsquo;s company supports. It also replaced the generic
+              &ldquo;SSO Login&rdquo; label with the provider people actually recognize, like
+              Google, Microsoft, or Okta. Nobody has to know which method their company uses.
+            </p>
+          }
+        >
+          <Col>
+            <Block>
               <div className="cs-phone-pair">
                 <figure>
                   <div className="cs-phone">
@@ -642,77 +622,79 @@ export default function AwardcoCaseStudy() {
                     </div>
                   </div>
                   <figcaption className="cs-cap">
-                    Users could verify through email, a secondary email, or text without
-                    leaving the mobile flow.
+                    Users could verify through email, a secondary email, or text without leaving
+                    the mobile flow.
                   </figcaption>
                 </figure>
               </div>
-            }
-          >
+            </Block>
+          </Col>
+        </Stage>
+
+        {/* The brand-colour constraint. Desktop frames only: the whole page
+            takes the customer's tint, so a phone would show less of the
+            thing being compared, and the file has no Accenture mobile with
+            an Okta button to pair honestly against its desktop. */}
+        <Stage
+          id="brands"
+          title="Designing for every brand"
+          body={
             <p>
-              Many Awardco users work in warehouses, theaters, and other environments where{' '}
-              <strong>mobile is their primary access point</strong>. The redesigned mobile
-              experience introduced SMS verification and only displayed authentication
-              options supported by the user&rsquo;s company. It also replaced the generic
-              &ldquo;SSO Login&rdquo; label with <strong>the provider users actually
-              recognized</strong>, such as Google, Microsoft, or Okta. Users no longer had to
-              know which authentication method their company supported.
+              Awardco&rsquo;s login pages are white-labelled. Every customer&rsquo;s page carries
+              their logo, button color, and link color, so one layout had to hold up in all of them.
+              I designed against the two hardest cases I could find instead of Awardco&rsquo;s own
+              comfortable blue.
             </p>
-          </Pair>
+          }
+        >
+          <Col>
+            <Block>
+              <ol className="acs-brands">
+                {BRANDS.map((b) => (
+                  <li className="acs-brands__item" key={b.src}>
+                    <p className="acs-brands__name">{b.name}</p>
+                    <ZoomShot
+                      src={b.src}
+                      alt={b.alt}
+                      width={2880}
+                      height={1600}
+                      sizes="(min-width: 60em) 30vw, 80vw"
+                    />
+                    <p className="acs-brands__note">{b.note}</p>
+                  </li>
+                ))}
+              </ol>
+            </Block>
+          </Col>
+        </Stage>
 
-          {/* The brand-colour constraint. Desktop frames only: the whole page
-              takes the customer's tint, so a phone would show less of the
-              thing being compared, and the file has no Accenture mobile with
-              an Okta button to pair honestly against its desktop. */}
-          <Block>
-            <H3 dim="the constraint every screen had to survive">One layout, any brand</H3>
-            <div className="cs-prose mt-3">
+        <Stage
+          id="prototyping"
+          title="Prototyping in code"
+          body={
+            <>
               <p>
-                Awardco&rsquo;s login pages are white-labelled. Every customer&rsquo;s page
-                carries their logo, their button colour, and their link colour, so{' '}
-                <strong>one layout had to hold up in all of them</strong>. I designed against
-                the two hardest cases I could find rather than against Awardco&rsquo;s own
-                comfortable blue.
+                A Figma prototype could show navigation, but not where people struggled to type,
+                validate a password, or enter a verification code. So I built working prototypes
+                with real inputs, validation, and code entry. Testing them with more than 20 admins
+                and end users exposed friction around email entry, verification codes, and most of
+                all password recovery.
               </p>
-            </div>
-            <ol className="acs-brands">
-              {BRANDS.map((b) => (
-                <li className="acs-brands__item" key={b.src}>
-                  <h4 className="acs-brands__name">{b.name}</h4>
-                  <ZoomShot
-                    src={b.src}
-                    alt={b.alt}
-                    width={2880}
-                    height={1600}
-                    sizes="(min-width: 60em) 30vw, 80vw"
-                  />
-                  <p className="acs-brands__note">{b.note}</p>
-                </li>
-              ))}
-            </ol>
-          </Block>
-        </Col>
-
-        {/* ══ Act 04 · Prototype ══ */}
-        <Col>
-          <Act phase="Prototype" num="04" title="Coded prototypes exposed the forgotten flow">
-            <div className="cs-prose">
               <p>
-                A Figma prototype could show navigation, but it could not reveal where users
-                struggled to type, validate a password, or enter a verification code. I built{' '}
-                <strong>working prototypes with real inputs, validation, and code entry</strong>.
-                Testing them with more than 20 admins and end users exposed friction around
-                email entry, verification codes, and especially password recovery.
+                The old reset was a disconnected page with a blind password field and no visible
+                requirements. The new one has inline validation, live password matching, a
+                show-password toggle, and the same visual system as the rest of the login.
               </p>
-            </div>
-          </Act>
-
-          <Pair
-            level={3}
-            num="02"
-            task="Reset was a disconnected page with a blind password field and no visible requirements"
-            solution="Inline validation, live password matching, show-password, and the same visual system"
-            visual={
+              <p>
+                Working in code made the edge cases visible earlier and gave engineering something
+                closer to the final interaction. I later added the workflow to Awardco&rsquo;s
+                AI-prototyping guide and helped introduce it across the design team.
+              </p>
+            </>
+          }
+        >
+          <Col>
+            <Block>
               <CompareStage
                 ariaLabel="Before and after: the old password reset page versus the redesigned reset flow with inline validation"
                 layers={[
@@ -735,147 +717,95 @@ export default function AwardcoCaseStudy() {
                   },
                 ]}
               />
-            }
-          >
-            <p>
-              Working in code made the edge cases visible earlier and gave engineering
-              something closer to the final interaction model. I later contributed the
-              workflow to <strong>Awardco&rsquo;s AI-prototyping guide</strong> and helped
-              introduce it across the design team.
+            </Block>
+          </Col>
+        </Stage>
+
+        <Stage
+          id="handoff"
+          title="Handing off"
+          body={
+            <>
+              <p>
+                In before-and-after usability testing, the redesign produced 25% faster login, 4.5%
+                more successful sign-ins, a 78% drop in the time spent choosing a sign-in method,
+                higher confidence, and lower reported difficulty. It&rsquo;s one guided experience
+                across mobile and desktop.
+              </p>
+              <p>
+                The token-based flow passed architecture and security review, and I handed off the
+                finished designs for implementation after my internship: the token flow mapped as
+                states and transitions, SSO-first login for desktop and mobile, SMS verification and
+                provider-named sign-in on mobile, the redesigned password reset, the coded
+                prototypes, and the workflow behind Awardco&rsquo;s AI-prototyping guide.
+              </p>
+            </>
+          }
+        >
+          <Band tone="accent" className="cs-final">
+            <p className="cs-final__word" aria-hidden="true">
+              Final designs
             </p>
-          </Pair>
-        </Col>
-
-        {/* ══ Final designs band ══ */}
-        <Band tone="accent" className="cs-final">
-          <p className="cs-final__word" aria-hidden="true">
-            Final designs
-          </p>
-          {/* The same Macbook and Iphone the hero opens on, not the plain
-              rectangles the other studies use: the band closes the page on
-              the hardware it started with. */}
-          <div className="cs-final__stage" style={{ paddingInline: 'var(--cs-pad)' }}>
-            <Macbook
-              ratio={2880 / 2048}
-              style={{ '--r': '-5deg', '--y': '6%' } as React.CSSProperties}
-            >
-              <Image
-                src={`${IMG}/figma/new-reset-web.png`}
-                alt="The redesigned password reset page with inline validation"
-                fill
-                sizes="(min-width: 40em) 50vw, 100vw"
-              />
-            </Macbook>
-            <div className="cs-phones" style={{ '--r': '4deg', '--y': '-4%' } as React.CSSProperties}>
-              <Iphone>
+            {/* The same Macbook and Iphone the hero opens on, not the plain
+                rectangles the other studies use: the band closes the page on
+                the hardware it started with. */}
+            <div className="cs-final__stage" style={{ paddingInline: 'var(--cs-pad)' }}>
+              <Macbook
+                ratio={2880 / 2048}
+                style={{ '--r': '-5deg', '--y': '6%' } as React.CSSProperties}
+              >
                 <Image
-                  src={`${IMG}/figma/new-mobile.png`}
-                  alt="The redesigned mobile sign-in"
+                  src={`${IMG}/figma/new-reset-web.png`}
+                  alt="The redesigned password reset page with inline validation"
                   fill
-                  sizes="(min-width: 40em) 20vw, 40vw"
+                  sizes="(min-width: 40em) 50vw, 100vw"
                 />
-              </Iphone>
-              <Iphone>
-                <Image
-                  src={`${IMG}/figma/sms-mobile.png`}
-                  alt="The mobile verification chooser"
-                  fill
-                  sizes="(min-width: 40em) 20vw, 40vw"
-                />
-              </Iphone>
+              </Macbook>
+              <div className="cs-phones" style={{ '--r': '4deg', '--y': '-4%' } as React.CSSProperties}>
+                <Iphone>
+                  <Image
+                    src={`${IMG}/figma/new-mobile.png`}
+                    alt="The redesigned mobile sign-in"
+                    fill
+                    sizes="(min-width: 40em) 20vw, 40vw"
+                  />
+                </Iphone>
+                <Iphone>
+                  <Image
+                    src={`${IMG}/figma/sms-mobile.png`}
+                    alt="The mobile verification chooser"
+                    fill
+                    sizes="(min-width: 40em) 20vw, 40vw"
+                  />
+                </Iphone>
+              </div>
             </div>
-          </div>
-        </Band>
+          </Band>
 
-        {/* ══ Act 05 · Handoff ══ */}
-        <Col>
-          <Act phase="Handoff" num="05" title="Validated, approved, and handed off">
-            <div className="cs-prose">
-              <p>
-                In before-and-after usability testing, the redesigned system produced{' '}
-                <strong>25% faster login</strong>, 4.5% more successful sign-ins, a 78%
-                reduction in login-method decision time, higher confidence, and lower reported
-                difficulty. One guided experience now spans mobile and desktop.
-              </p>
-              <p>
-                The token-based flow <strong>passed architecture and security review</strong>,
-                and the completed designs were handed off for implementation after my
-                internship.
-              </p>
-            </div>
-          </Act>
-
-          <Block tight>
-            <MonoLabel>What I handed off</MonoLabel>
-            <Checklist
-              items={[
-                'The token-based flow, mapped as states and transitions',
-                'SSO-first login for desktop and mobile',
-                'SMS verification and provider-named sign-in for mobile',
-                'The redesigned password reset with inline validation',
-                'Coded prototypes with real inputs and code entry',
-                "The workflow behind Awardco's AI-prototyping guide",
-              ]}
-            />
-          </Block>
-
-          <Block>
-            <Two
-              items={[
-                {
-                  label: 'Learnings',
-                  body: (
-                    <>
-                      <p>
-                        I learned <strong>not to follow a metric without asking what it was
-                        actually rewarding</strong>. The password-first design won the task
-                        test, but it worked against the larger product evidence. Choosing the
-                        slightly slower direction produced the better system.
-                      </p>
-                      <p>
-                        The biggest improvement was not a cleaner login page. It was changing{' '}
-                        <strong>how authentication state moved</strong> between two parts of
-                        the product.
-                      </p>
-                    </>
-                  ),
-                },
-                {
-                  label: 'Reflections',
-                  body: (
-                    <p>
-                      One limitation remains. Some deskless workers cannot carry phones during
-                      their shifts and access Awardco through <strong>shared kiosks</strong>.
-                      SMS does not solve authentication for them. If I continued the project,
-                      kiosk research would be the next place I looked.
-                    </p>
-                  ),
-                },
-              ]}
-            />
-          </Block>
-
-          <Reveal>
-            <GhostCard
-              word="What next?"
-              title="What would come next?"
-              items={[
-                <>
-                  <strong>Kiosk research</strong> for deskless workers who cannot carry a
-                  phone on shift
-                </>,
-                <>
-                  Watching the <strong>production numbers</strong> once the handed-off system
-                  ships, against the 34.6% and 98% baselines
-                </>,
-                <>
-                  Carrying the <strong>coded-prototype workflow</strong> into the next flows
-                  the team tests
-                </>,
-              ]}
-            />
-          </Reveal>
-        </Col>
+          <Col>
+            <Block>
+              <div className="cs-prose">
+                <p>
+                  I learned not to follow a metric without asking what it was actually rewarding.
+                  Password-first won the task test, but it worked against the larger product
+                  evidence. Choosing the slightly slower direction produced the better system.
+                </p>
+                <p>
+                  The biggest improvement wasn&rsquo;t a cleaner login page. It was changing how
+                  authentication state moved between two parts of the product.
+                </p>
+                <p>
+                  One limitation remains. Some deskless workers can&rsquo;t carry phones during
+                  their shifts and use Awardco on shared kiosks, so SMS doesn&rsquo;t solve sign-in
+                  for them. If I kept going, kiosk research is where I&rsquo;d look next. I&rsquo;d
+                  also watch the production numbers once the system ships, against the 34.6% and
+                  98% baselines, and carry the coded-prototype workflow into the next flows the team
+                  tests.
+                </p>
+              </div>
+            </Block>
+          </Col>
+        </Stage>
 
         {/* ══ Read next ══ */}
         <ReadNext current="awardco" />
