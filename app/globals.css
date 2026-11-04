@@ -1922,7 +1922,8 @@ p a {
 
 .lcs-lightbox__img {
   display: block;
-  width: auto;
+  /* As wide as the screen allows without running taller than it. */
+  width: min(100%, calc((100vh - 2 * var(--lb-pad)) * var(--lb-ar, 1.5)));
   height: auto;
   max-width: 100%;
   max-height: calc(100vh - 2 * var(--lb-pad));
