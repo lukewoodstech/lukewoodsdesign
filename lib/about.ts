@@ -326,9 +326,9 @@ export type RoomShot = {
   alt: string
   caption: string
   /** Columns out of 12. */
-  span: 4 | 6 | 12
+  span: 3 | 4 | 5 | 6 | 7 | 12
   /** Aspect ratio, width over height. */
-  ratio: '16 / 9' | '4 / 3' | '3 / 4'
+  ratio: '16 / 9' | '3 / 2' | '4 / 3' | '3 / 4'
   /** object-position, where the default centre crop cuts something that matters. */
   focus?: string
 }
@@ -347,10 +347,21 @@ export type RoomChapter = {
 
 export type RoomBlock = {
   id: string
+  /** Chapter text beside the photos (desktop) instead of over them. */
+  split?: boolean
   chapter?: RoomChapter
   shots: ReadonlyArray<RoomShot>
 }
 
+/* 2026-11-03: cut from 17 photos in five rows to 11 in three (Luke: the
+   section was too long to scan). Dropped the shots that repeated a beat
+   another photo already made: the second room shot, the monitor lizard,
+   the cage build, the Burmese, the second egg tub, the rat tub and the
+   corn snake. Tiles are four across at the photos' own 4:3 now instead
+   of three across at 3:4, so each row is well under half its old height.
+   Then the incubator went from three photos to two, beside its text,
+   and the teaching block (a chapter and four photos) became one shot
+   with its line as the caption, closing the top row. */
 export const REPTILE_ROOM: ReadonlyArray<RoomBlock> = [
   {
     id: 'business',
@@ -358,164 +369,67 @@ export const REPTILE_ROOM: ReadonlyArray<RoomBlock> = [
       {
         src: '/about/boa-babies.jpg',
         alt: 'Luke kneeling in black scrubs, giving a thumbs up over a plastic bin holding a litter of newborn boa constrictors',
-        caption: 'A litter of boas, a few days old. This was the product.',
-        span: 4,
-        ratio: '3 / 4',
+        caption: 'A litter of newborn boas. This was the product.',
+        span: 3,
+        ratio: '4 / 3',
+        focus: '50% 46%',
       },
       {
         src: '/about/python-ultrasound.jpg',
         alt: 'Luke holding a ball python steady on a towel while a vet runs an ultrasound probe along it, children watching from the floor',
-        caption: 'Ultrasounding a gravid female. You learn veterinary skill fast when the animals are the inventory.',
-        span: 4,
-        ratio: '3 / 4',
+        caption: 'Ultrasounding a gravid female. The animals were the inventory.',
+        span: 3,
+        ratio: '4 / 3',
       },
       {
         src: '/about/rodent-racks.jpg',
         alt: 'Luke standing arms-folded beside the shelved rodent-breeding racks he built in a shed',
-        caption: 'Feed was the biggest running cost, so I bred the mice and rats myself and took it off the books.',
-        span: 4,
-        ratio: '3 / 4',
-      },
-    ],
-  },
-  {
-    id: 'room',
-    shots: [
-      /* This opened as one full-width 16:9 lead. At 1100px it was an
-         enormous close-up of Luke and it showed none of the room the
-         caption was talking about, so it became a pair at the photos'
-         own 4:3 — no crop at all, and the second one actually has the
-         wall of enclosures in it. */
-      {
-        src: '/about/room-snake.jpg',
-        alt: 'Luke in his reptile room holding a large snake across both hands, glass enclosures stacked along the wall behind him',
-        caption: 'About a hundred animals at the peak.',
-        span: 6,
+        caption: 'Feed was the biggest cost, so I bred it myself.',
+        span: 3,
         ratio: '4 / 3',
       },
       {
-        src: '/about/teach-friend.jpg',
-        alt: 'Luke sitting on the floor in front of a wall of lit enclosures, talking a friend through what lives in them',
-        caption: 'Visitors got the tour whether they asked for it or not.',
-        span: 6,
+        src: '/about/teach-kid-boa.jpg',
+        alt: 'Luke steadying a boa constrictor draped across a child’s shoulders in the reptile room',
+        caption: 'The best part: handing one to someone sure they’d hate it.',
+        span: 3,
         ratio: '4 / 3',
       },
     ],
   },
-  {
-    id: 'keeping',
-    shots: [
-      {
-        src: '/about/monitor-lizard.jpg',
-        alt: 'A teenage Luke grinning on a porch with a savannah monitor lizard held against his chest',
-        caption: 'Where it started. One lizard, no business plan.',
-        span: 4,
-        ratio: '3 / 4',
-      },
-      {
-        src: '/about/cage-build.jpg',
-        alt: 'Luke and his dad in ear protection, clamping and drilling a wooden enclosure frame on a patio table',
-        caption: 'I built the enclosures instead of buying them.',
-        span: 4,
-        ratio: '3 / 4',
-      },
-      {
-        src: '/about/burmese-python.jpg',
-        alt: 'Luke standing in front of a hedge with a large albino Burmese python draped across his shoulders and both arms',
-        caption: 'Some of them got big.',
-        span: 4,
-        ratio: '3 / 4',
-      },
-    ],
-  },
-  /* Big Bertha's clutch (Luke, 2026-09-28). Every number in the lede is
-     his: a 15-foot reticulated python, 18 eggs, around $10,000 of
-     animals riding on the incubator, which he built himself from a
-     drinks fridge with fans, sensors and alerts. The point of the block
-     is the last sentence: it is where "design around the failure modes
+  /* Big Bertha's clutch (Luke, 2026-09-28). Every number is his: a
+     15-foot reticulated python, 18 eggs, around $10,000 of animals
+     riding on an incubator he built from a drinks fridge. The point is
+     the last sentence: it is where "design around the failure modes
      first" comes from, and the case studies lean on that. Mirrored in
-     BACKGROUND.personal in lib/lukeAiFacts.ts. */
+     BACKGROUND.personal in lib/lukeAiFacts.ts.
+     2026-11-03: a split block (text beside two photos, one row) instead
+     of a centred chapter over three; the numbers live in the facts so
+     the body doesn't repeat them. */
   {
     id: 'eggs',
+    split: true,
     chapter: {
       label: 'The incubator',
       title: 'Eighteen eggs, and no margin for a silent failure.',
       body:
-        'Big Bertha, my 15-foot reticulated python, laid 18 eggs while I was in high school. Each baby was worth real money, around $10,000 across the clutch, so I built an incubator from scratch: a drinks fridge, fans and sensors to hold heat and humidity, and alerts so I would know the moment anything drifted. A missed reading was not a bug ticket. It was a dead animal. I have designed around the failure modes first ever since.',
+        'Big Bertha laid a clutch, so I built an incubator from a drinks fridge, with sensors and alerts the moment anything drifted. A missed reading was not a bug ticket. It was a dead animal. I have designed around the failure modes first ever since.',
       facts: ['15 ft of snake', '18 eggs', '$10k on the line'],
     },
     shots: [
       {
         src: '/about/big-bertha.jpg',
         alt: 'Big Bertha, a pale albino reticulated python, coiled in a long enclosure with her head raised',
-        caption: 'Big Bertha. Fifteen feet, and the reason the incubator got built.',
-        span: 12,
-        ratio: '16 / 9',
+        caption: 'Big Bertha, all fifteen feet.',
+        span: 7,
+        ratio: '4 / 3',
       },
       {
         src: '/about/incubator-fridge.jpg',
         alt: 'A glass-fronted Rockstar Energy Drink fridge repurposed as an incubator, with four clear tubs of eggs on perlite stacked inside',
-        caption: 'The incubator was a drinks fridge, rewired with fans, sensors and alerts.',
-        span: 4,
+        caption: 'The incubator: a rewired drinks fridge.',
+        span: 5,
         ratio: '3 / 4',
-      },
-      {
-        src: '/about/retic-eggs-tub.jpg',
-        alt: 'Five large white python eggs on a plastic grid over perlite in a clear tub, a heating panel behind them',
-        caption: 'Eggs on a grid over perlite, inside the fridge.',
-        span: 4,
-        ratio: '3 / 4',
-      },
-      {
-        src: '/about/retic-eggs-hand.jpg',
-        alt: 'Luke\u2019s hand beside four python eggs for scale, each egg longer than his palm',
-        caption: 'Bigger than they look. Eighteen of these, and no margin for a silent failure.',
-        span: 4,
-        ratio: '3 / 4',
-      },
-    ],
-  },
-  {
-    id: 'teaching',
-    chapter: {
-      label: 'The best part',
-      title: 'It was never the animals. It was handing one to someone who was sure they’d hate it.',
-    },
-    shots: [
-      {
-        src: '/about/class-beardies.jpg',
-        alt: 'Luke leaning over a classroom desk, offering a bearded dragon on each open hand to two seated students',
-        caption: 'My mom’s elementary class, meeting a bearded dragon.',
-        span: 4,
-        ratio: '3 / 4',
-      },
-      {
-        src: '/about/teach-kid-boa.jpg',
-        alt: 'Luke steadying a boa constrictor draped across a child’s shoulders in the reptile room',
-        caption: 'A boa is heavier than anyone expects.',
-        span: 4,
-        ratio: '3 / 4',
-      },
-      {
-        src: '/about/rats-kid.jpg',
-        alt: 'Luke laughing at the rodent racks while a child lifts a rat out of a bin',
-        caption: 'Even the feeders made friends.',
-        span: 4,
-        ratio: '3 / 4',
-      },
-      {
-        src: '/about/class-zoom-boa.jpg',
-        alt: 'Luke holding a snake up to an iMac showing a grid of elementary students on a video call',
-        caption: 'And over Zoom, the year school happened at home.',
-        span: 6,
-        ratio: '4 / 3',
-      },
-      {
-        src: '/about/teach-corn-snake.jpg',
-        alt: 'Luke passing a corn snake hand to hand with a child in front of a wall of enclosures',
-        caption: 'Friends, family, anyone who’d hold still.',
-        span: 6,
-        ratio: '4 / 3',
       },
     ],
   },

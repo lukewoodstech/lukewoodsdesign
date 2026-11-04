@@ -29,7 +29,7 @@ export default function ReptileRoom({ blocks }: { blocks: ReadonlyArray<RoomBloc
   return (
     <div className="rr">
       {blocks.map((block) => (
-        <section key={block.id} className="rr__block">
+        <section key={block.id} className={`rr__block${block.split ? ' rr__block--split' : ''}`}>
           {block.chapter && (
             <header className="rr__chapter">
               {block.chapter.label && <p className="rr__chapter-label">{block.chapter.label}</p>}
@@ -66,9 +66,11 @@ export default function ReptileRoom({ blocks }: { blocks: ReadonlyArray<RoomBloc
                       sizes={
                         shot.span === 12
                           ? '(max-width: 60em) 92vw, 1100px'
-                          : shot.span === 6
+                          : shot.span >= 6
                             ? '(max-width: 60em) 92vw, 550px'
-                            : '(max-width: 60em) 92vw, 370px'
+                            : shot.span === 4
+                              ? '(max-width: 60em) 46vw, 370px'
+                              : '(max-width: 60em) 46vw, 280px'
                       }
                     />
                   ) : (

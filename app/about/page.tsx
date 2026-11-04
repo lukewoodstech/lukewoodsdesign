@@ -107,8 +107,10 @@ export default function AboutPage() {
               <h1 className="ab-hero__title">Nice to meet you.</h1>
               <p className="ab-hero__lede">
                 I&rsquo;m Luke, a product designer who tells the story and builds the thing.
-                Every project I&rsquo;ve shipped started small: a ticket, a complaint, a vague
-                ask. The part I&rsquo;m good at is what comes next: finding the real problem
+                I learned the story part as a teenager, handing snakes to people who were sure
+                they&rsquo;d hate them. Facts never changed anyone&rsquo;s mind. The right story
+                did. Design works the same way: every project I&rsquo;ve shipped started as a
+                ticket, a complaint or a vague ask, and the job was finding the real problem
                 underneath, telling the story that gets a team behind it, and building it, in
                 Figma and in code.
               </p>
@@ -145,10 +147,8 @@ export default function AboutPage() {
             <Title id="reptiles">The reptile business</Title>
             <p className="ab-sec__lede">
               Everyone has a thing. Mine was a company. Through high school I bred snakes and
-              lizards in a room at my parents&rsquo; house and sold them across the country on
-              MorphMarket. That meant learning genetics, veterinary basics, photography,
-              listings, pricing, live shipping and customer service, because there was nobody
-              else to do any of it.
+              lizards at my parents&rsquo; house and sold them across the country on MorphMarket,
+              learning genetics, vet care, pricing and live shipping because nobody else would.
             </p>
             <BigStats stats={[...REPTILE_STATS]} small />
             <ReptileRoom blocks={REPTILE_ROOM} />

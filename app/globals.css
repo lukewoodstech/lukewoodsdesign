@@ -5930,7 +5930,7 @@ p a {
 /* The stat row sits between the section lede and the photo essay, so
    it needs room under it that the case-study layout never needed. */
 .ab-wide > .cs-bigstats {
-  margin: 1.25rem 0 3.5rem;
+  margin: 1.25rem 0 2.5rem;
 }
 
 /* Blocks stack; each block is its own 12-column row of shots. A shot
@@ -5939,7 +5939,7 @@ p a {
    doesn't fit. */
 .rr {
   display: grid;
-  gap: 2.5rem;
+  gap: 2rem;
 }
 
 /* A chapter break between rows of photographs: the section header's
@@ -5949,7 +5949,7 @@ p a {
    a paragraph dropped above a picture (Luke, 2026-09-28). */
 .rr__chapter {
   max-width: 42rem;
-  margin: 1.5rem auto 2.5rem;
+  margin: 1rem auto 1.75rem;
   text-align: center;
 }
 
@@ -5968,7 +5968,7 @@ p a {
   margin: 0;
   font-family: var(--font-serif);
   font-weight: 400;
-  font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+  font-size: clamp(1.5rem, 2.6vw, 2.125rem);
   line-height: 1.15;
   letter-spacing: var(--display-serif-tracking);
   color: #fff;
@@ -6022,6 +6022,41 @@ p a {
   transition:
     transform 0.35s var(--ease-out-quint),
     border-color 0.2s ease;
+}
+
+/* The incubator: its chapter sits to the left of its photos instead of
+   centred over them, so the beat costs one row of height, not two. */
+@media (min-width: 60em) {
+  .rr__block--split {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: center;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    margin-block: 1rem;
+  }
+
+  .rr__block--split .rr__chapter {
+    margin: 0;
+    text-align: left;
+  }
+
+  .rr__block--split .rr__chapter-body {
+    margin-inline: 0;
+  }
+
+  .rr__block--split .rr__facts {
+    justify-content: flex-start;
+  }
+}
+
+/* A row with a wide shot in it (Big Bertha beside the fridge): the
+   wide one sets the height and the portraits fill it, so the tops line
+   up whatever the grid gap does to the arithmetic. */
+@media (min-width: 48em) {
+  .rr__row:has(.rr__card--wide) .rr__card:not(.rr__card--wide) {
+    aspect-ratio: auto;
+    align-self: stretch;
+  }
 }
 
 /* Pointer devices only: on a phone the tap that scrolls past a photo
