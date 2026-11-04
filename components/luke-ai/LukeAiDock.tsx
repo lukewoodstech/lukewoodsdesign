@@ -20,22 +20,10 @@ import LukeSprite from './LukeSprite'
  * lives in LukeAiProvider, so collapsing is genuinely just putting the
  * window away, and maximize still hands the same thread to /chat.
  *
- * On a wide screen it starts open, the way it did originally. It spent
- * a while starting closed: the peek it had until 2026-09-22 opened a
- * second in, sat there six, and put itself away, and Luke landing on the
- * deployed site said there was a lot going on — a hero assembling
- * itself, pixel Luke leaning in, and a window dealing itself open, all
- * inside two seconds. Starting open is not that. Nothing animates in
- * late and nothing takes itself away; the panel is simply already there,
- * and closing it is one click that sticks for the rest of the visit.
- *
- * Phones keep the chip. Down there the panel is the whole screen, so
- * opening by default would be opening a page nobody asked for.
- *
- * Case studies keep the chip too, until someone opens it. Their heroes
- * run the role, team, tools and skills down the right-hand column, and an
- * open panel sat on top of exactly that. Once a visitor opens or closes
- * the panel themselves, that choice wins everywhere.
+ * It always starts closed, as the chip, on every page and screen size.
+ * Luke wanted it discreet (2026-11-03): an open panel on arrival competed
+ * with the work. Opening is one click, and once a visitor opens or closes
+ * it, that choice holds for the rest of the visit.
  */
 
 /* /chat IS this conversation, maximized. A dock on top of it would be the
@@ -47,28 +35,11 @@ const HIDE_ON = ['/chat']
    job is telling render-on-the-server from render-in-the-browser. */
 const noopSubscribe = () => () => {}
 
-/* Wide enough that the panel is a window in the corner rather than the
-   view itself. Matches the breakpoint the rest of the site calls desktop;
-   the dock's own phone layout starts lower, at 36em, and everything
-   between the two keeps the chip. */
-const OPENS_ITSELF = '(min-width: 60em)'
-
-/* Pages where the panel waits to be asked for. */
-const STARTS_CLOSED_ON = ['/work']
-
 export default function LukeAiDock() {
   const pathname = usePathname()
-  /* Read once, on mount. The dock lives in the layout and is never
-     remounted, so a close survives every client-side navigation after
-     it, and a visitor who puts the panel away keeps it away. */
-  const [wide] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia(OPENS_ITSELF).matches,
-  )
-  /* null until the visitor opens or closes it; after that their choice
-     replaces the default on every page. */
-  const [choice, setChoice] = useState<boolean | null>(null)
-  const startsClosed = STARTS_CLOSED_ON.some((p) => pathname === p || pathname.startsWith(`${p}/`))
-  const open = choice ?? (wide && !startsClosed)
+  /* The dock lives in the layout and is never remounted, so whether the
+     visitor opened or closed it survives every client-side navigation. */
+  const [open, setOpen] = useState(false)
 
   /* Nothing renders on the server. The chip is a control and nothing
      else: without JS it would sit in the corner doing nothing, so it
@@ -85,7 +56,7 @@ export default function LukeAiDock() {
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setChoice(false)
+      if (e.key === 'Escape') setOpen(false)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -97,13 +68,13 @@ export default function LukeAiDock() {
     <div className={`ai-dock${open ? ' is-open' : ''}`}>
       {open ? (
         <div className="ai-dock__panel">
-          <LukeAiCard onClose={() => setChoice(false)} />
+          <LukeAiCard onClose={() => setOpen(false)} />
         </div>
       ) : (
         <button
           type="button"
           className="ai-dock__chip"
-          onClick={() => setChoice(true)}
+          onClick={() => setOpen(true)}
           aria-label="Open Luke AI"
         >
           <span className="ai-dock__name" aria-hidden="true">
