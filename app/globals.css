@@ -7681,6 +7681,116 @@ p a {
   .cs-note, .is-inview .cs-note { animation: none; opacity: 1; }
 }
 
+/* ── Speech bubbles: things people said, word for word ───────── */
+.cs-quotes { margin: 3rem 0 0; }
+
+.cs-quotes__cap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: var(--label-micro, 0.75rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.cs-quotes__cap::before {
+  content: '';
+  width: 1.5rem;
+  height: 1px;
+  background: var(--accent);
+}
+
+.cs-quotes__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 2rem 0 0;
+  padding: 0;
+}
+
+/* Alternate sides like a conversation: left, right, left. */
+.cs-quotes__item {
+  display: flex;
+  justify-content: flex-start;
+  opacity: 0;
+}
+.cs-quotes__item:nth-child(even) { justify-content: flex-end; }
+.cs-quotes__item:nth-child(3) { padding-left: 10%; }
+
+.is-inview .cs-quotes__item {
+  animation: cs-bubble-in 0.6s var(--ease-out-quint) forwards;
+  animation-delay: calc(var(--i) * 180ms);
+}
+
+@keyframes cs-bubble-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.96); }
+  to   { opacity: 1; transform: none; }
+}
+
+.cs-bubble {
+  position: relative;
+  max-width: min(30rem, 86%);
+  margin: 0;
+  padding: 1.15rem 1.5rem 1.25rem;
+  --bubble: #1c1c1f;
+  border-radius: 24px 24px 24px 4px;
+  background: var(--bubble);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 20px 40px -12px rgba(0, 0, 0, 0.7);
+  transform-origin: bottom left;
+}
+
+/* Tail: a curl that sweeps out of the squared corner. */
+.cs-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -12px;
+  width: 26px;
+  height: 26px;
+  background: var(--bubble);
+  clip-path: path('M26 0 L26 26 L0 26 C8 25 15 21 18 12 Z');
+}
+
+.cs-quotes__item:nth-child(even) .cs-bubble {
+  border-radius: 24px 24px 4px 24px;
+  transform-origin: bottom right;
+}
+.cs-quotes__item:nth-child(even) .cs-bubble::after {
+  left: auto;
+  right: -12px;
+  transform: scaleX(-1);
+}
+
+.cs-bubble p {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(1.125rem, 1.5vw, 1.3rem);
+  font-weight: 450;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.92);
+  text-wrap: pretty;
+}
+
+/* Accent quote marks keep the "said out loud" read. */
+.cs-bubble p::before { content: '\201C'; color: var(--accent); }
+.cs-bubble p::after  { content: '\201D'; color: var(--accent); }
+
+@media (max-width: 40em) {
+  .cs-quotes__item:nth-child(3) { padding-left: 0; }
+  .cs-bubble { max-width: 92%; padding: 1rem 1.2rem 1.1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-quotes__item, .is-inview .cs-quotes__item { animation: none; opacity: 1; }
+}
+
 /* ── Key question band ────────────────────────────────────────── */
 .cs-keyq__lead {
   margin: 0 0 0.75rem;

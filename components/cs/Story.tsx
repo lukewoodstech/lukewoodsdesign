@@ -233,12 +233,33 @@ export function Notes({
   notes,
   label,
   stickers = [],
+  quotes = false,
 }: {
   notes: string[]
   label: string
   /** Up to three icon or text stickers scattered between the cards. */
   stickers?: Sticker[]
+  /** Things people said, word for word: set as editorial pull quotes. */
+  quotes?: boolean
 }) {
+  if (quotes) {
+    return (
+      <Reveal className="cs-block">
+        <figure className="cs-quotes">
+          <figcaption className="cs-quotes__cap">{label}</figcaption>
+          <ul className="cs-quotes__list">
+            {notes.map((n, i) => (
+              <li key={n} className="cs-quotes__item" style={{ '--i': i } as React.CSSProperties}>
+                <blockquote className="cs-bubble">
+                  <p>{n}</p>
+                </blockquote>
+              </li>
+            ))}
+          </ul>
+        </figure>
+      </Reveal>
+    )
+  }
   return (
     <Reveal className="cs-block">
       <p className="cs-cap cs-cap--mono">{label}</p>

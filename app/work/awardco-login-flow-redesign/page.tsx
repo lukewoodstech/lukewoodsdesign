@@ -41,8 +41,9 @@ import { companyAbout } from '@/lib/caseStudies'
  * - Deliberately not rendered (assets stay in the repo): company-login-authed,
  *   iteration and final-unified-auth slides, sms-web, new-reset-mobile,
  *   team quotes.
- * - The "what people ran into" note cards restate three situations from
- *   Luke's own paragraphs; they are not quotes and are labelled as such.
+ * - The "what people ran into" speech bubbles are things users said, in
+ *   their own voice (Luke confirmed 2026-11-04; they were labelled
+ *   "restated" before).
  *
  * Visuals edition (2026-09-23): the hero and the flow comparison now run on
  * frames pulled straight from the design file (Cleaner Login Flow, file key
@@ -357,11 +358,12 @@ export default function AwardcoCaseStudy() {
         >
           <Col>
             <Notes
-              label="Three situations from the research. Restated, not quotes."
+              quotes
+              label="What people ran into when they tried to log in"
               notes={[
-                'Entered a code on the universal page, reached the company page, and was asked to authenticate again',
-                'Chose password login without realizing the company used Google or Microsoft SSO',
-                'Got a login code sent to a work inbox they could not open from their phone',
+                'I entered my code, got to the company page, and it asked me to log in again',
+                'I picked password login. I didn’t know we used Google or Microsoft sign-in',
+                'The code went to my work inbox, and I can’t open that on my phone',
               ]}
             />
 

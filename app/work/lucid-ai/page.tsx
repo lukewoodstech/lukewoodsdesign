@@ -183,7 +183,8 @@ export default function LucidCaseStudy() {
         >
           <Col>
             <Notes
-              label="What people could remember instead of a title. Illustrative, not quotes."
+              quotes
+              label="What people remembered instead of a title"
               notes={[
                 'the pricing one with the big comparison table, finance made it I think',
                 'our onboarding flowchart, the one with all the red decision diamonds',
