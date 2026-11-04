@@ -94,7 +94,7 @@ export default function Home() {
         {LAB_TILES.length > 0 && (
           <section className="home-lab" id="lab" aria-labelledby="home-lab-heading">
             <h2 id="home-lab-heading" className="home-work__heading home-lab__heading">
-              lab <span aria-hidden="true">—</span>
+              other work <span aria-hidden="true">—</span>
             </h2>
 
             {LAB_TILES.map((item) => (
