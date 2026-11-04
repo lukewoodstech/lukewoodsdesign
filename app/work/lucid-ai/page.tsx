@@ -249,25 +249,39 @@ export default function LucidCaseStudy() {
             </Block>
 
             <Block>
-              <CompareStage
-                ariaLabel="Before and after: the old homepage versus the same homepage with the Lucid AI entry point beside search"
-                layers={[
+              <div className="cs-prose">
+                <p>
+                  I started with where people already went when they needed something. On the
+                  homepage that was the search bar, so the entry point belonged right beside it:
+                  close enough to read as a smarter way to find work, separate enough that keyword
+                  search kept working the way people knew.
+                </p>
+                <p>
+                  The space next to the bar was already empty, so adding Lucid AI moved nothing
+                  else. Navigation, templates and recent documents all stayed where people expected
+                  them.
+                </p>
+                <p>
+                  The result was <strong>one new button and nothing to relearn</strong>. People
+                  meet Lucid AI at the moment they are already looking for something, which is
+                  exactly where its first skill, Find Docs, does its work.
+                </p>
+              </div>
+              <Callouts
+                src={`${IMG}/home-entry.png`}
+                alt="The Lucid homepage with one addition: a Lucid AI sparkle button in the empty space beside the search bar"
+                width={2880}
+                height={1800}
+                items={[
                   {
-                    src: `${IMG}/home-before.png`,
-                    alt: 'The old Lucid homepage: a search bar that only matches keywords against document titles, with nothing beside it',
-                    label: 'Before',
-                    caption: 'The old homepage. Search matched keywords in titles and nothing else.',
-                    width: 2880,
-                    height: 1800,
-                  },
-                  {
-                    src: `${IMG}/home-entry.png`,
-                    alt: 'The same homepage with one addition: a Lucid AI sparkle button beside the search bar',
-                    label: 'After',
-                    caption:
-                      'One addition to the homepage: the Lucid AI entry point beside search, in the spot that was empty. Everything else stays where people expect it.',
-                    width: 2880,
-                    height: 1800,
+                    label: 'Lucid AI',
+                    text: <>The new entry point, in the <strong>empty space beside search</strong>.</>,
+                    x: 50.6,
+                    y: 1.4,
+                    w: 2.8,
+                    h: 4.4,
+                    ax: 51.95,
+                    ay: 1.4,
                   },
                 ]}
               />
