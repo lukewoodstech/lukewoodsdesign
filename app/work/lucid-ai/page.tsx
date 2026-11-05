@@ -252,14 +252,61 @@ export default function LucidCaseStudy() {
               <div className="cs-prose">
                 <p>
                   I started with where people already went when they needed something. On the
-                  homepage that was the search bar, so the entry point belonged right beside it:
-                  close enough to read as a smarter way to find work, separate enough that keyword
-                  search kept working the way people knew.
+                  homepage that was the search bar, but it was not the only open spot. The left
+                  navigation, the links at the bottom of it, and the icons in the top right could
+                  all have held the entry point.
+                </p>
+              </div>
+              <Callouts
+                src={`${IMG}/home-before.png`}
+                alt="The old Lucid homepage with three other places the entry point could have gone: the left navigation beside Home and Documents, the links at the bottom of the left navigation, and the icons in the top right"
+                width={2880}
+                height={1800}
+                items={[
+                  {
+                    label: 'Left nav',
+                    text: <>Beside <strong>Home and Documents</strong>, where people move between their own work.</>,
+                    x: 1.6,
+                    y: 22.1,
+                    w: 13.3,
+                    h: 11.6,
+                    ax: 15.2,
+                    ay: 27.9,
+                  },
+                  {
+                    label: 'Bottom links',
+                    text: <>With <strong>Discover, Templates and Integrations</strong>, the secondary destinations.</>,
+                    x: 1.4,
+                    y: 67.1,
+                    w: 13.8,
+                    h: 30.5,
+                    ax: 16.6,
+                    ay: 82.3,
+                  },
+                  {
+                    label: 'Top right',
+                    text: <>Next to <strong>help and notifications</strong>, by the plan switcher.</>,
+                    x: 79.1,
+                    y: 1.5,
+                    w: 4.5,
+                    h: 4.4,
+                    ax: 77.4,
+                    ay: 3.7,
+                  },
+                ]}
+              />
+              <div className="cs-prose mt-10">
+                <p>
+                  In testing, people found the spot beside search the most familiar. It sat right
+                  next to where they already went to find work, and it matched the industry pattern
+                  of putting the AI entry point in the top navigation rather than the left. It was
+                  close enough to read as a smarter way to find work, and separate enough that
+                  keyword search kept working the way people knew.
                 </p>
                 <p>
-                  The space next to the bar was already empty, so adding Lucid AI moved nothing
-                  else. Navigation, templates and recent documents all stayed where people expected
-                  them.
+                  The space next to the bar was already empty, so adding the Lucid AI sparkle
+                  button moved nothing else. Navigation, templates and recent documents all stayed
+                  where people expected them.
                 </p>
                 <p>
                   The result was <strong>one new button and nothing to relearn</strong>. People
@@ -267,24 +314,17 @@ export default function LucidCaseStudy() {
                   exactly where its first skill, Find Docs, does its work.
                 </p>
               </div>
-              <Callouts
-                src={`${IMG}/home-entry.png`}
-                alt="The Lucid homepage with one addition: a Lucid AI sparkle button in the empty space beside the search bar"
-                width={2880}
-                height={1800}
-                items={[
-                  {
-                    label: 'Lucid AI',
-                    text: <>The new entry point, in the <strong>empty space beside search</strong>.</>,
-                    x: 50.6,
-                    y: 1.4,
-                    w: 2.8,
-                    h: 4.4,
-                    ax: 51.95,
-                    ay: 1.4,
-                  },
-                ]}
-              />
+              <figure className="m-0 mt-6">
+                <div className="cs-fig__frame">
+                  <ZoomShot
+                    src={`${IMG}/home-entry.png`}
+                    alt="The Lucid homepage with one addition: a Lucid AI sparkle button in the empty space beside the search bar"
+                    width={2880}
+                    height={1800}
+                    sizes="(min-width: 60em) 800px, 100vw"
+                  />
+                </div>
+              </figure>
             </Block>
           </Col>
         </Stage>

@@ -14,7 +14,7 @@ import {
 } from 'react'
 import Image from 'next/image'
 import { AnimatePresence, motion } from 'framer-motion'
-import { SITE, INTRO } from '@/lib/site'
+import { SITE, INTRO, INTRO_SENTENCE } from '@/lib/site'
 import { STORY } from '@/lib/about'
 import { useReducedMotion } from '@/lib/useReducedMotion'
 
@@ -23,13 +23,13 @@ import { useReducedMotion } from '@/lib/useReducedMotion'
  * tannerengland.framer.website: one sentence in a serif, with three words
  * you can hover. Each one is a different way of answering "who is this?"
  *
- *   at rest          Luke Woods is a creative & impact-driven product designer.
+ *   at rest          Hi, I’m Luke Woods. A curious & proven product designer.
  *   "Luke Woods"     the name lights up, four photos deal out around the
  *                    sentence, the ending rolls to "designer who codes."
- *   "creative"       outline icons of what the creativity goes into — and
+ *   "curious"        outline icons of what the creativity goes into — and
  *                    what refills it — drift in; the ending rolls to
  *                    "problem solver."
- *   "impact-driven"  four stat chips from the case studies tilt in; the
+ *   "proven"         four stat chips from the case studies tilt in; the
  *                    ending stays put — the numbers are the point.
  *
  * Only those three words are hot. Everything else in the sentence is just
@@ -82,12 +82,13 @@ const TAILS: Record<State, string> = {
    name greets and says what Luke is doing now; creative names the outlets;
    impact claims the numbers — and the chips say where each one was measured. */
 const SUBLINES: Record<Mode, string> = {
-  name: 'Hi, I’m Luke! I’m studying CS and HCI at BYU and building products between classes.',
+  name: 'Right now I’m studying CS and HCI at BYU and building products between classes.',
   creative: 'Design, code, sports, and poetry: four outlets for the same creative instinct.',
   impact: 'These stats are the measurable results of my design work, on real teams in real tests.',
 }
 
-type Word = { text: string; dim?: boolean; hot?: Mode; tail?: true }
+/* `after` is punctuation that follows a hot word without lighting up with it. */
+type Word = { text: string; dim?: boolean; hot?: Mode; tail?: true; after?: string }
 
 /*
  * Three lines, fixed. The ending changes width when it rolls, and if it
@@ -97,8 +98,9 @@ type Word = { text: string; dim?: boolean; hot?: Mode; tail?: true }
  * its line, and the two lines above it never change.
  */
 const LINES: readonly (readonly Word[])[] = [
-  [{ text: SITE.name, hot: 'name' }, { text: 'is a', dim: true }],
+  [{ text: INTRO.greeting, dim: true }, { text: SITE.name, hot: 'name', after: '.' }],
   [
+    { text: INTRO.article, dim: true },
     { text: INTRO.adjectives[0], hot: 'creative' },
     { text: '&', dim: true },
     { text: INTRO.adjectives[1], hot: 'impact' },
@@ -108,7 +110,7 @@ const LINES: readonly (readonly Word[])[] = [
 const WORD_COUNT = LINES.flat().length
 
 /* What assistive tech reads: the resting sentence, once. */
-const SENTENCE = `${SITE.name} is a creative & impact-driven ${TAILS.rest}`
+const SENTENCE = INTRO_SENTENCE
 
 /*
  * Where a decoration sits. `y` is a percentage of a box drawn around the
@@ -560,6 +562,7 @@ export default function HeroIntro() {
                   ) : (
                     word.text
                   )}
+                  {word.after}
                 </span>
               </Fragment>
             )
