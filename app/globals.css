@@ -6507,11 +6507,9 @@ p a {
 
 /* ════════════════════════════════════════════════════════════════
    HERO INTRO (2026-09-21)
-   One serif sentence with three hot words — see components/HeroIntro.tsx
-   for the why. Words blur in on arrival; hovering a hot word lights it,
-   deals its decorations out around the sentence (photos, icons, or stat
-   chips), swaps the subline, and rolls the ending over letter by letter.
-   Nothing else in the sentence reacts.
+   One serif sentence, centred on the first screen. See
+   components/HeroIntro.tsx. Words blur in on arrival; the connecting
+   words are set back so the key words carry it.
    ════════════════════════════════════════════════════════════════ */
 
 .hero-intro {
@@ -6526,7 +6524,7 @@ p a {
 }
 
 /* A faint pool of light behind the sentence — the reference's dark
-   radial. Neutral, not blue: the blue is saved for the lit word. */
+   radial. Neutral, not blue. */
 .hero-intro::before {
   content: '';
   position: absolute;
@@ -6552,36 +6550,36 @@ p a {
   font-weight: 400;
   font-size: var(--display-serif);
   letter-spacing: var(--display-serif-tracking);
-  /* A hair looser than the sans display tokens so the split-flap cells
-     have room for descenders inside their clip. */
   line-height: var(--display-serif-lh);
   color: #fff;
   cursor: default;
 }
 
-/* One line each — the ending's line can change width without touching
-   the two above it (see LINES in HeroIntro.tsx). The first two may wrap
-   on a narrow screen (their content never changes, so that wrap is
-   stable); the ending never does. */
+/* The sentence's own line breaks on wide screens (INTRO_LINES in
+   lib/site.ts). On a phone the lines run together and wrap as they fit. */
 .hero-l {
   display: block;
 }
 
-.hero-l--tail {
-  white-space: nowrap;
+@media (max-width: 47.99em) {
+  .hero-l {
+    display: inline;
+  }
+  .hero-line {
+    text-wrap: balance;
+  }
 }
 
 /*
  * The arrival: each word blurs up in turn, in CSS rather than in
  * framer-motion, so the sentence paints whether or not the JavaScript
  * ever lands (see the note in HeroIntro.tsx). `--wi` is the word's place
- * in the stagger; the ending's split-flap cells use `--i`, which is why
- * this one has a name of its own.
+ * in the stagger, kept quick because the sentence is long.
  */
 .hero-word {
   display: inline-block;
   animation: hero-word-in 0.8s var(--ease-out-quint) both;
-  animation-delay: calc(0.15s + var(--wi, 0) * 0.08s);
+  animation-delay: calc(0.15s + var(--wi, 0) * 0.05s);
 }
 
 @keyframes hero-word-in {
@@ -6597,79 +6595,12 @@ p a {
   }
 }
 
-/* "is a" and "&": set back so the name and the qualities carry it. */
+/* The connecting words: set back so the key words carry the sentence. */
 .hero-word--dim {
   color: rgba(255, 255, 255, 0.4);
 }
 
-/* ── The split-flap ending ──
-   Each cell's width is set from JS once measured, and transitions, so
-   "product designer." eases into the longer "designer who codes.". The
-   letters are absolute inside the cell so an exiting and an entering
-   letter share the slot. */
-
-.hero-flip {
-  position: relative;
-  display: inline-block;
-  vertical-align: top;
-  white-space: pre;
-}
-
-.hero-flip__cell {
-  position: relative;
-  display: inline-block;
-  vertical-align: top;
-  height: 1.14em;
-  perspective: 420px;
-  transition: width 0.5s var(--ease-out-quint);
-  transition-delay: calc(var(--i) * 20ms);
-}
-
-/* Invisible, in the flow: it is the cell's width until the ruler has
-   measured one (see FlipTail). It may overflow a cell that has been
-   given a narrower measured width — it is hidden, and an inline-block
-   can't widen a parent with a width of its own. */
-/* The letter is drawn from the data attribute rather than being a text
-   node, so it sizes the cell without landing in the <h1>'s text. See the
-   sizer in components/HeroIntro.tsx. `white-space: pre` so a space still
-   measures as a space. */
-.hero-flip__sizer {
-  display: inline-block;
-  visibility: hidden;
-  white-space: pre;
-}
-
-.hero-flip__sizer::before {
-  content: attr(data-ch);
-}
-
-.hero-flip__letter {
-  position: absolute;
-  inset: 0;
-  display: block;
-  text-align: center;
-  transform-origin: 50% 50%;
-  backface-visibility: hidden;
-}
-
-.hero-flip__ruler {
-  position: absolute;
-  left: 0;
-  top: 0;
-  visibility: hidden;
-  white-space: pre;
-  pointer-events: none;
-}
-
-.hero-flip__ruler span {
-  display: inline-block;
-}
-
-.hero-flip__ruler span[data-ch]::before {
-  content: attr(data-ch);
-}
-
-/* On the phone the headline steps down so the three lines stay three. */
+/* On the phone the headline steps down to fit the narrow column. */
 @media (max-width: 47.99em) {
   :root {
     --display-serif: clamp(2rem, 8.8vw, 3rem);
@@ -6677,12 +6608,9 @@ p a {
 }
 
 /* The site-wide reduced-motion rule only covers the view transitions,
-   so the hero opts out on its own: the letters just change, and the
-   sentence is simply there, with no blur-up. */
+   so the hero opts out on its own: the sentence is simply there, with
+   no blur-up. */
 @media (prefers-reduced-motion: reduce) {
-  .hero-flip__cell {
-    transition: none;
-  }
   .hero-word {
     animation: none;
   }

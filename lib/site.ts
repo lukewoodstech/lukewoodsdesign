@@ -35,33 +35,18 @@ export const MAILTO = `mailto:${SITE.email}?subject=${encodeURIComponent(
 )}`
 
 /*
- * The home page's resting sentence, in the pieces it's built from.
+ * The home page's sentence (2026-11-05), in the lines it sets in.
  *
- * HeroIntro sets it word by word — the name and both adjectives are hoverable,
- * and the ending rolls over to another phrase — so it reads these pieces rather
- * than the joined string. The link-preview card is a still of the same line, so
- * it uses INTRO_SENTENCE. Both come from here so the two can't drift.
- */
-export const INTRO = {
-  /* First person (2026-11-04): the greeting before the name, the article after. */
-  greeting: 'Hi, I’m',
-  article: 'A',
-  adjectives: ['curious', 'proven'],
-  /* Lower-cased SITE.role, with the full stop. */
-  tail: 'product designer.',
-} as const
-
-/*
- * The three lines HeroIntro sets, in order. They're fixed there rather than
- * wrapped, because the ending rolls over to phrases of other widths and a
- * shared line would rewrap under the pointer. The preview card keeps the same
- * three — left to wrap on its own it broke the old "impact-driven" at the hyphen.
+ * HeroIntro sets it word by word, with these breaks on wide screens; the
+ * link-preview card is a still of the same lines. Both come from here so
+ * the two can't drift.
  */
 export const INTRO_LINES = [
-  `${INTRO.greeting} ${SITE.name}.`,
-  `${INTRO.article} ${INTRO.adjectives[0]} & ${INTRO.adjectives[1]}`,
-  INTRO.tail,
-]
+  'Hi, I’m Luke, a product designer',
+  'that enjoys building data-driven',
+  'and user-centric experiences',
+  'for other humans.',
+] as const
 
 /** The whole line, joined up — what assistive tech reads. */
 export const INTRO_SENTENCE = INTRO_LINES.join(' ')
