@@ -13,9 +13,8 @@ import { INTRO_LINES, INTRO_SENTENCE } from '@/lib/site'
  * that rolled over like a split-flap board. Luke cut both; the sentence
  * is plain type now.
  *
- * The words that say who and what stay full white; the words that join
- * them are set back, so the sentence scans as Luke, product designer,
- * data-driven, user-centric.
+ * All white (2026-11-05): with nothing to hover, dimming some words only
+ * made the sentence harder to read.
  *
  * Each word blurs up in turn on arrival (the reference starts every word
  * at opacity 0 / blur 10px / y 10px and staggers them). That entrance is
@@ -25,9 +24,6 @@ import { INTRO_LINES, INTRO_SENTENCE } from '@/lib/site'
  * if hydration never landed). CSS runs on first paint, so this needs no
  * JavaScript at all and is a server component.
  */
-
-/* The words set in full white. Everything else is dimmed. */
-const BRIGHT = new Set(['Luke,', 'product', 'designer', 'data-driven', 'user-centric'])
 
 export default function HeroIntro() {
   let wordIndex = 0
@@ -51,7 +47,7 @@ export default function HeroIntro() {
                   return (
                     <Fragment key={i}>
                       {i > 0 && ' '}
-                      <span className={`hero-word${BRIGHT.has(word) ? '' : ' hero-word--dim'}`} style={style}>
+                      <span className="hero-word" style={style}>
                         {word}
                       </span>
                     </Fragment>

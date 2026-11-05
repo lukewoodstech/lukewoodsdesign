@@ -6508,8 +6508,7 @@ p a {
 /* ════════════════════════════════════════════════════════════════
    HERO INTRO (2026-09-21)
    One serif sentence, centred on the first screen. See
-   components/HeroIntro.tsx. Words blur in on arrival; the connecting
-   words are set back so the key words carry it.
+   components/HeroIntro.tsx. Words blur in on arrival.
    ════════════════════════════════════════════════════════════════ */
 
 .hero-intro {
@@ -6593,11 +6592,6 @@ p a {
     filter: blur(0);
     transform: translateY(0);
   }
-}
-
-/* The connecting words: set back so the key words carry the sentence. */
-.hero-word--dim {
-  color: rgba(255, 255, 255, 0.4);
 }
 
 /* On the phone the headline steps down to fit the narrow column. */
