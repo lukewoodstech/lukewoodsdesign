@@ -4951,50 +4951,27 @@ p a {
 
 /* ── The story stage ─────────────────────────────────────────────── */
 
-/* Tall so there is scroll to scrub; the stage inside pins for the
-   difference. The card size is the smaller of "five across" and
-   "three down", so the grid always fits a viewport. */
+/* The heading, then the 5x3 grid, still (the scroll-dealt deck was cut
+   2026-11-05; see StoryStage.tsx). The card size is the smaller of
+   "five across" and "three down", so the grid fits a viewport. */
 .story {
   --card-w: min(12.4vw, 19vh, 190px);
   --card-gap: clamp(0.75rem, 1.4vw, 1.25rem);
   position: relative;
-  /* Enough scroll to deal the deck unhurried and no more: at 320vh the
-     deal was done with a third of a screen of scrolling still to go and
-     the pinned stage read as stuck (see DEAL_END in StoryStage.tsx). */
-  height: 240vh;
+  padding-block: 1rem 2rem;
 }
 
 .story__stage {
-  position: sticky;
-  top: 0;
-  height: 100vh;
   display: grid;
   place-items: center;
-  overflow: hidden;
 }
 
-/* The heading sits OVER the stage rather than taking a row of it: the
-   finished 5x3 grid needs the whole height to fit, and a row that keeps
-   its height after the heading has faded pushes the bottom row off the
-   screen. StoryStage drops the deck far enough to clear the heading at
-   the start and eases that back to nothing. */
-.story__intro {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  will-change: opacity, transform;
-}
-
-/* Phones: the stage is a static grid, so the heading is a heading again. */
-.story.is-static .story__intro {
-  position: static;
-}
-
-/* Inside the stage the heading is one screen's worth of furniture, not
-   a page header — it gets the top of the viewport and no more. */
+/* .sitenav-offset's 4rem clears the fixed bar; this is the breathing
+   room on top of it, so it adds rather than replaces. The bottom
+   padding keeps the lede off the first row of photographs. */
 .story__intro .ab-hero {
-  padding-bottom: 0;
+  padding-top: calc(4rem + 1.25rem);
+  padding-bottom: 2.75rem;
 }
 
 .story__intro .ab-hero .cs-eyebrow {
@@ -5002,10 +4979,8 @@ p a {
   margin-bottom: 0.75rem;
 }
 
-/* Wider and tighter than the standalone version: every line the lede
-   wraps to is a line the portrait loses underneath it. */
 .story__intro .ab-hero__lede {
-  margin-top: 0.9rem;
+  margin-top: 1.25rem;
   max-width: 52rem;
   font-size: var(--reading-intro);
   line-height: var(--reading-intro-lh);
@@ -5015,7 +4990,6 @@ p a {
   display: grid;
   grid-template-columns: repeat(5, var(--card-w));
   gap: var(--card-gap);
-  will-change: transform;
 }
 
 .story-card {
@@ -5026,25 +5000,12 @@ p a {
   border: 1px solid rgba(255, 255, 255, 0.16);
   background: #101015;
   overflow: hidden;
-  will-change: transform, opacity;
-  transform-origin: center;
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
 }
 
 .story-card.is-center {
   z-index: 2;
   border-color: rgba(255, 255, 255, 0.5);
-}
-
-/* Until the client has taken over, the deck is stacked: only the
-   portrait shows. Desktop only: that stack is the first frame of the
-   scrub and the scrub is the only thing that undoes it, so it needs the
-   script. A phone deals no deck, and hiding fourteen cards there leaves
-   a hole for as long as hydration takes. */
-@media (min-width: 60em) {
-  .story:not(.is-ready) .story-card:not(.is-center) {
-    opacity: 0;
-  }
 }
 
 .story-card__art {
@@ -5285,63 +5246,9 @@ p a {
   background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.55) 38%, rgba(0, 0, 0, 0.92));
 }
 
-/* Phones and reduced motion: a plain grid. */
-.story.is-static {
-  height: auto;
-  padding-block: 1rem 2rem;
-}
-
-/* In the pinned stage the heading is furniture on a screen it shares
-   with the deck, so it hugs the top on purpose. Standing at the top of
-   a scrolling page it is a page header, and it needs the room a page
-   header gets: the lede was sitting directly on the first row of
-   photographs, with nothing between the sentence and the pictures. */
-.story.is-static .story__intro .ab-hero {
-  /* .sitenav-offset's 4rem clears the fixed bar; this is the breathing
-     room on top of it, so it adds rather than replaces. */
-  padding-top: calc(4rem + 1.25rem);
-  padding-bottom: 2.75rem;
-}
-
-.story.is-static .story__intro .ab-hero__lede {
-  margin-top: 1.25rem;
-}
-
-.story.is-static .story__stage {
-  position: static;
-  height: auto;
-  overflow: visible;
-}
-
-.story.is-static .story-card {
-  opacity: 1;
-  transform: none;
-}
-
 @media (max-width: 60em) {
-  /* The plain grid is the phone layout, full stop, not a state the
-     script switches into. It used to arrive only with `.is-static` from
-     StoryStage's effect, so the first paint on a phone was the desktop
-     stage: a 240vh section, a sticky 100vh box with overflow:hidden,
-     and a 1774px two-up grid centred inside it and clipped top and
-     bottom, with the absolutely positioned heading sitting under the
-     portrait. Locally hydration is instant and it never showed; on a
-     real phone it was the whole first screen. `.is-static` still comes,
-     and still says the same thing. */
   .story {
     --card-w: calc((100vw - 2.5rem - var(--card-gap)) / 2);
-    height: auto;
-    padding-block: 1rem 2rem;
-  }
-
-  .story__stage {
-    position: static;
-    height: auto;
-    overflow: visible;
-  }
-
-  .story__intro {
-    position: static;
   }
 
   .story__grid {
@@ -5350,35 +5257,9 @@ p a {
   }
 
   /* Portrait first on a phone: the middle cell of a 5-wide grid is
-     the 8th card, which two-up would bury it on row four. */
+     the 8th card, which two-up would bury on row four. */
   .story-card.is-center {
     order: -1;
-  }
-
-  /* Staggered fade-up once the grid is on screen. Guarded on
-     no-preference: with reduced motion there is no fade to stagger, and
-     a card parked at opacity 0 waiting for a class is just a hidden
-     card. */
-  @media (prefers-reduced-motion: no-preference) {
-    .story.is-static .story-card {
-      opacity: 0;
-      transform: translateY(18px);
-      transition:
-        opacity 0.5s ease,
-        transform 0.6s var(--ease-out-quint);
-    }
-
-    .story.is-static.is-in .story-card {
-      opacity: 1;
-      transform: none;
-    }
-  }
-}
-
-@media (min-width: 60em) {
-  /* Scrubbed by JS; a transition would lag the scroll. */
-  .story-card {
-    transition: none;
   }
 }
 

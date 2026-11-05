@@ -19,7 +19,7 @@ import { SITE } from '@/lib/site'
  * end. It said true things and it read like a résumé.
  *
  * This version is the visual story instead: you meet the person, the
- * deck of things about them deals out from the portrait as you scroll,
+ * deck of things about them sits in a grid under the heading,
  * the experience is a rail you travel down, the tools are things you can
  * pick up, and the ending is two words at the size they deserve. Every
  * section is a designed component with one job and one interaction —
@@ -97,9 +97,7 @@ export default function AboutPage() {
       <main id="main">
 
         {/* ── 01 Nice to meet you ──
-            The heading lives inside the pinned stage rather than in a
-            block above it, so it shares the first screen with the
-            full-size portrait and then fades as the deck deals out. */}
+            The heading, then the story grid, shown still. */}
         <StoryStage
           cards={STORY}
           intro={
