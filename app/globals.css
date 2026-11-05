@@ -5637,10 +5637,10 @@ p a {
 
 /* ── 04 My process ───────────────────────────────────────────────── */
 
-/* Five stops on one line: find, design, test, build, ship. A row on
-   wide screens with the line through the dots; a vertical rail below
-   70em, where five columns get too narrow to read. Each stop stacks the
-   fundamental, the AI line, the proof and the tool chips. */
+/* Five stops on one line: discovery, design, build, test, ship. A row
+   on wide screens with the line through the dots; a vertical rail below
+   70em, where five columns get too narrow to read. Under each stop, the
+   tools and how each was used on a real project. */
 .tb-rail {
   --tb-ink: rgba(255, 255, 255, 0.4);
   --tb-dot: 10px;
@@ -5705,43 +5705,43 @@ p a {
   color: #fff;
 }
 
-.tb-stage__practice {
-  margin: 0.15rem 0 0;
-  font-size: var(--reading-caption);
-  line-height: 1.5;
-  color: #fff;
-  text-wrap: pretty;
+.tb-stage__tools {
+  display: grid;
+  gap: 1.4rem;
+  margin: 0.4rem 0 0;
+  padding: 0;
+  list-style: none;
 }
 
-.tb-stage__ai,
-.tb-stage__proof {
+.tb-tool {
   display: grid;
-  gap: 0.35rem;
-  margin: 0;
-  padding-top: 0.9rem;
-  border-top: 1px solid var(--card-ring);
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.8rem;
+  align-items: start;
+}
+
+.tb-tool__body {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.tb-tool__name {
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.tb-tool__line {
   font-size: var(--reading-caption);
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.72);
   text-wrap: pretty;
 }
 
-/* The AI line is the one this section exists to show, so it carries
-   the accent on its label. */
-.tb-stage__tag {
-  font-family: var(--font-mono);
-  font-size: var(--label-size);
-  font-weight: var(--label-weight);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
-}
-
-.tb-stage__ai .tb-stage__tag {
-  color: var(--accent, #4c8dff);
-}
-
-.tb-stage__link {
+.tb-tool__link {
   font-family: var(--font-mono);
   font-size: var(--label-size);
   letter-spacing: 0.04em;
@@ -5750,52 +5750,15 @@ p a {
   text-decoration: none;
 }
 
-.tb-stage__link:hover {
+.tb-tool__link:hover {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-.tb-stage__link:focus-visible {
+.tb-tool__link:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 3px;
   border-radius: 2px;
-}
-
-.tb-stage__loop {
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: var(--label-size);
-  letter-spacing: 0.04em;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.62);
-}
-
-/* The tools that support the step: names, nothing more. */
-.tb-stage__named {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin: 0.25rem 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.tb-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.3rem 0.65rem 0.3rem 0.3rem;
-  border: 1px solid var(--card-ring);
-  border-radius: 6px;
-  font-family: var(--font-mono);
-  font-size: var(--label-size);
-  letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.tb-chip .tb-ico {
-  --tb-ico: 1.25rem;
-  border-radius: 4px;
 }
 
 /* A tool's icon: its brand colour as the ground, the glyph in white. */

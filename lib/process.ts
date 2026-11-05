@@ -1,88 +1,93 @@
-import type { ToolStage } from '@/lib/about'
-
 /*
- * "My process" on /about (2026-11-05): five steps, each with the design
- * fundamental, where AI comes in, the proof from a case study, and the
- * tools that support it (tools are matched by `stage` in lib/about.ts).
+ * "My process" on /about (2026-11-05, Luke's structure): five steps,
+ * and under each the tools Luke uses and how he used each one on a real
+ * project. No labels like "proof" or "with AI": the tool and the line
+ * say it. Icons and colours come from TOOLS in lib/about.ts by name.
  *
- * Every line traces to lib/lukeAiFacts.ts:
- *   find    pattern-discovery-interviews (internship-wide, not Custom
- *           Reports), plus the Pendo line from TOOLS
- *   design  lucid-20-capabilities
- *   test    awardco-external-prototype-testing, awardco-usability-results
- *           (usability-test numbers, never production)
- *   build   BACKGROUND.site ("designs in Figma and pairs with Claude
- *           Code"), awardco-ai-prototyping-guide
- *   ship    the GitHub line from TOOLS
+ * Every line traces to lib/lukeAiFacts.ts or a case study:
+ *   Pendo, ClickUp  TOOLS provenance (Pattern case study)
+ *   Figma (design)  TOOLS provenance
+ *   Claude          BACKGROUND.site ("pairs with Claude Code"), Luke AI
+ *   Next.js         TOOLS provenance
+ *   Figma (test)    BACKGROUND.experience, BYU Library ("usability
+ *                   testing, Figma prototyping")
+ *   GitHub          TOOLS provenance (Awardco case study)
+ *   Vercel          TOOLS provenance
  *
- * `ai` is set only where a fact says how Luke uses AI. Find, design and
- * ship have none yet: Luke hasn't said, and the truth layer won't guess.
+ * Tools with no project story on the site (Notion, Framer, Cursor,
+ * TypeScript, Python, Node, Git, Tailwind, React) are left off to keep
+ * it simple.
  */
 
-export type ProcessStep = {
-  id: ToolStage | 'test'
-  title: string
-  /** The design fundamental: what the step is made of. */
-  practice: string
-  /** Where AI comes in, only when sourced. */
-  ai?: string
-  proof: { line: string; href: string; label: string }
-  /** A note that this step feeds back into an earlier one. */
-  loop?: string
+export type ProcessTool = {
+  /** Must match a `name` in TOOLS. */
+  name: string
+  line: string
+  link?: { href: string; label: string }
 }
+
+export type ProcessStep = { title: string; tools: ReadonlyArray<ProcessTool> }
 
 export const PROCESS: ReadonlyArray<ProcessStep> = [
   {
-    id: 'find',
-    title: 'Find the problem',
-    practice: 'Interviews, product data, and the ticket behind the ticket.',
-    proof: {
-      line: '50+ discovery interviews across my Pattern internship. Pendo showed high trial and poor retention: a usability problem, not a demand problem.',
-      href: '/work/pattern-custom-reports',
-      label: 'Pattern',
-    },
+    title: 'Discovery',
+    tools: [
+      {
+        name: 'Pendo',
+        line: 'High trial, poor retention. That told me Pattern had a usability problem, not a demand problem.',
+        link: { href: '/work/pattern-custom-reports', label: 'Pattern' },
+      },
+      {
+        name: 'ClickUp',
+        line: 'The whole Pattern project started as one ticket: let users duplicate a widget.',
+        link: { href: '/work/pattern-custom-reports', label: 'Pattern' },
+      },
+    ],
   },
   {
-    id: 'design',
-    title: 'Design it',
-    practice: 'Go wide on directions, then cut hard.',
-    proof: {
-      line: 'More than 20 capabilities prototyped and tested before Lucid AI narrowed to four core skills.',
-      href: '/work/lucid-ai',
-      label: 'Lucid',
-    },
+    title: 'Design',
+    tools: [
+      {
+        name: 'Figma',
+        line: 'Where every project on this site started: Lucid, Awardco and Pattern.',
+      },
+    ],
   },
   {
-    id: 'test',
-    title: 'Test it',
-    practice: 'Working prototypes with real inputs, in front of real users.',
-    ai: 'I build coded prototypes with AI, and contributed that workflow to Awardco’s AI-prototyping guide.',
-    proof: {
-      line: 'Tested with 20+ admins and end users. Choosing a login method went from 27 seconds to 5.9 in usability testing.',
-      href: '/work/awardco-login-flow-redesign',
-      label: 'Awardco',
-    },
-    loop: 'What testing breaks goes back to step 01.',
+    title: 'Build',
+    tools: [
+      {
+        name: 'Claude',
+        line: 'I pair with Claude Code to build in code. Luke AI on this site streams from Claude.',
+        link: { href: '/chat', label: 'Ask Luke AI' },
+      },
+      {
+        name: 'Next.js',
+        line: 'Every page of this site, including the route Luke AI answers from.',
+      },
+    ],
   },
   {
-    id: 'build',
-    title: 'Build it',
-    practice: 'In code, not only in Figma.',
-    ai: 'I design in Figma and pair with Claude Code.',
-    proof: {
-      line: 'This site, including Luke AI, which streams from Claude.',
-      href: '/chat',
-      label: 'Ask Luke AI',
-    },
+    title: 'Test',
+    tools: [
+      {
+        name: 'Figma',
+        line: 'Prototypes for usability testing on the BYU Library website.',
+      },
+    ],
   },
   {
-    id: 'ship',
-    title: 'Ship it',
-    practice: 'Alongside engineers, not over a wall.',
-    proof: {
-      line: 'Awardco prototypes were iterated on a real branch with the frontend engineers, not handed over as mocks.',
-      href: '/work/awardco-login-flow-redesign',
-      label: 'Awardco',
-    },
+    title: 'Ship',
+    tools: [
+      {
+        name: 'GitHub',
+        line: 'Awardco prototypes were iterated on a real branch with the frontend engineers, not handed over as mocks.',
+        link: { href: '/work/awardco-login-flow-redesign', label: 'Awardco' },
+      },
+      {
+        name: 'Vercel',
+        line: 'Where this site is deployed.',
+      },
+    ],
   },
 ]
