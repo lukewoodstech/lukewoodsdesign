@@ -5647,7 +5647,8 @@ p a {
   position: relative;
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 2rem;
+  column-gap: 2rem;
+  row-gap: 1.4rem;
   margin: 3rem 0 0;
   padding: 0;
   list-style: none;
@@ -5665,17 +5666,23 @@ p a {
   background: var(--tb-ink);
 }
 
+/* Each step spans four shared rows of the rail (its heading and up to
+   three entries; lib/process.ts caps it at three), and its list spans
+   the last three. Both are subgrids, so the first entry of every step
+   sits on one row, the second on the next, and the icons line up
+   across all five columns. */
 .tb-stage {
   position: relative;
   display: grid;
-  align-content: start;
-  gap: 1.1rem;
+  grid-row: span 4;
+  grid-template-rows: subgrid;
   min-width: 0;
 }
 
 .tb-stage__head {
   display: grid;
   gap: 0.55rem;
+  margin-bottom: 0.5rem;
 }
 
 .tb-stage__dot {
@@ -5707,8 +5714,9 @@ p a {
 
 .tb-stage__tools {
   display: grid;
-  gap: 1.4rem;
-  margin: 0.4rem 0 0;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
@@ -5812,7 +5820,7 @@ p a {
 @media (max-width: 70em) {
   .tb-rail {
     grid-template-columns: minmax(0, 1fr);
-    gap: 3rem;
+    row-gap: 3rem;
     max-width: 40rem;
     margin-inline: auto;
     padding-left: 2rem;
@@ -5825,6 +5833,23 @@ p a {
     right: auto;
     width: 2px;
     height: auto;
+  }
+
+  /* One column: no rows to share, so each step is its own stack. */
+  .tb-stage {
+    grid-row: auto;
+    grid-template-rows: none;
+    gap: 1.1rem;
+  }
+
+  .tb-stage__head {
+    margin-bottom: 0;
+  }
+
+  .tb-stage__tools {
+    grid-row: auto;
+    grid-template-rows: none;
+    gap: 1.4rem;
   }
 
   .tb-stage__dot {

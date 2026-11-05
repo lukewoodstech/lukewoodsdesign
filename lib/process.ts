@@ -1,7 +1,8 @@
 /*
  * "My process" on /about (2026-11-05, Luke's structure): five steps.
- * Under each, at most three entries: tools first (Luke's call), then
- * methods to fill the rest, each one short line from a real project,
+ * Under each, at most three entries. When cutting, tools are kept and
+ * methods fill what's left (Luke's call); on the page methods still sit
+ * above tools. Each is one short line from a real project,
  * kept to about two lines in a column so the steps stay even. Method
  * names are design vocabulary on purpose. Tool icons and colours come
  * from TOOLS in lib/about.ts by name; methods get a line icon.

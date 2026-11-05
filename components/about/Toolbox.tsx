@@ -4,8 +4,8 @@ import { PROCESS, type MethodIcon, type ProcessEntry } from '@/lib/process'
 
 /*
  * "My process": Discovery, Design, Build, Test, Ship along one line
- * (2026-11-05). Under each step, the methods Luke uses first, then the
- * tools, each with one line from a real project, linked to the case
+ * (2026-11-05). Under each step, methods above tools, each with one
+ * line from a real project, linked to the case
  * study when there is one. Methods and tools share one row shape; a
  * method's icon is a white line drawing on a neutral tile, a tool's is
  * its glyph on its brand colour. Copy lives in lib/process.ts.
@@ -111,7 +111,12 @@ export default function Toolbox({ tools }: { tools: ReadonlyArray<Tool> }) {
             <h3 className="tb-stage__title">{step.title}</h3>
           </div>
           <ul className="tb-stage__tools">
-            {step.entries.map((e) => (
+            {/* Methods sit above tools. Which entries make the cut is
+                decided in lib/process.ts, where tools win. */}
+            {[
+              ...step.entries.filter((e) => e.kind === 'method'),
+              ...step.entries.filter((e) => e.kind === 'tool'),
+            ].map((e) => (
               <li key={`${e.kind}-${e.name}`} className="tb-tool">
                 <EntryIcon
                   entry={e}
