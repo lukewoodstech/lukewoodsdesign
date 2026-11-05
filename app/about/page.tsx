@@ -124,10 +124,10 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ── 03 My toolbox ── */}
-        <section className="ab-sec" aria-labelledby="toolbox">
+        {/* ── 03 My process ── */}
+        <section className="ab-sec" aria-labelledby="process">
           <div className="ab-wide">
-            <Title id="toolbox">My toolbox</Title>
+            <Title id="process">My process</Title>
             <Toolbox tools={TOOLS} />
           </div>
         </section>
