@@ -1,7 +1,8 @@
 /*
  * "My process" on /about (2026-11-05, Luke's structure): five steps.
- * Under each, the methods Luke uses first (what he did), then the tools
- * (what he did it with), each with one line from a real project. Method
+ * Under each, at most three entries: tools first (Luke's call), then
+ * methods to fill the rest, each one short line from a real project,
+ * kept to about two lines in a column so the steps stay even. Method
  * names are design vocabulary on purpose. Tool icons and colours come
  * from TOOLS in lib/about.ts by name; methods get a line icon.
  *
@@ -15,13 +16,8 @@
  *                         managers, ten advertising strategists). Not
  *                         called personas: no source says he made any.
  *   Usability testing     awardco-usability-results (test numbers only)
- *   Focused user sessions pattern-uk-session
  *   Systems mapping       Awardco case study ("states and transitions")
- *   Concept evaluation    Lucid case study, entry-point candidates
- *   Concept validation    Lucid case study ("people found the
- *                         spot beside search the most familiar")
  *   Cross-functional rev. awardco-token
- *   Design handoff        pattern-handoff, pattern-shipped-after
  *   Tools                 TOOLS provenance; Figma (test) from the BYU
  *                         Library line in BACKGROUND.experience;
  *                         Claude from BACKGROUND.site
@@ -32,12 +28,9 @@ export type MethodIcon =
   | 'people'
   | 'diverge'
   | 'map'
-  | 'compare'
   | 'code'
   | 'eye'
-  | 'check'
   | 'review'
-  | 'handoff'
 
 type Link = { href: string; label: string }
 
@@ -57,29 +50,23 @@ export const PROCESS: ReadonlyArray<ProcessStep> = [
     title: 'Discovery',
     entries: [
       {
-        kind: 'method',
-        name: 'User interviews',
-        icon: 'interviews',
-        line: 'The first thing I do on any project is talk to the people who use it. At Pattern that was 50+ discovery interviews across my internship.',
-        link: PATTERN,
-      },
-      {
-        kind: 'method',
-        name: 'Focused user sessions',
-        icon: 'people',
-        line: 'A focused session with four UK brand managers who had used Pattern’s Custom Reports.',
-        link: PATTERN,
-      },
-      {
         kind: 'tool',
         name: 'Pendo',
-        line: 'High trial, poor retention. That told me Pattern had a usability problem, not a demand problem.',
+        line: 'High trial, poor retention: a usability problem, not demand.',
         link: PATTERN,
       },
       {
         kind: 'tool',
         name: 'ClickUp',
-        line: 'The whole Pattern project started as one ticket: let users duplicate a widget.',
+        line: 'Pattern’s project started as one ticket: duplicate a widget.',
+        link: PATTERN,
+      },
+      {
+        kind: 'method',
+        name: 'User interviews',
+        icon: 'interviews',
+        line: 'The first thing I do. 50+ discovery interviews at Pattern.',
+        link: PATTERN,
       },
     ],
   },
@@ -87,30 +74,23 @@ export const PROCESS: ReadonlyArray<ProcessStep> = [
     title: 'Design',
     entries: [
       {
+        kind: 'tool',
+        name: 'Figma',
+        line: 'Where every project on this site started.',
+      },
+      {
         kind: 'method',
         name: 'Divergent exploration',
         icon: 'diverge',
-        line: 'Go wide, then converge. More than 20 capabilities prototyped and tested before Lucid AI narrowed to four core skills.',
+        line: '20+ capabilities prototyped, narrowed to four for Lucid AI.',
         link: LUCID,
       },
       {
         kind: 'method',
         name: 'Systems mapping',
         icon: 'map',
-        line: 'Before drawing a screen of Awardco’s login, I mapped the system as states and transitions.',
+        line: 'Awardco’s login mapped as states and transitions first.',
         link: AWARDCO,
-      },
-      {
-        kind: 'method',
-        name: 'Concept evaluation',
-        icon: 'compare',
-        line: 'For Lucid AI’s entry point I weighed the left nav, the links below it and the top-right icons against the spot beside search.',
-        link: LUCID,
-      },
-      {
-        kind: 'tool',
-        name: 'Figma',
-        line: 'Where every project on this site started: Lucid, Awardco and Pattern.',
       },
     ],
   },
@@ -118,22 +98,22 @@ export const PROCESS: ReadonlyArray<ProcessStep> = [
     title: 'Build',
     entries: [
       {
-        kind: 'method',
-        name: 'High-fidelity prototyping',
-        icon: 'code',
-        line: 'A Figma prototype couldn’t show where people struggled to type, so at Awardco I built working prototypes with real inputs, validation and code entry.',
-        link: AWARDCO,
-      },
-      {
         kind: 'tool',
         name: 'Claude',
-        line: 'I pair with Claude Code to build in code. Luke AI on this site streams from Claude.',
+        line: 'I pair with Claude Code to build in code.',
         link: { href: '/chat', label: 'Ask Luke AI' },
       },
       {
         kind: 'tool',
         name: 'Next.js',
-        line: 'Every page of this site, including the route Luke AI answers from.',
+        line: 'Every page of this site, including Luke AI.',
+      },
+      {
+        kind: 'method',
+        name: 'High-fidelity prototyping',
+        icon: 'code',
+        line: 'Coded Awardco prototypes with real inputs and validation.',
+        link: AWARDCO,
       },
     ],
   },
@@ -141,30 +121,23 @@ export const PROCESS: ReadonlyArray<ProcessStep> = [
     title: 'Test',
     entries: [
       {
+        kind: 'tool',
+        name: 'Figma',
+        line: 'Prototypes for usability testing at BYU Library.',
+      },
+      {
         kind: 'method',
         name: 'Participant recruitment',
         icon: 'people',
-        line: 'Pattern’s redesign was validated with 20 users: ten brand managers and ten advertising strategists.',
+        line: '20 users: ten brand managers, ten advertising strategists.',
         link: PATTERN,
       },
       {
         kind: 'method',
         name: 'Usability testing',
         icon: 'eye',
-        line: 'Before-and-after testing at Awardco: choosing a login method went from 27 seconds to 5.9.',
+        line: 'Choosing a login method went from 27s to 5.9s.',
         link: AWARDCO,
-      },
-      {
-        kind: 'method',
-        name: 'Concept validation',
-        icon: 'check',
-        line: 'In testing at Lucid, people found the spot beside search the most familiar, so that’s where the entry point went.',
-        link: LUCID,
-      },
-      {
-        kind: 'tool',
-        name: 'Figma',
-        line: 'Prototypes for usability testing on the BYU Library website.',
       },
     ],
   },
@@ -172,28 +145,22 @@ export const PROCESS: ReadonlyArray<ProcessStep> = [
     title: 'Ship',
     entries: [
       {
-        kind: 'method',
-        name: 'Cross-functional review',
-        icon: 'review',
-        line: 'I took Awardco’s token-based login through engineering, architecture and security review. It passed without material changes.',
-        link: AWARDCO,
-      },
-      {
-        kind: 'method',
-        name: 'Design handoff',
-        icon: 'handoff',
-        line: 'Annotated designs, the prototype, documentation, a prioritized backlog and a follow-up testing plan. Pattern’s team shipped it after my internship.',
-        link: PATTERN,
-      },
-      {
         kind: 'tool',
         name: 'GitHub',
-        line: 'Awardco prototypes were iterated on a real branch with the frontend engineers, not handed over as mocks.',
+        line: 'Prototypes iterated on a real branch with engineers.',
+        link: AWARDCO,
       },
       {
         kind: 'tool',
         name: 'Vercel',
         line: 'Where this site is deployed.',
+      },
+      {
+        kind: 'method',
+        name: 'Cross-functional review',
+        icon: 'review',
+        line: 'Token login cleared security review without material changes.',
+        link: AWARDCO,
       },
     ],
   },

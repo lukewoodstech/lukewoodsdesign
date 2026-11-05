@@ -13,7 +13,7 @@ import { PROCESS, type MethodIcon, type ProcessEntry } from '@/lib/process'
  */
 
 /* Line icons in Lucide's style (24 grid, 2px stroke), inlined because
-   the repo has no icon package and six paths don't justify one. */
+   the repo has no icon package and seven paths don't justify one. */
 const METHOD_PATHS: Record<MethodIcon, React.ReactNode> = {
   interviews: (
     <>
@@ -47,12 +47,6 @@ const METHOD_PATHS: Record<MethodIcon, React.ReactNode> = {
       <path d="M18 9v6" />
     </>
   ),
-  compare: (
-    <>
-      <rect x="3" y="3" width="7" height="18" rx="1" />
-      <rect x="14" y="3" width="7" height="18" rx="1" />
-    </>
-  ),
   code: (
     <>
       <path d="m18 16 4-4-4-4" />
@@ -66,22 +60,10 @@ const METHOD_PATHS: Record<MethodIcon, React.ReactNode> = {
       <circle cx="12" cy="12" r="3" />
     </>
   ),
-  check: (
-    <>
-      <circle cx="12" cy="12" r="10" />
-      <path d="m9 12 2 2 4-4" />
-    </>
-  ),
   review: (
     <>
       <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
       <path d="m9 12 2 2 4-4" />
-    </>
-  ),
-  handoff: (
-    <>
-      <path d="M5 12h14" />
-      <path d="m12 5 7 7-7 7" />
     </>
   ),
 }
