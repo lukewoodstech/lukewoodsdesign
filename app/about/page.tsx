@@ -7,7 +7,7 @@ import Toolbox from '@/components/about/Toolbox'
 import ReptileRoom from '@/components/about/ReptileRoom'
 import BigStats from '@/components/cs/BigStats'
 import Testimonials from '@/components/about/Testimonials'
-import { STORY, ROLES, ONGOING, TOOLS, REPTILE_ROOM, REPTILE_STATS, QUOTES } from '@/lib/about'
+import { STORY, ROLES, TOOLS, REPTILE_ROOM, REPTILE_STATS, QUOTES } from '@/lib/about'
 import { SITE } from '@/lib/site'
 
 /*
@@ -97,21 +97,13 @@ export default function AboutPage() {
       <main id="main">
 
         {/* ── 01 Nice to meet you ──
-            The heading, then the story grid, shown still. */}
+            The heading, then three paragraphs, each with its row of
+            photos underneath. The copy lives in STORY (lib/about.ts). */}
         <StoryStage
-          cards={STORY}
+          beats={STORY}
           intro={
             <header className="ab-hero sitenav-offset">
               <h1 className="ab-hero__title">Nice to meet you.</h1>
-              <p className="ab-hero__lede">
-                I&rsquo;m Luke, a product designer who tells the story and builds the thing.
-                I learned the story part as a teenager, handing snakes to people who were sure
-                they&rsquo;d hate them. Facts never changed anyone&rsquo;s mind. The right story
-                did. Design works the same way: every project I&rsquo;ve shipped started as a
-                ticket, a complaint or a vague ask, and the job was finding the real problem
-                underneath, telling the story that gets a team behind it, and building it, in
-                Figma and in code.
-              </p>
             </header>
           }
         />
@@ -120,7 +112,7 @@ export default function AboutPage() {
         <section className="ab-sec ab-sec--grid" aria-labelledby="experience">
           <div className="ab-wide">
             <Title id="experience">My experience</Title>
-            <ExperienceTimeline roles={ROLES} ongoing={ONGOING} />
+            <ExperienceTimeline roles={ROLES} />
           </div>
         </section>
 
@@ -161,17 +153,6 @@ export default function AboutPage() {
             <Testimonials quotes={QUOTES} />
           </div>
         </section>
-
-        {/* The Provo tile is real OpenStreetMap data, and their licence
-            asks for credit where the map is shown. One quiet line on the
-            one page that uses it, rather than in the global footer. */}
-        <p className="ab-credit">
-          Map data &copy;{' '}
-          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">
-            OpenStreetMap
-          </a>{' '}
-          contributors
-        </p>
 
       </main>
 

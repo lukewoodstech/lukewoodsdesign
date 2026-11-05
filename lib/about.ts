@@ -19,22 +19,19 @@
  * mistaken for a real claim. Fill it in and the scaffolding disappears.
  */
 
-/* ── The story cards ────────────────────────────────────────────────
-   The deck that deals out from behind the portrait. Fifteen cards on a
-   5×3 grid; the one marked `center` is the portrait and sits in the
-   middle cell, everything else fans out from it. Order here is grid
-   order, reading left to right, top to bottom.
+/* ── The story ──────────────────────────────────────────────────────
+   The top of /about: three short paragraphs, each followed by a row of
+   cards that shows what it just said (Luke, 2026-11-05). Row one is the
+   kid with a new hobby every week, row two is the road from wanting to
+   be a doctor to building software, row three is the people person.
 
-   Kinds: `photo` is a picture with a caption (src null = slot for now).
-   The rest are designed tiles — no photo needed, they say the thing with
-   type and colour, the way the reference site does with its map, its
-   Wordle and its cereal box.
+   Kinds: `photo` is a picture with a caption. `src: null` is a photo
+   Luke still has to send: it renders as a dashed slot, and its caption
+   says what goes there. The rest are designed tiles (type, colour, a
+   real logo) that say the thing without a photo.
 
-   The deck is deliberately PERSONAL (Luke, 2026-09-22): hobbies, skills,
-   the person. The internships are the experience rail's job, so the
-   company tiles that were going to fill the dashed slots were dropped —
-   a deck that opens with three employer logos is a résumé again. Every
-   tile traces to BACKGROUND / BACKGROUND.personal in lib/lukeAiFacts.ts. */
+   Every paragraph and caption traces to BACKGROUND /
+   BACKGROUND.personal in lib/lukeAiFacts.ts. */
 
 export type TileKind = 'byu' | 'code' | 'figma' | 'jazz' | 'map' | 'sandbox' | 'morphmarket'
 
@@ -42,25 +39,39 @@ export type StoryCard =
   | { kind: 'photo'; src: string | null; alt: string; caption: string; center?: boolean; focus?: string }
   | { kind: TileKind; caption: string }
 
-export const STORY: ReadonlyArray<StoryCard> = [
-  /* row 1 */
-  { kind: 'morphmarket', caption: 'I bred and sold reptiles nationwide' },
-  { kind: 'byu', caption: 'Earning a CS degree at BYU, HCI emphasis' },
-  { kind: 'photo', src: '/luke-fishing.jpg', alt: 'Luke waist-deep in the Kenai River in Alaska, grinning and holding up a large salmon', caption: 'I love outdoor adventures (Kenai, Alaska)' },
-  { kind: 'code', caption: 'A CS degree means I build what I design' },
-  { kind: 'photo', src: '/about/dogwalk-first.jpg', alt: 'A small boy in an orange striped shirt walking a dog on a red retractable lead down a suburban sidewalk', caption: 'My first business was walking the neighbours\u2019 dogs' },
-  /* row 2 */
-  { kind: 'jazz', caption: 'Utah Jazz, win or lose' },
-  { kind: 'photo', src: '/luke-snake.jpg', alt: 'Luke with a snake draped over his shoulders', caption: 'I love animals of all kinds' },
-  { kind: 'photo', src: '/luke-woods.jpg', alt: 'Luke Woods standing on a stone balcony in a light blue suit', caption: 'Hi, I\u2019m Luke Woods', center: true },
-  { kind: 'photo', src: '/about/obi-car.jpg', alt: 'Luke in a car holding his black cat Obi up against his shoulder', caption: 'My cat Obi' },
-  { kind: 'figma', caption: 'I\u2019m a Figma Campus Leader' },
-  /* row 3 */
-  { kind: 'map', caption: 'Currently in Provo, Utah' },
-  { kind: 'photo', src: '/about/ramp-bike.jpg', alt: 'Luke balanced on his bike at the top of the plywood ramp he built in the backyard', caption: 'I have loved building things my entire life' },
-  { kind: 'photo', src: '/luke-grand-canyon.jpg', alt: 'Luke smiling in a selfie on a Grand Canyon trail, canyon ridges stretching out behind him', caption: '26 miles across the Grand Canyon' },
-  { kind: 'photo', src: '/about/optometry-exam.jpg', alt: 'Luke in black scrubs and a mask holding an eye-testing instrument up to an older patient seated in an exam chair', caption: 'Before design, I ran eye exams' },
-  { kind: 'sandbox', caption: 'Building startup software through Sandbox' },
+export type StoryBeat = { text: string; cards: ReadonlyArray<StoryCard> }
+
+export const STORY: ReadonlyArray<StoryBeat> = [
+  {
+    text: 'Hey, I\u2019m Luke. Growing up, I was the kid who was pretty good at everything and not the best at anything. I loved sports, drawing, video games, animals, cracking jokes and camping, and seemed to start a new hobby or project every other week.',
+    cards: [
+      { kind: 'photo', src: '/luke-woods.jpg', alt: 'Luke Woods standing on a stone balcony in a light blue suit', caption: 'Hi, I\u2019m Luke Woods', center: true },
+      { kind: 'photo', src: '/about/football-kid.jpg', alt: 'Luke as a little boy in a navy Cougars jersey, grinning and holding a football up by his ear', caption: 'Playing every sport I could', focus: '50% 35%' },
+      { kind: 'photo', src: '/about/basketball-game.jpg', alt: 'Luke as a kid in a white number 11 jersey, passing the ball during a youth basketball game', caption: 'Basketball most of all' },
+      { kind: 'photo', src: '/luke-snake.jpg', alt: 'Luke with a snake draped over his shoulders', caption: 'One of about 100 animals I kept as a teenager' },
+      { kind: 'photo', src: '/luke-fishing.jpg', alt: 'Luke waist-deep in the Kenai River in Alaska, grinning and holding up a large salmon', caption: 'Salmon on the Kenai River, Alaska' },
+    ],
+  },
+  {
+    text: 'I wanted to be a doctor like my dad, so I could help people. When I found software, I realized I could help lots of people at the same time by building one thing. That felt like magic to me.',
+    cards: [
+      { kind: 'photo', src: '/about/luke-and-dad.jpg', alt: 'Luke and his dad in wet rain jackets, grinning in a selfie above a harbour full of fishing boats', caption: 'My dad, the doctor I wanted to be' },
+      { kind: 'photo', src: '/about/optometry-exam.jpg', alt: 'Luke in black scrubs and a mask holding an eye-testing instrument up to an older patient seated in an exam chair', caption: 'Running eye exams as an optometric tech' },
+      { kind: 'byu', caption: 'Then I found computer science at BYU' },
+      { kind: 'photo', src: '/about/lucid-ai-card.jpg', alt: 'The Lucid AI panel Luke designed: a prompt box reading Find or summarize a document, above four skills: Find docs, Summarize, Build a diagram and Catch up', caption: 'Lucid AI, built once and shipped to every Lucid plan' },
+      { kind: 'sandbox', caption: 'Now I build software for startups through Sandbox' },
+    ],
+  },
+  {
+    text: 'At the end of the day, I\u2019m a people person first. That\u2019s what I love about design, when you start with the user and step into their shoes everything else follows.',
+    cards: [
+      { kind: 'photo', src: '/about/dogwalk-first.jpg', alt: 'A small boy in an orange striped shirt walking a dog on a red retractable lead down a suburban sidewalk', caption: 'My first business was walking the neighbours\u2019 dogs' },
+      { kind: 'photo', src: '/about/teach-friend.jpg', alt: 'Luke sitting on the floor of his reptile room, talking a friend through one of the enclosures', caption: 'Helping people get over their fear of snakes' },
+      { kind: 'photo', src: '/about/class-beardies.jpg', alt: 'Luke in a mask holding out two bearded dragons to children at their desks in an elementary classroom', caption: 'Bearded dragons for my mom\u2019s class' },
+      { kind: 'photo', src: '/about/class-zoom-boa.jpg', alt: 'Luke at a classroom desk holding up a boa to a grid of students on a Zoom call during remote school', caption: 'Her class again, over Zoom during remote school', focus: '25% 50%' },
+      { kind: 'figma', caption: 'Figma Campus Leader at BYU' },
+    ],
+  },
 ]
 
 /* ── The experience rail ────────────────────────────────────────────
@@ -155,17 +166,6 @@ export const ROLES: ReadonlyArray<Role> = [
        same 48px square as the company logos instead of a bare letter. */
     logo: '/logos/byu.svg',
   },
-]
-
-/* The ongoing, undated things — kept off the dated rail so it stays a
-   timeline. All four trace to BACKGROUND. */
-export type Ongoing = { label: string; org: string; note: string }
-
-export const ONGOING: ReadonlyArray<Ongoing> = [
-  { label: 'Co-President', org: 'BYU UX Design Association', note: 'Workshops, and a lot of first critiques.' },
-  { label: 'Campus Leader', org: 'Figma', note: 'The person on campus who gets people into the file.' },
-  { label: 'UX Designer & Developer', org: 'Harold B. Lee Library', note: 'Information architecture for users with nothing in common.' },
-  { label: 'Building', org: 'Sandbox, BYU’s incubator', note: 'Software for real estate and hotel operations.' },
 ]
 
 /* ── The toolbox ────────────────────────────────────────────────────

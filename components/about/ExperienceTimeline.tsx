@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import Link from 'next/link'
-import type { Role, Ongoing } from '@/lib/about'
+import type { Role } from '@/lib/about'
 
 /*
  * The experience rail: a dot per role down the middle of the page, a
@@ -33,13 +33,7 @@ import type { Role, Ongoing } from '@/lib/about'
 const NODE_TOP = 29.6 /* 1.85rem */
 const SEP = 13
 
-export default function ExperienceTimeline({
-  roles,
-  ongoing,
-}: {
-  roles: ReadonlyArray<Role>
-  ongoing: ReadonlyArray<Ongoing>
-}) {
+export default function ExperienceTimeline({ roles }: { roles: ReadonlyArray<Role> }) {
   const rootRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -60,10 +54,6 @@ export default function ExperienceTimeline({
       { threshold: 0.25 },
     )
     items.forEach((el) => io.observe(el))
-    /* The row of undated cards under the rail rises in the same way,
-       as one group, staggered by CSS. */
-    const aside = root.querySelector('.tl__ongoing')
-    if (aside) io.observe(aside)
 
     /* Reduced motion gets the finished timeline, drawn, immediately. */
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -103,12 +93,12 @@ export default function ExperienceTimeline({
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
     }
-  }, [])
+    /* Re-run when the roles change, so a card added while the page is
+       open (hot reload) gets observed and drawn like the rest. */
+  }, [roles])
 
   return (
     <div ref={rootRef} className="tl">
-      {/* The rail lives with the dated list only — "now" is not a year,
-          so the line stops before the ongoing cards. */}
       <ol className="tl__list" aria-label="Experience, newest first">
         {roles.map((r, i) => (
           <li
@@ -192,31 +182,6 @@ export default function ExperienceTimeline({
           </li>
         ))}
       </ol>
-
-      {/* The undated things, as a row of spec cards under the rail: a
-          mono index, the role, the place, one line on what it is. Same
-          card language as the case studies' people cards. */}
-      <div className="tl__aside">
-        <p className="tl__aside-label" id="tl-aside-label">
-          Alongside all of it
-        </p>
-        <ol className="tl__ongoing" aria-labelledby="tl-aside-label">
-          {ongoing.map((o, i) => (
-            <li
-              key={`${o.label}-${o.org}`}
-              className="tl-ongoing"
-              style={{ '--i': i } as React.CSSProperties}
-            >
-              <span className="tl-ongoing__i" aria-hidden="true">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <span className="tl-ongoing__label">{o.label}</span>
-              <span className="tl-ongoing__org">{o.org}</span>
-              <span className="tl-ongoing__note">{o.note}</span>
-            </li>
-          ))}
-        </ol>
-      </div>
     </div>
   )
 }

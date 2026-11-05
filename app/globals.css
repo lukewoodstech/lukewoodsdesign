@@ -4951,45 +4951,48 @@ p a {
 
 /* ── The story stage ─────────────────────────────────────────────── */
 
-/* The heading, then the 5x3 grid, still (the scroll-dealt deck was cut
-   2026-11-05; see StoryStage.tsx). The card size is the smaller of
-   "five across" and "three down", so the grid fits a viewport. */
+/* The heading, then three paragraphs, each followed by its own row of
+   five cards (2026-11-05; see StoryStage.tsx). A row is never wider
+   than the reading column it sits under, give or take, so the photos
+   stay tied to the paragraph above them. */
 .story {
-  --card-w: min(12.4vw, 19vh, 190px);
   --card-gap: clamp(0.75rem, 1.4vw, 1.25rem);
+  --card-w: min(calc((100vw - 4rem - 4 * var(--card-gap)) / 5), 210px);
   position: relative;
   padding-block: 1rem 2rem;
 }
 
-.story__stage {
-  display: grid;
-  place-items: center;
-}
-
 /* .sitenav-offset's 4rem clears the fixed bar; this is the breathing
-   room on top of it, so it adds rather than replaces. The bottom
-   padding keeps the lede off the first row of photographs. */
+   room on top of it, so it adds rather than replaces. */
 .story__intro .ab-hero {
   padding-top: calc(4rem + 1.25rem);
-  padding-bottom: 2.75rem;
+  padding-bottom: 0;
 }
 
-.story__intro .ab-hero .cs-eyebrow {
-  margin-top: 0;
-  margin-bottom: 0.75rem;
+.story__beat {
+  display: grid;
+  justify-items: center;
 }
 
-.story__intro .ab-hero__lede {
-  margin-top: 1.25rem;
-  max-width: 52rem;
+.story__beat + .story__beat {
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+}
+
+.story .story__para {
+  margin: 1.75rem auto 0;
+  max-width: 46rem;
   font-size: var(--reading-intro);
   line-height: var(--reading-intro-lh);
+  text-align: center;
 }
 
-.story__grid {
+.story__row {
   display: grid;
   grid-template-columns: repeat(5, var(--card-w));
   gap: var(--card-gap);
+  margin: 1.75rem 0 0;
+  padding: 0;
+  list-style: none;
 }
 
 .story-card {
@@ -5188,7 +5191,8 @@ p a {
 
 .story-card__brand--figma {
   background: #1e1e1e;
-  padding: 24%;
+  /* Weighted to the top: the caption under it runs three lines. */
+  padding: 16% 28% 44%;
 }
 
 .story-card__brand--jazz {
@@ -5246,20 +5250,32 @@ p a {
   background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.55) 38%, rgba(0, 0, 0, 0.92));
 }
 
+/* Phone and narrow tablet: each row becomes a sideways swipe strip,
+   with the next card peeking in so it's clear there's more. */
 @media (max-width: 60em) {
   .story {
-    --card-w: calc((100vw - 2.5rem - var(--card-gap)) / 2);
+    --card-w: 40vw;
   }
 
-  .story__grid {
-    grid-template-columns: repeat(2, var(--card-w));
-    padding-inline: 1.25rem;
+  .story__row {
+    display: flex;
+    width: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 1.25rem;
+    /* Room for the card shadow, which the scroller would clip. */
+    padding: 0 1.25rem 2rem;
+    margin-bottom: -2rem;
+    scrollbar-width: none;
   }
 
-  /* Portrait first on a phone: the middle cell of a 5-wide grid is
-     the 8th card, which two-up would bury on row four. */
-  .story-card.is-center {
-    order: -1;
+  .story__row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .story__row .story-card {
+    flex: none;
+    scroll-snap-align: start;
   }
 }
 
@@ -5530,104 +5546,7 @@ p a {
   color: rgba(255, 255, 255, 0.6);
 }
 
-/* The undated things, under the rail: a row of four spec cards in the
-   same language as the case studies' people cards. Sharp corners, one
-   hairline, a mono index, and a short accent tick on the top edge that
-   runs the width of the card on hover. Not links, so no lift and no
-   badge: on this site those two mean "opens". They rise in one after
-   another when the row is reached (ExperienceTimeline adds `is-in`). */
-.tl__aside {
-  margin-top: 4rem;
-}
-
-.tl__aside-label {
-  margin: 0 0 1rem;
-  font-family: var(--font-mono);
-  font-size: var(--label-size);
-  font-weight: var(--label-weight);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.tl__ongoing {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.75rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.tl-ongoing {
-  position: relative;
-  display: grid;
-  gap: 0.3rem;
-  align-content: start;
-  padding: 1.15rem 1.25rem 1.3rem;
-  border: 1px solid var(--card-ring);
-  border-radius: 6px;
-  overflow: hidden;
-  /* Opaque for the same reason the role cards are. */
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 70%), #141419;
-  opacity: 0;
-  translate: 0 12px;
-  transition: border-color 0.25s ease;
-}
-
-.tl__ongoing.is-in .tl-ongoing {
-  animation: spec-in 0.6s var(--ease-out-quint) forwards;
-  animation-delay: calc(var(--i, 0) * 80ms);
-}
-
-.tl-ongoing::before {
-  content: '';
-  position: absolute;
-  top: -1px;
-  left: 1.25rem;
-  width: 1.75rem;
-  height: 2px;
-  background: var(--accent, #4c8dff);
-  transition: width 0.5s var(--ease-out-quint);
-}
-
-@media (hover: hover) {
-  .tl-ongoing:hover {
-    border-color: rgba(255, 255, 255, 0.22);
-  }
-
-  .tl-ongoing:hover::before {
-    width: calc(100% - 2.5rem);
-  }
-}
-
-.tl-ongoing__i {
-  margin-bottom: 0.9rem;
-  font-family: var(--font-mono);
-  font-size: var(--label-size);
-  letter-spacing: 0.12em;
-  color: rgba(255, 255, 255, 0.45);
-}
-
-.tl-ongoing__label {
-  font-weight: var(--display-weight);
-  color: #fff;
-}
-
-.tl-ongoing__org {
-  font-family: var(--font-mono);
-  font-size: var(--label-size);
-  color: rgba(255, 255, 255, 0.55);
-}
-
-.tl-ongoing__note {
-  margin-top: 0.35rem;
-  font-size: var(--reading-meta);
-  line-height: var(--reading-small-lh);
-  color: rgba(255, 255, 255, 0.66);
-}
-
-/* Shared by every spec card on the site (people cards, the aside). */
+/* Shared by every spec card on the site. */
 @keyframes spec-in {
   to {
     opacity: 1;
@@ -6247,10 +6166,6 @@ p a {
     translate: 0 0;
   }
 
-  .tl__ongoing {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
 
   /* Shorter lines and smaller serif: the longest quote runs seven at
      393px and eight at 375px (the 27em block below). */
@@ -6400,13 +6315,6 @@ p a {
   .rr__card,
   .kw__face {
     transition: none;
-  }
-
-  .tl-ongoing,
-  .tl__ongoing.is-in .tl-ongoing {
-    animation: none;
-    opacity: 1;
-    translate: none;
   }
 
   /* The panel no longer advances on its own for this reader (see

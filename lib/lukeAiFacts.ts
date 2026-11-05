@@ -891,6 +891,9 @@ export const BACKGROUND = {
     'Lives in Provo, Utah, where BYU is.',
     'Utah Jazz fan.',
     'Worked as an optometric technician, running pre-exam testing on patients.',
+    /* Luke, 2026-11-05, for the /about intro. */
+    'As a kid he was good at a lot of things and the best at none: sports, drawing, video games, animals, cracking jokes and camping, with a new hobby or project every other week.',
+    'Grew up wanting to be a doctor like his dad, to help people; software won him over because one thing you build can help many people at once.',
     'Two cats: Obi, black, and Mocha, calico.',
   ],
   gaps: [
