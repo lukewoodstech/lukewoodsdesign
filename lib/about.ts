@@ -173,8 +173,22 @@ export const ONGOING: ReadonlyArray<Ongoing> = [
    public/tools, painted white through a CSS mask; `color` is the tile's
    ground. */
 
+/* The toolbox is laid out along how Luke works (2026-11-05, replacing
+   the Matter.js tray): the four steps of the about lede, finding the
+   problem, designing it, building it, and shipping it. */
+export const TOOL_STAGES = [
+  { id: 'find', title: 'Find the problem' },
+  { id: 'design', title: 'Design it' },
+  { id: 'build', title: 'Build it' },
+  { id: 'ship', title: 'Ship it' },
+] as const
+
+export type ToolStage = (typeof TOOL_STAGES)[number]['id']
+
 export type Tool = {
   name: string
+  /** Which step of the process the tool sits under. */
+  stage: ToolStage
   /** Simple Icons glyph, masked white. `null` for a wordmark tile. */
   icon: string | null
   color: string
@@ -193,17 +207,14 @@ export type Tool = {
    with no sourceable story (Cursor, Framer, TypeScript, Python, Git,
    Node, Notion) deliberately carry none rather than a generic sentence.
 
-   They are still tappable, focusable and draggable: picking one up puts
-   its name on the plate and stops there. That used to be the difference
-   between an interactive tile and an inert one, which meant half the
-   tray answered a tap and half of it ignored you, with nothing on the
-   tile to say which was which.
+   On the rail those sit as plain name chips under their stage.
 
    `wordmark: true` is for a tool with no Simple Icons glyph; the tile
    sets its name in type instead of masking an SVG. */
 export const TOOLS: ReadonlyArray<Tool> = [
   {
     name: 'Figma',
+    stage: 'design',
     icon: '/tools/figma.svg',
     color: '#a259ff',
     /* Named in the Tools row of all three case studies, so it points at
@@ -212,6 +223,7 @@ export const TOOLS: ReadonlyArray<Tool> = [
   },
   {
     name: 'Pendo',
+    stage: 'find',
     icon: null,
     wordmark: true,
     color: '#2a2333',
@@ -222,6 +234,7 @@ export const TOOLS: ReadonlyArray<Tool> = [
   },
   {
     name: 'ClickUp',
+    stage: 'find',
     icon: '/tools/clickup.svg',
     color: '#7b68ee',
     provenance: {
@@ -231,6 +244,7 @@ export const TOOLS: ReadonlyArray<Tool> = [
   },
   {
     name: 'Claude',
+    stage: 'build',
     icon: '/tools/claude.svg',
     color: '#d97757',
     provenance: {
@@ -241,34 +255,39 @@ export const TOOLS: ReadonlyArray<Tool> = [
   },
   {
     name: 'React',
+    stage: 'build',
     icon: '/tools/react.svg',
     color: '#149eca',
     provenance: { line: 'This site is hand-built in it, not assembled in a site builder.' },
   },
   {
     name: 'Next.js',
+    stage: 'build',
     icon: '/tools/nextdotjs.svg',
     color: '#111111',
     provenance: { line: 'Every page here, including the route Luke AI answers from.' },
   },
-  { name: 'TypeScript', icon: '/tools/typescript.svg', color: '#3178c6' },
+  { name: 'TypeScript', stage: 'build', icon: '/tools/typescript.svg', color: '#3178c6' },
   {
     name: 'Tailwind',
+    stage: 'build',
     icon: '/tools/tailwindcss.svg',
     color: '#0ea5e9',
     provenance: { line: 'The styling layer under this whole site.' },
   },
-  { name: 'Framer', icon: '/tools/framer.svg', color: '#0055ff' },
+  { name: 'Framer', stage: 'design', icon: '/tools/framer.svg', color: '#0055ff' },
   {
     name: 'Vercel',
+    stage: 'ship',
     icon: '/tools/vercel.svg',
     color: '#000000',
     provenance: { line: 'Where this site is deployed.' },
   },
-  { name: 'Python', icon: '/tools/python.svg', color: '#3776ab' },
-  { name: 'Git', icon: '/tools/git.svg', color: '#f05032' },
+  { name: 'Python', stage: 'build', icon: '/tools/python.svg', color: '#3776ab' },
+  { name: 'Git', stage: 'ship', icon: '/tools/git.svg', color: '#f05032' },
   {
     name: 'GitHub',
+    stage: 'ship',
     icon: '/tools/github.svg',
     color: '#181717',
     provenance: {
@@ -277,11 +296,11 @@ export const TOOLS: ReadonlyArray<Tool> = [
     },
   },
   /* No provenance: Notion is a tool Luke names, and no project on this
-     site points at it. The tile still says its own name when you pick
-     it up, which is all the truth layer supports. */
-  { name: 'Notion', icon: '/tools/notion.svg', color: '#000000' },
-  { name: 'Node', icon: '/tools/nodedotjs.svg', color: '#3c873a' },
-  { name: 'Cursor', icon: '/tools/cursor.svg', color: '#1a1a1a' },
+     site points at it. It shows as a name chip, which is all the truth
+     layer supports. */
+  { name: 'Notion', stage: 'find', icon: '/tools/notion.svg', color: '#000000' },
+  { name: 'Node', stage: 'build', icon: '/tools/nodedotjs.svg', color: '#3c873a' },
+  { name: 'Cursor', stage: 'build', icon: '/tools/cursor.svg', color: '#1a1a1a' },
 ]
 
 /* ── The reptile business ───────────────────────────────────────────

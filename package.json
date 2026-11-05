@@ -16,7 +16,6 @@
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "framer-motion": "^12.42.0",
-    "matter-js": "^0.20.0",
     "next": "16.2.9",
     "posthog-js": "^1.419.3",
     "react": "19.2.4",
@@ -25,7 +24,6 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/matter-js": "^0.20.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

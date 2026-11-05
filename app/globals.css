@@ -5637,166 +5637,184 @@ p a {
 
 /* ── 04 The toolbox ──────────────────────────────────────────────── */
 
-.tb {
+/* Four stops on one line: find, design, build, ship. A row of four on
+   wide screens with the line running through the dots; a vertical rail
+   on a phone. Dots and line are the experience rail's material. */
+.tb-rail {
+  --tb-ink: rgba(255, 255, 255, 0.4);
+  --tb-dot: 10px;
   position: relative;
-  border: 1px solid var(--card-ring);
-  border-radius: var(--ab-tray-r);
-  background: rgba(255, 255, 255, 0.035);
-  overflow: hidden;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2.5rem;
+  margin: 3rem 0 0;
+  padding: 0;
+  list-style: none;
 }
 
-.tb__ghost {
+/* The line, behind the dots, from the first stop to the last. */
+.tb-rail::before {
+  content: '';
   position: absolute;
-  top: 2rem;
+  top: calc(var(--tb-dot) / 2 - 1px);
   left: 0;
   right: 0;
-  text-align: center;
-  font-family: var(--font-serif);
-  font-size: clamp(3rem, 8vw, 7rem);
-  font-weight: 400;
-  letter-spacing: -0.005em;
-  line-height: 1;
-  /* Was 0.08, a watermark nobody could read (Luke, 2026-09-28). */
-  color: rgba(255, 255, 255, 0.3);
-  pointer-events: none;
-  user-select: none;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--tb-ink);
 }
 
-.tb__hint {
-  position: absolute;
-  top: clamp(7rem, 15vw, 11rem);
-  left: 0;
-  right: 0;
-  text-align: center;
+.tb-stage {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+.tb-stage__head {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.tb-stage__dot {
+  width: var(--tb-dot);
+  height: var(--tb-dot);
+  border-radius: 50%;
+  background: #fff;
+  /* A ring of page colour so the line stops short of the dot. */
+  box-shadow: 0 0 0 5px #000;
+  margin-bottom: 0.9rem;
+}
+
+.tb-stage__num {
   font-family: var(--font-mono);
   font-size: var(--label-size);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  /* The only instruction the toolbox gives. */
-  color: rgba(255, 255, 255, 0.78);
-  pointer-events: none;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.55);
 }
 
-/* A tile with a story is a button filling its tile; one without keeps
-   the plain glyph. The button carries the focus ring, because the tile
-   itself is a physics body being transformed every frame. */
-.tb__btn {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  cursor: inherit;
-  border-radius: inherit;
-}
-
-.tb__btn:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 3px;
-}
-
-/* Pendo has no Simple Icons glyph, so its tile sets the name instead. */
-.tb__word {
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+.tb-stage__title {
+  display: block;
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.75rem, 2.4vw, 2.25rem);
+  line-height: 1.05;
   color: #fff;
 }
 
-/* The plate under the tray. Its height is reserved so that selecting a
-   tile never reflows the tray you are touching. */
-.tb__plate {
-  display: grid;
-  gap: 0.35rem;
-  min-height: 5.5rem;
-  margin: 1.5rem auto 0;
-  max-width: 34rem;
-  padding-inline: 1rem;
-  text-align: center;
+.tb-stage__told,
+.tb-stage__named {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.tb__plate-name {
+.tb-stage__told {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.tb-tool {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.85rem;
+  align-items: start;
+}
+
+.tb-tool__body {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.tb-tool__name {
   font-family: var(--font-mono);
   font-size: var(--label-size);
   font-weight: var(--label-weight);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.62);
+  color: #fff;
 }
 
-.tb__plate-line {
-  font-size: var(--reading-size);
-  line-height: 1.5;
-  color: #fff;
+.tb-tool__line {
+  font-size: var(--reading-caption);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.72);
   text-wrap: pretty;
 }
 
-.tb__plate-link,
-.tb__plate-empty {
+.tb-tool__link {
+  justify-self: start;
+  margin-top: 0.15rem;
   font-family: var(--font-mono);
   font-size: var(--label-size);
   letter-spacing: 0.04em;
-}
-
-.tb__plate-link {
-  justify-self: center;
   color: var(--accent, #4c8dff);
   text-decoration: none;
 }
 
-.tb__plate-link:hover {
+.tb-tool__link:hover {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-.tb__plate-empty {
-  color: rgba(255, 255, 255, 0.58);
+.tb-tool__link:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
-.tb__tray {
-  --tb-size: 76px;
-  position: relative;
-  height: clamp(20rem, 30vw, 26rem);
-  touch-action: pan-y;
-  user-select: none;
-  -webkit-user-select: none;
+/* Tools with no story on this site: names, nothing more. */
+.tb-stage__named {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
-/* A tile: a body's tile. Off the top until the world is live, so the
-   first thing seen is the drop. */
-.tb__tile {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: var(--tb-size);
-  height: var(--tb-size);
-  border-radius: 22%;
+.tb-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.65rem 0.3rem 0.3rem;
+  border: 1px solid var(--card-ring);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.tb-chip .tb-ico {
+  --tb-ico: 1.25rem;
+  border-radius: 4px;
+}
+
+/* A tool's icon: its brand colour as the ground, the glyph in white. */
+.tb-ico {
+  --tb-ico: 2rem;
   display: grid;
   place-items: center;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    0 10px 24px rgba(0, 0, 0, 0.45);
-  transform: translate3d(-200vw, -200vh, 0);
-  touch-action: none;
-  cursor: grab;
-  will-change: transform;
+  flex: none;
+  width: var(--tb-ico);
+  height: var(--tb-ico);
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
 }
 
-.tb__tile.is-held {
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    0 0 0 2px var(--accent),
-    0 18px 40px rgba(0, 0, 0, 0.6);
+/* Pendo has no Simple Icons glyph, so its icon is its initial. */
+.tb-ico__word {
+  font-family: var(--font-mono);
+  font-size: calc(var(--tb-ico) * 0.5);
+  font-weight: 600;
+  line-height: 1;
+  color: #fff;
 }
 
 .tb__glyph {
   display: block;
-  width: 52%;
-  height: 52%;
+  width: 58%;
+  height: 58%;
   background: #fff;
   mask-repeat: no-repeat;
   mask-position: center;
@@ -5804,6 +5822,31 @@ p a {
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
   -webkit-mask-size: contain;
+}
+
+/* Phones and narrow tablets: the same stops down a vertical rail. */
+@media (max-width: 60em) {
+  .tb-rail {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 3rem;
+    padding-left: 2rem;
+  }
+
+  .tb-rail::before {
+    top: 0.4rem;
+    bottom: 0.4rem;
+    left: calc(var(--tb-dot) / 2 - 1px);
+    right: auto;
+    width: 2px;
+    height: auto;
+  }
+
+  .tb-stage__dot {
+    position: absolute;
+    left: -2rem;
+    top: 0.25rem;
+    margin: 0;
+  }
 }
 
 /* ── 05 The reptile room ─────────────────────────────────────────── */
@@ -6195,10 +6238,6 @@ p a {
 
   .tl__ongoing {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .tb__tray {
-    height: 24rem;
   }
 
 

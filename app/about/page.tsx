@@ -20,8 +20,8 @@ import { SITE } from '@/lib/site'
  *
  * This version is the visual story instead: you meet the person, the
  * deck of things about them sits in a grid under the heading,
- * the experience is a rail you travel down, the tools are things you can
- * pick up, and the ending is two words at the size they deserve. Every
+ * the experience is a rail you travel down, the tools sit along the way
+ * Luke works, and the ending is two words at the size they deserve. Every
  * section is a designed component with one job and one interaction —
  * none of them is a paragraph wearing a border.
  *
@@ -127,9 +127,7 @@ export default function AboutPage() {
         {/* ── 03 My toolbox ── */}
         <section className="ab-sec" aria-labelledby="toolbox">
           <div className="ab-wide">
-            <h2 className="visually-hidden" id="toolbox">
-              My toolbox
-            </h2>
+            <Title id="toolbox">My toolbox</Title>
             <Toolbox tools={TOOLS} />
           </div>
         </section>
@@ -153,13 +151,13 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ── 05 Kind words ── */}
-        <section className="ab-sec" aria-labelledby="kind-words">
+        {/* ── 05 In their words ── */}
+        <section className="ab-sec" aria-labelledby="in-their-words">
           <div className="ab-wide">
             {/* The heading is visible now. The section used to be a single
                 card with a huge quote mark on it, which was label enough;
                 a wall of five cards with nothing over it is just text. */}
-            <Title id="kind-words">Kind words</Title>
+            <Title id="in-their-words">In their words</Title>
             <Testimonials quotes={QUOTES} />
           </div>
         </section>
