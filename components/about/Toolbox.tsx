@@ -1,17 +1,16 @@
 import Link from 'next/link'
-import { TOOL_STAGES, type Tool } from '@/lib/about'
+import type { Tool } from '@/lib/about'
+import { PROCESS } from '@/lib/process'
 
 /*
- * The toolbox, laid out along how Luke works: find the problem, design
- * it, build it, ship it (2026-11-05). It replaced a Matter.js tray of
- * icons you could toss around, which showed what he uses but not how.
+ * "My process": five steps along one line (2026-11-05). Each step reads
+ * top to bottom as the design fundamental, where AI comes in (only when
+ * a fact says so), one piece of proof linked to its case study, and the
+ * tools that support it as small chips. Test it carries a note that it
+ * loops back to the start, so the line doesn't read as a waterfall.
  *
- * Each stage is a stop on one line. Under it, a tool with a sourceable
- * story gets its icon, its name and that one line (and a link when the
- * line points at a case study). A tool without one is a plain name chip:
- * the truth layer has nothing to say about it, so the rail doesn't
- * either. Everything is visible at once, so there is nothing to tap and
- * no JavaScript.
+ * Copy lives in lib/process.ts, tools in lib/about.ts. Everything is
+ * visible at once: no JavaScript.
  */
 
 function Icon({ tool }: { tool: Tool }) {
@@ -32,41 +31,43 @@ function Icon({ tool }: { tool: Tool }) {
 export default function Toolbox({ tools }: { tools: ReadonlyArray<Tool> }) {
   return (
     <ol className="tb-rail">
-      {TOOL_STAGES.map((stage, s) => {
-        const here = tools.filter((t) => t.stage === stage.id)
-        const told = here.filter((t) => t.provenance)
-        const named = here.filter((t) => !t.provenance)
+      {PROCESS.map((step, s) => {
+        const here = tools.filter((t) => t.stage === step.id)
         return (
-          <li key={stage.id} className="tb-stage">
+          <li key={step.id} className="tb-stage">
             <div className="tb-stage__head">
               <span className="tb-stage__dot" aria-hidden="true" />
               <span className="tb-stage__num">{String(s + 1).padStart(2, '0')}</span>
-              <h3 className="tb-stage__title">{stage.title}</h3>
+              <h3 className="tb-stage__title">{step.title}</h3>
+              <p className="tb-stage__practice">{step.practice}</p>
             </div>
 
-            {told.length > 0 && (
-              <ul className="tb-stage__told">
-                {told.map((t) => (
-                  <li key={t.name} className="tb-tool">
-                    <Icon tool={t} />
-                    <div className="tb-tool__body">
-                      <span className="tb-tool__name">{t.name}</span>
-                      <span className="tb-tool__line">{t.provenance!.line}</span>
-                      {t.provenance!.href && (
-                        <Link className="tb-tool__link" href={t.provenance!.href}>
-                          {t.provenance!.cta ?? 'See it in the work'}
-                          <span aria-hidden="true"> &rarr;</span>
-                        </Link>
-                      )}
-                    </div>
-                  </li>
-                ))}
-              </ul>
+            {step.ai && (
+              <p className="tb-stage__ai">
+                <span className="tb-stage__tag">With AI</span>
+                {step.ai}
+              </p>
             )}
 
-            {named.length > 0 && (
-              <ul className="tb-stage__named" aria-label={`Also in ${stage.title.toLowerCase()}`}>
-                {named.map((t) => (
+            <p className="tb-stage__proof">
+              <span className="tb-stage__tag">Proof</span>
+              {step.proof.line}{' '}
+              <Link className="tb-stage__link" href={step.proof.href}>
+                {step.proof.label}
+                <span aria-hidden="true"> &rarr;</span>
+              </Link>
+            </p>
+
+            {step.loop && (
+              <p className="tb-stage__loop">
+                <span aria-hidden="true">&#8634; </span>
+                {step.loop}
+              </p>
+            )}
+
+            {here.length > 0 && (
+              <ul className="tb-stage__named" aria-label={`Tools for ${step.title.toLowerCase()}`}>
+                {here.map((t) => (
                   <li key={t.name} className="tb-chip">
                     <Icon tool={t} />
                     {t.name}

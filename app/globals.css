@@ -5635,18 +5635,19 @@ p a {
   }
 }
 
-/* ── 04 The toolbox ──────────────────────────────────────────────── */
+/* ── 04 My process ───────────────────────────────────────────────── */
 
-/* Four stops on one line: find, design, build, ship. A row of four on
-   wide screens with the line running through the dots; a vertical rail
-   on a phone. Dots and line are the experience rail's material. */
+/* Five stops on one line: find, design, test, build, ship. A row on
+   wide screens with the line through the dots; a vertical rail below
+   70em, where five columns get too narrow to read. Each stop stacks the
+   fundamental, the AI line, the proof and the tool chips. */
 .tb-rail {
   --tb-ink: rgba(255, 255, 255, 0.4);
   --tb-dot: 10px;
   position: relative;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 2.5rem;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 2rem;
   margin: 3rem 0 0;
   padding: 0;
   list-style: none;
@@ -5668,13 +5669,13 @@ p a {
   position: relative;
   display: grid;
   align-content: start;
-  gap: 1.5rem;
+  gap: 1.1rem;
   min-width: 0;
 }
 
 .tb-stage__head {
   display: grid;
-  gap: 0.6rem;
+  gap: 0.55rem;
 }
 
 .tb-stage__dot {
@@ -5699,77 +5700,84 @@ p a {
   margin: 0;
   font-family: var(--font-serif);
   font-weight: 400;
-  font-size: clamp(1.75rem, 2.4vw, 2.25rem);
+  font-size: clamp(1.6rem, 2vw, 2.1rem);
   line-height: 1.05;
   color: #fff;
 }
 
-.tb-stage__told,
-.tb-stage__named {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.tb-stage__told {
-  display: grid;
-  gap: 1.4rem;
-}
-
-.tb-tool {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 0.85rem;
-  align-items: start;
-}
-
-.tb-tool__body {
-  display: grid;
-  gap: 0.3rem;
-}
-
-.tb-tool__name {
-  font-family: var(--font-mono);
-  font-size: var(--label-size);
-  font-weight: var(--label-weight);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+.tb-stage__practice {
+  margin: 0.15rem 0 0;
+  font-size: var(--reading-caption);
+  line-height: 1.5;
   color: #fff;
+  text-wrap: pretty;
 }
 
-.tb-tool__line {
+.tb-stage__ai,
+.tb-stage__proof {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--card-ring);
   font-size: var(--reading-caption);
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.72);
   text-wrap: pretty;
 }
 
-.tb-tool__link {
-  justify-self: start;
-  margin-top: 0.15rem;
+/* The AI line is the one this section exists to show, so it carries
+   the accent on its label. */
+.tb-stage__tag {
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.tb-stage__ai .tb-stage__tag {
+  color: var(--accent, #4c8dff);
+}
+
+.tb-stage__link {
   font-family: var(--font-mono);
   font-size: var(--label-size);
   letter-spacing: 0.04em;
+  white-space: nowrap;
   color: var(--accent, #4c8dff);
   text-decoration: none;
 }
 
-.tb-tool__link:hover {
+.tb-stage__link:hover {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-.tb-tool__link:focus-visible {
+.tb-stage__link:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 3px;
   border-radius: 2px;
 }
 
-/* Tools with no story on this site: names, nothing more. */
+.tb-stage__loop {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* The tools that support the step: names, nothing more. */
 .tb-stage__named {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  list-style: none;
 }
 
 .tb-chip {
@@ -5824,11 +5832,13 @@ p a {
   -webkit-mask-size: contain;
 }
 
-/* Phones and narrow tablets: the same stops down a vertical rail. */
-@media (max-width: 60em) {
+/* Below 70em: the same stops down a vertical rail. */
+@media (max-width: 70em) {
   .tb-rail {
     grid-template-columns: minmax(0, 1fr);
     gap: 3rem;
+    max-width: 40rem;
+    margin-inline: auto;
     padding-left: 2rem;
   }
 
