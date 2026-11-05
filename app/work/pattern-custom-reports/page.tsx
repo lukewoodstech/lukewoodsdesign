@@ -617,7 +617,7 @@ export default function PatternCaseStudy() {
           }
         >
           <Col>
-            <Block className="cs-breakout">
+            <Block>
               <MetricLab />
             </Block>
             <p className="cs-cap cs-cap--mono mt-4 text-center">
@@ -735,7 +735,7 @@ export default function PatternCaseStudy() {
             </>
           }
         >
-          <Band tone="accent" className="cs-final">
+          <Band tone="accent" className="cs-final cs-final--open">
             <p className="cs-final__word" aria-hidden="true">
               Final designs
             </p>

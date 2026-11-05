@@ -34,7 +34,15 @@ export default function StageRail({ stages }: { stages: RailStage[] }) {
       const first = els[0].getBoundingClientRect()
       const last = els[els.length - 1].getBoundingClientRect()
       setCurrent(idx)
-      setVisible(first.top <= window.innerHeight * 0.6 && last.bottom >= window.innerHeight * 0.3)
+      // Step aside while a full-bleed final-designs band fills the middle
+      // of the screen, so the list never sits on top of the screenshots.
+      const overBand = Array.from(document.querySelectorAll('.cs-final')).some((b) => {
+        const r = b.getBoundingClientRect()
+        return r.top < window.innerHeight * 0.7 && r.bottom > window.innerHeight * 0.3
+      })
+      setVisible(
+        !overBand && first.top <= window.innerHeight * 0.6 && last.bottom >= window.innerHeight * 0.3
+      )
       const span = last.bottom - first.top
       setProgress(span > 0 ? Math.min(1, Math.max(0, (line - first.top) / span)) : 0)
     }

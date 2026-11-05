@@ -820,7 +820,7 @@ export default function AwardcoCaseStudy() {
             </>
           }
         >
-          <Band tone="accent" className="cs-final">
+          <Band tone="accent" className="cs-final cs-final--open">
             <p className="cs-final__word" aria-hidden="true">
               Final designs
             </p>

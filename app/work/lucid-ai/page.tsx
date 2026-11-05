@@ -673,12 +673,12 @@ export default function LucidCaseStudy() {
             </Col>
           </Band>
 
-          <Band tone="accent" className="cs-final">
+          <Band tone="accent" className="cs-final cs-final--open">
             <p className="cs-final__word" aria-hidden="true">
               Final designs
             </p>
             <div className="cs-final__stage" style={{ paddingInline: 'var(--cs-pad)' }}>
-              <Laptop style={{ '--r': '-2deg', '--y': '0' } as React.CSSProperties}>
+              <Laptop style={{ '--r': '-1.5deg', '--y': '0' } as React.CSSProperties}>
                 <Image
                   src={`${IMG}/panel-side.png`}
                   alt="Lucid AI docked as a side panel beside the homepage document list, offering Find docs, Summarize, Build a diagram, and Catch up"
@@ -686,7 +686,7 @@ export default function LucidCaseStudy() {
                   sizes="(min-width: 40em) 50vw, 100vw"
                 />
               </Laptop>
-              <Laptop style={{ '--r': '2deg', '--y': '0' } as React.CSSProperties}>
+              <Laptop style={{ '--r': '1.5deg', '--y': '0' } as React.CSSProperties}>
                 <Image
                   src={`${IMG}/panel-full.png`}
                   alt="Lucid AI expanded to a full page over the homepage, asking what are you looking for today above the four skills"

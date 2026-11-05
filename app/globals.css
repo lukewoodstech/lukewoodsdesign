@@ -7862,6 +7862,31 @@ p a {
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25), 0 40px 80px rgba(0, 0, 0, 0.35);
 }
 
+/* The open variant (Lucid first, 2026-11-05): a solid word that reads at
+   a glance, bare screenshots with no white bezel, and a wider stage set
+   further below the word so the designs carry the band. */
+.cs-final--open {
+  padding-block: clamp(2.5rem, 5vw, 4rem) clamp(3.5rem, 7vw, 6rem);
+}
+.cs-final--open .cs-final__word {
+  color: #fff;
+  -webkit-text-stroke: 0;
+}
+.cs-final--open .cs-final__stage {
+  width: min(100%, 1760px);
+  gap: 2.5%;
+  margin-top: clamp(2.5rem, 6vw, 5.5rem);
+}
+.cs-final--open .cs-laptop__screen {
+  border: 0;
+  border-radius: clamp(8px, 1vw, 14px);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12), 0 40px 80px rgba(0, 0, 0, 0.3);
+}
+.cs-final--open .cs-laptop__screen::after { display: none; }
+/* Two Macbooks (Pattern): each base hangs 6% past its lid, so the pair
+   needs a wider gap or the bases collide in the middle. */
+.cs-final--open .cs-final__stage:has(.cs-macbook + .cs-macbook) { gap: 7%; }
+
 @media (max-width: 40em) {
   .cs-final__stage { grid-template-columns: 1fr; gap: 1.5rem; }
   .cs-final__stage > * { --r: 0deg; --y: 0; }
@@ -8639,8 +8664,22 @@ p a {
 .pm-preset:focus-visible { outline: 2px solid var(--pm-link); outline-offset: 2px; }
 .pm-lab__stage { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-items: start; }
 .pm-lab__stage--open { grid-template-columns: minmax(0, 1fr) 300px; }
-@media (max-width: 64em) {
+/* The lab sits in the 800px prose column, too narrow for the drawer
+   beside the widget, so the drawer drops below it whenever the lab
+   itself is narrow, whatever the window width. */
+.pm-lab { container-type: inline-size; }
+@container (max-width: 1000px) {
   .pm-lab__stage--open { grid-template-columns: minmax(0, 1fr); }
+}
+/* Under the widget the drawer has the full width, so the selected and
+   unselected lists sit side by side instead of stacking into a tall
+   column. Below phablet width they stack again. */
+@container (min-width: 600px) and (max-width: 1000px) {
+  .pm-lab .pm-drawer { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pm-lab .pm-drawer > * { grid-column: 1 / -1; }
+  .pm-lab .pm-drawer > .pm-drawer__group { grid-column: auto; align-self: start; }
+  .pm-lab .pm-drawer > .pm-drawer__group:first-of-type { margin-right: 0; }
+  .pm-lab .pm-drawer > .pm-drawer__group:last-of-type { margin-left: 0; }
 }
 
 /* ── The stage that scales a fixed-width mock ──────────────────── */
