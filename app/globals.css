@@ -7457,50 +7457,16 @@ p a {
   .cs-chart__area { transition: none; }
 }
 
-/* ── Callout figure: labels above, lines dropping onto the shot ── */
+/* ── Callout figure: outlined regions on the shot, a numbered key under it ──
+   One colour per study (its --accent), so the boxes read as part of the
+   page rather than a highlighter set. Boxes sit in percentages of the
+   image, so nothing is measured and nothing can drift at any width. */
 .cs-callouts { margin-top: 2rem; }
 
-/* The figure measures itself (Callouts.tsx) and draws the leader lines in
-   one SVG over labels, band and picture together. */
 .cs-callouts__body { position: relative; }
 
-.cs-callouts__labels {
-  display: grid;
-  grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr));
-  gap: 1.25rem;
-  margin: 0;
-  /* The band: where the lines travel sideways, over the page background
-     rather than over the screenshot. Sized per figure by the component. */
-  padding: 0 0 var(--cs-callouts-band, 3rem);
-  list-style: none;
-}
-
-.cs-callouts__labels li {
-  position: relative;
-  font-size: 0.9375rem;
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.cs-callouts__labels li strong { color: #fff; font-weight: 600; }
-
-.cs-callouts__labels .cs-mono-label { color: var(--co); margin-bottom: 0.4rem; }
-
-.cs-callouts__labels .cs-mono-label i {
-  display: inline-grid;
-  place-items: center;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 1px solid var(--co);
-  font-style: normal;
-  font-size: 0.6rem;
-  color: var(--co);
-}
-
 /* The ring is an inset shadow, not a border: a border would shrink the box
-   the percentages are measured against by 1px a side and push every line
-   and pin off the image by that much. */
+   the percentages are measured against. */
 .cs-callouts__stage {
   position: relative;
   border-radius: 10px;
@@ -7510,129 +7476,141 @@ p a {
 
 .cs-callouts__stage img { display: block; width: 100%; height: auto; }
 
-/* One SVG over the whole figure, in screen pixels. Every leader is a single
-   path with rounded elbows, drawn twice: a dark halo under a 2px colour
-   run, so it stays legible where it crosses the picture. pathLength=1
-   makes the draw-on a 0→1 dash. Sits above the stage but below nothing
-   interactive: the labels' hover still works because the SVG ignores the
-   pointer. */
-.cs-callouts__lines {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  pointer-events: none;
-}
-
-.cs-callouts__halo,
-.cs-callouts__lead {
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-}
-
-.cs-callouts__halo { stroke: rgba(0, 0, 0, 0.45); stroke-width: 6px; }
-.cs-callouts__lead { stroke: var(--co); stroke-width: 2px; }
-
-.is-inview .cs-callouts__halo,
-.is-inview .cs-callouts__lead {
-  animation: cs-draw 0.7s var(--ease-out-quint) forwards;
-  animation-delay: calc(0.65s + var(--i) * 0.15s);
-}
-
-@keyframes cs-draw { to { stroke-dashoffset: 0; } }
-
+/* The region: an accent ring set just outside it, with a white gap
+   between, so it reads on a white screenshot, a dark one, or a button in
+   the accent's own colour, and never sits on the edge it points at. The
+   huge transparent spread is the spotlight: when this box is picked it
+   turns dark and dims everything around it (the stage clips it). */
 .cs-callouts__box {
   position: absolute;
-  border: 2px solid var(--co);
   border-radius: 6px;
-  background: color-mix(in srgb, var(--co) 12%, transparent);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35), 0 0 24px color-mix(in srgb, var(--co) 40%, transparent);
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.95),
+    0 0 0 3.5px var(--accent),
+    0 0 0 4.5px rgba(0, 0, 0, 0.22),
+    0 0 0 200vmax rgba(8, 8, 10, 0);
+  cursor: pointer;
   opacity: 0;
-  pointer-events: none;
+  transform: scale(1.04);
+  transition: box-shadow 0.35s var(--ease-out-quint), filter 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .is-inview .cs-callouts__box {
-  animation: cs-chart-pop 0.4s ease forwards;
-  animation-delay: calc(1.3s + var(--i) * 0.15s);
+  animation: cs-callout-in 0.5s var(--ease-out-quint) forwards;
+  animation-delay: calc(0.4s + var(--i) * 0.12s);
 }
 
-.cs-callouts__pin {
+@keyframes cs-callout-in { to { opacity: 1; transform: none; } }
+
+/* The number, centred on the ring's top-left corner. */
+.cs-callouts__tag {
   position: absolute;
-  z-index: 1;
+  top: -4px;
+  left: -4px;
   display: grid;
   place-items: center;
-  width: 22px;
-  height: 22px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
   transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: var(--co);
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.6), 0 4px 14px rgba(0, 0, 0, 0.5);
+  border-radius: 6px;
+  background: var(--accent);
+  box-shadow: 0 0 0 1.5px #fff, 0 2px 8px rgba(0, 0, 0, 0.3);
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: #0a0a0a;
-  opacity: 0;
-  pointer-events: none;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1;
+  color: #fff;
 }
 
-.is-inview .cs-callouts__pin {
-  animation: cs-chart-pop 0.3s ease forwards;
-  animation-delay: calc(1.4s + var(--i) * 0.15s);
+/* Near the top edge of the shot (Callouts.tsx flags it) the tag would be
+   clipped, so it hangs off the bottom-left corner instead; near the left
+   edge it moves in to sit on the corner from inside. */
+.cs-callouts__box.is-top .cs-callouts__tag { top: auto; bottom: -4px; transform: translate(-50%, 50%); }
+.cs-callouts__box.is-left .cs-callouts__tag { left: 4px; transform: translate(0, -50%); }
+.cs-callouts__box.is-top.is-left .cs-callouts__tag { transform: translate(0, 50%); }
+
+.cs-callouts__body[data-active] .cs-callouts__box.is-on {
+  z-index: 1;
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.95),
+    0 0 0 4px var(--accent),
+    0 0 0 5px rgba(0, 0, 0, 0.22),
+    0 0 0 200vmax rgba(8, 8, 10, 0.55);
 }
 
-/* Pick a label (hover with a mouse, tap on touch; Callouts.tsx keeps the
-   choice in data-active): the other callouts fall back so one pairing
-   reads. Done with a filter rather than opacity, which the reveal
-   keyframes own. */
-.cs-callouts__labels li { transition: filter 0.25s ease; }
-.cs-callouts [data-i] { transition: filter 0.25s ease; }
+/* A filter, not opacity: the entrance animation holds opacity. */
+.cs-callouts__body[data-active] .cs-callouts__box:not(.is-on) { filter: opacity(0.25); }
 
-.cs-callouts__body[data-active] .cs-callouts__labels li:not(.is-on),
-.cs-callouts__body[data-active] [data-i]:not(.is-on) {
-  filter: brightness(0.35);
-}
-
-/* The label is a button so touch and keyboard can pick it; it should still
-   read as the caption it was. */
-.cs-callouts__pick {
-  display: block;
-  width: 100%;
+/* The key: a hairline over each entry, the number in the accent, then the
+   label and its line of text. Columns on wide screens, a stack on phones. */
+.cs-callouts__key {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  gap: 1.5rem 2rem;
+  margin: 1.75rem 0 0;
   padding: 0;
+  list-style: none;
+}
+
+.cs-callouts__key li {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  transition: opacity 0.25s ease, border-color 0.25s ease;
+}
+
+.cs-callouts__key li.is-on { border-top-color: var(--accent); }
+.cs-callouts__body[data-active] .cs-callouts__key li:not(.is-on) { opacity: 0.4; }
+
+.cs-callouts__pick {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.9rem 0 0;
   border: 0;
   background: none;
   font: inherit;
-  color: inherit;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.68);
   text-align: left;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
 
+.cs-callouts__pick strong { color: #fff; font-weight: 600; }
+
 .cs-callouts__pick:focus-visible {
-  outline: 2px solid var(--co);
+  outline: 2px solid var(--accent);
   outline-offset: 4px;
   border-radius: 4px;
 }
 
-/* Pins answer taps too, so on a phone the number on the picture can be
-   tapped to find its caption. */
-.cs-callouts__pin { pointer-events: auto; cursor: pointer; }
+.cs-callouts__num {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.95;
+  color: var(--accent);
+}
+
+.cs-callouts__label {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-weight: 600;
+  color: #fff;
+}
 
 @media (max-width: 40em) {
-  .cs-callouts__labels { grid-template-columns: 1fr; gap: 0.9rem; padding-bottom: 0; }
-  .cs-callouts__lines { display: none; }
-  .cs-callouts__pin { width: 18px; height: 18px; font-size: 0.6rem; }
-  .cs-callouts__stage { margin-top: 1.25rem; }
+  .cs-callouts__key { grid-template-columns: 1fr; gap: 0; margin-top: 1.25rem; }
+  .cs-callouts__key li { padding-bottom: 0.9rem; }
+  .cs-callouts__tag { min-width: 16px; height: 16px; padding: 0 4px; font-size: 0.5625rem; border-radius: 4px; }
+  .cs-callouts__box { border-radius: 4px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cs-callouts__halo, .cs-callouts__lead,
-  .is-inview .cs-callouts__halo, .is-inview .cs-callouts__lead { animation: none; stroke-dashoffset: 0; }
-  .cs-callouts__box, .is-inview .cs-callouts__box,
-  .cs-callouts__pin, .is-inview .cs-callouts__pin { animation: none; opacity: 1; }
+  .cs-callouts__box, .is-inview .cs-callouts__box { animation: none; opacity: 1; transform: none; }
 }
 
 /* ── Paper on a band: the tilted artifact ─────────────────────── */
