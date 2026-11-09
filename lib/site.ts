@@ -20,6 +20,7 @@ export const SITE = {
     'Product designer combining research, systems thinking, and code to ship useful products: Pitch, Lucid, Awardco, and Pattern.',
   email: 'lukewoodstech@gmail.com',
   linkedin: 'https://www.linkedin.com/in/lukewoodstech',
+  github: 'https://github.com/lukewoodstech',
   /*
    * Self-hosted: the Drive link required Google's viewer and could silently
    * break on a permissions change. The PDF ships with the site instead —

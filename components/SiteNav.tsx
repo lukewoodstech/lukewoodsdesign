@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { SITE } from '@/lib/site'
 import { WORK, workForPath } from '@/lib/work'
+import EmailLink from './EmailLink'
+import { LinkedInIcon, GitHubIcon, MailIcon } from './ContactIcons'
 
 /*
  * The one nav for the whole site — the same fixed bar on the horizontal
@@ -12,7 +14,7 @@ import { WORK, workForPath } from '@/lib/work'
  * mono, sharp-cornered, and its only job is telling you where you are and
  * letting you leave.
  *
- *   luke woods | my story   lucid  awardco  pattern              résumé
+ *   luke woods | my story   lucid  awardco  pattern       résumé | in gh ✉
  *
  * Three slots on a 1fr/auto/1fr grid, so the case studies sit dead centre
  * of the SCREEN no matter how wide the two side groups get — with flex and
@@ -110,11 +112,36 @@ export default function SiteNav({
           })}
         </nav>
 
-        {/* ── Right: the résumé, and `next` where there is one ── */}
+        {/* ── Right: the résumé, the contact icons, and `next` where there
+            is one. The icons hide on phones (the footer still has them). ── */}
         <div className="sitebar__end">
           <a href={SITE.resume} className={LINK} target="_blank" rel="noopener noreferrer">
             résumé
           </a>
+          <span className="sitebar__bar sitebar__contact" aria-hidden="true">
+            |
+          </span>
+          <a
+            href={SITE.linkedin}
+            className={`${LINK} sitebar__icon sitebar__contact`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+          >
+            <LinkedInIcon />
+          </a>
+          <a
+            href={SITE.github}
+            className={`${LINK} sitebar__icon sitebar__contact`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+          >
+            <GitHubIcon />
+          </a>
+          <EmailLink className={`${LINK} sitebar__icon sitebar__contact`} label={`Email ${SITE.email}`}>
+            <MailIcon />
+          </EmailLink>
           {next && (
             <Link
               href={next.href}

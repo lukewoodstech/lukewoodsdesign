@@ -16,6 +16,7 @@ export default function EmailLink({
   className = 'footer-link',
   children,
   copy = false,
+  label,
 }: {
   className?: string
   /** Link text; defaults to "email" (the address itself with `copy`). */
@@ -27,6 +28,8 @@ export default function EmailLink({
    * mailto stays as the href so clipboard-less contexts still get a link.
    */
   copy?: boolean
+  /** Accessible name, for when the link shows only an icon. */
+  label?: string
 }) {
   const [copied, setCopied] = useState(false)
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
@@ -58,6 +61,7 @@ export default function EmailLink({
       href={MAILTO}
       className={`${className} email-link${copy ? ' email-link--copy' : ''}`}
       onClick={handleClick}
+      aria-label={label}
     >
       {copy && (
         // Sharp-cornered copy glyph: two squares, no rounding.

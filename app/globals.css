@@ -1359,7 +1359,8 @@ p a {
   background: #fff;
 }
 
-.footer-ico--mail {
+.footer-ico--mail,
+.footer-ico--gh {
   width: 1.05em;
   height: 1.05em;
   flex: none;
@@ -4164,6 +4165,11 @@ p a {
   outline-offset: 1px;
 }
 
+/* Icon-only links (LinkedIn, GitHub, mail): square boxes, same hover. */
+.sitebar__icon {
+  padding-inline: 0.45rem;
+}
+
 /* The site's own name: same type and box as its neighbours, one step
    brighter because it is the title and not a destination among equals. */
 .sitebar__name {
@@ -4212,7 +4218,8 @@ p a {
  * in the phone bar, and the arrow still announces itself through the
  * link's aria-label. */
 @media (max-width: 44em) {
-  .sitebar__section--work {
+  .sitebar__section--work,
+  .sitebar__contact {
     display: none;
   }
 
