@@ -4903,7 +4903,9 @@ p a {
    stay tied to the paragraph above them. */
 .story {
   --card-gap: clamp(0.75rem, 1.4vw, 1.25rem);
-  --card-w: min(calc((100vw - 4rem - 4 * var(--card-gap)) / 5), 210px);
+  /* 164px cards make a 900px row, the same width as the paragraph above
+     it, so text and photos share both edges (Luke, 2026-11-09). */
+  --card-w: min(calc((100vw - 4rem - 4 * var(--card-gap)) / 5), 164px);
   position: relative;
   padding-block: 1rem 2rem;
 }
@@ -4924,11 +4926,15 @@ p a {
   margin-top: clamp(3rem, 6vw, 4.5rem);
 }
 
-/* The block stays centred on the page; the lines inside it are
-   left-aligned (Luke, 2026-11-09: easier to read than centred text). */
+/* The block stays centred on the page and is exactly as wide as the
+   photo row under it; the lines inside are left-aligned (Luke,
+   2026-11-09: easier to read than centred text). */
 .story .story__para {
+  box-sizing: border-box;
   margin: 1.75rem auto 0;
-  max-width: 46rem;
+  width: calc(5 * var(--card-w) + 4 * var(--card-gap));
+  max-width: 100%;
+  padding-inline: 0;
   font-size: var(--reading-intro);
   line-height: var(--reading-intro-lh);
   text-align: left;
@@ -5158,6 +5164,13 @@ p a {
   padding: 14%;
 }
 
+/* Logos centre in the space above the caption, not on the whole card:
+   at 164px a three-line caption reached the middle and ran into the
+   mark. Two classes so it beats each tile's own padding. */
+.story .story-card__brand {
+  padding-bottom: 42%;
+}
+
 /* The caption sits over the foot of every card, so a light tile needs a
    scrim of its own or white type on near-white is unreadable. */
 .story-card--morphmarket .story-card__cap {
@@ -5203,6 +5216,12 @@ p a {
 @media (max-width: 60em) {
   .story {
     --card-w: 40vw;
+  }
+
+  /* The row is a swipe strip here; the text takes its 1.25rem inset. */
+  .story .story__para {
+    width: 100%;
+    padding-inline: 1.25rem;
   }
 
 
