@@ -4843,7 +4843,7 @@ p a {
   text-align: center;
   font-size: var(--reading-size);
   line-height: var(--reading-leading);
-  color: rgba(255, 255, 255, 0.72);
+  color: #fff;
 }
 
 /* The one tag that marks scaffolding. Loud on purpose. */
@@ -4891,7 +4891,7 @@ p a {
   padding-inline: 2rem;
   font-size: var(--reading-lede);
   line-height: var(--reading-lede-lh);
-  color: rgba(255, 255, 255, 0.72);
+  color: #fff;
   text-wrap: pretty;
 }
 
@@ -4924,13 +4924,29 @@ p a {
   margin-top: clamp(3rem, 6vw, 4.5rem);
 }
 
+/* Left-aligned (Luke, 2026-11-09: easier to read than centred), and set
+   on the photo row's own width so the paragraph's left edge sits on the
+   first card's. The right padding keeps the line to a reading measure
+   rather than the row's full 1130px. */
 .story .story__para {
-  margin: 1.75rem auto 0;
-  max-width: 46rem;
+  box-sizing: border-box;
+  width: calc(5 * var(--card-w) + 4 * var(--card-gap));
+  max-width: 100%;
+  margin: 1.75rem 0 0;
+  padding-inline: 0 max(0px, calc(5 * var(--card-w) + 4 * var(--card-gap) - 42rem));
   font-size: var(--reading-intro);
   line-height: var(--reading-intro-lh);
-  text-align: center;
+  text-align: left;
 }
+
+/* The heading shares that edge, so the page reads down one line. */
+.story__intro {
+  box-sizing: border-box;
+  width: calc(5 * var(--card-w) + 4 * var(--card-gap));
+  max-width: 100%;
+  margin-inline: auto;
+}
+.story__intro .ab-hero { text-align: left; }
 
 .story__row {
   display: grid;
@@ -5201,6 +5217,14 @@ p a {
 @media (max-width: 60em) {
   .story {
     --card-w: 40vw;
+  }
+
+  /* The rows are swipe strips here, so the text takes the strip's
+     1.25rem inset instead of the row's width. */
+  .story .story__para,
+  .story__intro {
+    width: 100%;
+    padding-inline: 1.25rem;
   }
 
   .story__row {
@@ -5478,7 +5502,7 @@ p a {
   margin: 1.1rem 0 0;
   font-size: var(--reading-size);
   line-height: var(--reading-leading);
-  color: rgba(255, 255, 255, 0.74);
+  color: #fff;
 }
 
 .tl-card__period {
@@ -5780,7 +5804,7 @@ p a {
   margin: 1.25rem auto 0;
   font-size: var(--reading-size);
   line-height: var(--reading-leading);
-  color: rgba(255, 255, 255, 0.72);
+  color: #fff;
   text-wrap: pretty;
 }
 
@@ -6535,9 +6559,10 @@ p a {
   --story-wide: 1080px;
 }
 
-/* Body copy on a story page is a shade quieter and bold phrases are white,
-   so a skimmer can read only the bold and still get the story. */
-.cs-story .cs-prose { color: rgba(255, 255, 255, 0.8); }
+/* Body copy is white like the headings (Luke, 2026-11-09: the quieter
+   grey read as harder, not calmer). Bold phrases keep their weight, so a
+   skimmer can still read only the bold and get the story. */
+.cs-story .cs-prose { color: #fff; }
 .cs-story .cs-prose strong { color: #fff; font-weight: 600; }
 
 /* ── The column and the bands ─────────────────────────────────── */
