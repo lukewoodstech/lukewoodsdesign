@@ -16,14 +16,14 @@ import { LinkedInIcon, GitHubIcon, MailIcon } from './ContactIcons'
  * mono, sharp-cornered, and its only job is telling you where you are and
  * letting you leave.
  *
- *   luke woods | my story   lucid | awardco | pattern     résumé | in gh ✉
+ *   luke woods | about      lucid | awardco | pattern     résumé | in gh ✉
  *
  * Three slots on a 1fr/auto/1fr grid, so the case studies sit dead centre
  * of the SCREEN no matter how wide the two side groups get — with flex and
  * `margin-right: auto` they'd centre in the leftover space instead, which
  * drifts every time a label changes.
  *
- * Every item in the bar — the name, my story, the studies, résumé, next — is
+ * Every item in the bar — the name, about, the studies, résumé, next — is
  * one `.sitebar__link`: same family, same size, same padding, same squared
  * hover. The current page, and only the current page, is the editor's
  * selection blue: on the home page no study is highlighted, however far
@@ -92,7 +92,7 @@ export default function SiteNav({
             className={`${LINK}${onAbout ? ' is-current' : ''}`}
             aria-current={onAbout ? 'page' : undefined}
           >
-            my story
+            about
           </Link>
         </div>
 
@@ -103,7 +103,7 @@ export default function SiteNav({
             const here = currentWork === item.slug
             return (
               <Fragment key={item.slug}>
-                {/* The same divider as name | my story, between studies. */}
+                {/* The same divider as name | about, between studies. */}
                 {i > 0 && (
                   <span className="sitebar__bar" aria-hidden="true">
                     |

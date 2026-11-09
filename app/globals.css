@@ -4234,7 +4234,7 @@ p a {
     font-size: 0.9rem;
   }
 
-  /* The rule between the name and "my story" is the first thing to go:
+  /* The rule between the name and "about" is the first thing to go:
      the gap alone separates them at this size. */
   .sitebar__bar {
     display: none;

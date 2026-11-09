@@ -108,7 +108,24 @@ export default function AboutPage() {
           }
         />
 
-        {/* ── 02 My experience ── */}
+        {/* ── 02 The reptile business ──
+            Straight after the intro on purpose (2026-11-09): this is where
+            Luke's love of building things and entrepreneurship started, so
+            it leads into the experience rather than trailing after it. */}
+        <section className="ab-sec" aria-labelledby="reptiles">
+          <div className="ab-wide">
+            <Title id="reptiles">The reptile business</Title>
+            <p className="ab-sec__lede">
+              Through high school I bred snakes and lizards at my parents&rsquo; house and sold
+              them across the country on MorphMarket. Starting that business is what made me
+              love building things, and it&rsquo;s where I caught the entrepreneurship bug.
+            </p>
+            <BigStats stats={[...REPTILE_STATS]} small />
+            <ReptileRoom blocks={REPTILE_ROOM} />
+          </div>
+        </section>
+
+        {/* ── 03 My experience ── */}
         <section className="ab-sec ab-sec--grid" aria-labelledby="experience">
           <div className="ab-wide">
             <Title id="experience">My experience</Title>
@@ -116,30 +133,11 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ── 03 My process ── */}
+        {/* ── 04 My process ── */}
         <section className="ab-sec" aria-labelledby="process">
           <div className="ab-wide">
             <Title id="process">My process</Title>
             <Toolbox tools={TOOLS} />
-          </div>
-        </section>
-
-        {/* ── 04 The reptile business ──
-            Not a hobby section. Luke ran this as a company through high
-            school, and the numbers are the reason it's on a design
-            portfolio at all: he found a market, built the production
-            line, engineered out his largest cost, and shipped nationally,
-            before he had ever heard the word "product". */}
-        <section className="ab-sec" aria-labelledby="reptiles">
-          <div className="ab-wide">
-            <Title id="reptiles">The reptile business</Title>
-            <p className="ab-sec__lede">
-              Everyone has a thing. Mine was a company. Through high school I bred snakes and
-              lizards at my parents&rsquo; house and sold them across the country on MorphMarket,
-              learning genetics, vet care, pricing and live shipping because nobody else would.
-            </p>
-            <BigStats stats={[...REPTILE_STATS]} small />
-            <ReptileRoom blocks={REPTILE_ROOM} />
           </div>
         </section>
 
