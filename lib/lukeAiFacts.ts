@@ -860,8 +860,10 @@ export const BACKGROUND = {
      is not in any published copy, so it is a tool he names and nothing
      more: the toolbox tile carries no provenance line, because there is
      no project here it can point at. */
+  /* Jira added 2026-11-09 on Luke's say-so: the ticket tracker he used
+     a lot at Awardco and Lucid. */
   tools:
-    'Figma, Framer, Cursor, Notion, Pendo, ClickUp, Claude, VS Code with Copilot, Brightspot CMS, React and Tailwind, Next.js, Vercel, HTML/CSS, JavaScript/TypeScript, Python, C++, Node/Express, MongoDB, AWS EC2, Git/GitHub.',
+    'Figma, Framer, Cursor, Notion, Pendo, ClickUp, Jira, Claude, VS Code with Copilot, Brightspot CMS, React and Tailwind, Next.js, Vercel, HTML/CSS, JavaScript/TypeScript, Python, C++, Node/Express, MongoDB, AWS EC2, Git/GitHub.',
   goals:
     'Product design roles at strong product teams, with long-term interest in building or leading digital products, especially in AI, productivity, and enterprise tools.',
   interests: 'Startups, AI tools, basketball, fitness, hackathons, and unusual pets (reptiles and tarantulas).',

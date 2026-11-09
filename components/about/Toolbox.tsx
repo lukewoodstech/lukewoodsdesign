@@ -68,7 +68,18 @@ const METHOD_PATHS: Record<MethodIcon, React.ReactNode> = {
   ),
 }
 
-function EntryIcon({ entry, tool }: { entry: ProcessEntry; tool?: Tool }) {
+function Glyph({ tool }: { tool: Tool }) {
+  return tool.wordmark || !tool.icon ? (
+    <span className="tb-ico__word">{tool.name.slice(0, 1)}</span>
+  ) : (
+    <span
+      className="tb__glyph"
+      style={{ maskImage: `url(${tool.icon})`, WebkitMaskImage: `url(${tool.icon})` }}
+    />
+  )
+}
+
+function EntryIcon({ entry, tool, also }: { entry: ProcessEntry; tool?: Tool; also?: Tool }) {
   if (entry.kind === 'method') {
     return (
       <span className="tb-ico tb-ico--method" aria-hidden="true">
@@ -88,13 +99,12 @@ function EntryIcon({ entry, tool }: { entry: ProcessEntry; tool?: Tool }) {
   if (!tool) return null
   return (
     <span className="tb-ico" style={{ background: tool.color }} aria-hidden="true">
-      {tool.wordmark || !tool.icon ? (
-        <span className="tb-ico__word">{tool.name.slice(0, 1)}</span>
-      ) : (
-        <span
-          className="tb__glyph"
-          style={{ maskImage: `url(${tool.icon})`, WebkitMaskImage: `url(${tool.icon})` }}
-        />
+      <Glyph tool={tool} />
+      {/* A second tool on the same row rides as a badge on the corner. */}
+      {also && (
+        <span className="tb-ico tb-ico--badge" style={{ background: also.color }}>
+          <Glyph tool={also} />
+        </span>
       )}
     </span>
   )
@@ -121,9 +131,14 @@ export default function Toolbox({ tools }: { tools: ReadonlyArray<Tool> }) {
                 <EntryIcon
                   entry={e}
                   tool={e.kind === 'tool' ? tools.find((t) => t.name === e.name) : undefined}
+                  also={
+                    e.kind === 'tool' && e.with ? tools.find((t) => t.name === e.with) : undefined
+                  }
                 />
                 <div className="tb-tool__body">
-                  <span className="tb-tool__name">{e.name}</span>
+                  <span className="tb-tool__name">
+                    {e.kind === 'tool' && e.with ? `${e.name} · ${e.with}` : e.name}
+                  </span>
                   <span className="tb-tool__line">
                     {e.line}
                     {e.link && (

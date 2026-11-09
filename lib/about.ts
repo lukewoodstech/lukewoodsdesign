@@ -241,6 +241,15 @@ export const TOOLS: ReadonlyArray<Tool> = [
       href: '/work/pattern-custom-reports',
     },
   },
+  /* Jira added 2026-11-09 on Luke's say-so: the ticket tracker at
+     Awardco and Lucid. It shares the ClickUp row in My process. */
+  {
+    name: 'Jira',
+    stage: 'find',
+    icon: '/tools/jira.svg',
+    color: '#0052cc',
+    provenance: { line: 'The ticket tracker for my work at Awardco and Lucid.' },
+  },
   {
     name: 'Claude',
     stage: 'build',

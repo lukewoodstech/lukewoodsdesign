@@ -19,6 +19,8 @@
  *   Usability testing     awardco-usability-results (test numbers only)
  *   Systems mapping       Awardco case study ("states and transitions")
  *   Cross-functional rev. awardco-token
+ *   ClickUp · Jira        Pattern case study; Jira at Awardco and Lucid
+ *                         is Luke's own word, 2026-11-09
  *   Tools                 TOOLS provenance; Figma (test) from the BYU
  *                         Library line in BACKGROUND.experience;
  *                         Claude from BACKGROUND.site
@@ -38,7 +40,15 @@ type Link = { href: string; label: string }
 export type ProcessEntry =
   | { kind: 'method'; name: string; icon: MethodIcon; line: string; link?: Link }
   /* `name` must match a `name` in TOOLS. */
-  | { kind: 'tool'; name: string; line: string; link?: Link }
+  | {
+      kind: 'tool'
+      name: string
+      /** A second tool that shares the row (also a TOOLS name): its glyph
+          sits as a badge on the first tile and its name follows. */
+      with?: string
+      line: string
+      link?: Link
+    }
 
 export type ProcessStep = { title: string; entries: ReadonlyArray<ProcessEntry> }
 
@@ -59,7 +69,10 @@ export const PROCESS: ReadonlyArray<ProcessStep> = [
       {
         kind: 'tool',
         name: 'ClickUp',
-        line: 'Pattern’s project started as one ticket: duplicate a widget.',
+        /* Jira joined this row 2026-11-09 (Luke: used it a lot at
+           Awardco and Lucid), keeping Discovery to three entries. */
+        with: 'Jira',
+        line: 'Pattern started as one ClickUp ticket. Jira ran Awardco and Lucid.',
         link: PATTERN,
       },
       {
