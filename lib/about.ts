@@ -76,9 +76,8 @@ export const STORY: ReadonlyArray<StoryBeat> = [
 
 /* ── The experience rail ────────────────────────────────────────────
    Newest first. `href` is a published case study, or with `external`
-   the company's own site: Hoth's study is password-gated (lib/gate.ts),
-   so its card goes to hoth.com instead (Luke,
-   2026-09-28). `logo` is a tile in public/logos; where there isn't one,
+   the company's own site: Hoth has no case study (Luke dropped it on
+   2026-11-09), so its card goes to hoth.com instead. `logo` is a tile in public/logos; where there isn't one,
    `mark` is the letter the tile shows and `color` its ground. */
 
 export type Role = {
@@ -146,7 +145,7 @@ export const ROLES: ReadonlyArray<Role> = [
     period: 'December 2024 – April 2025',
     year: '2024',
     summary:
-      'Product design at an early-stage encrypted work platform, formerly Mention. The case study is written but password-protected while it clears review.',
+      'Product design at an early-stage encrypted work platform, formerly Mention.',
     short: 'Product design at an early-stage encrypted work platform, formerly Mention.',
     href: 'https://hoth.com',
     external: true,

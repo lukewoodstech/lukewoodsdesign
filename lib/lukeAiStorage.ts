@@ -227,8 +227,8 @@ export function forApi(messages: Message[]) {
 
 /*
  * Real site routes only. The case studies with public pages are the three
- * bespoke ones and Pitch (public since 2026-10-14); Hoth is password-gated
- * and its tile hidden, so it gets no action. Matches are on the company
+ * bespoke ones and Pitch (public since 2026-10-14); Hoth has no case study,
+ * so it gets no action. Matches are on the company
  * name as the answer would write it.
  */
 export type RouteAction = { label: string; href: string }

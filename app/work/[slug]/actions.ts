@@ -24,14 +24,11 @@ import { UNLOCK_HINT_COOKIE, gatePasswordEnvFor, unlockCookieFor } from '@/lib/g
  */
 /*
  * Since 2026-11-03 (LUK-200) each study can carry its own password in
- * CASE_STUDY_GATE_PASSWORD_<SLUG> (Pitch's in Vercel only). Hoth has none
- * of its own and keeps the shared variable. Pitch does NOT fall back to the
- * shared one: if its own is unset it fails closed like any other.
+ * CASE_STUDY_GATE_PASSWORD_<SLUG> (Pitch's in Vercel only). There is no
+ * shared fallback: if a study's own is unset it fails closed.
  */
 function passwordFor(slug: string): string | undefined {
-  const own = process.env[gatePasswordEnvFor(slug)]
-  if (own) return own
-  return slug === 'hoth' ? process.env.CASE_STUDY_GATE_PASSWORD : undefined
+  return process.env[gatePasswordEnvFor(slug)]
 }
 
 export async function unlockCaseStudy(

@@ -16,12 +16,11 @@ export const UNLOCK_HINT_COOKIE = 'cs_unlocked_hint'
 /** Studies that render the gate instead of the article until unlocked.
     Pitch left this set on 2026-10-14 (LUK-77) when Luke promoted it, and
     came back on 2026-11-03 (LUK-200) with a password of its own. */
-export const PROTECTED_SLUGS = new Set(['hoth', 'pitch'])
+export const PROTECTED_SLUGS = new Set(['pitch'])
 
 /*
  * Each gated study has its own cookie, so one study's password never opens
- * another (LUK-200). Hoth also still honours the old shared cookie, so a
- * visitor who unlocked it before the split is not asked again.
+ * another (LUK-200).
  */
 export function unlockCookieFor(slug: string): string {
   return `${UNLOCK_COOKIE}_${slug.replace(/[^a-z0-9]/gi, '_')}`
@@ -29,8 +28,7 @@ export function unlockCookieFor(slug: string): string {
 
 /*
  * The environment variable holding a study's password:
- * CASE_STUDY_GATE_PASSWORD_PITCH for pitch. Hoth keeps the original shared
- * CASE_STUDY_GATE_PASSWORD as its fallback. Server-only: read it in
+ * CASE_STUDY_GATE_PASSWORD_PITCH for pitch. Server-only: read it in
  * actions.ts, never in a client component.
  */
 export function gatePasswordEnvFor(slug: string): string {

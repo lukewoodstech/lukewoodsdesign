@@ -22,7 +22,7 @@ import {
   BESPOKE_SLUGS,
 } from '@/lib/caseStudies'
 import type { Figure, ProcessStep } from '@/lib/caseStudies'
-import { PROTECTED_SLUGS, UNLOCK_COOKIE, unlockCookieFor } from '@/lib/gate'
+import { PROTECTED_SLUGS, unlockCookieFor } from '@/lib/gate'
 import { SITE } from '@/lib/site'
 import { unlockCaseStudy } from './actions'
 
@@ -226,10 +226,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
    */
   if (PROTECTED_SLUGS.has(cs.slug)) {
     const store = await cookies()
-    const unlocked =
-      store.get(unlockCookieFor(cs.slug))?.value === '1' ||
-      // Hoth's visitors from before the per-study split (LUK-200).
-      (cs.slug === 'hoth' && store.get(UNLOCK_COOKIE)?.value === '1')
+    const unlocked = store.get(unlockCookieFor(cs.slug))?.value === '1'
     if (!unlocked) {
       return (
         <div className="cs min-h-screen bg-black text-white" style={accentStyle}>

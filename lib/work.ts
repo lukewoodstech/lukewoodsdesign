@@ -61,30 +61,19 @@ export const ALL_WORK: ReadonlyArray<WorkItem> = [
     href: '/work/pitch',
     section: 'lab',
   },
-  /* Hoth joined the lab on 2026-11-03 (Luke): a second card beside Pitch,
-     same treatment, still behind its own password. */
-  {
-    slug: 'hoth',
-    label: '02 · hoth',
-    title: 'hoth',
-    nav: 'hoth',
-    file: 'hoth.tsx',
-    section: 'lab',
-    href: '/work/hoth',
-  },
 ]
 
 /*
  * Studies not ready to show. A slug here drops the tile from both home
  * layouts and the nav, and the canvas strip shortens to match; the route
- * itself stays (Hoth's and Pitch's are password-gated). Delete the slug to
+ * itself stays (Pitch's is password-gated). Delete the slug to
  * bring it back.
  *
  * Pitch left this set on 2026-10-14 (LUK-122): it has a tile now, so the
  * canvas says Pitch exists, while the study behind it stays gated
  * (lib/gate.ts) until it is promoted (LUK-77). The labels are numbered by
  * what shows within each section: since 2026-11-03 selected work runs
- * Lucid 01 to Pattern 03 (Hoth, still hidden, keeps 04) and the lab
+ * Lucid 01 to Pattern 03 and the lab
  * numbers from its own 01.
  */
 export const HIDDEN_WORK: ReadonlySet<string> = new Set([])

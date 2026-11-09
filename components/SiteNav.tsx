@@ -93,7 +93,7 @@ export default function SiteNav({
         {/* ── Centre: the work. Named, because on a sideways page the
             abstract section words were three rows for one destination. ── */}
         <nav className="sitebar__sections" aria-label="Case studies">
-          {/* Selected work only: lab tiles (Pitch, Hoth) live on the home
+          {/* Selected work only: lab tiles (Pitch) live on the home
               page, not in the bar (2026-11-03). */}
           {NAV_WORK.map((item) => {
             const here = currentWork === item.slug
