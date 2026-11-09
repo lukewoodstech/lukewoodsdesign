@@ -210,19 +210,19 @@ const BRANDS: { name: string; src: string; alt: string; note: string }[] = [
     name: 'Awardco',
     src: `${IMG}/hero/desk-awardco.png`,
     alt: 'The login page in Awardco branding: a pale blue page, a white card, and a blue Continue button',
-    note: 'The easy case. Awardco blue reads as a safe primary action anywhere on the page.',
+    note: 'The easy one. Awardco blue works as a main button anywhere on the page.',
   },
   {
     name: 'Cinemark',
     src: `${IMG}/hero/desk-cinemark.png`,
     alt: 'The same login page in Cinemark branding: a pale red page, a white card, and a red Continue button',
-    note: 'The hard case. A saturated red carries error and destructive meaning in almost every interface, so the layout has to make Continue read as the safe next step on its own.',
+    note: 'The hard one. Red usually means error or delete, so the layout has to make Continue feel safe on its own.',
   },
   {
     name: 'Accenture',
     src: `${IMG}/hero/desk-accenture.png`,
     alt: 'The same login page in Accenture branding: a pale purple page, a white card, and a purple Continue button',
-    note: 'The strict case. Accenture held the tightest brand standards of any customer I designed against, so the page had to be right with no latitude.',
+    note: 'The strict one. The tightest brand rules of any customer I designed for, so there was no wiggle room.',
   },
 ]
 
@@ -259,12 +259,11 @@ export default function AwardcoCaseStudy() {
               stacked
               summary={
                 <p>
-                  Awardco logged 7.7 million failed login attempts in one year. I redesigned
-                  its fragmented authentication flows into one guided system across SSO, MFA,
-                  password recovery, and mobile. I owned the redesign on desktop and mobile,
-                  validated it with 20+ external users and a 75-person internal study, and took
-                  it through architecture and security review before handing it off for
-                  implementation.
+                  Awardco had 7.7 million failed login attempts in one year. I redesigned its
+                  scattered login flows (SSO, MFA, password reset, and mobile) into one guided
+                  system. I owned it on desktop and mobile, tested it with 20+ external users and
+                  75 people inside Awardco, and got it through architecture and security review
+                  before handing it off to be built.
                 </p>
               }
               facts={[
@@ -352,14 +351,13 @@ export default function AwardcoCaseStudy() {
           body={
             <>
               <p>
-                Awardco is an employee-recognition platform where every customer sets up
-                authentication differently. Depending on their company, someone might need SSO, a
-                password, MFA, or a login code, and the old login made them figure out which one on
-                their own.
+                Every Awardco customer sets up login differently. Depending on your company, you
+                might need SSO, a password, MFA, or a login code, and the old login made you guess
+                which one.
               </p>
               <p>
-                My PM brought me a known pain point: login was driving heavy support volume. Before
-                touching the numbers, I went through the login the way an employee would.
+                My PM brought me the problem: login was driving a ton of support tickets. Before
+                looking at any data, I went through it myself the way an employee would.
               </p>
             </>
           }
@@ -406,15 +404,13 @@ export default function AwardcoCaseStudy() {
             <Block>
               <div className="cs-prose">
                 <p>
-                  Three ways in, two of them the same blue button, and nothing on the page says which
-                  one your company actually uses. That answer lived in each company&rsquo;s IT setup,
-                  and the login asked employees to guess it. A wrong guess meant a failed attempt or
-                  a support ticket.
+                  Three ways in, two of them the same blue button, and nothing telling you which one
+                  your company uses. Guess wrong and you get a failed attempt or a support ticket.
                 </p>
                 <p>
-                  Guessing right wasn&rsquo;t the end of it, either. The universal login page and the
-                  company login page didn&rsquo;t share what they knew, so someone who had already
-                  entered a code could be asked to sign in all over again.
+                  Guess right and you still weren&rsquo;t done. The universal login and the company
+                  login page didn&rsquo;t talk to each other, so you could enter a code and get asked
+                  to sign in all over again.
                 </p>
               </div>
             </Block>
@@ -436,9 +432,9 @@ export default function AwardcoCaseStudy() {
           title="Digging into the data"
           body={
             <p>
-              The audit showed why people were confused. To find out what that confusion cost, I
-              worked with our technical lead, account managers, and the customer-success team on a
-              year of login telemetry and support cases.
+              The audit showed why people were confused. To see what it cost, I dug into a year of
+              login data and support cases with our tech lead, account managers, and customer
+              success.
             </p>
           }
         >
@@ -446,9 +442,8 @@ export default function AwardcoCaseStudy() {
             <Block>
               <div className="cs-prose">
                 <p>
-                  The numbers backed up the audit. The problem wasn&rsquo;t that people forgot their
-                  credentials; it was that they picked the wrong door. Password login alone
-                  accounted for 6.7 million failures.
+                  The numbers backed it up. People weren&rsquo;t forgetting their logins. They were
+                  picking the wrong door. Password login alone failed 6.7 million times.
                 </p>
               </div>
               <Callouts
@@ -499,15 +494,14 @@ export default function AwardcoCaseStudy() {
             <Block>
               <div className="cs-prose">
                 <p>
-                  The old login failed three kinds of people. Employees at companies that use Google
-                  or Microsoft saw a password field anyway, so they used it. Deskless workers in
-                  warehouses and theaters had a phone as their only screen and couldn&rsquo;t reach
-                  their work inbox. And company admins fielded the support cases: login help was the
-                  top topic, with 9,275 cases in 90 days.
+                  Three groups got hit hardest. Employees at Google or Microsoft companies saw a
+                  password field and used it. Deskless workers in warehouses and theaters only had a
+                  phone and couldn&rsquo;t get to their work inbox. And company admins dealt with the
+                  fallout: login was the top support topic, with 9,275 cases in 90 days.
                 </p>
                 <p>
-                  So success meant sending each person to the method most likely to work, then
-                  proving it in before-and-after testing.
+                  So the goal was to send each person straight to the method most likely to work,
+                  and prove it in before-and-after testing.
                 </p>
               </div>
             </Block>
@@ -520,13 +514,13 @@ export default function AwardcoCaseStudy() {
           body={
             <>
               <p>
-                I tested three login directions with 75 people across Awardco: the existing
-                experience, an SSO-first design, and a password-first design.
+                I tested three directions with 75 people at Awardco: the current login, an SSO-first
+                design, and a password-first design.
               </p>
               <p>
-                With the existing experience, people took 27 seconds on average to decide where to
-                start. SSO-first cut that to 5.9 seconds. Password-first was even faster at 4.6
-                seconds and scored slightly higher on confidence. I still chose SSO-first.
+                With the current login, people took 27 seconds on average to figure out where to
+                start. SSO-first cut that to 5.9. Password-first was even faster at 4.6 seconds, and
+                scored a little higher on confidence. I still picked SSO-first.
               </p>
             </>
           }
@@ -570,10 +564,9 @@ export default function AwardcoCaseStudy() {
             <Block>
               <div className="cs-prose">
                 <p>
-                  Password-first did well because it put the option people already recognized up
-                  front. But in the real product, password login failed nearly two out of three
-                  times. Going with the fastest test result would have reinforced the behavior
-                  behind most of Awardco&rsquo;s failures.
+                  Password-first did well because it put the familiar option up top. But in the real
+                  product, password login failed nearly two out of three times. Picking it would
+                  have doubled down on the thing behind most of Awardco&rsquo;s failures.
                 </p>
                 <p>The fastest design wasn&rsquo;t the one most likely to get people signed in.</p>
               </div>
@@ -590,13 +583,13 @@ export default function AwardcoCaseStudy() {
           body={
             <>
               <p>
-                The universal login page identified you, but it didn&rsquo;t carry that
-                authentication into your company&rsquo;s login page. So you could enter a login code
-                and then immediately be asked for another code or a password.
+                The universal login knew who you were, but didn&rsquo;t pass that along to your
+                company&rsquo;s login page. So you&rsquo;d enter a code and immediately get asked for
+                another code or a password.
               </p>
               <p>
-                The old flow took six screens, two codes, and two trips to the inbox. The flow I
-                proposed takes four screens and one code.
+                The old flow was six screens, two codes, and two trips to your inbox. Mine is four
+                screens and one code.
               </p>
             </>
           }
@@ -626,9 +619,8 @@ export default function AwardcoCaseStudy() {
             <Block>
               <div className="cs-prose">
                 <p>
-                  If the company only requires a login code, you&rsquo;re already authenticated. If
-                  it also requires a password, your email is already filled in and you only finish
-                  that one step.
+                  If your company only needs a login code, you&rsquo;re already in. If it also needs
+                  a password, your email is filled in and that&rsquo;s the only thing left.
                 </p>
               </div>
               <figure className="acs-branch">
@@ -645,10 +637,9 @@ export default function AwardcoCaseStudy() {
               </figure>
               <div className="cs-prose">
                 <p>
-                  I mapped the system as states and transitions, then worked through the proposal
-                  with engineering, architecture, and security. It passed review without material
-                  changes. Engineering owned the implementation details, and I owned the concept and
-                  the end-to-end experience.
+                  I mapped it out as states and transitions and worked through it with engineering,
+                  architecture, and security. It passed review without major changes. Engineering
+                  owned how it&rsquo;s built. I owned the idea and the experience, start to finish.
                 </p>
               </div>
             </Block>
@@ -660,12 +651,12 @@ export default function AwardcoCaseStudy() {
           title="Designing for mobile"
           body={
             <p>
-              Many Awardco users work in warehouses, theaters, and other places where their phone is
-              the main way in, and their login codes went to work inboxes they couldn&rsquo;t open
-              from it. The redesigned mobile experience added SMS verification and only shows the
-              sign-in options the person&rsquo;s company supports. It also replaced the generic
-              &ldquo;SSO Login&rdquo; label with the provider people actually recognize, like
-              Google, Microsoft, or Okta. Nobody has to know which method their company uses.
+              Lots of Awardco users work in warehouses and theaters where their phone is the main
+              way in, and their codes went to a work inbox they couldn&rsquo;t open on it. So on
+              mobile I added text message verification, showed only the sign-in options your company
+              supports, and swapped the generic &ldquo;SSO Login&rdquo; for the name people
+              recognize, like Google, Microsoft, or Okta. Nobody has to know how their company does
+              login.
             </p>
           }
         >
@@ -718,10 +709,9 @@ export default function AwardcoCaseStudy() {
           title="Designing for every brand"
           body={
             <p>
-              Awardco&rsquo;s login pages are white-labelled. Every customer&rsquo;s page carries
-              their logo, button color, and link color, so one layout had to hold up in all of them.
-              I designed against the two hardest cases I could find instead of Awardco&rsquo;s own
-              comfortable blue.
+              Every customer&rsquo;s login page gets their own logo and colors, so one layout had to
+              work for all of them. I designed against the two hardest cases I could find instead
+              of Awardco&rsquo;s easy blue.
             </p>
           }
         >
@@ -752,21 +742,20 @@ export default function AwardcoCaseStudy() {
           body={
             <>
               <p>
-                A Figma prototype could show navigation, but not where people struggled to type,
-                validate a password, or enter a verification code. So I built working prototypes
-                with real inputs, validation, and code entry. Testing them with more than 20 admins
-                and end users exposed friction around email entry, verification codes, and most of
-                all password recovery.
+                A Figma prototype can show navigation, but not where people get stuck typing an
+                email, entering a code, or making a new password. So I built working prototypes with
+                real inputs and validation. Testing them with 20+ admins and end users showed
+                friction with email entry, codes, and most of all password reset.
               </p>
               <p>
-                The old reset was a disconnected page with a blind password field and no visible
-                requirements. The new one has inline validation, live password matching, a
-                show-password toggle, and the same visual system as the rest of the login.
+                The old reset page was one blind password field with no rules shown. The new one
+                checks as you type, confirms the passwords match, lets you see what you typed, and
+                matches the rest of the login.
               </p>
               <p>
-                Working in code made the edge cases visible earlier and gave engineering something
-                closer to the final interaction. I later added the workflow to Awardco&rsquo;s
-                AI-prototyping guide and helped introduce it across the design team.
+                Building in code caught edge cases earlier and gave engineering something close to
+                the real thing. I later added the workflow to Awardco&rsquo;s AI prototyping guide
+                and helped roll it out to the design team.
               </p>
             </>
           }
@@ -805,17 +794,15 @@ export default function AwardcoCaseStudy() {
           body={
             <>
               <p>
-                In before-and-after usability testing, the redesign produced 25% faster login, 4.5%
-                more successful sign-ins, a 78% drop in the time spent choosing a sign-in method,
-                higher confidence, and lower reported difficulty. It&rsquo;s one guided experience
-                across mobile and desktop.
+                In before-and-after usability testing, login got 25% faster, successful sign-ins
+                went up 4.5%, and time spent picking a method dropped 78%. People felt more
+                confident and said it was easier.
               </p>
               <p>
-                The token-based flow passed architecture and security review, and I handed off the
-                finished designs for implementation after my internship: the token flow mapped as
-                states and transitions, SSO-first login for desktop and mobile, SMS verification and
-                provider-named sign-in on mobile, the redesigned password reset, the coded
-                prototypes, and the workflow behind Awardco&rsquo;s AI-prototyping guide.
+                The token flow passed architecture and security review, and I handed everything off
+                to be built after my internship: the token flow, SSO-first login on desktop and
+                mobile, text verification and named sign-in buttons on mobile, the new password
+                reset, the coded prototypes, and the AI prototyping workflow.
               </p>
             </>
           }
@@ -864,21 +851,19 @@ export default function AwardcoCaseStudy() {
             <Block>
               <div className="cs-prose">
                 <p>
-                  I learned not to follow a metric without asking what it was actually rewarding.
-                  Password-first won the task test, but it worked against the larger product
-                  evidence. Choosing the slightly slower direction produced the better system.
+                  The big lesson for me: don&rsquo;t chase a metric without asking what it&rsquo;s
+                  rewarding. Password-first won the test but worked against everything the real data
+                  said. The slightly slower design made the better system.
                 </p>
                 <p>
-                  The biggest improvement wasn&rsquo;t a cleaner login page. It was changing how
-                  authentication state moved between two parts of the product.
+                  And the biggest win wasn&rsquo;t a cleaner login page. It was changing how login
+                  moves between two parts of the product.
                 </p>
                 <p>
-                  One limitation remains. Some deskless workers can&rsquo;t carry phones during
-                  their shifts and use Awardco on shared kiosks, so SMS doesn&rsquo;t solve sign-in
-                  for them. If I kept going, kiosk research is where I&rsquo;d look next. I&rsquo;d
-                  also watch the production numbers once the system ships, against the 34.6% and
-                  98% baselines, and carry the coded-prototype workflow into the next flows the team
-                  tests.
+                  One gap is left. Some deskless workers can&rsquo;t carry phones on shift and sign
+                  in on shared kiosks, so a texted code doesn&rsquo;t help them. That&rsquo;s where
+                  I&rsquo;d look next, along with watching the real numbers once it ships against
+                  the 34.6% and 98% baselines.
                 </p>
               </div>
             </Block>

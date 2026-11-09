@@ -133,11 +133,10 @@ export default function PatternCaseStudy() {
               stacked
               summary={
                 <p>
-                  Predict&rsquo;s reporting workflow was rigid, so brand managers fell back to
-                  Excel to build, edit, and share multi-metric client reports. I found the
-                  problem while working on a small feature request, brought the larger
-                  opportunity to the Predict team, and owned a nine-week redesign of the core
-                  reporting workflow. Usability testing validated it, and the team shipped it
+                  Predict&rsquo;s reporting tool was so rigid that brand managers kept going back
+                  to Excel to build client reports. I found the problem while working on a tiny
+                  feature ticket, pitched the bigger opportunity to the team, and owned a
+                  nine-week redesign. Usability testing backed it up, and the team shipped it
                   after my internship.
                 </p>
               }
@@ -218,12 +217,12 @@ export default function PatternCaseStudy() {
           body={
             <>
               <p>
-                My first assignment was a small ClickUp ticket: let users duplicate a widget so they
-                wouldn&rsquo;t have to rebuild the same setup. It was estimated at one or two days.
+                My first assignment was a small ClickUp ticket: let people duplicate a widget so they
+                didn&rsquo;t have to rebuild it. Estimated at a day or two.
               </p>
               <p>
-                As I worked through the flow, duplication started to look like a symptom. People
-                were cloning widgets because creating and editing reports was slow, rigid, and
+                But the more I dug in, the more duplication looked like a symptom. People were
+                copying widgets because building and editing reports was slow, rigid, and
                 repetitive.
               </p>
             </>
@@ -253,9 +252,9 @@ export default function PatternCaseStudy() {
             <Block>
               <div className="cs-prose">
                 <p>
-                  The Custom Reports list sat behind a BETA sub-tab on the Reports page, with no
-                  previews and no way to tell a report from its copies. The only way to reuse a
-                  setup was to duplicate the whole report and edit the copy.
+                  The reports list was tucked behind a BETA tab, with no previews and no way to tell
+                  a report from its copies. To reuse a setup, you copied the whole report and edited
+                  the copy.
                 </p>
               </div>
               <div className="cs-fig__frame mt-6">
@@ -280,15 +279,14 @@ export default function PatternCaseStudy() {
           body={
             <>
               <p>
-                I ran weekly discovery interviews throughout my Pattern internship, and reporting
-                workarounds kept coming up in conversations about other parts of Predict. I also
-                held a focused session with four UK brand managers who had used Custom Reports.
+                I ran weekly discovery interviews my whole internship, and reporting workarounds
+                kept coming up, even when we were talking about other parts of Predict. I also ran a
+                focused session with four UK brand managers who&rsquo;d used Custom Reports.
               </p>
               <p>
-                The product data I had showed that roughly 60% of eligible users created at least
-                one report in the feature&rsquo;s first year, but only about 15% came back. People
-                understood the potential value, but the workflow wasn&rsquo;t useful enough to
-                repeat.
+                The data told the same story. Roughly 60% of eligible users made at least one report
+                in the feature&rsquo;s first year, but only about 15% came back. People saw the
+                value. The tool just wasn&rsquo;t worth coming back to.
               </p>
             </>
           }
@@ -307,13 +305,12 @@ export default function PatternCaseStudy() {
             <Block>
               <div className="cs-prose">
                 <p>
-                  The research kept pointing to six problems. Charts stopped at two metrics, so
-                  anything more meant Excel. Filters were unclear and couldn&rsquo;t be edited once
-                  a report existed. Separate view and edit modes hid basic actions behind a switch
-                  nobody expected. Buttons looked the same as each other, and some things that
-                  looked like buttons did nothing. A chart couldn&rsquo;t carry a note, so the
-                  explanation lived in the call. And there was no export, so sharing a report with a
-                  client meant a screen share, screenshots, or Excel.
+                  It kept coming back to six problems. Charts maxed out at two metrics, so anything
+                  more meant Excel. Filters were confusing and locked once a report existed.
+                  Separate view and edit modes hid basic actions. Buttons all looked alike, and some
+                  things that looked like buttons did nothing. Charts couldn&rsquo;t hold a note, so
+                  the explanation lived in the meeting. And there was no export, so sharing meant a
+                  screen share, screenshots, or Excel.
                 </p>
               </div>
               <Callouts
@@ -420,9 +417,8 @@ export default function PatternCaseStudy() {
             <Block>
               <div className="cs-prose">
                 <p>
-                  The two-metric limit wasn&rsquo;t a Custom Reports decision. It came from
-                  Predict&rsquo;s charts everywhere: every page in the platform drew two metrics on
-                  two axes, and Custom Reports inherited it.
+                  The two-metric limit didn&rsquo;t start in Custom Reports. Every chart in Predict
+                  drew two metrics on two axes, and reports just inherited it.
                 </p>
               </div>
               <div className="cs-fig__frame mt-6">
@@ -443,10 +439,10 @@ export default function PatternCaseStudy() {
             <Block>
               <div className="cs-prose">
                 <p>
-                  Two groups reported every week. Brand managers build the client report.
-                  Advertising strategists compare more than two metrics at a time and need that
-                  comparison to travel with the report. For both, success meant a useful first
-                  report without Excel, with more control showing up only when someone needed it.
+                  Two groups report every week. Brand managers build the client report. Ad
+                  strategists compare more than two metrics at once and need that in the report too.
+                  For both, the goal was a useful first report without Excel, with more control
+                  there when they needed it.
                 </p>
               </div>
             </Block>
@@ -459,25 +455,20 @@ export default function PatternCaseStudy() {
           body={
             <>
               <p>
-                I brought the evidence to the Predict product and design team. With my design
-                manager and Director of Product, I scoped a nine-week project around the most
-                valuable workflow: creating reports, configuring widgets and filters, and editing
-                report content.
+                I brought what I&rsquo;d found to the Predict team, and with my design manager and
+                Director of Product I scoped a nine-week project around the core: creating reports,
+                setting up widgets and filters, and editing them.
               </p>
               <p>
-                The biggest constraint was engineering capacity. I couldn&rsquo;t introduce new
-                data sources, replace Predict&rsquo;s design system, or assume the team could
-                rebuild the report builder from scratch.
+                The biggest constraint was engineering time. No new data sources, no replacing the
+                design system, and no rebuilding the report builder from scratch.
               </p>
               <p>
-                Advanced users wanted a free canvas where they could drag charts around and layer
-                dimensions, so I explored a Slides-style canvas. It matched how they thought about
-                building a report, but it went past the engineering budget. I presented the
-                concept, the user evidence, and the tradeoffs, and leadership made the scope
-                decision. I focused on keeping the most important value inside a structured report
-                the team could ship, with reordering in a list and the canvas on the roadmap. People
-                still got control over report structure without the team building an entirely new
-                editing system.
+                Advanced users wanted a free canvas to drag charts around, so I explored a
+                Slides-style version. It matched how they thought, but it was way past the
+                engineering budget. I showed leadership the concept, the evidence, and the
+                tradeoffs, and they made the call. I kept the core value in a structured report the
+                team could actually ship, with list reordering now and the canvas on the roadmap.
               </p>
             </>
           }
@@ -545,16 +536,15 @@ export default function PatternCaseStudy() {
           body={
             <>
               <p>
-                Because so many people didn&rsquo;t come back after their first try, I focused first
-                on making report creation easier to understand. The goal wasn&rsquo;t to show every
-                reporting option up front. It was to help people make a useful first report and
-                reveal more control when they needed it.
+                So many people never came back after their first try, so I started there. The goal
+                wasn&rsquo;t to show every option up front. It was to help people make one useful
+                report, and show more control when they needed it.
               </p>
               <p>
-                The new home replaced the text list with templates and visual report previews. A
-                guided creation flow collects the report name, scope, filters, and first widget,
-                explaining scope and filters before they can quietly limit the report, and then
-                puts you inside a working report.
+                The new home swapped the text list for templates and report previews. A guided flow
+                walks you through the name, scope, filters, and first widget, explains scope and
+                filters before they can quietly limit your report, and drops you into a working
+                report.
               </p>
             </>
           }
@@ -597,17 +587,17 @@ export default function PatternCaseStudy() {
           body={
             <>
               <p>
-                Predict&rsquo;s charts had two y-axes and stopped at two metrics. People wanted to
-                compare five or six, and to mix lines with bars. The hard part wasn&rsquo;t drawing
-                more lines. It was that metrics come in different units, like dollars, counts,
-                percentages, and ratios, and a chart still only has two sides.
+                Predict&rsquo;s charts stopped at two metrics. People wanted to compare five or six,
+                and mix lines with bars. The hard part wasn&rsquo;t drawing more lines. It was that
+                metrics come in different units (dollars, counts, percentages, ratios) and a chart
+                only has two sides.
               </p>
               <p>
-                Here are the rules I landed on. Every metric has a unit. The first unit family on
-                the chart takes the left axis, the second takes the right, and a third family is
-                blocked with a reason instead of being squeezed onto a scale that would lie. Each
-                metric chooses line or bar. A switch lets same-unit metrics share one scale, or
-                split across both axes when one would flatten the other.
+                Here&rsquo;s what I landed on. Every metric has a unit. The first kind of unit takes
+                the left axis, the second takes the right, and a third is blocked with a reason
+                instead of being squished onto a scale that would lie. Each metric can be a line or
+                a bar. And a switch lets same-unit metrics share one scale, or split across both
+                sides when one would flatten the other.
               </p>
             </>
           }
@@ -624,10 +614,9 @@ export default function PatternCaseStudy() {
             <Block>
               <div className="cs-prose">
                 <p>
-                  The same widget carries a caption that travels with the chart, so a shared report
-                  can explain itself instead of relying on whoever is presenting it. And the numbers
-                  on it agree with each other: ROAS on a card is the ad sales over ad spend that the
-                  chart is drawing.
+                  Every chart also gets a caption that travels with it, so a shared report can
+                  explain itself without someone presenting it. And the numbers agree: ROAS on a
+                  card is the same ad sales over ad spend the chart is drawing.
                 </p>
               </div>
             </Block>
@@ -640,17 +629,15 @@ export default function PatternCaseStudy() {
           body={
             <>
               <p>
-                I tested the redesigned flows with 20 users: ten brand managers and ten advertising
-                strategists. I expected them to want a clean split between presenting a report and
-                editing it. Testing showed the opposite. Brand managers often edited charts while
-                presenting them to a client, and switching modes added friction right when they
-                needed the tool to feel most responsive.
+                I tested the redesign with 20 users: ten brand managers and ten ad strategists. I
+                expected them to want separate modes for presenting and editing. Turns out, the
+                opposite. Brand managers often edited charts live in front of a client, and
+                switching modes got in the way right when they needed it to feel fast.
               </p>
               <p>
-                So I removed the separate edit mode and combined viewing and editing into one.
-                Actions show up in context, filters stay editable after a report is created, and the
-                controls that looked like buttons now are buttons. That simplified the interface and
-                fit the way reports were actually used.
+                So I cut the edit mode and merged viewing and editing into one. Actions show up
+                where you need them, filters stay editable after you make a report, and things that
+                look like buttons actually are buttons.
               </p>
             </>
           }
@@ -699,12 +686,11 @@ export default function PatternCaseStudy() {
             <Block>
               <div className="cs-prose">
                 <p>
-                  The starting templates came from a report-building competition with brand
-                  managers and advertising strategists, not from my own assumptions about a good
-                  client report. Participants used the new system to build the reports they found
-                  most useful in their real work. The strongest entries became the templates in the
-                  product, and the competition gave me another round of feedback from the people who
-                  knew the workflow best.
+                  The starting templates came from a report-building competition, not from my
+                  guesses about what a good report looks like. Brand managers and ad strategists
+                  used the new system to build the reports they&rsquo;d actually use. The best ones
+                  became the templates, and I got one more round of feedback from the people who
+                  knew the work best.
                 </p>
               </div>
             </Block>
@@ -717,16 +703,15 @@ export default function PatternCaseStudy() {
           body={
             <>
               <p>
-                The redesign was validated through 20 usability sessions and shipped by the Pattern
-                team after my internship. By handoff, a chart could hold up to six metrics, with
-                lines and bars together on two axes that follow the unit rules. Viewing and editing
-                were one mode, filters could be changed after a report was created, and every widget
-                had a caption that travels with the chart. Reports could be reordered, duplicated,
-                shared, and exported, and the template library was seeded by reports users built.
+                The redesign was validated in 20 usability sessions and shipped by the Pattern team
+                after my internship. By handoff, a chart could hold up to six metrics, lines and bars
+                together on two axes. Viewing and editing were one mode, filters could change after
+                a report was made, and every chart had a caption. Reports could be reordered,
+                duplicated, shared, and exported, and the templates came from reports users built.
               </p>
               <p>
-                I delivered annotated designs, the prototype, supporting documentation, a
-                prioritized backlog, and a follow-up testing plan.
+                I handed off annotated designs, the prototype, documentation, a prioritized backlog,
+                and a plan for follow-up testing.
               </p>
             </>
           }
@@ -753,22 +738,20 @@ export default function PatternCaseStudy() {
             <Block>
               <div className="cs-prose">
                 <p>
-                  My first instinct was to include everything users asked for. Trying to build all
-                  of it would have produced another complicated report builder. The harder and more
-                  valuable work was finding the changes that improved the core workflow for
-                  everyone, then fitting them inside what engineering could support.
+                  My first instinct was to build everything users asked for. That would have just
+                  made another complicated report builder. The harder, more useful work was finding
+                  the changes that helped everyone, and fitting them into what engineering could
+                  build.
                 </p>
                 <p>
-                  The redesign still didn&rsquo;t solve missing forecast, wholesale, or logistics
-                  data. Those were platform limitations, not interface problems, and they&rsquo;re
-                  what stands between Predict and being someone&rsquo;s complete reporting tool.
-                </p>
-                <p>
-                  Next, I&rsquo;d let people send a report to the client from Predict through Gmail,
-                  so the old routine of a screen share or screenshots ends. That flow is in design
-                  now. I&rsquo;d also measure whether people return to build a second report, and
-                  look into the forecast, wholesale, and logistics gaps that still send people to
+                  It didn&rsquo;t fix the missing forecast, wholesale, and logistics data. Those are
+                  platform gaps, not design ones, and they&rsquo;re what still sends people to
                   Excel.
+                </p>
+                <p>
+                  Next, I&rsquo;d let people send a report straight to the client through Gmail (that
+                  flow is in design now), and I&rsquo;d track whether people come back to build a
+                  second report.
                 </p>
               </div>
             </Block>

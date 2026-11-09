@@ -97,12 +97,10 @@ export default function LucidCaseStudy() {
               stacked
               summary={
                 <p>
-                  Lucid AI is an assistant on the Lucid homepage that helps people find,
-                  understand, and create work. I designed it so users could search for a
-                  document with whatever details they remembered, not just its title. In the
-                  same experience, I designed AI skills for summarizing documents, synthesizing
-                  information across multiple documents, and generating new ones. It went to
-                  general availability on August 5, for every Lucid tier.
+                  Lucid AI is an assistant on the Lucid homepage. I designed it so you can
+                  find a document by whatever you remember about it, not just its title, and
+                  then summarize it, catch up on what changed, or build something new. It
+                  shipped to every Lucid tier on August 5.
                 </p>
               }
               facts={[
@@ -158,26 +156,20 @@ export default function LucidCaseStudy() {
           body={
             <>
               <p>
-                When I joined Lucid, finding documents took a lot of work, especially for
-                enterprise users who belonged to multiple teams and had years of document history.
+                When I joined Lucid, finding a document was hard work, especially for enterprise
+                users on multiple teams with years of history.
               </p>
               <p>
-                Search only matched keywords in document titles. If you couldn&rsquo;t remember the
-                title, your options were to scroll through pages of recent documents or use
-                advanced filters that many users found confusing.
+                Search only matched words in titles. Forget the title, and you were scrolling
+                through pages of recent docs or fighting filters many people found confusing.
               </p>
               <p>
-                I started scheduling discovery calls as quickly as I could. Across conversations
-                with users from around the world, the same pattern kept coming up: people
-                remembered what a document was about, or something inside it, but rarely its exact
-                title. That caused two problems. They couldn&rsquo;t turn what they remembered into a
-                keyword search, and a title alone didn&rsquo;t tell them enough to be sure they had
-                the right document.
+                I got on discovery calls with users around the world as fast as I could, and heard
+                the same thing over and over. People remembered what a doc was about, or something
+                inside it, but rarely its exact title. And even when they found a title, it
+                didn&rsquo;t tell them if it was the right doc.
               </p>
-              <p>
-                So success meant someone recognizing the right document from what they remembered,
-                without ever knowing its title.
-              </p>
+              <p>So the goal was simple: find the right doc from what you remember.</p>
             </>
           }
         >
@@ -199,10 +191,8 @@ export default function LucidCaseStudy() {
           title="Finding the opportunity"
           body={
             <p>
-              Lucid AI could already generate diagrams and flowcharts inside a document, but none of
-              that natural-language help existed on the homepage. We saw a chance to bring Lucid AI
-              there, so people could find existing work and get more done before opening a
-              document.
+              Lucid AI could already build diagrams inside a document, but the homepage had none of
+              it. That&rsquo;s where people go to look for their work, so we brought Lucid AI there.
             </p>
           }
         >
@@ -251,10 +241,9 @@ export default function LucidCaseStudy() {
             <Block>
               <div className="cs-prose">
                 <p>
-                  I started with where people already went when they needed something. On the
-                  homepage that was the search bar, but it was not the only open spot. The left
-                  navigation, the links at the bottom of it, and the icons in the top right could
-                  all have held the entry point.
+                  I started where people already go when they need something: the search bar. But
+                  there were other open spots too, like the left nav, the links at the bottom of
+                  it, and the icons in the top right.
                 </p>
               </div>
               <Callouts
@@ -297,21 +286,15 @@ export default function LucidCaseStudy() {
               />
               <div className="cs-prose mt-10">
                 <p>
-                  In testing, people found the spot beside search the most familiar. It sat right
-                  next to where they already went to find work, and it matched the industry pattern
-                  of putting the AI entry point in the top navigation rather than the left. It was
-                  close enough to read as a smarter way to find work, and separate enough that
-                  keyword search kept working the way people knew.
+                  In testing, the spot right next to search felt the most familiar. It&rsquo;s
+                  where people already go to find work, and most products put AI in the top nav,
+                  not the side. Close enough to feel like a smarter search, separate enough that
+                  regular search still works the way people know.
                 </p>
                 <p>
-                  The space next to the bar was already empty, so adding the Lucid AI sparkle
-                  button moved nothing else. Navigation, templates and recent documents all stayed
-                  where people expected them.
-                </p>
-                <p>
-                  The result was <strong>one new button and nothing to relearn</strong>. People
-                  meet Lucid AI at the moment they are already looking for something, which is
-                  exactly where its first skill, Find Docs, does its work.
+                  That space was already empty, so the sparkle button moved nothing.{' '}
+                  <strong>One new button, nothing to relearn</strong>, right where Find docs does
+                  its job.
                 </p>
               </div>
               <figure className="m-0 mt-6">
@@ -335,18 +318,16 @@ export default function LucidCaseStudy() {
           body={
             <>
               <p>
-                The discovery calls showed that search was only one of the things people struggled
-                with on the homepage. Managers wanted a faster way to understand their teams&rsquo;
-                work. Product leaders wanted visibility across their organization and quick
-                summaries of roadmaps and other planning documents. More broadly, people wanted the
-                assistant to help them get started, not only find files.
+                The calls showed search was only part of it. Managers wanted a faster read on what
+                their teams were doing. Product leaders wanted quick summaries of roadmaps and
+                planning docs. And people wanted help getting started, not just finding files.
               </p>
               <p>
-                That widened the project. We rapidly prototyped and tested more than 20 possible
-                capabilities, then narrowed them to four core skills. Find docs locates a doc by
-                topic, person, or what is inside it. Summarize gives the gist of a doc or a group of
-                them. Build a diagram creates flowcharts and visual layouts from a text prompt. Catch
-                up shows what changed recently or what you missed.
+                So we prototyped and tested more than 20 ideas and cut them to four.{' '}
+                <strong>Find docs</strong> searches by topic, person, or what&rsquo;s inside.{' '}
+                <strong>Summarize</strong> gives the gist of one doc or a bunch.{' '}
+                <strong>Build a diagram</strong> turns a prompt into a flowchart.{' '}
+                <strong>Catch up</strong> shows what you missed.
               </p>
             </>
           }
@@ -376,9 +357,9 @@ export default function LucidCaseStudy() {
           title="Designing the skills"
           body={
             <p>
-              Find docs is the skill the whole project started from. Instead of a keyword that has
-              to match the title, it takes whatever you remember: a collaborator, a timeframe, or
-              what is written on the canvas.
+              Find docs is where the whole project started. Instead of a keyword that has to match
+              the title, it takes whatever you remember: who you worked with, roughly when, or
+              what&rsquo;s on the canvas.
             </p>
           }
         >
@@ -404,11 +385,10 @@ export default function LucidCaseStudy() {
             <Block>
               <div className="cs-prose">
                 <p>
-                  A title alone still didn&rsquo;t tell people whether a result was the right one. So
-                  I designed a compact document result with an AI-generated summary of what is
-                  inside. Hovering a result shows when it was last modified, who owns it, and which
-                  team it belongs to. That gave people enough context to recognize the right
-                  document and check that the assistant had understood their search.
+                  But a title still didn&rsquo;t tell people if they&rsquo;d found the right one. So
+                  every result gets a one-line AI summary of what&rsquo;s inside, and hovering shows
+                  who owns it, which team it&rsquo;s in, and when it was last edited. Enough to
+                  recognize the doc, and to see the assistant understood you.
                 </p>
               </div>
               <Callouts
@@ -454,8 +434,8 @@ export default function LucidCaseStudy() {
             <Block>
               <div className="cs-prose">
                 <p>
-                  Summarize and Catch up answer in the same panel as Find docs. Each one opens by
-                  saying what it can do and offering a prompt to start from.
+                  Summarize and Catch up live in the same panel. Each one opens by explaining what
+                  it does and offering a prompt to start with.
                 </p>
               </div>
               <div className="mt-6">
@@ -506,9 +486,9 @@ export default function LucidCaseStudy() {
             <Block>
               <div className="cs-prose">
                 <p>
-                  Build a diagram is the one skill that leaves the panel. It runs as a conversation:
-                  the assistant asks what kind of diagram you want, takes a prompt, and assembles the
-                  board in its own tab while the panel reports progress.
+                  Build a diagram is the only skill that leaves the panel. It asks what kind of
+                  diagram you want, takes your prompt, and builds the board in a new tab while the
+                  panel shows its progress.
                 </p>
               </div>
               <figure className="m-0 mt-6">
@@ -531,10 +511,8 @@ export default function LucidCaseStudy() {
             <Block>
               <div className="cs-prose">
                 <p>
-                  I explored several layouts for the assistant. The side panel lets people keep
-                  viewing and working with their documents while they chat. For longer
-                  conversations that need more room, I also designed a full-page state you can open
-                  from the panel.
+                  I tried a few layouts and landed on a side panel, so you can keep working with
+                  your docs while you chat, plus a full page for longer conversations.
                 </p>
               </div>
               <div className="mt-6">
@@ -571,14 +549,13 @@ export default function LucidCaseStudy() {
           body={
             <>
               <p>
-                Find docs let people search by who they worked with, but testing with external
-                users showed a gap we hadn&rsquo;t fully expected. When someone typed a name, the
-                assistant sometimes guessed the wrong person.
+                Find docs let you search by who you worked with, but testing with external users
+                turned up something we didn&rsquo;t expect: type a name, and the assistant sometimes
+                picked the wrong person.
               </p>
               <p>
-                Instead of asking the AI to make that guess, I designed an @mention that lets you
-                pick the exact teammate or team. That removed the ambiguity and gave people more
-                control over the answer.
+                So instead of making the AI guess, I designed an @mention that lets you pick the
+                exact teammate or team.
               </p>
             </>
           }
@@ -599,16 +576,13 @@ export default function LucidCaseStudy() {
             <Block>
               <div className="cs-prose">
                 <p>
-                  The mention tool shipped in both surfaces: the assistant panel and the keyword
-                  search bar. Search kept its keyword bar, and past four words it also returns an AI
-                  answer above the results, so a sentence gets an answer and a keyword still gets a
-                  list.
+                  The @mention shipped in both the assistant panel and the regular search bar.
+                  Search still takes keywords, but past four words it also gives an AI answer above
+                  the results. A sentence gets an answer, a keyword still gets a list.
                 </p>
                 <p>
-                  My manager owned the design of that AI answer section, and I contributed to it.
-                  Across both surfaces I owned the mention tool, the document search results, and
-                  the interaction that opens the chat from inside the answer and leads into the full
-                  Lucid AI experience.
+                  My manager owned the AI answer and I helped with it. I owned the @mention, the
+                  document results, and the jump from that answer into the full Lucid AI chat.
                 </p>
               </div>
               <Callouts
@@ -660,10 +634,9 @@ export default function LucidCaseStudy() {
           title="Shipping to every tier"
           body={
             <p>
-              On August 5 we released the experience to general availability across every Lucid
-              tier, free through enterprise. Over my 12-week internship, I helped take the project
-              from a blank page through discovery, prototyping, testing with external users, and
-              release.
+              On August 5 we shipped it to every Lucid tier, free through enterprise. In 12 weeks I
+              helped take it from a blank page through discovery, prototyping and testing with
+              external users, all the way to release.
             </p>
           }
         >
@@ -704,28 +677,25 @@ export default function LucidCaseStudy() {
           body={
             <>
               <p>
-                My internship ended shortly after the release, so I don&rsquo;t have long-term
-                adoption data. Before I left, I designed and implemented an A/B test comparing the
-                side panel and the full page and measuring which capabilities performed best, so
-                the team could use real behavior to guide the next version.
+                My internship ended right after release, so I don&rsquo;t have long-term adoption
+                numbers. Before I left, I designed and set up an A/B test of the side panel against
+                the full page, tracking which skills did best, so real behavior could guide the
+                next version.
               </p>
               <p>
-                I handed off the side panel and full-page experiences, the results component, the
-                four core skills, the failure states that shipped with the release, that A/B test,
-                and designs for memory controls and chat history.
+                I handed off the panel and full page, the results component, the four skills, the
+                failure states, the A/B test, and designs for memory controls and chat history.
               </p>
               <p>
-                One limitation remained: the AI inside the editor and the Docs List AI
-                couldn&rsquo;t share context. Closing that gap was the clear next step, and the
-                memory and chat history designs were there so the team could keep building toward
-                it.
+                One gap was left: the AI in the editor and the AI on the homepage couldn&rsquo;t
+                share context. The memory and chat history designs give the team a head start on
+                closing it.
               </p>
               <p>
-                Every decision on this project was a tradeoff between speed, cost, and usability.
-                Knowing enough about the technical side to work through those with engineers
-                expanded what I could design. We shipped quickly because the feedback loop never
-                stopped. Users saw each round, engineers saw designs within days, and nothing waited
-                for a big reveal.
+                Every call here was a tradeoff between speed, cost, and usability, and knowing the
+                technical side helped me work through those with engineers. We moved fast because
+                the feedback never stopped. Users saw every round, and engineers saw designs within
+                days.
               </p>
             </>
           }
