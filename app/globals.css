@@ -4903,9 +4903,14 @@ p a {
    stay tied to the paragraph above them. */
 .story {
   --card-gap: clamp(0.75rem, 1.4vw, 1.25rem);
-  /* 164px cards make a 900px row, the same width as the paragraph above
-     it, so text and photos share both edges (Luke, 2026-11-09). */
-  --card-w: min(calc((100vw - 4rem - 4 * var(--card-gap)) / 5), 164px);
+  /* The row fills the same 1240px column (less .ab-wide's 2rem padding
+     each side) as every section below, so the story and the reptile
+     section share both edges (Luke, 2026-11-09). The paragraph above
+     takes the row's width too. */
+  --card-w: min(
+    calc((100vw - 4rem - 4 * var(--card-gap)) / 5),
+    calc((var(--ab-wide) - 4rem - 4 * var(--card-gap)) / 5)
+  );
   position: relative;
   padding-block: 1rem 2rem;
 }

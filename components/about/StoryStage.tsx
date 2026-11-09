@@ -35,7 +35,7 @@ export default function StoryStage({
                   key={i}
                   card={c}
                   index={i}
-                  sizes="(max-width: 60em) 40vw, 210px"
+                  sizes="(max-width: 60em) 40vw, 230px"
                   priority={b === 0}
                 />
               )
