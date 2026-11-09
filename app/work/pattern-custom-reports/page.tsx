@@ -115,11 +115,7 @@ const STAGES = [
 export default function PatternCaseStudy() {
   return (
     <div className="cs pcs cs-surface cs-story min-h-screen text-white">
-      {/*
-       * The chain in lib/caseStudies goes Pattern → Hoth → Lucid, but Hoth is
-       * hidden (HIDDEN_WORK in lib/work), so `next` skips it and wraps to
-       * Lucid — the same study the Read next cards below lead with.
-       */}
+      {/* Next leads to Lucid, the same study the Read next cards lead with. */}
       <SiteNav next={{ href: '/work/lucid-ai', title: 'Bringing Lucid AI to the homepage' }} />
 
       <main id="main" className="sitenav-offset pb-24">

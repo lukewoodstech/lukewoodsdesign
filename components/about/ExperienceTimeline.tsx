@@ -126,7 +126,7 @@ export default function ExperienceTimeline({ roles }: { roles: ReadonlyArray<Rol
                 <span className="tl-card__title">
                   <span className="tl-card__role">
                     {r.href && r.external ? (
-                      /* Off-site (Hoth's study is gated): a plain anchor
+                      /* Off-site (no case study, e.g. Hoth): a plain anchor
                          in a new tab, and the label says where it goes. */
                       <a
                         href={r.href}

@@ -121,27 +121,6 @@ const BY_PATH: Record<string, ReadonlyArray<Suggestion>> = {
     },
   ],
 
-  '/work/hoth': [
-    {
-      label: 'What is early-stage design actually like?',
-      message:
-        'What is designing at an early-stage startup actually like compared with designing inside a larger company? Use Hoth and your other roles.',
-    },
-    {
-      label: 'What was the hardest call here?',
-      message: 'At Hoth, what was the hardest design call you made, and what did you trade away?',
-    },
-    {
-      label: 'How do you work without a design system?',
-      message:
-        'How do you work when there is no design system and no research budget? What do you build first?',
-    },
-    {
-      label: 'What should I ask you in an interview?',
-      message:
-        'What should I ask you in an interview to find out whether you are any good? Give me the questions that would actually test you.',
-    },
-  ],
 }
 
 /** The four questions for a route. Anything unmapped gets the default set. */

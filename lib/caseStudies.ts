@@ -295,19 +295,7 @@ export const caseStudies: CaseStudy[] = [
         caption: 'Final in-report design — multi-metric comparison with color customization',
       },
     ],
-    // Pitch, not Hoth: Hoth is still gated, and a public study must never link to a locked door.
     nextSlug: 'pitch',
-  },
-  {
-    slug: 'hoth',
-    title: 'Hoth Landing Page',
-    company: 'Hoth',
-    about: 'Hoth is an early-stage startup building an encrypted platform for work.',
-    accent: '#008fff',
-    role: 'Product Design Intern',
-    period: 'Dec 2024 – Apr 2025',
-    summary: 'Brand identity and landing page for an encrypted work platform.',
-    nextSlug: 'lucid-ai',
   },
   {
     /*

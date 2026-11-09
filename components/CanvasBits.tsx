@@ -3,7 +3,6 @@ import { WORK, type WorkItem } from '@/lib/work'
 import LucidTile from './LucidTile'
 import AwardcoMobileTile from './AwardcoMobileTile'
 import PatternTile from './PatternTile'
-import HothTile from './HothTile'
 import PitchTile from './PitchTile'
 
 /*
@@ -27,7 +26,6 @@ const TILE_ART: Record<string, ReactNode> = {
   'lucid-ai': <LucidTile />,
   awardco: <AwardcoMobileTile />,
   pattern: <PatternTile />,
-  hoth: <HothTile />,
   pitch: <PitchTile />,
 }
 

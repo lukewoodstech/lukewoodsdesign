@@ -273,9 +273,8 @@ test('site description is the grounded line and the layout uses it', () => {
     SITE.description,
     'Product designer combining research, systems thinking, and code to ship useful products: Pitch, Lucid, Awardco, and Pattern.',
   )
-  /* The description may only name work a visitor can actually open. Hoth is
-     hidden and gated, so naming it here pointed the site's widest-reaching
-     sentence at a locked door. Put it back with the study, not before. */
+  /* The description may only name work a visitor can actually open. Hidden
+     work must never be named in the site's widest-reaching sentence. */
   for (const slug of HIDDEN_WORK) {
     const company = ALL_WORK.find((w) => w.slug === slug)?.nav
     if (!company) continue
@@ -313,9 +312,8 @@ test('no source file still says "four internships" or the retired positioning', 
   }
 })
 
-test('case-study data: Hoth role matches the truth layer; Pattern copy says usability sessions', () => {
-  const hoth = caseStudies.find((c) => c.slug === 'hoth')!
-  assert.equal(hoth.role, ENGAGEMENTS.find((e) => e.company === 'Hoth')!.role)
+test('case-study data: Hoth has no study; Pattern copy says usability sessions', () => {
+  assert.equal(caseStudies.find((c) => c.slug === 'hoth'), undefined)
   const pattern = caseStudies.find((c) => c.slug === 'pattern-custom-reports')!
   const text = JSON.stringify(pattern)
   assert.doesNotMatch(text, /daily/i)

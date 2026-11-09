@@ -12,11 +12,9 @@ export const SITE = {
    * The line Google prints under the name, and the one every page falls back
    * to. It names the three published studies and stops there.
    *
-   * It used to end "…Lucid, Awardco, Pattern, and Hoth." Hoth is in
-   * HIDDEN_WORK and password-gated, so the one sentence with the widest
-   * reach on the site was advertising the only work a visitor cannot open.
-   * Hoth goes back in the moment its study is written; until then the
-   * description promises exactly what the site delivers.
+   * It used to end "…Lucid, Awardco, Pattern, and Hoth." The Hoth study was
+   * dropped on 2026-11-09, so the description names only work a visitor can
+   * open.
    */
   description:
     'Product designer combining research, systems thinking, and code to ship useful products: Pitch, Lucid, Awardco, and Pattern.',
