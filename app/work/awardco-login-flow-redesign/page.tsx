@@ -976,12 +976,12 @@ export default function AwardcoCaseStudy() {
                 the hardware it started with. */}
             <div className="cs-final__stage" style={{ paddingInline: 'var(--cs-pad)' }}>
               <Macbook
-                ratio={2880 / 2048}
+                ratio={1440 / 1024}
                 style={{ '--r': '-5deg', '--y': '6%' } as React.CSSProperties}
               >
                 <Image
-                  src={`${IMG}/figma/new-reset-web.png`}
-                  alt="The redesigned password reset page with inline validation"
+                  src="/work/awardco/walk/desk-signin-filled.png"
+                  alt="The redesigned sign-in: Sign in with Google above one email field and Continue"
                   fill
                   sizes="(min-width: 40em) 50vw, 100vw"
                 />
@@ -989,16 +989,16 @@ export default function AwardcoCaseStudy() {
               <div className="cs-phones" style={{ '--r': '4deg', '--y': '-4%' } as React.CSSProperties}>
                 <Iphone>
                   <Image
-                    src={`${IMG}/figma/new-mobile.png`}
-                    alt="The redesigned mobile sign-in"
+                    src="/work/awardco/walk/phone-verify-method.png"
+                    alt="The mobile verification chooser: email, secondary email, or text message"
                     fill
                     sizes="(min-width: 40em) 20vw, 40vw"
                   />
                 </Iphone>
                 <Iphone>
                   <Image
-                    src={`${IMG}/figma/sms-mobile.png`}
-                    alt="The mobile verification chooser"
+                    src="/work/awardco/walk/phone-reset-states.png"
+                    alt="The mobile password reset with live checks: requirements met, passwords do not match"
                     fill
                     sizes="(min-width: 40em) 20vw, 40vw"
                   />
