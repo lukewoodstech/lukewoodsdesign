@@ -9026,3 +9026,199 @@ p a {
   .cs-gallery--many .cs-gallery__row::-webkit-scrollbar { display: none; }
   .cs-gallery--many .cs-gallery__item { flex: 0 0 42% !important; scroll-snap-align: start; }
 }
+
+/* ── Awardco: how sign-in fits together (LoginLayers) ────────────────
+   Universal login, company login page, app: three columns linked by the
+   same connector FlowStrip uses, the first one carrying the token. */
+.acs-layers {
+  --layers-gap: clamp(1rem, 2.4vw, 2rem);
+  list-style: none;
+  margin: 1.5rem auto 0;
+  padding: 0;
+  width: min(1100px, calc(100vw - 2 * var(--cs-pad)));
+  position: relative;
+  left: 50%;
+  translate: -50% 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--layers-gap);
+}
+.acs-layers__item { position: relative; display: flex; flex-direction: column; min-width: 0; }
+.acs-layers__kicker {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-mono);
+  font-size: var(--label-micro, 0.6875rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+.acs-layers__kicker span { color: var(--accent); margin-right: 0.25rem; }
+.acs-layers__title { margin: 0; font-size: 1rem; font-weight: 600; color: #fff; }
+.acs-layers__asks { margin: 0.2rem 0 0.8rem; font-size: 0.875rem; color: var(--accent); }
+.acs-layers__shot { position: relative; }
+.acs-layers__body { margin: 0.75rem 0 0; font-size: 0.875rem; line-height: 1.5; color: rgba(255, 255, 255, 0.72); }
+.acs-layers__link {
+  position: absolute;
+  /* Rough middle of the screenshot, under the title block. */
+  top: 42%;
+  left: 100%;
+  width: var(--layers-gap);
+  height: 1px;
+  background: var(--card-ring);
+}
+.acs-layers__item:has(.acs-layers__link--carry) { z-index: 2; }
+.acs-layers__link--carry {
+  background: var(--accent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+.acs-layers__carry {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  padding: 0.14rem 0.45rem;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  line-height: 1.45;
+  white-space: nowrap;
+  color: var(--accent);
+  background: rgba(10, 10, 14, 0.9);
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+}
+@media (max-width: 48em) {
+  .acs-layers { grid-template-columns: minmax(0, 1fr); width: 100%; left: 0; translate: none; gap: 2.5rem; }
+  .acs-layers__link { top: auto; bottom: -2.5rem; left: 1rem; width: 1px; height: 2.5rem; }
+  .acs-layers__carry { left: 0.75rem; translate: 0 -50%; }
+}
+
+/* ── Awardco: the new sign-in, path by path (FlowWalkthrough) ────────
+   Tabs pick a path, numbered steps pick a screen, and the phone and
+   laptop show it side by side like the hero. Screens in a path are
+   stacked and crossfaded so stepping never waits on a load. */
+.acs-walk {
+  width: min(1180px, calc(100vw - 2 * var(--cs-pad)));
+  position: relative;
+  left: 50%;
+  translate: -50% 0;
+  margin-top: 1.5rem;
+}
+.acs-walk__tabs { display: flex; justify-content: center; }
+.acs-walk__panel {
+  margin-top: 1.25rem;
+  padding: clamp(1rem, 3vw, 2rem);
+  border: 1px solid var(--card-ring);
+  border-radius: 20px;
+  background:
+    radial-gradient(120% 80% at 50% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%),
+    rgba(255, 255, 255, 0.02);
+}
+.acs-walk__steps {
+  list-style: none;
+  margin: 0 0 clamp(1rem, 3vw, 2rem);
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.acs-walk__step {
+  appearance: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--card-ring);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+.acs-walk__step:hover { color: #fff; border-color: rgba(255, 255, 255, 0.35); }
+.acs-walk__step[aria-current='step'] {
+  color: #fff;
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+}
+.acs-walk__step:focus-visible,
+.acs-walk__arrow:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.acs-walk__num { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--accent); }
+.acs-walk__stage {
+  display: grid;
+  grid-template-columns: minmax(0, 0.3fr) minmax(0, 1fr);
+  gap: clamp(0.75rem, 3vw, 2.5rem);
+  align-items: center;
+}
+.acs-walk__img { object-fit: cover; opacity: 0; transition: opacity 0.35s ease; }
+.acs-walk__img[data-on='true'] { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .acs-walk__img { transition: none; } }
+.acs-walk__foot {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: clamp(1rem, 3vw, 2rem);
+}
+.acs-walk__caption { max-width: 640px; min-height: 5.5rem; }
+.acs-walk__title { margin: 0; font-weight: 600; color: #fff; }
+.acs-walk__count {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  margin-right: 0.6rem;
+}
+.acs-walk__note { margin: 0.35rem 0 0; color: rgba(255, 255, 255, 0.72); line-height: 1.55; }
+.acs-walk__nav { display: flex; gap: 0.5rem; flex: none; }
+.acs-walk__arrow {
+  appearance: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--card-ring);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.acs-walk__arrow:hover:not(:disabled) { border-color: var(--accent); }
+.acs-walk__arrow:disabled { opacity: 0.3; cursor: default; }
+@media (max-width: 40em) {
+  .acs-walk { width: 100%; left: 0; translate: none; }
+  .acs-walk__stage { grid-template-columns: minmax(0, 0.36fr) minmax(0, 1fr); }
+  .acs-walk__steps { justify-content: flex-start; }
+  .acs-walk__foot { flex-direction: column-reverse; gap: 0.75rem; }
+  .acs-walk__caption { min-height: 0; }
+}
+
+/* The code page's alerts, rebuilt from the design file's Inline Alert. */
+.acs-alerts { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
+.acs-alert {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  max-width: 340px;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+.acs-alert--error { background: #fde4e4; color: #2a1a1a; }
+.acs-alert--ok { background: #e1f5e3; color: #17291a; }
+.acs-alert__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 999px;
+  border: 2px solid currentColor;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.acs-alert--error .acs-alert__icon { color: #c62828; }
+.acs-alert--ok .acs-alert__icon { color: #2e7d32; }
+.acs-alert__title { margin: 0; font-weight: 600; }
+.acs-alert__body { margin: 0.15rem 0 0; color: rgba(0, 0, 0, 0.6); }

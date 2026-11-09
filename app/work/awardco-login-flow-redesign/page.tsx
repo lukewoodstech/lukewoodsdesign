@@ -6,6 +6,8 @@ import ReadNext from '@/components/ReadNext'
 import CompareStage from '@/components/lucid/CompareStage'
 import ZoomShot from '@/components/lucid/ZoomShot'
 import FinalHero from '@/components/awardco/FinalHero'
+import FlowWalkthrough, { CodeAlerts, type WalkPath } from '@/components/awardco/FlowWalkthrough'
+import LoginLayers from '@/components/awardco/LoginLayers'
 import FlowStrip, { type FlowStep } from '@/components/cs/FlowStrip'
 import { Iphone, Macbook } from '@/components/cs/Devices'
 import BigStats from '@/components/cs/BigStats'
@@ -194,6 +196,126 @@ const AFTER_FLOW: FlowStep[] = [
 ]
 
 /*
+ * How sign-in is put together, before the before/after strips: the two
+ * login pages are separate, and the token only makes sense once that's
+ * clear. URLs come from the design file's capture names
+ * (app.awardco.com_start_login, natalietest.awardco.com).
+ */
+const LAYERS = [
+  {
+    kicker: 'app.awardco.com',
+    title: 'Universal login',
+    asks: 'Who are you, and which company?',
+    body: 'Awardco’s front door. It doesn’t know your company yet, so it asks for your work email, sends one code, and has you pick your workspace.',
+    src: `${FLOW}/universal.png`,
+    alt: 'The universal login page: an Awardco logo, one Work Email field, and Continue With Email',
+    width: 1440,
+    height: 1024,
+    carry: 'secure token',
+  },
+  {
+    kicker: 'yourcompany.awardco.com',
+    title: 'Company login page',
+    asks: 'How does your company sign in?',
+    body: 'Your company’s own branded page. It knows whether you use SSO, a password, a code, or MFA. This is the page I redesigned, and it now picks up where the universal login left off.',
+    src: `${IMG}/hero/desk-awardco.png`,
+    alt: 'The redesigned company login page in Awardco branding, with Sign in with Google above a single email field',
+    width: 2880,
+    height: 1600,
+  },
+  {
+    kicker: 'Signed in',
+    title: 'The app',
+    asks: 'Recognition, points, and rewards.',
+    body: 'Where people actually wanted to be. Every screen before this one is friction, so the goal was fewer of them.',
+    src: `${FLOW}/app.png`,
+    alt: 'The Awardco home page after signing in, with recognition programs and a points balance',
+    width: 1440,
+    height: 1024,
+  },
+]
+
+/*
+ * The redesigned screens, path by path. Captured from Luke's coded
+ * prototype (saved Vibe54 pages in his Awardco files) at 1440x1024 and
+ * 393x852, both at 2x; the phone captures add side padding the prototype
+ * lacked at that width. The visible-password step flips the field to text
+ * and the icon to an open eye, which is what the toggle does.
+ */
+const PATHS: WalkPath[] = [
+  {
+    label: 'Password',
+    steps: [
+      {
+        shot: 'signin-filled',
+        title: 'Sign in',
+        alt: 'The redesigned sign-in: Sign in with Google, then one Email, Username, or ID field and Continue',
+        note: 'One field to start. Above it is only the sign-in your company uses, named the way people know it, like Google.',
+      },
+      {
+        shot: 'password',
+        title: 'Enter your password',
+        alt: 'The password step: the email carried over as plain text, one password field, Continue, and Forgot Password',
+        note: 'Your email carries over, so the password is the only thing left. Forgot Password sits right under it.',
+      },
+      {
+        shot: 'password-shown',
+        title: 'Show your password',
+        alt: 'The password step with the eye toggle on, showing the typed password in plain text',
+        note: 'The eye toggle shows what you typed, so a typo gets caught before it becomes a failed attempt.',
+      },
+    ],
+  },
+  {
+    label: 'Login code',
+    steps: [
+      {
+        shot: 'verify-method',
+        title: 'Choose where the code goes',
+        alt: 'Let’s verify it’s you: choose email, secondary email, or text message for the one-time code, then Send Code',
+        note: 'Email, a secondary email, or a text. Someone on a warehouse floor who can’t open a work inbox on their phone can still get in.',
+      },
+      {
+        shot: 'code',
+        title: 'Enter the code',
+        alt: 'Check your email: six digit boxes, the address the code went to, Continue, and Resend Code',
+        note: 'Six boxes, one per digit, with the address it went to spelled out. If it doesn’t arrive, Resend Code sends another. Ask too many times and it makes you wait, so nobody can flood an account with codes.',
+        extra: <CodeAlerts />,
+      },
+    ],
+  },
+  {
+    label: 'Forgot password',
+    steps: [
+      {
+        shot: 'forgot',
+        title: 'Ask for a reset',
+        alt: 'Forgot Password: one email field, Send Instructions, and Back to Sign In',
+        note: 'Enter your email and the reset instructions come to your inbox.',
+      },
+      {
+        shot: 'reset-hint',
+        title: 'Set a new password',
+        alt: 'Reset Your Password: new and confirm fields with show-password toggles, and the 12-character rule shown under the first field',
+        note: 'The rule shows up before you type, not after you fail: at least 12 characters.',
+      },
+      {
+        shot: 'reset-states',
+        title: 'Checks as you type',
+        alt: 'Reset Your Password mid-entry: a green check saying the password meets all requirements, and a red confirm field saying passwords do not match',
+        note: 'Green once the password meets every requirement, red as soon as the confirmation doesn’t match, and Reset stays off until both are right.',
+      },
+      {
+        shot: 'expired',
+        title: 'Expired passwords too',
+        alt: 'Your password has expired: the same new and confirm fields, rule, and toggles, with Update Password and Sign Out',
+        note: 'When a company makes people change their password, they get the same fields, rules, and checks.',
+      },
+    ],
+  },
+]
+
+/*
  * The brand-colour constraint, in its own stage. Desktop frames only: the customer's
  * tint covers the whole page, which a phone would show less of, and the
  * design file has no Accenture mobile with an Okta button to pair honestly
@@ -233,6 +355,7 @@ const STAGES = [
   { id: 'data', label: 'Digging into the data' },
   { id: 'testing', label: 'Testing three directions' },
   { id: 'token', label: 'Carrying the login forward' },
+  { id: 'flows', label: 'The new sign-in, screen by screen' },
   { id: 'mobile', label: 'Designing for mobile' },
   { id: 'brands', label: 'Designing for every brand' },
   { id: 'prototyping', label: 'Prototyping in code' },
@@ -583,18 +706,38 @@ export default function AwardcoCaseStudy() {
           body={
             <>
               <p>
-                The universal login knew who you were, but didn&rsquo;t pass that along to your
-                company&rsquo;s login page. So you&rsquo;d enter a code and immediately get asked for
-                another code or a password.
+                Signing in to Awardco actually means going through two separate login pages. The
+                universal login figures out who you are and which company you belong to. Then it
+                sends you to your company&rsquo;s own login page, which knows how that company
+                signs in.
               </p>
               <p>
-                The old flow was six screens, two codes, and two trips to your inbox. Mine is four
-                screens and one code.
+                The universal login knew who you were, but didn&rsquo;t pass that along. So
+                you&rsquo;d enter a code and immediately get asked for another code or a password.
               </p>
             </>
           }
         >
           <Col>
+            <Block>
+              <LoginLayers layers={LAYERS} />
+            </Block>
+
+            <Block>
+              <div className="cs-prose">
+                <p>
+                  My fix: once you pass the universal login&rsquo;s code, Awardco issues a
+                  short-lived, single-use token tied to your session and your company. The company
+                  page checks it, uses it up, and skips its own code. It only asks for what&rsquo;s
+                  still missing, like a password.
+                </p>
+                <p>
+                  The old flow was six screens, two codes, and two trips to your inbox. Mine is four
+                  screens and one code.
+                </p>
+              </div>
+            </Block>
+
             <Block>
               <p className="cs-row-label">Before</p>
               <FlowStrip
@@ -642,6 +785,23 @@ export default function AwardcoCaseStudy() {
                   owned how it&rsquo;s built. I owned the idea and the experience, start to finish.
                 </p>
               </div>
+            </Block>
+          </Col>
+        </Stage>
+
+        <Stage
+          id="flows"
+          title="The new sign-in, screen by screen"
+          body={
+            <p>
+              Here&rsquo;s the redesign end to end, captured from my coded prototype. Pick a path to
+              walk through it on a phone and a laptop.
+            </p>
+          }
+        >
+          <Col>
+            <Block>
+              <FlowWalkthrough paths={PATHS} />
             </Block>
           </Col>
         </Stage>
