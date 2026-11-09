@@ -456,12 +456,12 @@ export const CLAIMS: readonly Claim[] = [
     project: 'Authentication redesign',
     claim: 'Three directions tested with 75 people',
     wording:
-      'Luke tested three login directions with 75 people across Awardco: the existing experience, an SSO-first design, and a password-first design. The existing experience took an average of 27 seconds to decide where to begin; SSO-first cut that to 5.9 seconds; password-first was faster still at 4.6 seconds and scored slightly higher on confidence.',
+      'Luke tested three login directions with 75 people across Awardco in Useberry: the existing experience, an SSO-first design, and a password-first design. The existing experience took an average of 27 seconds to decide where to begin; SSO-first cut that to 5.9 seconds; password-first was faster still at 4.6 seconds and scored slightly higher on confidence.',
     status: 'tested',
     scope: 'project',
     source: '/work/awardco-login-flow-redesign',
     qualifier:
-      'An internal study comparing the three sign-in directions; the numbers are test results. The before-and-after usability results are a separate measurement, and the portfolio does not state how many people took part in it.',
+      'An internal Useberry study at Awardco comparing the three sign-in directions; the numbers are test results. The before-and-after usability results are a separate measurement, and the portfolio does not state how many people took part in it.',
     prohibited: ['describing the 75-person study as the before-and-after validation of the whole redesign'],
   },
   {
@@ -494,12 +494,13 @@ export const CLAIMS: readonly Claim[] = [
     qualifier: 'Usability-test results, never production analytics.',
   },
   {
-    id: 'awardco-external-prototype-testing',
+    id: 'awardco-internal-prototype-testing',
     company: 'Awardco',
     project: 'Authentication redesign',
-    claim: 'Coded prototypes tested with more than 20 admins and end users',
+    claim: 'Coded prototypes tested in person with more than 20 people at Awardco',
     wording:
-      'Luke built working prototypes with real inputs, validation, and code entry, and tested them with more than 20 admins and end users, which exposed friction around email entry, verification codes, and especially password recovery.',
+      'Luke built working prototypes with real inputs, validation, and code entry, and ran in-person design testing sessions with more than 20 people inside Awardco, which exposed friction around email entry, verification codes, and especially password recovery.',
+    prohibited: ['describing the 20+ prototype testers as external users or customers'],
     status: 'tested',
     scope: 'project',
     source: '/work/awardco-login-flow-redesign',

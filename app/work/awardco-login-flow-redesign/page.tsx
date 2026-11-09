@@ -261,9 +261,9 @@ export default function AwardcoCaseStudy() {
                 <p>
                   Awardco had 7.7 million failed login attempts in one year. I redesigned its
                   scattered login flows (SSO, MFA, password reset, and mobile) into one guided
-                  system. I owned it on desktop and mobile, tested it with 20+ external users and
-                  75 people inside Awardco, and got it through architecture and security review
-                  before handing it off to be built.
+                  system. I owned it on desktop and mobile, ran in-person testing sessions with 20+
+                  people at Awardco, ran Useberry tests with 75 more, and got it through
+                  architecture and security review before handing it off to be built.
                 </p>
               }
               facts={[
@@ -300,9 +300,9 @@ export default function AwardcoCaseStudy() {
         <Band dust flush>
           <Col>
             <Problem iconSrc="/logos/awardco.png" iconAlt="Awardco">
-              How might we get people signed in when{' '}
-              <em>every company authenticates differently</em> and users have to guess
-              which method is theirs?
+              How might we <em>remove the friction from signing in</em>, so every user can
+              get into Awardco, whether they use SSO, sign in on their phone, or can&rsquo;t
+              reach their email for a code?
             </Problem>
           </Col>
         </Band>
@@ -327,7 +327,7 @@ export default function AwardcoCaseStudy() {
                 {
                   value: 20,
                   suffix: '+',
-                  caption: <>external users on <strong>working prototypes</strong></>,
+                  caption: <>people in <strong>in-person sessions</strong> on working prototypes</>,
                 },
               ]}
             />
@@ -514,8 +514,8 @@ export default function AwardcoCaseStudy() {
           body={
             <>
               <p>
-                I tested three directions with 75 people at Awardco: the current login, an SSO-first
-                design, and a password-first design.
+                I tested three directions with 75 people at Awardco in Useberry: the current login, an
+                SSO-first design, and a password-first design.
               </p>
               <p>
                 With the current login, people took 27 seconds on average to figure out where to
@@ -744,8 +744,8 @@ export default function AwardcoCaseStudy() {
               <p>
                 A Figma prototype can show navigation, but not where people get stuck typing an
                 email, entering a code, or making a new password. So I built working prototypes with
-                real inputs and validation. Testing them with 20+ admins and end users showed
-                friction with email entry, codes, and most of all password reset.
+                real inputs and validation. In-person testing sessions with 20+ people at Awardco
+                showed friction with email entry, codes, and most of all password reset.
               </p>
               <p>
                 The old reset page was one blind password field with no rules shown. The new one

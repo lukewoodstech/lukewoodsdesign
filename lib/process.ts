@@ -12,7 +12,7 @@
  *                         never "for Custom Reports"); "the first thing
  *                         I do" is Luke's own words, 2026-11-05
  *   Divergent exploration lucid-20-capabilities
- *   High-fidelity proto.  awardco-external-prototype-testing + case study
+ *   High-fidelity proto.  awardco-internal-prototype-testing + case study
  *   Participant recruit.  Pattern: validated with 20 users (ten brand
  *                         managers, ten advertising strategists). Not
  *                         called personas: no source says he made any.
