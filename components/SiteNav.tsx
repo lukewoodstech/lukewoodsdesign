@@ -1,9 +1,11 @@
 'use client'
 
+import { Fragment } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { SITE } from '@/lib/site'
 import { WORK, workForPath } from '@/lib/work'
+import { PROTECTED_SLUGS } from '@/lib/gate'
 import EmailLink from './EmailLink'
 import { LinkedInIcon, GitHubIcon, MailIcon } from './ContactIcons'
 
@@ -14,7 +16,7 @@ import { LinkedInIcon, GitHubIcon, MailIcon } from './ContactIcons'
  * mono, sharp-cornered, and its only job is telling you where you are and
  * letting you leave.
  *
- *   luke woods | my story   lucid  awardco  pattern       résumé | in gh ✉
+ *   luke woods | my story   lucid | awardco | pattern     résumé | in gh ✉
  *
  * Three slots on a 1fr/auto/1fr grid, so the case studies sit dead centre
  * of the SCREEN no matter how wide the two side groups get — with flex and
@@ -38,7 +40,9 @@ import { LinkedInIcon, GitHubIcon, MailIcon } from './ContactIcons'
  */
 
 const LINK = 'footer-link sitebar__link'
-const NAV_WORK = WORK.filter((w) => w.section === 'selected')
+/* Public selected work only: gated studies (Pitch) show as a home tile,
+   not in the bar. */
+const NAV_WORK = WORK.filter((w) => w.section === 'selected' && !PROTECTED_SLUGS.has(w.slug))
 
 export default function SiteNav({
   next,
@@ -95,19 +99,24 @@ export default function SiteNav({
         {/* ── Centre: the work. Named, because on a sideways page the
             abstract section words were three rows for one destination. ── */}
         <nav className="sitebar__sections" aria-label="Case studies">
-          {/* Selected work only: lab tiles (Pitch) live on the home
-              page, not in the bar (2026-11-03). */}
-          {NAV_WORK.map((item) => {
+          {NAV_WORK.map((item, i) => {
             const here = currentWork === item.slug
             return (
-              <Link
-                key={item.slug}
-                href={item.href}
-                className={`${LINK} sitebar__section--work${here ? ' is-current' : ''}`}
-                aria-current={here ? 'page' : undefined}
-              >
-                {item.nav}
-              </Link>
+              <Fragment key={item.slug}>
+                {/* The same divider as name | my story, between studies. */}
+                {i > 0 && (
+                  <span className="sitebar__bar" aria-hidden="true">
+                    |
+                  </span>
+                )}
+                <Link
+                  href={item.href}
+                  className={`${LINK} sitebar__section--work${here ? ' is-current' : ''}`}
+                  aria-current={here ? 'page' : undefined}
+                >
+                  {item.nav}
+                </Link>
+              </Fragment>
             )
           })}
         </nav>

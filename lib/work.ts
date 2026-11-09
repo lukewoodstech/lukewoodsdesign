@@ -48,18 +48,19 @@ export const ALL_WORK: ReadonlyArray<WorkItem> = [
     section: 'selected',
     href: '/work/pattern-custom-reports',
   },
-  /* The lab: ventures and side projects, below selected work. Pitch led
-     the canvas from 2026-10-14 (LUK-122) until 2026-11-03, when Luke moved
-     it here so selected work is the client studies (LUK-195). New lab
-     tiles go after it, newest first within the section. */
+  /* Pitch led the canvas from 2026-10-14 (LUK-122), moved to the lab on
+     2026-11-03 (LUK-195), and joined selected work as the last tile on
+     2026-11-09 once Hoth's removal left it alone in the lab. It sits last
+     because the client studies lead; it stays out of the nav bar while
+     it is password-gated (SiteNav). */
   {
     slug: 'pitch',
-    label: '01 · pitch',
+    label: '04 · pitch',
     title: 'pitch',
     nav: 'pitch',
     file: 'pitch.tsx',
     href: '/work/pitch',
-    section: 'lab',
+    section: 'selected',
   },
 ]
 
