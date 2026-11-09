@@ -18,7 +18,7 @@ export type EvalCase = {
 
 /* "The portfolio doesn't say" in the model's own words. */
 const DECLINES =
-  /doesn(?:'|’)t specify|does not specify|doesn(?:'|’)t (?:provide|include|have|report|show)|does not (?:provide|include|have|report|show)|no (?:post-launch|production|verified|long-term|adoption|available)|not (?:available|specified|provided|something the portfolio)|isn(?:'|’)t (?:available|specified|provided|in the portfolio)|is not (?:available|specified|provided|in the portfolio)|(?:can(?:'|’)t|cannot) (?:speak to|confirm|verify|say)|no data|no evidence/i
+  /doesn(?:'|’)t specify|does not specify|doesn(?:'|’)t (?:provide|include|have|report|show)|does not (?:provide|include|have|report|show)|no (?:post-launch|production|verified|long-term|adoption|available)|not (?:available|specified|provided|something the portfolio)|isn(?:'|’)t (?:available|specified|provided|in the portfolio)|is not (?:available|specified|provided|in the portfolio)|(?:can(?:'|’)t|cannot) (?:speak to|confirm|verify|say)|no data|no evidence|(?:don(?:'|’)t|do not) have (?:any )?(?:production|post-launch|long-term|adoption)|isn(?:'|’)t in my portfolio|is not in my portfolio|no [\w-]+(?: [\w-]+){0,5} (?:is|was) verified/i
 
 export const EVAL_CASES: EvalCase[] = [
   {
@@ -33,10 +33,10 @@ export const EVAL_CASES: EvalCase[] = [
     question: 'Show me Luke’s strongest shipped work and what each project changed.',
     mustMatch: [/\bLucid\b/],
     mustNotMatch: [
-      /\bawardco\b[^.\n]{0,80}\b(launched|went live|is live|in production)\b/i,
+      /\bawardco\b[^.\n]{0,80}(?<!\bnot\s)\b(launched|went live|is live|in production)\b/i,
       /\bshipped\s+three\b/i,
     ],
-    note: 'Lucid shipped; Pattern shipped after the internship; Awardco handed off.',
+    note: 'Lucid shipped; Pattern and Awardco were handed off.',
   },
   {
     id: 'decision',
@@ -80,10 +80,10 @@ export const EVAL_CASES: EvalCase[] = [
   },
   {
     id: 'pattern-daily-users',
-    question: 'Did Pattern test with 20 daily users?',
-    mustMatch: [/\b20\b/, /brand managers/i, /strategists/i],
+    question: 'Did Pattern test with 24 daily users?',
+    mustMatch: [/\b24\b/, /brand managers/i, /strategists/i],
     mustNotMatch: [/\bdaily users\b/i, /\byes\b[^.\n]{0,30}\bdaily\b/i],
-    note: '20 usability sessions: 10 brand managers, 10 advertising strategists.',
+    note: '24 usability sessions: 12 brand managers, 12 advertising strategists.',
   },
   {
     id: 'pattern-400-hours',

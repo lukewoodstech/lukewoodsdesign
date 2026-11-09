@@ -30,11 +30,14 @@ import { companyAbout } from '@/lib/caseStudies'
  * interview record, which is kept out of this repo (see .gitignore); its
  * build decisions are binding:
  * - Canonical numbers only: Pendo ~60% trial / ~15% return, 50+ discovery
- *   interviews across the internship, 20 usability sessions, 2 → 5 metrics,
- *   9 weeks. No "400+ hours per week", no adoption / retention / revenue /
- *   time-saved claims.
- * - The team built and shipped the redesign AFTER the internship: outcomes
- *   are "validated through usability testing and shipped after my internship".
+ *   interviews across the internship, 24 usability sessions (12 + 12), 2 → 6 metrics (Luke, 2026-11-09).
+ *   Usability-test results (Luke, 2026-11-09): under 10 minutes to build a
+ *   report vs. the 30–60 minute baseline, and satisfaction ratings +50%.
+ *   No "400+ hours per week" (projection, inputs lost), no 80%, no
+ *   adoption / retention / revenue claims.
+ * - Validated in usability testing and HANDED OFF. Never say it shipped:
+ *   Luke doesn't know whether Pattern built it after he left (2026-11-09).
+ *   No project length either; "nine weeks" may not be accurate (same day).
  * - Stages edition (2026-11-03, Luke): acts and the Journey strip gave way
  *   to design-process stages with the StageRail, as on Pitch. Each stage is
  *   a heading and plain body; subheads, the task/solution pairs, the six
@@ -70,7 +73,7 @@ import { companyAbout } from '@/lib/caseStudies'
  *   captions, modes, look-alike controls added to the original four), the
  *   "Copy of" evidence, the axis-rules section, and the export beat in
  *   What next. The Gmail send-to-client flow is in design now and is not
- *   claimed as shipped.
+ *   claimed as built.
  * - Deliberately not rendered (in the file, not the repo): the wireframe
  *   home, the mobile prototypes, the Will/Trista personas, discovery-board.
  */
@@ -108,7 +111,7 @@ const STAGES = [
   { id: 'scope', label: 'Scoping with leadership' },
   { id: 'first-report', label: 'Designing the first report' },
   { id: 'chart', label: 'Designing the multi-metric chart' },
-  { id: 'testing', label: 'Testing with 20 users' },
+  { id: 'testing', label: 'Testing with 24 users' },
   { id: 'handoff', label: 'Handing off' },
 ]
 
@@ -125,19 +128,18 @@ export default function PatternCaseStudy() {
             <p className="cs-eyebrow mb-5">Pattern · Product Design Internship</p>
             <StoryTitle dim="in Predict">Custom Reports</StoryTitle>
             {/* Pitch's header (LUK-199): one summary paragraph across the
-                column, then Company, Role, Timeline and Tools. Two spans of
-                time stay apart: Timeline is the internship, and the summary
-                says the project was nine weeks inside it. One fact that said
-                both read as a nine-week internship. */}
+                column, then Company, Role, Timeline and Tools. Timeline is
+                the whole internship, not the project. */}
             <MetaGrid
               stacked
               summary={
                 <p>
                   Predict&rsquo;s reporting tool was so rigid that brand managers kept going back
                   to Excel to build client reports. I found the problem while working on a tiny
-                  feature ticket, pitched the bigger opportunity to the team, and owned a
-                  nine-week redesign. Usability testing backed it up, and the team shipped it
-                  after my internship.
+                  feature ticket, pitched the bigger opportunity to the team, and owned the
+                  redesign. In testing with 24 brand managers and ad strategists, building a
+                  client report dropped from 30&ndash;60 minutes to under 10, and satisfaction
+                  ratings went up 50%. I handed it off at the end of my internship.
                 </p>
               }
               facts={[
@@ -180,20 +182,19 @@ export default function PatternCaseStudy() {
         {/* ══ At a glance ══ */}
         <Col wide>
           <Block className="cs-centered">
-            <Pill>The project at a glance</Pill>
+            <Pill>The impact</Pill>
             <p className="cs-cap cs-cap--mono">
-              Validated through usability testing and shipped by the team after my
-              internship. This page only claims what I observed before handoff.
+              Before and after usability testing. Not production analytics.
             </p>
             <BigStats
               small
               stats={[
                 {
-                  value: 50,
-                  suffix: '+',
-                  caption: <><strong>discovery interviews</strong> across my internship</>,
+                  value: '<10',
+                  caption: <>minutes to build a client report, <strong>down from 30&ndash;60</strong></>,
                 },
-                { value: 20, caption: <><strong>usability sessions</strong> on the redesign</> },
+                { value: '+50%', caption: <><strong>satisfaction</strong> over the old tool</> },
+                { value: 24, caption: <><strong>usability sessions</strong> on the redesign</> },
                 {
                   value: '2 → 6',
                   caption: (
@@ -201,9 +202,7 @@ export default function PatternCaseStudy() {
                       <strong>metrics</strong> on one chart
                     </>
                   ),
-                },
-                { value: 9, caption: <>weeks from <strong>ticket to handoff</strong></> },
-              ]}
+                },              ]}
             />
           </Block>
         </Col>
@@ -247,30 +246,6 @@ export default function PatternCaseStudy() {
               </Reveal>
             </Col>
           </Band>
-
-          <Col>
-            <Block>
-              <div className="cs-prose">
-                <p>
-                  The reports list was tucked behind a BETA tab, with no previews and no way to tell
-                  a report from its copies. To reuse a setup, you copied the whole report and edited
-                  the copy.
-                </p>
-              </div>
-              <div className="cs-fig__frame mt-6">
-                <ZoomShot
-                  src={`${OLD}/home-copies.png`}
-                  alt="The old Custom Reports list: a plain table of six reports, four of them named Copy of, with a small menu offering Share, Edit, Make a Copy, and Delete"
-                  {...CAP}
-                  sizes="(min-width: 60em) 800px, 100vw"
-                />
-              </div>
-              <p className="cs-cap">
-                The old Custom Reports home: a bare list with no previews, where a report and its
-                copies look identical. Building was harder than copying, so people copied.
-              </p>
-            </Block>
-          </Col>
         </Stage>
 
         <Stage
@@ -300,6 +275,28 @@ export default function PatternCaseStudy() {
                   { value: '~15%', caption: <>of them <strong>came back</strong></> },
                 ]}
               />
+            </Block>
+
+            <Block>
+              <div className="cs-prose">
+                <p>
+                  The reports list was tucked behind a BETA tab, with no previews and no way to tell
+                  a report from its copies. To reuse a setup, you copied the whole report and edited
+                  the copy.
+                </p>
+              </div>
+              <div className="cs-fig__frame mt-6">
+                <ZoomShot
+                  src={`${OLD}/home-copies.png`}
+                  alt="The old Custom Reports list: a plain table of six reports, four of them named Copy of, with a small menu offering Share, Edit, Make a Copy, and Delete"
+                  {...CAP}
+                  sizes="(min-width: 60em) 800px, 100vw"
+                />
+              </div>
+              <p className="cs-cap">
+                The old Custom Reports home: a bare list with no previews, where a report and its
+                copies look identical. Building was harder than copying, so people copied.
+              </p>
             </Block>
 
             <Block>
@@ -456,7 +453,7 @@ export default function PatternCaseStudy() {
             <>
               <p>
                 I brought what I&rsquo;d found to the Predict team, and with my design manager and
-                Director of Product I scoped a nine-week project around the core: creating reports,
+                Director of Product I scoped a project around the core: creating reports,
                 setting up widgets and filters, and editing them.
               </p>
               <p>
@@ -476,14 +473,14 @@ export default function PatternCaseStudy() {
           <Col>
             <Block>
               <CompareStage
-                ariaLabel="The cut drag-and-drop canvas concept versus the list-based reordering that shipped"
+                ariaLabel="The cut drag-and-drop canvas concept versus the list-based reordering in the final design"
                 layers={[
                   {
                     src: `${IMG}/figma/canvas-concept.png`,
                     alt: 'The cut concept: a Slides-style report builder with a left rail of draggable widget thumbnails next to the report canvas',
                     label: 'Cut concept',
                     caption:
-                      'The canvas concept matched how advanced users thought about building a report, but it needed an editing system engineering could not build in nine weeks.',
+                      'The canvas concept matched how advanced users thought about building a report, but it needed an editing system engineering didn’t have time to build.',
                     ...CAP,
                   },
                   {
@@ -492,9 +489,9 @@ export default function PatternCaseStudy() {
                         <ReportPage />
                       </MockStage>
                     ),
-                    label: 'Shipped',
+                    label: 'Final design',
                     caption:
-                      'What shipped: a structured report whose widgets carry a written description, up to six metrics on two axes, and the edit controls on the widget itself. Reordering lives in a list, not on a canvas.',
+                      'The final design: a structured report whose widgets carry a written description, up to six metrics on two axes, and the edit controls on the widget itself. Reordering lives in a list, not on a canvas.',
                   },
                 ]}
               />
@@ -625,11 +622,11 @@ export default function PatternCaseStudy() {
 
         <Stage
           id="testing"
-          title="Testing with 20 users"
+          title="Testing with 24 users"
           body={
             <>
               <p>
-                I tested the redesign with 20 users: ten brand managers and ten ad strategists. I
+                I tested the redesign with 24 users: 12 brand managers and 12 ad strategists. I
                 expected them to want separate modes for presenting and editing. Turns out, the
                 opposite. Brand managers often edited charts live in front of a client, and
                 switching modes got in the way right when they needed it to feel fast.
@@ -638,6 +635,10 @@ export default function PatternCaseStudy() {
                 So I cut the edit mode and merged viewing and editing into one. Actions show up
                 where you need them, filters stay editable after you make a report, and things that
                 look like buttons actually are buttons.
+              </p>
+              <p>
+                The results: building a client report took under 10 minutes, down from 30&ndash;60,
+                and satisfaction ratings were 50% higher than for the old tool.
               </p>
             </>
           }
@@ -703,8 +704,7 @@ export default function PatternCaseStudy() {
           body={
             <>
               <p>
-                The redesign was validated in 20 usability sessions and shipped by the Pattern team
-                after my internship. By handoff, a chart could hold up to six metrics, lines and bars
+                I handed the redesign off at the end of my internship. By then, a chart could hold up to six metrics, lines and bars
                 together on two axes. Viewing and editing were one mode, filters could change after
                 a report was made, and every chart had a caption. Reports could be reordered,
                 duplicated, shared, and exported, and the templates came from reports users built.

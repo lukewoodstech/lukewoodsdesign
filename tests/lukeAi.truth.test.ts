@@ -69,15 +69,17 @@ test('claims: Awardco is handed off, not launched', () => {
   assert.ok(!CLAIMS.some((x) => x.company === 'Awardco' && x.status === 'post-launch'))
 })
 
-test('claims: Pattern testing is 20 sessions with 10 + 10, never daily users', () => {
+test('claims: Pattern testing is 24 sessions with 12 + 12, never daily users', () => {
   const c = CLAIMS.find((x) => x.id === 'pattern-usability-sessions')!
-  assert.match(c.wording, /20 usability sessions with 10 brand managers and 10 advertising strategists/)
+  assert.match(c.wording, /24 usability sessions with 12 brand managers and 12 advertising strategists/)
   assert.doesNotMatch(renderClaimWordings(), /daily users/i)
 })
 
-test('claims: Pattern shipped after the internship and keeps its usage qualifiers', () => {
-  const shipped = CLAIMS.find((x) => x.id === 'pattern-shipped-after')!
-  assert.match(shipped.wording, /after Luke’s internship/)
+test('claims: Pattern was handed off, never shipped, and keeps its usage qualifiers', () => {
+  const handedOff = CLAIMS.find((x) => x.id === 'pattern-handed-off')!
+  assert.equal(handedOff.status, 'handed-off')
+  assert.match(handedOff.wording, /handed off/)
+  assert.equal(CLAIMS.find((x) => x.id === 'pattern-shipped-after'), undefined)
   const usage = CLAIMS.find((x) => x.id === 'pattern-usage-baseline')!
   assert.match(usage.wording, /roughly 60% of eligible users created at least one report during the feature’s first year/)
   assert.match(usage.wording, /about 15% returned/)
@@ -317,5 +319,6 @@ test('case-study data: Hoth has no study; Pattern copy says usability sessions',
   const pattern = caseStudies.find((c) => c.slug === 'pattern-custom-reports')!
   const text = JSON.stringify(pattern)
   assert.doesNotMatch(text, /daily/i)
-  assert.match(text, /after my internship/)
+  assert.doesNotMatch(text, /\bshipped\b/i)
+  assert.doesNotMatch(text, /\b(9|nine)[- ]weeks?\b/i)
 })

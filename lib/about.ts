@@ -134,7 +134,7 @@ export const ROLES: ReadonlyArray<Role> = [
     period: 'January – October 2025',
     year: '2025',
     summary:
-      'Redesigned the Custom Reports workflow inside the Predict platform over a nine-week project, after discovery interviews turned a duplicate-widget ticket into a reporting problem.',
+      'Redesigned the Custom Reports workflow inside the Predict platform, after discovery interviews turned a duplicate-widget ticket into a reporting problem.',
     short: 'Rebuilt the Custom Reports workflow in Predict, after discovery reframed the ticket.',
     href: '/work/pattern-custom-reports',
     logo: '/logos/pattern.png',

@@ -207,9 +207,10 @@ export const caseStudies: CaseStudy[] = [
      * this repo (see .gitignore). Its build decisions are binding:
      * - Canonical numbers only: Pendo baseline ~60% trial / ~15% retention
      *   (vs ~28–35% benchmarks), 30–60 min manual reporting, 50+ interviews,
-     *   20-user testing, 9-week project.
-     * - The redesign was BUILT AFTER THE INTERNSHIP — impact is framed as
-     *   "validated through usability testing and shipped after my internship".
+     *   24-user testing (12 brand managers, 12 ad strategists).
+     * - Validated in usability testing and HANDED OFF. Never say it shipped:
+     *   Luke does not know whether Pattern built it after he left (2026-11-09).
+     *   No project length either; "nine weeks" may not be accurate (same day).
      *   The old 80%-adoption / +50%-satisfaction figures are cut entirely.
      * - Filter override behavior is unverified — say "clearer, editable after
      *   creation" and nothing more specific.
@@ -221,19 +222,19 @@ export const caseStudies: CaseStudy[] = [
       'Pattern is an ecommerce accelerator. It sells brands’ products on marketplaces like Amazon and Walmart, and its Predict software shows brands how those products are performing.',
     accent: '#1d7cf3',
     role: 'Product Design Intern',
-    // Résumé dates; the Custom Reports project itself ran 9 weeks inside them.
+    // Résumé dates for the whole internship.
     period: 'Jan – Oct 2025',
     team: 'Julie Broadbent (Design Manager) · Mitch Park (Director of Product)',
     summary: 'Rebuilding the failed reporting tool brand managers had abandoned for Excel.',
     headline: [
       '60% tried the old tool — only 15% stayed',
-      'Validated with 20 users in live testing',
-      'Shipped by the team after handoff',
+      'Under 10 min to build a report in testing, down from 30–60',
+      'Validated with 24 users in live testing',
     ],
     tagline:
       "Redesigning Predict's abandoned reporting tool so brand managers could build, edit, and share multi-metric client reports without falling back to Excel.",
     overview:
-      "Pattern's Predict platform had a Custom Reports tool built to replace the export-to-Excel reporting grind — and a year in, almost nobody used it. Pendo showed roughly 60% of eligible users had tried it, but only about 15% came back, well under enterprise retention benchmarks. The demand was real; the experience was failing it. Starting from a one-line ticket and 50+ discovery interviews, I made the case for a redesign, scoped it to 9 weeks with product and design leadership, rebuilt the core report-building experience, and validated it with 20 users. The team built and shipped it after my internship ended.",
+      "Pattern's Predict platform had a Custom Reports tool built to replace the export-to-Excel reporting grind — and a year in, almost nobody used it. Pendo showed roughly 60% of eligible users had tried it, but only about 15% came back, well under enterprise retention benchmarks. The demand was real; the experience was failing it. Starting from a one-line ticket and 50+ discovery interviews, I made the case for a redesign, scoped it with product and design leadership, rebuilt the core report-building experience, and validated it with 24 users before handing it off.",
     problemIntro:
       "Brand managers at Pattern each juggle around six brands and are the primary point of contact for brand partners — reporting performance is a core part of their week. The old tool made that painful: charts were capped at two metrics, so comparing ad spend against sales lift in one view was impossible, and both brand managers and ad strategists fell back to stitching screenshots and Excel exports into client decks.",
     problemPoints: [
@@ -250,7 +251,7 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         heading: 'Building the case',
-        body: "I synthesized the interview patterns, checked Pendo — high trial, poor retention, so a usability problem rather than a demand problem — and brought the opportunity to the Predict product and design team. Once we agreed it was worth pursuing, I scoped a 9-week project with my design manager and our Director of Product, focused on the core report-building experience: creating reports, configuring widgets and filters, and editing content.",
+        body: "I synthesized the interview patterns, checked Pendo — high trial, poor retention, so a usability problem rather than a demand problem — and brought the opportunity to the Predict product and design team. Once we agreed it was worth pursuing, I scoped the project with my design manager and our Director of Product, focused on the core report-building experience: creating reports, configuring widgets and filters, and editing content.",
       },
       {
         heading: 'Prioritize under real constraints',
@@ -262,15 +263,15 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         heading: 'Testing killed my favorite assumption',
-        body: "I tested the redesigned flows in 20 usability sessions — 10 brand managers, 10 advertising strategists. I'd assumed users wanted separate view and edit modes; watching managers edit graphs live with clients in the room killed that, and the shipped design uses one combined mode. To seed the new Templates feature, I ran a report-building competition with prizes — the winning reports became the shipped templates.",
+        body: "I tested the redesigned flows in 24 usability sessions — 12 brand managers, 12 advertising strategists. I'd assumed users wanted separate view and edit modes; watching managers edit graphs live with clients in the room killed that, and the final design uses one combined mode. To seed the new Templates feature, I ran a report-building competition with prizes — the winning reports became the templates.",
       },
       {
         heading: 'Handoff & honest impact',
-        body: "I handed off annotated specs, the prototype, documentation, and a backlog; the team built and shipped Custom Reports after my internship ended. The impact I can claim is what testing showed — both user groups building multi-metric reports quickly and confidently against a 30–60 minute baseline — and I frame it exactly that way.",
+        body: "I handed off annotated specs, the prototype, documentation, and a backlog at the end of my internship. The impact I can claim is what testing showed — both user groups building multi-metric reports quickly and confidently against a 30–60 minute baseline — and I frame it exactly that way.",
       },
     ],
     outcomes: [
-      'Redesign validated through usability testing with 20 brand managers and ad strategists, then shipped by the team after my internship',
+      'Redesign validated through usability testing with 24 brand managers and ad strategists, then handed off',
       'Broke the two-metric chart cap — multi-metric comparison became the core of the in-report experience',
       'Templates seeded from a prized report-building competition among the tool’s actual users',
       'Full handoff: annotated specs, prototype, documentation, and a follow-up testing plan',

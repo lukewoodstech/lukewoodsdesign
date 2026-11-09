@@ -114,7 +114,7 @@ export const ENGAGEMENTS: readonly Engagement[] = [
     kind: 'internship',
     route: '/work/pattern-custom-reports',
     summary:
-      'Ecommerce accelerator. Redesigned the Custom Reports workflow in the Predict platform over a nine-week project.',
+      'Ecommerce accelerator. Redesigned the Custom Reports workflow in the Predict platform.',
   },
   {
     company: 'Hoth',
@@ -618,7 +618,7 @@ export const CLAIMS: readonly Claim[] = [
     status: 'baseline',
     scope: 'project',
     source: 'lib/caseStudies.ts',
-    prohibited: ['any hours-saved or time-saved figure of any size; none is verified for Custom Reports'],
+    prohibited: ['any hours-saved, weekly, or company-wide time figure; the only verified time is the under-10-minute report build in usability testing'],
   },
   {
     id: 'pattern-discovery-interviews',
@@ -648,9 +648,9 @@ export const CLAIMS: readonly Claim[] = [
     id: 'pattern-ticket-origin',
     company: 'Pattern',
     project: 'Custom Reports in Predict',
-    claim: 'A one-to-two-day ticket became a nine-week redesign',
+    claim: 'A one-to-two-day ticket became a full redesign',
     wording:
-      'The project started as a one-to-two-day ClickUp ticket to let users duplicate a widget. Luke treated duplication as a symptom, investigated the surrounding workflow, and turned the ticket into a proposal to redesign the core report-building experience, scoped to nine weeks with his design manager and the Director of Product.',
+      'The project started as a one-to-two-day ClickUp ticket to let users duplicate a widget. Luke treated duplication as a symptom, investigated the surrounding workflow, and turned the ticket into a proposal to redesign the core report-building experience, scoped with his design manager and the Director of Product.',
     status: 'validated',
     scope: 'project',
     source: '/work/pattern-custom-reports',
@@ -672,7 +672,7 @@ export const CLAIMS: readonly Claim[] = [
     project: 'Custom Reports in Predict',
     claim: 'The drag-and-drop canvas was cut to the roadmap',
     wording:
-      'Luke explored a Slides-style canvas that matched advanced users’ mental model but exceeded the engineering budget. He presented the concept, the evidence, and the tradeoffs; leadership made the scope decision; the full canvas moved to the roadmap and reordering shipped through a simpler list with drag handles.',
+      'Luke explored a Slides-style canvas that matched advanced users’ mental model but exceeded the engineering budget. He presented the concept, the evidence, and the tradeoffs; leadership made the scope decision; the full canvas moved to the roadmap and the design handled reordering through a simpler list with drag handles.',
     status: 'validated',
     scope: 'project',
     source: '/work/pattern-custom-reports',
@@ -681,14 +681,47 @@ export const CLAIMS: readonly Claim[] = [
     id: 'pattern-usability-sessions',
     company: 'Pattern',
     project: 'Custom Reports in Predict',
-    claim: '20 usability sessions: 10 brand managers, 10 advertising strategists',
+    claim: '24 usability sessions: 12 brand managers, 12 advertising strategists',
     wording:
-      'Luke tested the redesigned flows in 20 usability sessions with 10 brand managers and 10 advertising strategists.',
+      'Luke tested the redesigned flows in 24 usability sessions with 12 brand managers and 12 advertising strategists.',
     status: 'tested',
     scope: 'project',
     source: '/work/pattern-custom-reports',
-    allowed: ['validated with 20 users in usability testing (ten brand managers, ten advertising strategists)'],
+    allowed: ['validated with 24 users in usability testing (12 brand managers, 12 advertising strategists)'],
     prohibited: ['describing the participants by how often they used the product; describe them by role only'],
+  },
+  {
+    /* Luke, 2026-11-09: timed in the usability sessions. */
+    id: 'pattern-report-time',
+    company: 'Pattern',
+    project: 'Custom Reports in Predict',
+    claim: 'Building a client report took under 10 minutes in testing',
+    wording:
+      'In usability testing, participants built a client-ready report in the redesign in under 10 minutes, against a baseline of 30–60 minutes across Predict, Excel, and slides.',
+    status: 'tested',
+    scope: 'project',
+    source: '/work/pattern-custom-reports',
+    allowed: ['in testing, building a client report went from 30–60 minutes to under 10'],
+    prohibited: [
+      'any hours-saved, weekly, or company-wide time figure derived from it',
+      'that real users after launch build reports in under 10 minutes',
+    ],
+    qualifier: 'Always keep "in usability testing".',
+  },
+  {
+    /* Luke, 2026-11-09: before/after ratings in the usability sessions. */
+    id: 'pattern-satisfaction',
+    company: 'Pattern',
+    project: 'Custom Reports in Predict',
+    claim: 'Satisfaction ratings rose 50% in testing',
+    wording:
+      'In usability testing, participants’ satisfaction ratings for the redesign were 50% higher than for the old tool.',
+    status: 'tested',
+    scope: 'project',
+    source: '/work/pattern-custom-reports',
+    allowed: ['satisfaction ratings rose 50% over the old tool in usability testing'],
+    prohibited: ['customer or company satisfaction after launch', 'adoption or retention'],
+    qualifier: 'Always keep "in usability testing" and "satisfaction ratings".',
   },
   {
     id: 'pattern-combined-mode',
@@ -702,12 +735,12 @@ export const CLAIMS: readonly Claim[] = [
     source: '/work/pattern-custom-reports',
   },
   {
-    id: 'pattern-five-metrics',
+    id: 'pattern-six-metrics',
     company: 'Pattern',
     project: 'Custom Reports in Predict',
-    claim: 'Charts went from two metrics to five',
+    claim: 'Charts went from two metrics to six',
     wording:
-      'By handoff, users could compare up to five metrics in one chart instead of two, edit filters after creation, add, duplicate, delete, and reorder widgets, attach notes to shared charts, and export, share, or schedule report delivery.',
+      'By handoff, users could compare up to six metrics in one chart instead of two, edit filters after creation, add, duplicate, delete, and reorder widgets, attach notes to shared charts, and export, share, or schedule report delivery.',
     status: 'validated',
     scope: 'project',
     source: '/work/pattern-custom-reports',
@@ -735,20 +768,23 @@ export const CLAIMS: readonly Claim[] = [
     source: '/work/pattern-custom-reports',
   },
   {
-    id: 'pattern-shipped-after',
+    /* Luke, 2026-11-09: he does not know whether Pattern shipped the
+       redesign after he left and thinks it may not have, so the portfolio
+       never says it shipped. It was validated in testing and handed off. */
+    id: 'pattern-handed-off',
     company: 'Pattern',
     project: 'Custom Reports in Predict',
-    claim: 'Shipped by the Pattern team after the internship',
+    claim: 'Validated in usability testing, then handed off',
     wording:
-      'The redesign was validated through usability testing and shipped by the Pattern team after Luke’s internship.',
-    status: 'shipped',
+      'The redesign was validated through usability testing and handed off at the end of Luke’s internship. The portfolio does not say what happened to it after that.',
+    status: 'handed-off',
     scope: 'project',
     source: '/work/pattern-custom-reports',
     prohibited: [
-      'that it launched during the internship',
+      'that it shipped, launched, or went live, during or after the internship',
       'any post-launch adoption, retention, satisfaction, time-saved, or business-impact figure',
     ],
-    qualifier: 'Always keep "after my internship" / "after his internship".',
+    qualifier: 'Say "validated in usability testing" and "handed off". Never "shipped".',
   },
   {
     id: 'pattern-reflection',
@@ -943,11 +979,11 @@ export const PROHIBITED_PATTERNS: readonly ProhibitedPattern[] = [
   },
   {
     pattern: /\bdaily\s+users?\b/i,
-    reason: 'Pattern tested with 20 usability participants, not daily users.',
+    reason: 'Pattern tested with 24 usability participants, not daily users.',
   },
   {
     pattern: /\b20\s+daily\b/i,
-    reason: 'Pattern tested with 20 usability participants, not daily users.',
+    reason: 'Pattern tested with 24 usability participants, not daily users.',
   },
   {
     pattern:
@@ -981,7 +1017,12 @@ export const PROHIBITED_PATTERNS: readonly ProhibitedPattern[] = [
   },
   {
     pattern: /\b(launched|shipped|went\s+live|released)\b[^.\n]{0,50}\bduring\s+(his|luke['’]?s|the)\s+(pattern\s+|awardco\s+)?internship/i,
-    reason: 'Pattern shipped after the internship; Awardco was handed off.',
+    reason: 'Pattern and Awardco were both handed off at the end of the internship.',
+  },
+  {
+    pattern:
+      /\bcustom\s+reports\b[^.\n]{0,80}\b(shipped|launched|released|went\s+live)\b|\b(shipped|launched|released)\b[^.\n]{0,80}\bcustom\s+reports\b|\bpattern\s+team\s+(built\s+and\s+)?(shipped|launched|released)\b/i,
+    reason: 'Pattern: the redesign was validated in usability testing and handed off; shipping is not confirmed.',
   },
   {
     pattern: /\bawardco\b[^.\n]{0,120}\b(post-launch|after\s+(the\s+)?launch|since\s+(the\s+)?launch|in\s+production|went\s+live|is\s+live|now\s+live)\b[^.\n]{0,80}\d/i,

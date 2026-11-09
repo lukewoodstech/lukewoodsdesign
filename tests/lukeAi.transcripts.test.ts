@@ -36,7 +36,7 @@ test('the known bad answers are caught', () => {
   const bad: Array<[string, string, string]> = [
     ['awardco-failed-logins', 'Yes. Luke cut failed logins by 4.5% at Awardco.', 'failed-login reduction'],
     ['awardco-failed-logins', 'The redesign reduced 7.7 million failed logins.', 'baseline as outcome'],
-    ['pattern-daily-users', 'Yes, Pattern validated the redesign with 20 daily users.', 'daily users'],
+    ['pattern-daily-users', 'Yes, Pattern validated the redesign with 24 daily users.', 'daily users'],
     ['pattern-400-hours', 'Custom Reports saved 400+ weekly hours across Pattern.', '400 hours'],
     ['internship-count', 'Luke has completed four internships: Pattern, Awardco, Lucid, and Hoth.', 'four internships'],
     ['lucid-adoption', 'Lucid AI reached 40% adoption in its first month.', 'invented adoption'],

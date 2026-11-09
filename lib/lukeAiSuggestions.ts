@@ -109,7 +109,7 @@ const BY_PATH: Record<string, ReadonlyArray<Suggestion>> = {
     {
       label: 'How do you run discovery on a deadline?',
       message:
-        'The Pattern project ran nine weeks. How do you run discovery against a deadline like that — what do you skip, and what do you refuse to skip?',
+        'How do you run discovery when engineering time is tight — what do you skip, and what do you refuse to skip?',
     },
     {
       label: 'What would you change now?',

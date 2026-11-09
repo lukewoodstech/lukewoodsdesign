@@ -55,7 +55,10 @@ export function checkAnswer(c: EvalCase, t: Transcript): string[] {
   for (const f of t.followups) {
     if (/[\[\]]/.test(f)) problems.push(`followup has brackets: "${f}"`)
     if (RISKY_FOLLOWUP.test(f)) problems.push(`followup is risky: "${f}"`)
-    if (/\byou\b/i.test(f) && !/\bLuke\b/.test(f)) problems.push(`followup in second person: "${f}"`)
+    /* "you" means Luke in a follow-up (lib/lukeAiPrompt.ts); only a
+       question aimed at the visitor is wrong. */
+    if (/\b(would|do|did|can|could|should)\s+you\s+(like|want|prefer|need)\b|\bare\s+you\s+(looking|hiring|interested)\b|\byour\s+(team|role|company|hiring)\b/i.test(f))
+      problems.push(`followup asks the visitor: "${f}"`)
   }
 
   const words = text.split(/\s+/).filter(Boolean).length

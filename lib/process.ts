@@ -13,8 +13,8 @@
  *                         I do" is Luke's own words, 2026-11-05
  *   Divergent exploration lucid-20-capabilities
  *   High-fidelity proto.  awardco-internal-prototype-testing + case study
- *   Participant recruit.  Pattern: validated with 20 users (ten brand
- *                         managers, ten advertising strategists). Not
+ *   Participant recruit.  Pattern: validated with 24 users (12 brand
+ *                         managers, 12 advertising strategists). Not
  *                         called personas: no source says he made any.
  *   Usability testing     awardco-usability-results (test numbers only)
  *   Systems mapping       Awardco case study ("states and transitions")
@@ -143,7 +143,7 @@ export const PROCESS: ReadonlyArray<ProcessStep> = [
         kind: 'method',
         name: 'Participant recruitment',
         icon: 'people',
-        line: '20 users: ten brand managers, ten advertising strategists.',
+        line: '24 users: 12 brand managers, 12 advertising strategists.',
         link: PATTERN,
       },
       {

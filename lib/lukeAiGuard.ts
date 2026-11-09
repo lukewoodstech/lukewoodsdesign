@@ -40,6 +40,21 @@ export type QualifierRule = {
 
 export const QUALIFIER_RULES: readonly QualifierRule[] = [
   {
+    trigger: /\bunder\s+(10|ten)\s+min/i,
+    requires: [/\b(usability|testing|tested|test|sessions?)\b/i],
+    reason: 'Pattern: under 10 minutes is a usability-test result.',
+  },
+  {
+    trigger: /\b50\s?%/,
+    requires: [/\b(usability|testing|tested|test|sessions?)\b/i],
+    reason: 'Pattern: the 50% satisfaction rise is a usability-test result.',
+  },
+  {
+    trigger: /\b50\s?%/,
+    requires: [/\bsatisf/i],
+    reason: 'Pattern: the 50% is a rise in satisfaction ratings, nothing else.',
+  },
+  {
     trigger: /\b60%/,
     requires: [/\beligible\b/i],
     reason: 'Pattern: the 60% is of eligible users.',
@@ -68,11 +83,6 @@ export const QUALIFIER_RULES: readonly QualifierRule[] = [
     trigger: /\b78\s?%/,
     requires: [/decision[- ]time|time to (choose|decide|pick)|to choose a login method|login-method decision|decide where to begin/i],
     reason: 'Awardco: the 78% is a reduction in login-method decision time, nothing else.',
-  },
-  {
-    trigger: /\bcustom\s+reports\b[^.\n]{0,80}\b(shipped|launched|released)\b|\b(shipped|launched|released)\b[^.\n]{0,80}\bcustom\s+reports\b/i,
-    requires: [/\bafter\s+(his|luke['’]?s|the|my)\s+(pattern\s+)?internship\b|\bafter\s+(he|luke|i)\s+left\b|\bafter\s+(the\s+)?handoff\b|\bpost-internship\b/i],
-    reason: 'Pattern: Custom Reports shipped after the internship.',
   },
 ]
 
