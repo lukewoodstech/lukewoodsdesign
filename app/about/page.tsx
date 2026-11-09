@@ -97,8 +97,7 @@ export default function AboutPage() {
       <main id="main">
 
         {/* ── 01 Nice to meet you ──
-            The heading, then three paragraphs, each with its row of
-            photos underneath. The copy lives in STORY (lib/about.ts). */}
+            The heading, one short paragraph, then two rows of photos. The copy lives in STORY (lib/about.ts). */}
         <StoryStage
           beats={STORY}
           intro={

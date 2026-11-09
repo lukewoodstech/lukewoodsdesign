@@ -43,33 +43,18 @@ export type StoryBeat = { text: string; cards: ReadonlyArray<StoryCard> }
 
 export const STORY: ReadonlyArray<StoryBeat> = [
   {
-    text: 'Hey, I\u2019m Luke. Growing up I was into everything: sports, drawing, animals, camping, and a new project every other week.',
+    text: 'Hey, I\u2019m Luke. I grew up wanting to be a doctor like my dad so I could help people. Then I found software, where one thing you build can help thousands at once. I\u2019m a people person first, so I design from the user out.',
     cards: [
       { kind: 'photo', src: '/luke-woods.jpg', alt: 'Luke Woods standing on a stone balcony in a light blue suit', caption: 'Hi, I\u2019m Luke Woods', center: true },
       { kind: 'photo', src: '/about/football-kid.jpg', alt: 'Luke as a little boy in a navy Cougars jersey, grinning and holding a football up by his ear', caption: 'Playing every sport I could', focus: '50% 35%' },
       { kind: 'photo', src: '/about/basketball-game.jpg', alt: 'Luke as a kid in a white number 11 jersey, passing the ball during a youth basketball game', caption: 'Basketball most of all' },
       { kind: 'photo', src: '/luke-snake.jpg', alt: 'Luke with a snake draped over his shoulders', caption: 'One of about 100 animals I kept as a teenager' },
       { kind: 'photo', src: '/luke-fishing.jpg', alt: 'Luke waist-deep in the Kenai River in Alaska, grinning and holding up a large salmon', caption: 'Salmon on the Kenai River, Alaska' },
-    ],
-  },
-  {
-    text: 'I wanted to be a doctor like my dad, to help people. Then I found software, where one thing you build can help thousands at once. That felt like magic.',
-    cards: [
       { kind: 'photo', src: '/about/luke-and-dad.jpg', alt: 'Luke and his dad in wet rain jackets, grinning in a selfie above a harbour full of fishing boats', caption: 'My dad, the doctor I wanted to be' },
       { kind: 'photo', src: '/about/optometry-exam.jpg', alt: 'Luke in black scrubs and a mask holding an eye-testing instrument up to an older patient seated in an exam chair', caption: 'Running eye exams as an optometric tech' },
       { kind: 'byu', caption: 'Then I found computer science at BYU' },
       { kind: 'photo', src: '/about/lucid-ai-card.jpg', alt: 'The Lucid AI panel Luke designed: a prompt box reading Find or summarize a document, above four skills: Find docs, Summarize, Build a diagram and Catch up', caption: 'Lucid AI, built once and shipped to every Lucid plan' },
       { kind: 'sandbox', caption: 'Now I build software for startups through Sandbox' },
-    ],
-  },
-  {
-    text: 'I\u2019m a people person first. That\u2019s why I love design: start with the user, and everything else follows.',
-    cards: [
-      { kind: 'photo', src: '/about/dogwalk-first.jpg', alt: 'A small boy in an orange striped shirt walking a dog on a red retractable lead down a suburban sidewalk', caption: 'My first business was walking the neighbours\u2019 dogs' },
-      { kind: 'photo', src: '/about/teach-friend.jpg', alt: 'Luke sitting on the floor of his reptile room, talking a friend through one of the enclosures', caption: 'Helping people get over their fear of snakes' },
-      { kind: 'photo', src: '/about/class-beardies.jpg', alt: 'Luke in a mask holding out two bearded dragons to children at their desks in an elementary classroom', caption: 'Bearded dragons for my mom\u2019s class' },
-      { kind: 'photo', src: '/about/class-zoom-boa.jpg', alt: 'Luke at a classroom desk holding up a boa to a grid of students on a Zoom call during remote school', caption: 'Her class again, over Zoom during remote school', focus: '25% 50%' },
-      { kind: 'figma', caption: 'Figma Campus Leader at BYU' },
     ],
   },
 ]

@@ -4897,8 +4897,8 @@ p a {
 
 /* ── The story stage ─────────────────────────────────────────────── */
 
-/* The heading, then three paragraphs, each followed by its own row of
-   five cards (2026-11-05; see StoryStage.tsx). A row is never wider
+/* The heading, one paragraph, then ten cards in two rows of five
+   (2026-11-09; see StoryStage.tsx). A row is never wider
    than the reading column it sits under, give or take, so the photos
    stay tied to the paragraph above them. */
 .story {

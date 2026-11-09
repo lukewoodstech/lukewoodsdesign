@@ -2,13 +2,12 @@ import StoryCard from './StoryCard'
 import type { StoryBeat } from '@/lib/about'
 
 /*
- * The story stage: the page heading, then three short paragraphs, each
- * followed by its own row of cards (Luke, 2026-11-05). The row shows
- * what the paragraph just said, so the photos read as evidence rather
- * than a separate collage.
+ * The story stage: the page heading, one short paragraph, then two rows
+ * of cards (Luke, 2026-11-09). It takes a list of beats, but STORY is a
+ * single beat of ten cards; the five-column grid wraps them into rows.
  *
- * Before that it was one 5×3 grid under a single lede, and before that
- * a scroll-scrubbed deck. Still, on every screen, no JavaScript. On a
+ * Before that it was three paragraphs each with its own row, before
+ * that one 5×3 grid, and before that a scroll-scrubbed deck. Still, on every screen, no JavaScript. On a
  * phone each row becomes a sideways swipe strip so five cards don't
  * leave an orphan in a two-up grid.
  */
