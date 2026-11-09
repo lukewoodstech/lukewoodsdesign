@@ -5,6 +5,8 @@ assembled from a template — [lukewoodsdesign.com](https://lukewoodsdesign.com)
 
 Next.js 16, React 19, TypeScript, Tailwind 4, deployed on Vercel.
 
+![The home page of lukewoodsdesign.com](docs/home.jpg)
+
 ## Why the repo is worth opening
 
 Most portfolio sites are a template with someone's work poured into them.
