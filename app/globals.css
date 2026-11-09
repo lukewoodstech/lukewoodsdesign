@@ -4924,29 +4924,15 @@ p a {
   margin-top: clamp(3rem, 6vw, 4.5rem);
 }
 
-/* Left-aligned (Luke, 2026-11-09: easier to read than centred), and set
-   on the photo row's own width so the paragraph's left edge sits on the
-   first card's. The right padding keeps the line to a reading measure
-   rather than the row's full 1130px. */
+/* The block stays centred on the page; the lines inside it are
+   left-aligned (Luke, 2026-11-09: easier to read than centred text). */
 .story .story__para {
-  box-sizing: border-box;
-  width: calc(5 * var(--card-w) + 4 * var(--card-gap));
-  max-width: 100%;
-  margin: 1.75rem 0 0;
-  padding-inline: 0 max(0px, calc(5 * var(--card-w) + 4 * var(--card-gap) - 42rem));
+  margin: 1.75rem auto 0;
+  max-width: 46rem;
   font-size: var(--reading-intro);
   line-height: var(--reading-intro-lh);
   text-align: left;
 }
-
-/* The heading shares that edge, so the page reads down one line. */
-.story__intro {
-  box-sizing: border-box;
-  width: calc(5 * var(--card-w) + 4 * var(--card-gap));
-  max-width: 100%;
-  margin-inline: auto;
-}
-.story__intro .ab-hero { text-align: left; }
 
 .story__row {
   display: grid;
@@ -5219,13 +5205,6 @@ p a {
     --card-w: 40vw;
   }
 
-  /* The rows are swipe strips here, so the text takes the strip's
-     1.25rem inset instead of the row's width. */
-  .story .story__para,
-  .story__intro {
-    width: 100%;
-    padding-inline: 1.25rem;
-  }
 
   .story__row {
     display: flex;
@@ -5668,6 +5647,18 @@ p a {
   height: var(--tb-ico);
   border-radius: 6px;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+
+/* A second tool sharing the row (Jira on ClickUp): a small tile on the
+   lower-right corner, ringed in the page ground so it reads as on top. */
+.tb-ico { position: relative; }
+.tb-ico--badge {
+  --tb-ico: 1.125rem;
+  position: absolute;
+  right: -0.4rem;
+  bottom: -0.4rem;
+  border-radius: 4px;
+  box-shadow: 0 0 0 2px #000, inset 0 0 0 1px rgba(255, 255, 255, 0.14);
 }
 
 /* A method (interviews, testing, review) rather than a product: a white
