@@ -9,7 +9,7 @@ export const contentType = OG_CONTENT_TYPE
  * /about had no preview image at all, so it shared as a bare link. The card
  * shows what the page opens with: the greeting, in the same serif the page
  * sets it in. No eyebrow — the byline underneath already says who this is,
- * and "My story" over "Nice to meet you." would be the same sentence twice.
+ * and "About" over "Nice to meet you." would be the same sentence twice.
  */
 export default async function Image() {
   return new ImageResponse(<OgCard title="Nice to meet you." />, {

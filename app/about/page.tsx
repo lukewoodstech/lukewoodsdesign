@@ -11,7 +11,7 @@ import { STORY, ROLES, TOOLS, REPTILE_ROOM, REPTILE_STATS, QUOTES } from '@/lib/
 import { SITE } from '@/lib/site'
 
 /*
- * My story, as a page you scroll through rather than read.
+ * The about page, as a page you scroll through rather than read.
  *
  * The 2026-09-20 version was an essay: the one story the case studies
  * tell together — at all three internships the project that shipped was
@@ -52,14 +52,14 @@ import { SITE } from '@/lib/site'
  * work, just with the volume up.
  */
 
-const TITLE = 'My story'
+const TITLE = 'About'
 const DESCRIPTION =
   'Luke Woods, a product designer who finds the real problem behind the assigned one. BYU computer science and HCI, three internships, and the work that came out of them.'
 
 /*
  * The `twitter` block is spelled out rather than left to inherit. Without it
  * the page took the root layout's card — "Luke Woods · Product Designer" and
- * the site blurb — while its og:title said "My story", so the two halves of
+ * the site blurb — while its og:title said the page title, so the two halves of
  * the same preview disagreed depending on which one a platform read.
  */
 export const metadata: Metadata = {
