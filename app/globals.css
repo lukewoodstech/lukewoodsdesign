@@ -4837,12 +4837,14 @@ p a {
   color: #fff;
 }
 
+/* Reads exactly like the story paragraph above it: same size, left-
+   aligned, full column width, so the two sections' body text matches
+   (Luke, 2026-11-09). */
 .ab-sec__lede {
-  margin: 0 auto 2.5rem;
-  max-width: 40rem;
-  text-align: center;
-  font-size: var(--reading-size);
-  line-height: var(--reading-leading);
+  margin: 0 0 2.5rem;
+  text-align: left;
+  font-size: var(--reading-intro);
+  line-height: var(--reading-intro-lh);
   color: #fff;
 }
 
