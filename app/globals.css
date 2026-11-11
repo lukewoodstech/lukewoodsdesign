@@ -9240,43 +9240,155 @@ p a {
 .acs-alert__title { margin: 0; font-weight: 600; }
 .acs-alert__body { margin: 0.15rem 0 0; color: rgba(0, 0, 0, 0.6); }
 
-/* ── Lucid: the skills' opening answers, side by side ──
-   Three shipped and one next (Catch up), two across on wide screens and a
-   stack on phones. The next one sits back a step so it reads as planned. */
-.lcs-zero {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 2rem 1.5rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+/* ── Visual-first sections (components/sections) ──────────────────
+   A case study as text cards and the visuals that back them. Shared by
+   every study on the format; each page sets its own --accent. One even
+   gap (--vs-gap) runs between every card and visual, inside a section
+   and between sections, so no card reads as tied to one picture
+   (Luke, 2026-11-11). */
+.vs-sections {
+  --vs-gap: 96px;
+  width: min(100% - 2 * var(--cs-pad, 1.5rem), 1040px);
+  margin: var(--vs-gap) auto 0;
 }
 
-.lcs-zero__name {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin: 0.85rem 0 0;
-  font-size: 0.9375rem;
+.vs-section + .vs-section { margin-top: var(--vs-gap); }
+
+/* The card. The resting glow sits on the card; ::after carries the
+   brighter glow and fades in on hover, so only opacity animates. */
+.vs-card {
+  position: relative;
+  padding: 36px 44px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  background: #1a1a1c;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 1px 2px rgba(0, 0, 0, 0.4),
+    0 16px 48px -16px color-mix(in srgb, var(--accent) 32%, transparent),
+    0 0 24px -6px color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.vs-card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  box-shadow:
+    0 16px 48px -16px color-mix(in srgb, var(--accent) 48%, transparent),
+    0 0 24px -6px color-mix(in srgb, var(--accent) 18%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.vs-card:hover::after { opacity: 1; }
+
+/* The step word and the subtitle are one heading. It wraps rather than
+   truncating: with the step in front, most subtitles outgrow one line. */
+.vs-card__title {
+  margin: 0;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 28px;
   font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: #f5f5f5;
+  text-wrap: balance;
+}
+
+.vs-card__step { color: var(--accent); }
+
+.vs-card__body {
+  max-width: 64ch;
+  margin: 16px 0 0;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.65;
   color: #fff;
 }
 
-.lcs-zero li.is-next .cs-fig__frame { opacity: 0.55; }
-.lcs-zero li.is-next .lcs-zero__name { color: rgba(255, 255, 255, 0.6); }
+/* Visuals: below the card in a stacked section, 24px apart. */
+.vs-visuals {
+  display: grid;
+  gap: var(--vs-gap);
+  margin-top: var(--vs-gap);
+}
 
-.lcs-zero__badge {
-  padding: 0.2rem 0.5rem;
-  border: 1px solid color-mix(in srgb, var(--accent) 60%, transparent);
-  border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent);
+.vs-visual { margin: 0; min-width: 0; }
+
+.vs-visual__frame {
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.vs-visual__cap {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #8c8c8c;
+}
+
+/* Existing components dropped in as visuals bring their own outer
+   margins; inside a section the section owns the spacing. */
+.vs-visual > .cs-block,
+.vs-visual > .cs-callouts { margin-top: 0; }
+.vs-visual .cs-quotes__cap:empty { display: none; }
+
+.vs-placeholder {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  padding: 24px;
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.025);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* A row of three same-size frames, and frames stacked in one visual. */
+.vs-trio {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.vs-stack { display: grid; gap: 24px; }
+
+/* Split: the card sticks on the left while the tall visual scrolls past. */
+.vs-split {
+  display: grid;
+  grid-template-columns: 420px minmax(0, 1fr);
+  gap: 48px;
+  align-items: start;
+}
+
+.vs-split__card {
+  position: sticky;
+  top: calc(4rem + 32px);
+}
+
+.vs-split .vs-card { padding: 32px 36px; }
+
+@media (max-width: 899px) {
+  .vs-sections { --vs-gap: 72px; }
+  .vs-split { grid-template-columns: 1fr; gap: var(--vs-gap); }
+  .vs-split__card { position: static; }
 }
 
 @media (max-width: 40em) {
-  .lcs-zero { grid-template-columns: 1fr; gap: 1.5rem; }
+  .vs-sections { --vs-gap: 56px; }
+  .vs-card, .vs-split .vs-card { padding: 28px 24px; }
+  .vs-card__title { font-size: 24px; }
+  .vs-trio { grid-template-columns: 1fr; }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .vs-card::after { transition: none; }
+}
+
