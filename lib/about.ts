@@ -97,7 +97,7 @@ export const ROLES: ReadonlyArray<Role> = [
     period: 'May – August 2026',
     year: '2026',
     summary:
-      'Designed the Lucid AI assistant on the homepage: find a document by what you remember, summarize it, catch up, or generate a new board. Blank page to general availability in twelve weeks, across every tier.',
+      'Designed the Lucid AI assistant on the homepage: find a document by what you remember, summarize it, or generate a new board. Blank page to general availability in twelve weeks, across every tier.',
     short: 'The AI assistant on Lucid\u2019s homepage. Blank page to general availability in twelve weeks.',
     href: '/work/lucid-ai',
     logo: '/logos/lucid.png',

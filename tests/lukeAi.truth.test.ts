@@ -100,7 +100,7 @@ test('claims: Lucid stays within the documented evidence', () => {
   assert.match(w, /12 weeks/)
   assert.match(w, /every Lucid tier/)
   assert.match(w, /12 external user sessions/)
-  assert.match(w, /Find docs, Summarize, Build a diagram, and Catch up/)
+  assert.match(w, /Find docs, Summarize, and Build a diagram\. Catch up was designed and was next/)
   assert.match(w, /does not have long-term adoption data/)
   const lucid = CLAIMS.filter((c) => c.company === 'Lucid').map((c) => c.wording).join('\n')
   assert.doesNotMatch(lucid, /\d+\s?%/, 'no percentages exist for Lucid')

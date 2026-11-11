@@ -96,7 +96,7 @@ export const ENGAGEMENTS: readonly Engagement[] = [
     kind: 'internship',
     route: '/work/lucid-ai',
     summary:
-      'Visual collaboration platform. Designed the Lucid AI assistant for the homepage: find documents by what you remember, summarize, catch up, or generate a new board.',
+      'Visual collaboration platform. Designed the Lucid AI assistant for the homepage: find documents by what you remember, summarize, or generate a new board.',
   },
   {
     company: 'Awardco',
@@ -286,12 +286,12 @@ export const CLAIMS: readonly Claim[] = [
     source: '/work/lucid-ai',
   },
   {
-    id: 'lucid-four-skills',
+    id: 'lucid-three-skills',
     company: 'Lucid',
     project: 'Lucid AI on the homepage',
-    claim: 'Four core skills',
+    claim: 'Three core skills shipped, Catch up next',
     wording:
-      'The four final skills were Find docs, Summarize, Build a diagram, and Catch up.',
+      'Three skills shipped: Find docs, Summarize, and Build a diagram. Catch up was designed and was next on the list to build.',
     status: 'shipped',
     scope: 'project',
     source: '/work/lucid-ai',
@@ -300,9 +300,9 @@ export const CLAIMS: readonly Claim[] = [
     id: 'lucid-20-capabilities',
     company: 'Lucid',
     project: 'Lucid AI on the homepage',
-    claim: 'More than 20 capabilities prototyped before the cut to four',
+    claim: 'More than 20 capabilities prototyped before the cut to three',
     wording:
-      'More than 20 potential capabilities were prototyped and tested before the experience was narrowed to four core skills.',
+      'More than 20 potential capabilities were prototyped and tested before the experience was narrowed to three core skills for launch.',
     status: 'tested',
     scope: 'project',
     source: '/work/lucid-ai',

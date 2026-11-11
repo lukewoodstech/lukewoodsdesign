@@ -22,6 +22,8 @@ export type Callout = {
   y: number
   w: number
   h: number
+  /** More regions that share this callout's number, e.g. several spots. */
+  more?: { x: number; y: number; w: number; h: number }[]
   /** Unused since the leader lines went; kept so existing pages compile. */
   ax?: number
   ay?: number
@@ -71,25 +73,29 @@ export default function Callouts({
       <div className="cs-callouts__body" data-active={active ?? undefined}>
         <div className="cs-callouts__stage" onClick={() => setActive(null)}>
           <Image src={src} alt="" width={width} height={height} sizes={sizes} />
-          {items.map((c, i) => (
-            <span
-              key={c.label}
-              className={['cs-callouts__box', on(i), c.y < 4 && 'is-top', c.x < 3 && 'is-left'].filter(Boolean).join(' ')}
-              style={
-                {
-                  left: `${c.x}%`,
-                  top: `${c.y}%`,
-                  width: `${c.w}%`,
-                  height: `${c.h}%`,
-                  '--i': i,
-                } as React.CSSProperties
-              }
-              aria-hidden="true"
-              {...pick(i)}
-            >
-              <span className="cs-callouts__tag">{i + 1}</span>
-            </span>
-          ))}
+          {items.flatMap((c, i) =>
+            [c, ...(c.more ?? [])].map((r, j) => (
+              <span
+                key={`${c.label}-${j}`}
+                className={['cs-callouts__box', on(i), c.more?.length && 'is-multi', r.y < 4 && 'is-top', r.x < 3 && 'is-left']
+                  .filter(Boolean)
+                  .join(' ')}
+                style={
+                  {
+                    left: `${r.x}%`,
+                    top: `${r.y}%`,
+                    width: `${r.w}%`,
+                    height: `${r.h}%`,
+                    '--i': i,
+                  } as React.CSSProperties
+                }
+                aria-hidden="true"
+                {...pick(i)}
+              >
+                <span className="cs-callouts__tag">{i + 1}</span>
+              </span>
+            )),
+          )}
         </div>
 
         <ol className="cs-callouts__key" /* Three across at most: four make a 2×2, five a 3 + 2. */
