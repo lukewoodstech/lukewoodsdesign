@@ -4,7 +4,6 @@ import Callouts from '@/components/cs/Callouts'
 import LayoutContest from '@/components/lucid/LayoutContest'
 import CompareStage from '@/components/lucid/CompareStage'
 import ZoomShot from '@/components/lucid/ZoomShot'
-import BoardGenClip from '@/components/lucid/BoardGenClip'
 import MentionFlow from '@/components/lucid/MentionFlow'
 import ShipTimeline from '@/components/lucid/ShipTimeline'
 
@@ -43,7 +42,8 @@ export const lucid: CaseStudySections = {
       visuals: [
         {
           alt: 'Example user quotes',
-          caption: 'Illustrative examples of how users described the doc they were looking for.',
+          title: 'What users remembered',
+          caption: 'Illustrative examples of how users described the doc they were looking for: by what was in it, who made it, or when.',
           element: (
             <Notes
               quotes
@@ -58,7 +58,8 @@ export const lucid: CaseStudySections = {
         },
         {
           alt: 'Home page, before, with callouts',
-          caption: 'Title only search, no AI entry point, and scrolling recents as the fallback.',
+          title: 'The homepage before',
+          caption: 'Title only search, no AI entry point, and scrolling recents as the fallback. The boxes marked 2 are the four open spots where AI could go.',
           element: (
             <Callouts
               src={`${IMG}/home-before.png`}
@@ -112,7 +113,8 @@ export const lucid: CaseStudySections = {
           width: 2880,
           height: 1800,
           alt: 'The Lucid homepage with one addition: a Lucid AI sparkle button in the empty space beside the search bar',
-          caption: 'The sparkle button sits in the empty space beside search.',
+          title: 'The entry point',
+          caption: 'The sparkle button sits in the empty space beside search, so nothing else on the page had to move.',
         },
       ],
     },
@@ -123,12 +125,14 @@ export const lucid: CaseStudySections = {
       visuals: [
         {
           alt: '4 coded harness prototypes',
-          caption: 'Four layouts, coded and tested with users.',
+          title: 'Four coded layouts',
+          caption: 'A side panel, a modal, a floating corner panel, and an inline bar, each coded and tested with users.',
           element: <LayoutContest />,
         },
         {
           alt: 'Final side panel and full page',
-          caption: 'Docked to keep working, full page for longer conversations.',
+          title: 'Side panel and full page',
+          caption: 'Docked to keep working, full page for longer conversations. Use the toggle to switch between them.',
           element: (
             <CompareStage
               ariaLabel="The shipped expand interaction: side panel versus full page"
@@ -167,12 +171,14 @@ export const lucid: CaseStudySections = {
           height: 1956,
           orientation: 'tall',
           alt: 'An ideation grid of twenty candidate capabilities for the homepage assistant, including Find docs, Summarize, Catch up, Build a diagram, dormant files, and project status',
-          caption: 'Candidate capabilities from the design file, before the cut.',
+          title: 'Capability ideas',
+          caption: 'Candidate capabilities from the design file, before the cut to three.',
         },
         {
           orientation: 'wide',
           alt: 'Zero state responses for Find docs, Summarize, Build a diagram',
-          caption: 'Each skill teaches itself first. Catch up is next on the list.',
+          title: 'Zero state responses',
+          caption: 'Picking a skill returns a hard coded example response that explains what it can do and offers prompts to start with. Shown: Find docs, Summarize, and Build a diagram. Catch up is next on the list.',
           element: (
             <div className="vs-trio">
               {ZERO_STATES.map((z) => (
@@ -201,7 +207,8 @@ export const lucid: CaseStudySections = {
           width: 2400,
           height: 1312,
           alt: 'The shipped document results: seven compact document chips, each followed by a one-line AI-generated summary, ranked strongest match first, ending with an offer to narrow or open',
-          caption: 'Compact rows, a one line AI summary, and a next step.',
+          title: 'The 16px results component',
+          caption: 'Compact rows ranked by confidence, a one line AI summary for each doc, and a next step to narrow or open.',
         },
       ],
     },
@@ -211,24 +218,12 @@ export const lucid: CaseStudySections = {
       body: 'Build a diagram is the only skill that leaves the panel. It asks what kind of diagram first, takes a prompt, then builds it in a new tab. The status line names every step so the wait never feels dead. I reused the loading pattern from Lucid AI in the editor instead of making a new one.',
       visuals: [
         {
-          alt: 'Build a diagram full flow',
-          caption: 'Diagram type first, then the prompt, with every step named.',
-          element: (
-            <div className="vs-stack">
-              <div className="vs-visual__frame">
-                <ZoomShot
-                  src={`${IMG}/skill-diagram.png`}
-                  alt="Build a diagram in progress: the homepage on the left, and in the panel a diagram-type chooser, a chosen flowchart, an example prompt, and a generating diagram status under a scanned canvas step"
-                  width={2880}
-                  height={1800}
-                  sizes="(min-width: 65em) 1040px, 100vw"
-                />
-              </div>
-              <div className="vs-visual__frame">
-                <BoardGenClip />
-              </div>
-            </div>
-          ),
+          src: `${IMG}/skill-diagram.png`,
+          width: 2880,
+          height: 1800,
+          alt: 'Build a diagram in progress: the homepage on the left, and in the panel a diagram-type chooser, a chosen flowchart, an example prompt, and a generating diagram status under a scanned canvas step',
+          title: 'Build a diagram in progress',
+          caption: 'Diagram type first, then the prompt. The status line names every step while the board builds in a new tab.',
         },
       ],
     },
@@ -239,7 +234,8 @@ export const lucid: CaseStudySections = {
       visuals: [
         {
           alt: 'Mention / collaborator tool',
-          caption: 'Type @, pick a person or team, and it becomes a chip the search can use.',
+          title: '@mention',
+          caption: 'Type @, pick a person or team, and it becomes a chip the search can use. The same tool works in the AI panel and the regular search bar.',
           element: (
             <div className="vs-visual__frame">
               <MentionFlow />
@@ -258,7 +254,8 @@ export const lucid: CaseStudySections = {
           width: 2880,
           height: 1800,
           alt: 'The search results page: a resolved mention chip inside the keyword query, an AI answer listing documents with one-line summaries above the results table, and a chat input under the answer that continues into Lucid AI',
-          caption: 'Keyword results stay, with an AI answer on top for longer questions.',
+          title: 'AI answer in search',
+          caption: 'Keyword results stay, with an AI answer on top for longer questions and a path into the full chat.',
         },
       ],
     },
@@ -275,7 +272,8 @@ export const lucid: CaseStudySections = {
       visuals: [
         {
           alt: 'Ship timeline',
-          caption: 'Research to general release in about three months.',
+          title: 'Timeline',
+          caption: 'Research to general release in about three months, with an internal release on July 20.',
           element: <ShipTimeline />,
         },
       ],

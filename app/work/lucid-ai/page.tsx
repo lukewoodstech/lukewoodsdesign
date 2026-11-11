@@ -8,6 +8,7 @@ import Laptop from '@/components/cs/Laptop'
 import Sections from '@/components/sections/Sections'
 import { Band, Block, Col, MetaGrid, Pill, Problem, StoryTitle } from '@/components/cs/Story'
 import { SITE } from '@/lib/site'
+import { companyAbout } from '@/lib/caseStudies'
 import { lucid } from '@/lib/sections/lucid'
 
 /*
@@ -63,6 +64,7 @@ export default function LucidCaseStudy() {
               stacked
               summary={<p>{SUMMARY}</p>}
               facts={[
+                { label: 'Company', value: companyAbout('lucid-ai'), span: true },
                 { label: 'Role', value: 'Product Design Intern' },
                 { label: 'Timeline', value: 'May to August 2026' },
                 { label: 'Team', value: 'PM, design manager, search and AI engineering teams' },

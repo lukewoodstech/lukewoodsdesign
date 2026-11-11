@@ -11,6 +11,8 @@ export type SectionVisual = {
   /** Image under /public. Opens in the click-to-expand lightbox. */
   src?: string
   alt: string
+  /** A short name for what the visual shows, set above its caption. */
+  title?: string
   caption?: string
   /** Tall visuals take the right column of a split section. */
   orientation?: 'wide' | 'tall'
