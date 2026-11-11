@@ -52,13 +52,13 @@ export function Visual({ v }: { v: SectionVisual }) {
   }
   return (
     <figure className={`vs-visual${v.orientation === 'tall' ? ' vs-visual--tall' : ''}`}>
-      {content}
       {(v.title || v.caption) && (
         <figcaption className="vs-visual__cap">
           {v.title && <span className="vs-visual__title">{v.title}</span>}
           {v.caption}
         </figcaption>
       )}
+      {content}
     </figure>
   )
 }

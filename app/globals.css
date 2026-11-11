@@ -9323,11 +9323,11 @@ p a {
   border-radius: 8px;
 }
 
-/* Under each visual: a short title and a line or two of text, set like
+/* Above each visual: a short title and a line or two of text, set like
    the card's subtitle and body so it reads at the same level. */
 .vs-visual__cap {
   max-width: 64ch;
-  margin-top: 20px;
+  margin-bottom: 24px;
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   font-size: 17px;
   line-height: 1.65;
@@ -9349,6 +9349,7 @@ p a {
 .vs-visual > .cs-block,
 .vs-visual > .cs-callouts { margin-top: 0; }
 .vs-visual .cs-quotes__cap:empty { display: none; }
+.vs-visual .cs-quotes { margin-top: 0; }
 
 .vs-placeholder {
   display: grid;
