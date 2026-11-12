@@ -9351,6 +9351,27 @@ p a {
 .vs-visual > .cs-callouts { margin-top: 0; }
 .vs-visual .cs-quotes__cap:empty { display: none; }
 .vs-visual .cs-quotes { margin-top: 0; }
+
+/* Pitch: the phone rows, galleries, recording and stack inside a visual. */
+.vs-visual .cs-screens { margin: 0; }
+.vs-visual .cs-gallery { margin: 0; }
+.vs-visual .cs-row-label { margin-top: 2rem; }
+.vs-visual .cs-row-label:first-child { margin-top: 0; }
+.vs-visual .cs-gallery .cs-screens__name,
+.vs-stacked .cs-screens__name { display: block; }
+.vs-icons { width: min(100%, 420px); margin-inline: auto; }
+.vs-stacked { display: grid; gap: 1.5rem; }
+.vs-link { margin: 1rem 0 0; text-align: center; font-size: 15px; }
+.vs-panel {
+  background: #1a1a1c;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 36px 44px;
+}
+.vs-panel .cs-stack--compact { margin-top: 0; }
+@media (max-width: 40em) {
+  .vs-panel { padding: 28px 24px; }
+}
 /* The flow strips broke out of the old 800px column; the section column
    is already wide enough, so they sit inside it like every visual. */
 .vs-visual .cs-flow { --flow-w: 100%; margin: 0; }
