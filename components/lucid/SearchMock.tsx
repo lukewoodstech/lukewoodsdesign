@@ -121,7 +121,7 @@ function ChatInput({
           style={{ opacity: !sent && typedCount > 0 ? 1 : 0.45, transition: 'opacity 0.2s ease' }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={`${MOCK}/send-arrow.svg`} alt="" className="size-[24px]" />
+          <img src={`${MOCK}/send-arrow.svg`} alt="" aria-hidden="true" className="size-[24px]" />
         </span>
       </div>
     </div>
@@ -268,17 +268,17 @@ export default function SearchMock({
             <span className="text-[18px] font-semibold leading-[24px]">Lucid AI</span>
             <span className="flex min-w-[24px] items-center justify-center rounded-[4px] px-[4px]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`${MOCK}/info-16.svg`} alt="" className="size-[16px]" />
+              <img src={`${MOCK}/info-16.svg`} alt="" aria-hidden="true" className="size-[16px]" />
             </span>
           </div>
           <div className="flex items-center gap-[8px]">
             <span className="flex size-[32px] items-center justify-center rounded-[4px]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`${MOCK}/shrink-24.svg`} alt="" className="size-[24px]" />
+              <img src={`${MOCK}/shrink-24.svg`} alt="" aria-hidden="true" className="size-[24px]" />
             </span>
             <span className="flex size-[32px] items-center justify-center rounded-[4px]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`${MOCK}/close-24.svg`} alt="" className="size-[24px]" />
+              <img src={`${MOCK}/close-24.svg`} alt="" aria-hidden="true" className="size-[24px]" />
             </span>
           </div>
         </div>
@@ -306,7 +306,7 @@ export default function SearchMock({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={`${MOCK}/progress-circle-24.svg`}
-                alt=""
+                alt="" aria-hidden="true"
                 className="size-[24px] shrink-0 animate-spin"
                 style={{ animationDuration: '0.9s' }}
               />
@@ -334,11 +334,11 @@ export default function SearchMock({
                   >
                     <span className="flex size-[24px] shrink-0 items-center justify-center">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={`${MOCK}/dot-24.svg`} alt="" className="size-[24px]" />
+                      <img src={`${MOCK}/dot-24.svg`} alt="" aria-hidden="true" className="size-[24px]" />
                     </span>
                     <span className="flex h-[24px] shrink-0 items-center bg-[rgba(131,138,147,0.1)] px-[4px]">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={`${MOCK}/lucidchart-doc.svg`} alt="" className="h-[16px] w-[13.7px] shrink-0" />
+                      <img src={`${MOCK}/lucidchart-doc.svg`} alt="" aria-hidden="true" className="h-[16px] w-[13.7px] shrink-0" />
                       <span className="whitespace-nowrap px-[4px] text-[14px] font-medium leading-[20px]">
                         {r.title}
                       </span>
@@ -392,7 +392,7 @@ export default function SearchMock({
                       className="flex min-w-[120px] flex-1 flex-col justify-center gap-[4px] rounded-[4px] p-[12px]"
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={`${MOCK}/${p.icon}`} alt="" className="size-[24px]" />
+                      <img src={`${MOCK}/${p.icon}`} alt="" aria-hidden="true" className="size-[24px]" />
                       <p className="text-[14px] font-medium leading-[24px]">{p.title}</p>
                       <p className="text-[12px] leading-[16px] text-[rgba(40,44,51,0.7)]">{p.desc}</p>
                     </div>

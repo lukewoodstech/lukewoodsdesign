@@ -69,10 +69,10 @@ export default function Callouts({
   const on = (i: number) => (active === i ? 'is-on' : undefined)
 
   return (
-    <Reveal className="cs-callouts" role="figure" aria-label={alt}>
+    <Reveal className="cs-callouts" role="figure">
       <div className="cs-callouts__body" data-active={active ?? undefined}>
         <div className="cs-callouts__stage" onClick={() => setActive(null)}>
-          <Image src={src} alt="" width={width} height={height} sizes={sizes} />
+          <Image src={src} alt={alt} width={width} height={height} sizes={sizes} />
           {items.flatMap((c, i) =>
             [c, ...(c.more ?? [])].map((r, j) => (
               <span

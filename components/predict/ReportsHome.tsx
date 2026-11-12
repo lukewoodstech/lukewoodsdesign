@@ -108,11 +108,11 @@ export default function ReportsHome() {
           <strong>52</strong>
         </div>
         <div className="pm-searchbox">
-          <img src={`${M}/icons-search.svg`} alt="" className="pm-icon" />
+          <img src={`${M}/icons-search.svg`} alt="" aria-hidden="true" className="pm-icon" />
           <span>Search</span>
         </div>
         <span className="pm-btn pm-btn--ghost">
-          <img src={`${M}/icons-filter.svg`} alt="" className="pm-icon" />
+          <img src={`${M}/icons-filter.svg`} alt="" aria-hidden="true" className="pm-icon" />
           Filters
         </span>
       </section>
@@ -122,14 +122,14 @@ export default function ReportsHome() {
           <li key={r.name} className="pm-tile">
             <div className="pm-tile__head">
               <span className="pm-tag">{r.sharing}</span>
-              <img src={`${M}/icons-more.svg`} alt="" className="pm-icon" />
+              <img src={`${M}/icons-more.svg`} alt="" aria-hidden="true" className="pm-icon" />
             </div>
             <div className="pm-tile__chart">
               <Sparkline keys={r.series} />
             </div>
             <div className="pm-tile__foot">
               <span>{r.name}</span>
-              <img src={`${M}/icons-info.svg`} alt="" className="pm-icon" />
+              <img src={`${M}/icons-info.svg`} alt="" aria-hidden="true" className="pm-icon" />
             </div>
           </li>
         ))}

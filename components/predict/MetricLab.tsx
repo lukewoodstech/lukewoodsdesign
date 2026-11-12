@@ -71,7 +71,7 @@ export default function MetricLab() {
               onClick={() => setDrawerOpen((o) => !o)}
               title="Customize graph and header"
             >
-              <img src={`${M}/icons-settings.svg`} alt="" className="pm-icon" />
+              <img src={`${M}/icons-settings.svg`} alt="" aria-hidden="true" className="pm-icon" />
               <span className="sr-only">Customize graph and header</span>
             </button>
           }

@@ -44,7 +44,7 @@ export default function TileFooter({
 
   const mark = logoSrc ? (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={logoSrc} alt="" className="tile-footer__logo-img" />
+    <img src={logoSrc} alt="" aria-hidden="true" className="tile-footer__logo-img" />
   ) : (
     <span className="tile-footer__logo" aria-hidden="true">
       {company.charAt(0)}

@@ -7,8 +7,9 @@ import { useReducedMotion } from '@/lib/useReducedMotion'
  * The big numbers under "The impact": silver-gradient figures that count
  * up once when the strip enters view, each rising in on a stagger, with an
  * italic caption beneath. Numeric values tween from zero; string values
- * ("All") just rise with their tile. Every number carries a visually-hidden
- * static value so the count-up is decoration, not content.
+ * ("All") just rise with their tile. The final value sits in an aria-label
+ * and the animated digits are aria-hidden, so screen readers hear each
+ * number once.
  *
  * Same count-up as ImpactStats, different clothes — this is the story
  * edition's version of the same hook.
@@ -86,14 +87,10 @@ export default function BigStats({
           }`}
           style={{ '--i': i } as React.CSSProperties}
         >
-          <span className="cs-bigstat__num">
+          <span className="cs-bigstat__num" role="img" aria-label={`${stat.value}${stat.suffix ?? ''}`}>
             <span aria-hidden="true">
               {typeof stat.value === 'number' ? counts[i] : stat.value}
               {stat.suffix && <small>{stat.suffix}</small>}
-            </span>
-            <span className="visually-hidden">
-              {stat.value}
-              {stat.suffix}
             </span>
           </span>
           <span className="cs-bigstat__cap">{stat.caption}</span>

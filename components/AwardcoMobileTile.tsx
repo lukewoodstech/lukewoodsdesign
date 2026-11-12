@@ -28,14 +28,25 @@ const HREF = '/work/awardco-login-flow-redesign'
 const IMG = '/work/awardco/figma'
 
 const SCREENS = [
-  { key: 'verify', pos: 'left', src: `${IMG}/sms-mobile.png` },
-  { key: 'signin', pos: 'center', src: `${IMG}/new-mobile.png` },
-  { key: 'reset', pos: 'right', src: `${IMG}/new-reset-mobile.png` },
+  {
+    key: 'verify',
+    pos: 'left',
+    src: `${IMG}/sms-mobile.png`,
+    alt: 'Redesigned Awardco mobile verification screen offering a one-time code by email, secondary email, or text message',
+  },
+  {
+    key: 'signin',
+    pos: 'center',
+    src: `${IMG}/new-mobile.png`,
+    alt: 'Redesigned Awardco mobile sign-in screen with a Sign in with Google button and a single email field',
+  },
+  {
+    key: 'reset',
+    pos: 'right',
+    src: `${IMG}/new-reset-mobile.png`,
+    alt: 'Redesigned Awardco mobile reset screen asking for a new password after the old one expired',
+  },
 ] as const
-
-/* The composition is one picture, described once. */
-const LABEL =
-  'Three screens from the redesigned Awardco mobile login: the sign-in page with a Sign in with Google button and a single email field, the verification chooser offering a one-time code by email, secondary email, or text message, and the expired-password reset form'
 
 /* The primary phone is ~16vw on the canvas and ~45vw in the mobile stack. */
 const SIZES = '(min-width: 48em) 16vw, 45vw'
@@ -55,11 +66,11 @@ export default function AwardcoMobileTile() {
         {/* Dark overlay — behind the phones, darkens the blue on hover */}
         <div className="tile-scrim" style={{ opacity: hovered ? 1 : 0 }} />
 
-        <div className="phone-trio" role="img" aria-label={LABEL}>
+        <div className="phone-trio">
           {SCREENS.map((s) => (
             <div key={s.key} className={`phone phone--${s.pos}`}>
               <div className="phone__screen">
-                <Image src={s.src} alt="" fill sizes={SIZES} />
+                <Image src={s.src} alt={s.alt} fill sizes={SIZES} />
               </div>
             </div>
           ))}

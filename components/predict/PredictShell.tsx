@@ -44,22 +44,22 @@ export default function PredictShell({
     <div className={`pm pm-shell ${predictFont.className} ${className}`.trim()}>
       <nav className="pm-rail" aria-hidden="true">
         <div className="pm-rail__logo">
-          <img src={`${M}/pattern.svg`} alt="" />
+          <img src={`${M}/pattern.svg`} alt="" aria-hidden="true" />
           <span>PRE</span>
         </div>
         <ul>
           {RAIL.map((icon, i) => (
             <li key={icon} className={i === active ? 'is-active' : ''}>
-              <img src={`${M}/${icon}.svg`} alt="" />
+              <img src={`${M}/${icon}.svg`} alt="" aria-hidden="true" />
             </li>
           ))}
         </ul>
         <ul className="pm-rail__bottom">
           <li>
-            <img src={`${M}/icons-config.svg`} alt="" />
+            <img src={`${M}/icons-config.svg`} alt="" aria-hidden="true" />
           </li>
           <li>
-            <img src={`${M}/icons-info.svg`} alt="" />
+            <img src={`${M}/icons-info.svg`} alt="" aria-hidden="true" />
           </li>
         </ul>
       </nav>
@@ -69,15 +69,15 @@ export default function PredictShell({
           <h2 className="pm-top__title">{title}</h2>
           <div className="pm-top__tools">
             <span className="pm-chip">
-              <img src={`${M}/icons-filter.svg`} alt="" className="pm-icon" />
+              <img src={`${M}/icons-filter.svg`} alt="" aria-hidden="true" className="pm-icon" />
               {filter}
             </span>
             <span className="pm-pill">
-              <img src={`${M}/icons-bell.svg`} alt="" className="pm-icon" />
+              <img src={`${M}/icons-bell.svg`} alt="" aria-hidden="true" className="pm-icon" />
               12
             </span>
             <span className="pm-pill pm-pill--round">
-              <img src={`${M}/icons-search.svg`} alt="" className="pm-icon" />
+              <img src={`${M}/icons-search.svg`} alt="" aria-hidden="true" className="pm-icon" />
             </span>
           </div>
         </header>

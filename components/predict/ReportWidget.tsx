@@ -55,7 +55,7 @@ function MetricCard({
       <div className="pm-card__body">
         <p className="pm-card__label">
           <span className="pm-card__name">{metric.label}</span>
-          <img src={`${M}/icons-info.svg`} alt="" className="pm-icon pm-icon--sm" />
+          <img src={`${M}/icons-info.svg`} alt="" aria-hidden="true" className="pm-icon pm-icon--sm" />
           {onChart && kind && <KindGlyph kind={kind} title={kind === 'bar' ? 'Shown as bars' : 'Shown as a line'} />}
         </p>
         <p className="pm-card__value">
@@ -97,7 +97,7 @@ export default function ReportWidget({
         </div>
         <div className="pm-widget__tools">
           <span className="pm-chip" aria-hidden="true">
-            <img src={`${M}/icons-filter.svg`} alt="" className="pm-icon" />
+            <img src={`${M}/icons-filter.svg`} alt="" aria-hidden="true" className="pm-icon" />
             YEAR · BY MONTH | AMAZON US | ALL | $USD
           </span>
           {actions}
