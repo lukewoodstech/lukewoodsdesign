@@ -26,7 +26,7 @@ export type SectionVisual = {
 }
 
 export type CaseSection = {
-  /** The process step, a word or two, shown before the subtitle: "Discovery". */
+  /** The process step, one or two words, shown before the subtitle in the accent: "Discovery". */
   step?: string
   subtitle: string
   body: string

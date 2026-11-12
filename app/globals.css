@@ -9299,6 +9299,7 @@ p a {
 
 .vs-card__step { color: var(--accent); }
 
+
 .vs-card__body {
   max-width: 64ch;
   margin: 16px 0 0;
@@ -9350,6 +9351,9 @@ p a {
 .vs-visual > .cs-callouts { margin-top: 0; }
 .vs-visual .cs-quotes__cap:empty { display: none; }
 .vs-visual .cs-quotes { margin-top: 0; }
+/* The flow strips broke out of the old 800px column; the section column
+   is already wide enough, so they sit inside it like every visual. */
+.vs-visual .cs-flow { --flow-w: 100%; margin: 0; }
 
 .vs-placeholder {
   display: grid;
@@ -9374,6 +9378,32 @@ p a {
 }
 
 .vs-stack { display: grid; gap: 24px; }
+
+/* Two frames side by side, and a phone shown at a phone's size. */
+.vs-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.vs-phone { width: min(100%, 300px); margin-inline: auto; }
+.vs-phones {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 220px));
+  justify-content: center;
+  gap: 24px;
+}
+
+/* A laptop and its phones together, for final designs. */
+.vs-devices {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 32px;
+}
+
+.vs-devices .vs-phones { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.vs-devices--two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
 /* Split: the card sticks on the left while the tall visual scrolls past. */
 .vs-split {
@@ -9400,7 +9430,7 @@ p a {
   .vs-sections { --vs-gap: 56px; }
   .vs-card, .vs-split .vs-card { padding: 28px 24px; }
   .vs-card__title { font-size: 24px; }
-  .vs-trio { grid-template-columns: 1fr; }
+  .vs-trio, .vs-pair, .vs-devices, .vs-devices--two { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
