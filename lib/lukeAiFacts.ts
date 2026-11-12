@@ -83,11 +83,11 @@ export const ENGAGEMENTS: readonly Engagement[] = [
   {
     company: 'Pitch',
     role: 'Contract designer and engineer',
-    period: 'September 2026 to present',
+    period: 'September 2026 to November 2026',
     kind: 'contract',
     route: '/work/pitch',
     summary:
-      'Sales-coaching startup for reps who sell face to face. Current contract work, in pilot. Luke redesigned the whole rep app, designed and built its three main flows (recording, Stats and Coach), and built the public site (usepitch.app). The case study is password-protected; Luke shares the password on request.',
+      'Sales-coaching startup for reps who sell face to face. Contract work, in pilot. Luke redesigned the whole rep app, designed and built its three main flows (recording, Stats and Coach), and built the public site (usepitch.app). The case study is password-protected; Luke shares the password on request.',
   },
   {
     company: 'Lucid',

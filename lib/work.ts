@@ -30,9 +30,23 @@ export const ALL_WORK: ReadonlyArray<WorkItem> = [
     section: 'selected',
     href: '/work/lucid-ai',
   },
+  /* Pitch led the canvas from 2026-10-14 (LUK-122), moved to the lab on
+     2026-11-03 (LUK-195), joined selected work as the last tile on
+     2026-11-09, and moved up between Lucid and Awardco on 2026-11-11
+     (Luke). It stays out of the nav bar while it is password-gated
+     (SiteNav). */
+  {
+    slug: 'pitch',
+    label: '02 · pitch',
+    title: 'pitch',
+    nav: 'pitch',
+    file: 'pitch.tsx',
+    href: '/work/pitch',
+    section: 'selected',
+  },
   {
     slug: 'awardco',
-    label: '02 · awardco',
+    label: '03 · awardco',
     title: 'awardco login',
     nav: 'awardco',
     file: 'awardco.tsx',
@@ -41,26 +55,12 @@ export const ALL_WORK: ReadonlyArray<WorkItem> = [
   },
   {
     slug: 'pattern',
-    label: '03 · pattern',
+    label: '04 · pattern',
     title: 'pattern custom reports',
     nav: 'pattern',
     file: 'pattern.tsx',
     section: 'selected',
     href: '/work/pattern-custom-reports',
-  },
-  /* Pitch led the canvas from 2026-10-14 (LUK-122), moved to the lab on
-     2026-11-03 (LUK-195), and joined selected work as the last tile on
-     2026-11-09 once Hoth's removal left it alone in the lab. It sits last
-     because the client studies lead; it stays out of the nav bar while
-     it is password-gated (SiteNav). */
-  {
-    slug: 'pitch',
-    label: '04 · pitch',
-    title: 'pitch',
-    nav: 'pitch',
-    file: 'pitch.tsx',
-    href: '/work/pitch',
-    section: 'selected',
   },
 ]
 
@@ -74,7 +74,7 @@ export const ALL_WORK: ReadonlyArray<WorkItem> = [
  * canvas says Pitch exists, while the study behind it stays gated
  * (lib/gate.ts) until it is promoted (LUK-77). The labels are numbered by
  * what shows within each section: since 2026-11-03 selected work runs
- * Lucid 01 to Pattern 03 and the lab
+ * Lucid 01, Pitch 02, Awardco 03, Pattern 04 and the lab
  * numbers from its own 01.
  */
 export const HIDDEN_WORK: ReadonlySet<string> = new Set([])

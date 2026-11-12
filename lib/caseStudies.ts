@@ -400,7 +400,7 @@ export const caseStudies: CaseStudy[] = [
      * - No pilot customer names or pilot figures. Product screens are fine
      *   here because the gate holds them; public positioning (usepitch.app)
      *   is fine to repeat anywhere.
-     * - Role and dates follow the résumé; `period` stays open-ended.
+     * - Role follows the résumé; the contract ran Sep to Nov 2026 (Luke, 2026-11-11).
      * - Out of the prev/next chain on purpose (no nextSlug, nothing points
      *   here), so public studies never link to a locked door.
      * - Luke AI knows nothing about Pitch yet (lib/lukeAiFacts.ts). That is
@@ -428,7 +428,7 @@ export const caseStudies: CaseStudy[] = [
     role: 'Contract designer and engineer',
     // Shown since LUK-199 (Luke, 2026-11-03): the header carries Role,
     // Timeline and Tools only, under a full-width summary.
-    period: 'Sep 2026 – present',
+    period: 'Sep 2026 – Nov 2026',
     metaStacked: true,
     tools: 'Figma, React Native, Expo, Supabase, Next.js, Claude Code',
     summary: 'An AI coach for face-to-face sales. I rebranded it, redesigned the app and rebuilt its recording flow.',

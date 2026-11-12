@@ -71,7 +71,7 @@ export default async function PitchPage() {
               facts={[
                 { label: 'Company', value: 'Pitch, an early-stage sales coaching startup', span: true },
                 { label: 'Role', value: 'Contract designer and engineer' },
-                { label: 'Timeline', value: 'Sep 2026 to present' },
+                { label: 'Timeline', value: 'Sep 2026 to Nov 2026' },
                 { label: 'Team', value: 'two founders' },
               ]}
             />
