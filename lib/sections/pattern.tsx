@@ -9,8 +9,7 @@ import { DeviceSet, Macbook, ShotRow } from '@/components/sections/frames'
 
 /*
  * The Pattern case study's sections, copy as Luke wrote it (2026-11-11).
- * [Bracketed] text is his placeholder and renders as written. The visual
- * text above each visual is drawn from the earlier page's own captions.
+ * The visual text above each visual is drawn from the earlier page's own captions.
  * The old tool is real product captures; the new design is built in code
  * (components/predict). This copy says the redesign shipped after the
  * internship, which reverses the 2026-11-09 note that Luke didn't know
@@ -27,7 +26,7 @@ export const pattern: CaseStudySections = {
     {
       step: 'Origin',
       subtitle: 'It started as a two-day ticket',
-      body: 'I was handed a small ticket to add a duplicate button to report widgets. Digging into it, I kept finding problems across the whole reporting workflow. A one-to-two-day fix turned into a case for redesigning the tool.',
+      body: 'I was handed a small ClickUp ticket to add a duplicate button to report widgets. Digging into it, I kept finding problems across the whole reporting workflow. A one-to-two-day fix turned into a case for redesigning the tool.',
       visuals: [
         {
           src: `${IMG}/clickup-ticket.png`,
@@ -42,7 +41,7 @@ export const pattern: CaseStudySections = {
     {
       step: 'Research',
       subtitle: 'Brand managers gave up and used Excel',
-      body: "About 60% of eligible users made a report in the first year, and only about 15% came back. The report list had no previews, so copies all looked the same. Brand managers were rebuilding client reports in Excel because Predict wouldn't let them make what they needed.",
+      body: "Pendo data showed about 60% of eligible users made a report in the first year, and only about 15% came back. The report list had no previews, so copies all looked the same. Brand managers were rebuilding client reports in Excel because Predict wouldn't let them make what they needed. I ran weekly interviews plus a session with four UK brand managers.",
       visuals: [
         {
           src: `${OLD}/home-copies.png`,
@@ -139,7 +138,7 @@ export const pattern: CaseStudySections = {
     {
       step: 'Scoping',
       subtitle: 'I pitched big, then cut it down',
-      body: 'I took the bigger opportunity to my design manager and the Director of Product. My first concept was a Slides-style report canvas. [Why it got cut.] We scoped down to fixing report creation and the chart widget, the two places people were getting stuck.',
+      body: 'I took the bigger opportunity to my design manager and the Director of Product. My first concept was a Slides-style report canvas. Engineering constraints made the canvas too big for this round, so we shipped a structured report instead. We scoped down to fixing report creation and the chart widget, the two places people were getting stuck.',
       visuals: [
         {
           alt: 'The cut canvas concept and the final design',
@@ -263,7 +262,7 @@ export const pattern: CaseStudySections = {
     {
       step: 'Handoff',
       subtitle: 'Validated in testing, shipped after I left',
-      body: "I handed off the designs at the end of my internship and the team shipped them after. [What went well, what you'd do differently, and what you'd do next.]",
+      body: "I handed off the designs at the end of my internship and the team shipped them after.",
       visuals: [
         {
           alt: 'Final designs, built in code',

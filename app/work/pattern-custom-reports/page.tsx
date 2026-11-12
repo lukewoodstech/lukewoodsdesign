@@ -19,7 +19,7 @@ import { pattern } from '@/lib/sections/pattern'
  * Visual-first edition (Luke, 2026-11-11): the same section system as
  * Lucid. A hero, the problem banner and the testing numbers, then sections
  * of one text card and its visuals, from lib/sections/pattern.tsx. The copy
- * is Luke's; [bracketed] text is his placeholder.
+ * is Luke's.
  *
  * Canonical numbers: Pendo ~60% tried / ~15% came back, 24 usability
  * sessions (12 + 12), 2 to 6 metrics, under 10 minutes vs the 30 to 60
@@ -69,7 +69,6 @@ export default function PatternCaseStudy() {
                 { label: 'Role', value: 'Product Design Intern' },
                 { label: 'Timeline', value: 'January to October 2025' },
                 { label: 'Team', value: 'design lead, UX manager, PM, Director of Product' },
-                { label: 'Tools', value: 'Figma, Pendo, ClickUp' },
               ]}
             />
           </header>
@@ -106,7 +105,6 @@ export default function PatternCaseStudy() {
                 { value: 'Under 10', caption: 'min to build a report, down from 30 to 60' },
                 { value: '2 to 6', caption: 'metrics on one chart' },
                 { value: 24, caption: 'usability sessions' },
-                { value: '[+50%]', caption: '[satisfaction, or cut]' },
               ]}
             />
           </Block>

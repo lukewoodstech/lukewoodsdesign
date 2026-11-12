@@ -17,7 +17,7 @@ import { awardco } from '@/lib/sections/awardco'
  * Visual-first edition (Luke, 2026-11-11): the same section system as
  * Lucid. A hero, the problem banner and the testing numbers, then sections
  * of one text card and its visuals, from lib/sections/awardco.tsx. The copy
- * is Luke's; [bracketed] text is his placeholder.
+ * is Luke's.
  *
  * Binding from the 2026-08-24 interview record: 45.9M attempts / 1 year,
  * 7.7M failures (6.7M from password), password 34.6% vs SSO 98%, 9,275
@@ -67,8 +67,6 @@ export default function AwardcoCaseStudy() {
                 { label: 'Company', value: companyAbout('awardco-login-flow-redesign'), span: true },
                 { label: 'Role', value: 'Product Design Intern' },
                 { label: 'Timeline', value: 'October 2025 to April 2026' },
-                { label: 'Team', value: '[team]' },
-                { label: 'Tools', value: 'Figma, VS Code, GitHub Copilot' },
               ]}
             />
           </header>

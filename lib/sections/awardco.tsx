@@ -8,8 +8,7 @@ import { DeviceSet, Macbook, PhoneShot, ShotRow } from '@/components/sections/fr
 
 /*
  * The Awardco case study's sections, copy as Luke wrote it (2026-11-11).
- * [Bracketed] text is his placeholder and renders as written. The visual
- * text above each visual is drawn from the earlier page's own captions.
+ * The visual text above each visual is drawn from the earlier page's own captions.
  * Binding from the interview record: 25% faster, +4.5% and 27s to 5.9s are
  * usability-test results, not production analytics, and the redesign was
  * handed off, not shipped by Luke.
@@ -186,7 +185,7 @@ export const awardco: CaseStudySections = {
     {
       step: 'Audit',
       subtitle: "Logging in shouldn't take a guess",
-      body: 'Every company on Awardco signs in differently. Some use SSO, some use passwords, some use codes, and the old login made people figure out which one was theirs. Users bounced between screens, entered codes twice, and ended up in support. [One line on what you found in the audit.]',
+      body: "Every company on Awardco signs in differently. Some use SSO, some use passwords, some use codes, and the old login made people figure out which one was theirs. Users bounced between screens, entered codes twice, and ended up in support. The audit turned up three confusing entry points: SSO that didn't name the provider, an email code sent to a work inbox people couldn't always reach, and a password option shown even to SSO companies.",
       visuals: [
         {
           alt: 'The old login, annotated',
@@ -280,7 +279,7 @@ export const awardco: CaseStudySections = {
     {
       step: 'Testing',
       subtitle: 'Three directions, tested on real users',
-      body: "I tested three versions with 75 remote participants on Useberry: the current login, an SSO-first version, and a password-first version. Heatmaps showed where people got stuck. [Which direction won and why.] That's what led to asking for an email first, then routing each person to their company's sign-in.",
+      body: "I tested three versions with 75 remote participants on Useberry: the current login, an SSO-first version, and a password-first version. Heatmaps showed where people got stuck. Password-first was the fastest, but it pushed people toward the method that failed the most, so I went with SSO-first. That's what led to asking for an email first, then routing each person to their company's sign-in.",
       visuals: [
         {
           alt: 'Heatmap testing, annotated',
@@ -444,7 +443,7 @@ export const awardco: CaseStudySections = {
     {
       step: 'Prototyping',
       subtitle: 'I prototyped in code so testing felt real',
-      body: "Instead of clickable mockups, I built working prototypes in feature branches with VS Code and GitHub Copilot, then QA'd them with front-end engineers before they shipped. That let me run 20+ in-person sessions on the real thing, including keyboard-only and screen reader sessions. [How AI sped this up.]",
+      body: "Instead of clickable mockups, I built working prototypes in feature branches with VS Code and GitHub Copilot, then QA'd them with front-end engineers before they shipped. That let me run 20+ in-person sessions on the real thing, including keyboard-only and screen reader sessions.",
       visuals: [
         {
           alt: 'Password reset before and after',
@@ -479,7 +478,7 @@ export const awardco: CaseStudySections = {
     {
       step: 'Handoff',
       subtitle: 'Through security review and handed off',
-      body: "The redesign passed architecture and security review before handoff. In testing, login was 25% faster, successful sign-ins went up 4.5%, and choosing a method dropped from 27 seconds to under 6. [What went well, what you'd do differently, what you kept human, and what's next.]",
+      body: "The redesign passed architecture and security review before handoff. In testing, login was 25% faster, successful sign-ins went up 4.5%, and choosing a method dropped from 27 seconds to under 6. The biggest gap left is deskless workers signing in on shared kiosks.",
       visuals: [
         {
           alt: 'Final designs on desktop and mobile',

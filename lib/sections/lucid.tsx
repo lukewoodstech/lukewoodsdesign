@@ -121,7 +121,7 @@ export const lucid: CaseStudySections = {
     {
       step: 'Exploration',
       subtitle: 'The side panel won, then power users asked for more room',
-      body: 'I coded four layouts to test with real users: a side panel, a modal, a floating corner panel, and an inline bar. The side panel won because people could keep working while they asked. Testing also showed power users wanted more space for longer conversations, so I added a full page view you can toggle into. Building them in code with Claude Code meant each layout was a working version people could actually use, not a click-through.',
+      body: 'I coded four layouts with Claude Code to test with real users: a side panel, a modal, a floating corner panel, and an inline bar. The side panel won because people could keep working while they asked. Testing also showed power users wanted more space for longer conversations, so I added a full page view you can toggle into. Building them in code with Claude Code meant each layout was a working version people could actually use, not a click-through.',
       visuals: [
         {
           alt: '4 coded harness prototypes',
