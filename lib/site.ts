@@ -41,8 +41,8 @@ export const MAILTO = `mailto:${SITE.email}?subject=${encodeURIComponent(
  * the two can't drift.
  */
 export const INTRO_LINES = [
-  'Hi, I’m Luke, a product designer',
-  'that enjoys building data-driven',
+  'Hi, I’m Luke, a product builder',
+  'that ships data-driven',
   'and user-centric experiences',
   'for other humans.',
 ] as const

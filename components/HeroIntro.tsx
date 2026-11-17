@@ -5,7 +5,7 @@ import { INTRO_LINES, INTRO_SENTENCE } from '@/lib/site'
  * The hero intro, after the opening of tannerengland.framer.website: one
  * sentence in a serif, centred on the first screen of the homepage.
  *
- *   Hi, I’m Luke, a product designer that enjoys building data-driven
+ *   Hi, I’m Luke, a product builder that ships data-driven
  *   and user-centric experiences for other humans.
  *
  * History: until 2026-11-05 the sentence was "A creative & impact-driven
