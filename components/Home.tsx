@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import Footer from './Footer'
 import SiteNav from './SiteNav'
-import HeroIntro from './HeroIntro'
+import HeroCompile from './HeroCompile'
 import { SELECTED_TILES, LAB_TILES } from './CanvasBits'
 
 /*
@@ -62,7 +62,7 @@ export default function Home() {
 
       <main id="main">
         <section className="home-hero" aria-label="Introduction">
-          <HeroIntro />
+          <HeroCompile />
         </section>
 
         <section className="home-work" id="work" aria-labelledby="home-work-heading">

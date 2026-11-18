@@ -1,0 +1,242 @@
+/* EXPERIMENT (2026-11-17): see HeroCompile.tsx. Phase times arrive as
+ * custom properties on .root (--draw-at, --sent-out, ...), worked out
+ * from the letter counts, and each letter carries its own --d (when it
+ * lands) and --g (how long until the next one, i.e. how long the caret
+ * sits on it).
+ */
+
+.root {
+  --blue: var(--mono-blue);
+  --draw-end: calc(var(--draw-at) + var(--draw-for));
+}
+
+/* ── Letters (sentence, code, build line) ── */
+
+.word { white-space: nowrap; }
+
+.ch,
+.cch,
+.bch {
+  position: relative;
+  animation: hc-land 0.001s linear var(--d) both;
+}
+
+/* The caret: sits on a letter from the moment it lands until the next
+   one does, so it appears to move as you type. */
+.ch::after,
+.cch::after,
+.bch::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: 0.12em;
+  bottom: 0.05em;
+  width: 2px;
+  background: var(--blue);
+  opacity: 0;
+  /* No fill: outside its window the caret falls back to opacity 0, so
+     none can get left behind. */
+  animation: hc-caret var(--g) linear var(--d);
+}
+.cch::after,
+.bch::after {
+  width: 1.5px;
+  top: 0.15em;
+  bottom: 0.1em;
+  background: #fff;
+}
+
+/* The sentence steps aside for the code, then comes back finished. */
+.sentence {
+  animation:
+    hc-blur-out 0.35s var(--ease-out-quint) var(--sent-out) forwards,
+    hc-blur-in 0.6s var(--ease-out-quint) var(--sent-in) forwards;
+}
+
+/* ── Code ── */
+
+.code {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: clamp(0.6875rem, 1.25vw, 0.9375rem);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: left;
+  white-space: pre;
+  pointer-events: none;
+  animation:
+    hc-on 0.01s linear var(--code-in) both,
+    hc-off 0.35s var(--ease-out-quint) var(--code-out) forwards;
+}
+.kw { color: var(--mono-pink); }
+.fn { color: var(--mono-yellow); }
+.tag { color: var(--mono-blue); }
+.attr { color: var(--mono-yellow); }
+.str { color: var(--mono-green); }
+
+/* ── The frame ── */
+
+.frame {
+  position: absolute;
+  top: -0.9rem;
+  left: -1.4rem;
+  width: calc(100% + 2.8rem);
+  height: calc(100% + 1.8rem);
+  border: 1px solid var(--blue);
+  pointer-events: none;
+  animation:
+    hc-show 0.001s linear var(--draw-at) both,
+    hc-draw var(--draw-for) cubic-bezier(0.5, 0, 0.3, 1) var(--draw-at) both,
+    hc-off 0.5s var(--ease-out-quint) var(--frame-out) forwards;
+}
+
+.label {
+  position: absolute;
+  left: -1px;
+  bottom: calc(100% + 6px);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1;
+  color: var(--blue);
+  white-space: nowrap;
+}
+.labelDesign {
+  animation:
+    hc-on 0.2s linear var(--draw-end) both,
+    hc-off 0.15s linear var(--sent-out) forwards;
+}
+.labelCode {
+  animation: hc-on 0.2s linear calc(var(--sent-out) + 0.15s) both;
+}
+
+.handle {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background: #fff;
+  border: 1px solid var(--blue);
+  animation:
+    hc-on 0.01s linear var(--draw-at) both,
+    hc-shrink 0.4s var(--ease-out-quint) var(--frame-out) forwards;
+}
+.tl { left: -4px; top: -4px; }
+.tr { right: -4px; top: -4px; }
+.bl { left: -4px; bottom: -4px; }
+.br { right: -4px; bottom: -4px; }
+
+/* The render pass: a lit line sweeping the frame top to bottom. */
+.scan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--blue) 20%, #fff 50%, var(--blue) 80%, transparent);
+  box-shadow: 0 0 18px 4px rgba(0, 143, 255, 0.55);
+  opacity: 0;
+  animation: hc-scan 0.7s cubic-bezier(0.65, 0, 0.35, 1) var(--scan-at) both;
+}
+
+/* Under the frame: the size readout while designing, then the build. */
+.under {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 8px);
+  transform: translateX(-50%);
+  display: grid;
+  justify-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.under > * { grid-area: 1 / 1; }
+
+.size {
+  padding: 1px 5px;
+  border-radius: 2px;
+  background: var(--blue);
+  color: #fff;
+  font-size: 0.625rem;
+  animation:
+    hc-on 0.2s linear var(--draw-end) both,
+    hc-off 0.15s linear var(--build-at) forwards;
+}
+.build {
+  color: rgba(255, 255, 255, 0.75);
+  animation:
+    hc-on 0.15s linear var(--build-at) both,
+    hc-off 0.15s linear var(--compiled-at) forwards;
+}
+.prompt { color: rgba(255, 255, 255, 0.35); }
+.compiled {
+  color: var(--mono-green);
+  animation: hc-on 0.2s linear var(--compiled-at) both;
+}
+
+/* The pointer rides the frame's bottom-right corner, so it is wherever
+   the drag is. It flies in, drags, lets go. */
+.cursor {
+  position: absolute;
+  left: 100%;
+  top: 100%;
+  margin: -2px 0 0 -2px;
+  /* Shows while the frame itself is still hidden, before the drag. */
+  visibility: visible;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+  animation:
+    hc-cursor-in 0.4s var(--ease-out-quint) calc(var(--draw-at) - 0.42s) both,
+    hc-cursor-out 0.3s ease-in calc(var(--draw-end) + 0.2s) forwards;
+}
+
+/* ── Keyframes ── */
+
+@keyframes hc-land { from { opacity: 0; } to { opacity: 1; } }
+@keyframes hc-caret { from, to { opacity: 1; } }
+@keyframes hc-on { from { opacity: 0; } to { opacity: 1; } }
+@keyframes hc-off { from { opacity: 1; } to { opacity: 0; } }
+@keyframes hc-show { from { visibility: hidden; } to { visibility: visible; } }
+@keyframes hc-draw { from { width: 0; height: 0; } }
+@keyframes hc-shrink { to { transform: scale(0); } }
+@keyframes hc-blur-out { to { opacity: 0; filter: blur(8px); } }
+@keyframes hc-blur-in { from { opacity: 0; filter: blur(8px); } to { opacity: 1; filter: blur(0); } }
+@keyframes hc-cursor-in {
+  from { opacity: 0; transform: translate(120px, 70px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes hc-cursor-out {
+  0% { opacity: 1; transform: none; }
+  30% { transform: scale(0.85); }
+  100% { opacity: 0; transform: translate(6px, 6px); }
+}
+@keyframes hc-scan {
+  0% { top: 0; opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* Phone: the sentence fills the column, so the frame hugs it tighter
+   and the code steps down to fit the shorter box. */
+@media (max-width: 47.99em) {
+  .frame {
+    top: -0.6rem;
+    left: -0.5rem;
+    width: calc(100% + 1rem);
+    height: calc(100% + 1.2rem);
+  }
+  .code { font-size: 0.625rem; line-height: 1.5; }
+}
+
+/* Reduced motion: the finished sentence, nothing else. */
+@media (prefers-reduced-motion: reduce) {
+  .frame,
+  .code { display: none; }
+  .ch,
+  .sentence { animation: none; }
+  .ch::after { display: none; }
+}
